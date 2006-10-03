@@ -1,0 +1,36 @@
+numbers in parentheses are the bug numbers as recorded at http://mantis.verens.com/
+
+0.5
+	(20)	allow editing of text files, using a notepad clone or FCKeditor
+	(77)	directories with no sub-directories should not have open/close nodes
+	(76)	Rightclick on folder icons doesnt do expected action
+	(64)	"closed" panels should be re-openable by contextmenu
+	(90)	cannot delete directories
+	(08)	automatic caption extraction
+	(81)	Automated nightly builds
+	(51)	directory view looks awful. redo it
+	(66)	konqueror's oncontextmenu is overridden by the browser's contextmenu
+	(75)	Spanish translation file
+	(39)	ie: file selection cleared after a drag-selection
+	(73)	context menus should be recursive
+	(36)	change selected file using arrow keys
+	(68)	Mark selected folder upon opening of KFM
+	(71)	bug(s) - php notices & config.php issues
+	(72)	Check for JS or place a nice error message
+
+0.3-0.4
+	(38) properties for directories
+	(58) ability to remove the log panel
+	(49) "file info" panel, when one file is selected
+	(45) panels should swap position with others as needed
+	(43) maximised panels need "minimise" and "restore" buttons
+	(54) Long filenames ..
+	(57) get kfm working basically with konqueror
+	(62) Server parse error
+	(67) panel buttons should have graphics instead of text
+	(65) themes
+	(61) IE - undefined bug
+	(63) php - use short_open_tag ? (<? vs <?php)
+	(56) Upload panel too small in IE 6 & panel max-min-buttons disappears
+	(55) Mantis Bug - Email sender
+	(69) Languagepacks
