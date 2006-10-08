@@ -56,6 +56,7 @@ session_start();
 		try{
 			$db=@new PDO('sqlite:'.$rootdir.'.files/db');
 			$db_defined=1;
+			$db_method='sqlite';
 		}
 		catch(PDOException $e){
 		}
@@ -63,7 +64,9 @@ session_start();
 	if(!$db_defined){
 		require 'btk_database.class.php';
 		$db = new btk_database();
+		$db_method='btk';
 	}
+	$db_defined=null;
 }
 { # languages
 	$kfm_language='';

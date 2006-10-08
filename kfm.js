@@ -215,11 +215,11 @@ function kfm_chooseFile(e,o){
 	window.close();
 }
 function kfm_changeCaption(filename){
-	var el=kfm_filesCache[kfm_cwd_name+'/'+filename],txt='Change Caption'+el.image_data.caption;
+	var el=kfm_filesCache[filename],txt='Change Caption'+el.image_data.caption;
 	var newCaption=kfm_prompt(txt,el.image_data.caption);;
 	if(!newCaption||newCaption==el.image_data.caption)return;
 	if(confirm('New Caption:\n'+newCaption+'\n\nIs this correct?')){
-		kfm_filesCache[kfm_cwd_name+'/'+filename]=null;
+		kfm_filesCache[filename]=null;
 		kfm_log(kfm_lang.log_ChangeCaption(filename,newCaption));
 		x_kfm_changeCaption(filename,newCaption,kfm_refreshFiles);
 	}
@@ -345,13 +345,13 @@ function kfm_deleteDirectoryCheck(res){
 function kfm_deleteFile(id){
 	var filename=$('kfm_file_icon').kfm_attributes.name;
 	if(confirm(kfm_lang.DelFileMessage(filename))){
-		kfm_filesCache[kfm_cwd_name+'/'+filename]=null;
+		kfm_filesCache[filename]=null;
 		x_kfm_rm(id,kfm_refreshFiles);
 	}
 }
 function kfm_deleteSelectedFiles(){
 	if(confirm(kfm_lang.DelMultipleFilesMessage+selectedFiles.join('\n'))){
-		for(var i in selectedFiles)kfm_filesCache[kfm_cwd_name+'/'+selectedFiles[i]]=null;
+		for(var i in selectedFiles)kfm_filesCache[selectedFiles[i]]=null;
 		x_kfm_rm(selectedFiles,kfm_refreshFiles);
 	}
 }
@@ -724,13 +724,13 @@ function kfm_refreshFiles(res){
 				},100);
 			};
 		})(id));
-		if(kfm_filesCache[fullfilename]){
-			el.kfm_attributes=kfm_filesCache[fullfilename];
-			if(kfm_filesCache[fullfilename].image_data)kfm_showIcon([name,kfm_filesCache[fullfilename].image_data],el);
+		if(kfm_filesCache[id]){
+			el.kfm_attributes=kfm_filesCache[id];
+			if(kfm_filesCache[id].image_data)kfm_showIcon([name,kfm_filesCache[id].image_data],el);
 		}
 		else{
 			el.kfm_attributes=res.files[a];
-			for(b in kfm_imageExts)if(kfm_imageExts[b]==ext)x_kfm_getThumbnail(res.files[a].parent,id,64,64,kfm_showIcon);
+			for(b in kfm_imageExts)if(kfm_imageExts[b]==ext)x_kfm_getThumbnail(id,64,64,kfm_showIcon);
 		}
 		files[a]=el;
 		fileids[a]=id;
@@ -782,7 +782,7 @@ function kfm_removePanel(wrapper,panel){
 function kfm_renameFile(filename){
 	var newName=kfm_prompt('Rename the file "'+filename+'" to what?',filename);
 	if(newName&&newName!=''&&newName!=filename){
-		kfm_filesCache[kfm_cwd_name+'/'+filename]=null;
+		kfm_filesCache[filename]=null;
 		kfm_log(kfm_lang.RenamedFile(filename,newName));
 		x_kfm_renameFile(filename,newName,kfm_refreshFiles);
 	}
@@ -799,14 +799,14 @@ function kfm_removeFromSelection(id){
 	}
 }
 function kfm_resizeImage(filename){
-	var el=kfm_filesCache[kfm_cwd_name+'/'+filename],txt=kfm_lang.CurrentSize(el.image_data.width,el.image_data.height);
+	var el=kfm_filesCache[filename],txt=kfm_lang.CurrentSize(el.image_data.width,el.image_data.height);
 	var x=parseInt(kfm_prompt(txt+kfm_lang.NewWidth,el.image_data.width));
 	if(!x)return;
 	txt+=kfm_lang.NewWidthConfirmTxt(x);
 	var y=parseInt(kfm_prompt(txt+kfm_lang.NewHeight,Math.ceil(el.image_data.height*(x/el.image_data.width))));
 	if(!y)return;
 	if(confirm(txt+kfm_lang.NewHeightConfirmTxt(y))){
-		kfm_filesCache[kfm_cwd_name+'/'+filename]=null;
+		kfm_filesCache[filename]=null;
 		x_kfm_resizeImage(filename,x,y,kfm_refreshFiles);
 	}
 }
@@ -818,7 +818,7 @@ function kfm_restorePanel(wrapper,panel){
 	kfm_redrawPanels(wrapper);
 }
 function kfm_rotateImage(filename,direction){
-	kfm_filesCache[kfm_cwd_name+'/'+filename]=null;
+	kfm_filesCache[filename]=null;
 	x_kfm_rotateImage(filename,direction,kfm_refreshFiles);
 }
 function kfm_run_delayed(name,call){
@@ -1020,7 +1020,7 @@ function kfm_showIcon(res,el2){
 	if(!el||!image_data)return;
 	if(image_data.caption)el.title=image_data.caption.replace(/\n/g,' ');
 	if(image_data.icon){
-		if(!kfm_filesCache[kfm_cwd_name+'/'+file])image_data.icon=image_data.icon+'?'+Math.random();
+		if(!kfm_filesCache[file])image_data.icon=image_data.icon;
 		var img=newImg(image_data.icon).setCss('width:1px;height:1px');
 		img.onload=function(){
 			var p=this.parentNode;
@@ -1029,7 +1029,7 @@ function kfm_showIcon(res,el2){
 		}
 		el.addEl(img);
 		el.kfm_attributes.image_data=image_data;
-		kfm_filesCache[kfm_cwd_name+'/'+file]=el.kfm_attributes;
+		kfm_filesCache[file]=el.kfm_attributes;
 	}
 }
 function kfm_showTextFile(res){

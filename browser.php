@@ -71,6 +71,28 @@ function kaejax_get_javascript(){
 	foreach($GLOBALS['kaejax_export_list'] as $func)$html.=kaejax_get_one_stub($func);
 	return $html;
 }
+function kfm_add_file_to_db($filename,$directory_id){
+	global $db,$db_method;
+	$sql='insert into files (name,directory) values("'.addslashes($filename).'",'.$directory_id.')';
+	if($db_method=='sqlite'&&$db->getAttribute(PDO_ATTR_SERVER_VERSION)<'3.3'){ # sqlite only supports autoincrement recently
+		$q=$db->prepare('select id from files limit 1');
+		$id=$q->execute()?'(select id from files order by id desc limit 1)+1':1;
+		$sql='insert into files (id,name,directory) values('.$id.',"'.addslashes($filename).'",'.$directory_id.')';
+	}
+	$q=$db->prepare($sql);
+	return $q->execute();
+}
+function kfm_add_directory_to_db($name,$physical_address,$parent){
+	global $db,$db_method;
+	$sql='insert into directories (name,physical_address,parent) values("'.addslashes($name).'","'.addslashes($physical_address).'",'.$parent.')';
+	if($db_method=='sqlite'&&$db->getAttribute(PDO_ATTR_SERVER_VERSION)<'3.3'){ # sqlite only supports autoincrement recently
+		$q=$db->prepare('select id from directories limit 1');
+		$id=$q->execute()?'(select id from directories order by id desc limit 1)+1':1;
+		$sql='insert into directories (id,name,physical_address,parent) values('.$id.',"'.addslashes($name).'","'.addslashes($physical_address).'",'.$parent.')';
+	}
+	$q=$db->prepare($sql);
+	return $q->execute();
+}
 function kfm_changeCaption($filename,$newCaption){
 	include_once('functions.image.php');
 	kfm_functions_image_setCaption($filename,$newCaption);
@@ -186,32 +208,28 @@ function kfm_getTextFile($filename){
 	}
 	return 'error: "'.$filename.'" cannot be edited (restricted)'; # TODO: new string
 }
-function kfm_getThumbnail($root,$fileid,$width,$height){
+function kfm_getThumbnail($fileid,$width,$height){
 	global $db;
-	if(is_numeric($root)){
-		$rootid=$root;
-		$q=$db->prepare('select physical_address from directories where directories.id='.$rootid);
-		$q->execute();
-		$dirdata=$q->fetch();
-		$reqdir=count($dirdata)?$dirdata['physical_address'].'/':$GLOBALS['rootdir'];
-		$root=str_replace($GLOBALS['rootdir'],'',$reqdir);
-	}
+	$q=$db->prepare('select physical_address from directories,files where directories.id=files.directory and files.id='.$fileid);
+	$q->execute();
+	$dirdata=$q->fetch();
+	$reqdir=count($dirdata)?$dirdata['physical_address'].'/':$GLOBALS['rootdir'];
+	$dirname=str_replace($GLOBALS['rootdir'],'',$reqdir);
 	if(is_numeric($fileid)){
 		$q=$db->prepare('select name from files where id='.$fileid);
 		$q->execute();
 		$filedata=$q->fetch();
 		$filename=$filedata['name'];
 	}
-	$dirname=$root.'/';
 	$caption=kfm_getCaption($dirname,$filename);
 	$thumbnail=$dirname.'.files/'.$width.'x'.$height.' '.$filename;
 	if(!kfm_checkAddr($thumbnail))return 'error: illegal filename "'.$thumbnail.'"';
 	$originalfile=$GLOBALS['rootdir'].'/'.$dirname.$filename;
 	if(!file_exists($originalfile))return 'error: missing file "'.$filename.'"';
-	$thumbnailurl=$GLOBALS['kfm_userfiles_output'].'/'.$thumbnail;
-	$thumbnailfile=$GLOBALS['rootdir'].'/'.$thumbnail;
+	$thumbnailurl=$GLOBALS['kfm_userfiles_output'].$thumbnail;
+	$thumbnailfile=$GLOBALS['rootdir'].$thumbnail;
 	$info=getimagesize($originalfile);
-	if(file_exists($thumbnailfile))return array($filename,array('icon'=>$thumbnailurl,'width'=>$info[0],'height'=>$info[1],'caption'=>$caption));
+	if(file_exists($thumbnailfile))return array($fileid,array('icon'=>$thumbnailurl,'width'=>$info[0],'height'=>$info[1],'caption'=>$caption));
 	if(!$info)return 'error: "'.$filename.'" is not an image';
 	$type=0;
 	switch($info[2]){
@@ -264,7 +282,7 @@ function kfm_loadDirectories($root){
 		$q->execute();
 		$dirsdb=$q->fetchAll();
 		$dirshash=array();
-		foreach($dirsdb as $r)$dirshash[$r['name']]=$r['id'];
+		if(is_array($dirsdb))foreach($dirsdb as $r)$dirshash[$r['name']]=$r['id'];
 		$directories=array();
 		while(false!==($file=readdir($handle))){
 			$ff1=$reqdir.$file;
@@ -276,7 +294,7 @@ function kfm_loadDirectories($root){
 					}
 				}
 				if(!isset($dirshash[$file])){
-					$db->exec('insert into directories (name,physical_address,parent) values("'.addslashes($file).'","'.addslashes($ff1).'",'.$rootid.')');
+					kfm_add_directory_to_db($file,$ff1,$rootid);
 					$dirshash[$file]=$db->lastInsertId();
 				}
 				$directories[]=array($file,$directory[1],$dirshash[$file]);
@@ -292,7 +310,7 @@ function kfm_loadFiles($root=1){
 	global $db;
 	if(is_numeric($root)){
 		$rootid=$root;
-		$q=$db->prepare('select id,physical_address,name from directories where id='.$rootid.'');
+		$q=$db->prepare('select * from directories where id='.$rootid.'');
 		$q->execute();
 		$dirdata=$q->fetch();
 		$reqdir=count($dirdata)?$dirdata['physical_address'].'/':$GLOBALS['rootdir'];
@@ -303,15 +321,15 @@ function kfm_loadFiles($root=1){
 	if(!is_dir($reqdir))mkdir($reqdir,0755);
 	if(!is_dir($reqdir.'/.files')&&is_writable($reqdir))mkdir($reqdir.'/.files',0755);
 	if($handle=opendir($reqdir)){
-		$q=$db->prepare('select id,name from files where directory="'.$rootid.'"');
+		$q=$db->prepare('select * from files where directory="'.$rootid.'"');
 		$q->execute();
 		$filesdb=$q->fetchAll();
 		$fileshash=array();
-		foreach($filesdb as $r)$fileshash[$r['name']]=$r['id'];
+		if(is_array($filesdb))foreach($filesdb as $r)$fileshash[$r['name']]=$r['id'];
 		$files=array();
 		while(false!==($file=readdir($handle)))if(is_file($reqdir.'/'.$file)){
 			if(!isset($fileshash[$file])){
-				$db->exec('insert into files (name,directory) values("'.addslashes($file).'",'.$rootid.')');
+				kfm_add_file_to_db($file,$rootid);
 				$fileshash[$file]=$db->lastInsertId();
 			}
 			$files[]=array('name'=>$file,'parent'=>$rootid,'id'=>$fileshash[$file]);
