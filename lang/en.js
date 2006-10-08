@@ -1,6 +1,5 @@
 ﻿/*
- * Licensed under the terms of the GNU Lesser General Public License:
- * 	http://www.opensource.org/licenses/lgpl-license.php
+ * See ../license.txt for licensing
  *
  * For further information visit:
  * 	http://kfm.verens.com/

@@ -1,25 +1,26 @@
 <?
 	try{
 		$db=new PDO('sqlite:'.$rootdir.'.files/db');
-		chmod($rootdir.'.files/db',0660);
 	}
 	catch(PDOException $e){
-		echo 'error: '.$e->getMessage();
-		die();
+		$db_defined=0;
 	}
 
-	$db->exec('create table parameters(name text, value text)');
-	$db->exec('create table directories(
-		id int not null primary key,
-		name text,
-		physical_address text,
-		parent int not null
-	)');
-	$db->exec('create table files(
-		id int not null primary key,
-		name text,directory int not null
-	)');
+	if($db_defined){
+		chmod($rootdir.'.files/db',0660);
+		$db->exec('create table parameters(name text, value text)');
+		$db->exec('create table directories(
+			id int not null primary key,
+			name text,
+			physical_address text,
+			parent int not null
+		)');
+		$db->exec('create table files(
+			id int not null primary key,
+			name text,directory int not null
+		)');
 
-	$db->exec('insert into parameters values("version","0.5.1")');
-	$db->exec('insert into directories values(1,"","'.addslashes($rootdir).'",0)');
+		$db->exec('insert into parameters values("version","0.5.1")');
+		$db->exec('insert into directories values(1,"","'.addslashes($rootdir).'",0)');
+	}
 ?>

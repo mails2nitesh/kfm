@@ -43,21 +43,26 @@ session_start();
 	if(!isset($_SESSION['kfm']))$_SESSION['kfm']=array(
 		'currentdir'=>$rootdir,
 		'currentdirpart'=>'/',
+		'cwd_id'=>1,
 		'language'=>''
 	);
 	define('LSQUIGG','{');
 	define('RSQUIGG','}');
 }
 { # sqlite db
-	if(!file_exists($rootdir.'.files/db'))include('scripts/db.create.php'); # initialise database
-	else{
+	$db_defined=0;
+	if(class_exists('PDO')&&extension_loaded('pdo_sqlite')){
+		if(!file_exists($rootdir.'.files/db'))include('scripts/db.create.php'); # initialise database
 		try{
-			$db=new PDO('sqlite:'.$rootdir.'.files/db');
+			$db=@new PDO('sqlite:'.$rootdir.'.files/db');
+			$db_defined=1;
 		}
 		catch(PDOException $e){
-			echo 'error: '.$e->getMessage();
-			die();
 		}
+	}
+	if(!$db_defined){
+		require 'btk_database.class.php';
+		$db = new btk_database();
 	}
 }
 { # languages
