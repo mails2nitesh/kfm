@@ -15,6 +15,8 @@ td{vertical-align:top}
 #kfm_right_column{overflow:auto;position:relative;height:100%;background:white}
 #kfm_right_column #kfm_editFileTable textarea{background:#eee;font-style:italic}
 #kfm_right_column #kfm_editFileTable td{text-align:center}
+#kfm_search_table{width:100%}
+#kfm_search{width:100%}
 
 .boxdroptracer{border:1px solid #000;-moz-border-radius:10px;background:#9cf;height:0;width:0;position:absolute;left:0;top:0}
 .last_clicked{border-style:dashed !important;border-color:red !important}

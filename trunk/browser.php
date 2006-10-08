@@ -74,7 +74,7 @@ function kaejax_get_javascript(){
 function kfm_changeCaption($filename,$newCaption){
 	include_once('functions.image.php');
 	kfm_functions_image_setCaption($filename,$newCaption);
-	return kfm_loadFiles($_SESSION['kfm']['currentdirpart']);
+	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
 function kfm_createDirectory($dir_id,$child){
 	global $db;
@@ -92,7 +92,7 @@ function kfm_createDirectory($dir_id,$child){
 }
 function kfm_createEmptyFile($filename){
 	if(!kfm_checkAddr($_SESSION['kfm']['currentdir'].'/'.$filename))return 'error: filename not allowed';
-	return(touch($_SESSION['kfm']['currentdir'].'/'.$filename))?kfm_loadFiles($_SESSION['kfm']['currentdirpart']):'error: could not write file "'.$filename.'"';
+	return(touch($_SESSION['kfm']['currentdir'].'/'.$filename))?kfm_loadFiles($_SESSION['kfm']['cwd_id']):'error: could not write file "'.$filename.'"';
 }
 function kfm_deleteDirectory($directory,$recursive=0){
 	if(!kfm_checkAddr($directory))return array('type'=>'error','msg'=>1,'name'=>$directory); # illegal name
@@ -112,7 +112,7 @@ function kfm_downloadFileFromUrl($url,$filename){
 	if(substr($url,0,4)!='http')return 'error: url must begin with http';
 	$file=file_get_contents(str_replace(' ','%20',$url));
 	if(!$file)return 'error: could not download file "'.$url.'"';
-	return(file_put_contents($_SESSION['kfm']['currentdir'].'/'.$filename,$file))?kfm_loadFiles($_SESSION['kfm']['currentdirpart']):'error: could not write file "'.$filename.'"';
+	return(file_put_contents($_SESSION['kfm']['currentdir'].'/'.$filename,$file))?kfm_loadFiles($_SESSION['kfm']['cwd_id']):'error: could not write file "'.$filename.'"';
 }
 function kfm_moveFiles($files,$dir_id){
 	global $db;
@@ -120,11 +120,17 @@ function kfm_moveFiles($files,$dir_id){
 	$q->execute();
 	if(!($dirdata=$q->fetch()))return 'error: no data for directory id "'.$dir_id.'"'; # TODO: new string
 	$to=$dirdata['physical_address'].'/';
-	if(!kfm_checkAddr($to))return 'error: illegal directory "'.$to.'"';
-	foreach($files as $file){
-		$dir=$_SESSION['kfm']['currentdir'];
-		if(!kfm_checkAddr($from))return;
+	if(!kfm_checkAddr($to))return 'error: illegal directory "'.$to.'"'; # TODO: new string
+	foreach($files as $fid){
+		$q=$db->prepare('select directories.physical_address as da,files.name as fn from files,directories where directories.id=files.directory and files.id='.$fid);
+		$q->execute();
+		if(!($filedata=$q->fetch()))return 'error: no data for file id "'.$file.'"'; # TODO: new string
+		$dir=$filedata['da'];
+		$file=$filedata['fn'];
+		if(!kfm_checkAddr($dir.'/'.$file))return;
 		rename($dir.'/'.$file,$to.'/'.$file);
+		$q=$db->prepare('update files set directory='.$dir_id.' where id='.$fid);
+		$q->execute();
 		$icons=glob($dir.'/.files/[0-9]*x[0-9]* '.$file);
 		foreach($icons as $f)unlink($f);
 		if(file_exists($dir.'/.captions/'.$file)){
@@ -132,7 +138,7 @@ function kfm_moveFiles($files,$dir_id){
 			rename($dir.'/.captions/'.$file,$to.'/.captions/'.$file);
 		}
 	}
-	return kfm_loadFiles($_SESSION['kfm']['currentdirpart']);
+	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
 function kfm_getCaption($dirname,$filename){
 	$directory=$GLOBALS['rootdir'].'/'.$dirname.'/.captions';
@@ -180,8 +186,23 @@ function kfm_getTextFile($filename){
 	}
 	return 'error: "'.$filename.'" cannot be edited (restricted)'; # TODO: new string
 }
-function kfm_getThumbnail($dirname,$filename,$width,$height){
-	$dirname.='/';
+function kfm_getThumbnail($root,$fileid,$width,$height){
+	global $db;
+	if(is_numeric($root)){
+		$rootid=$root;
+		$q=$db->prepare('select physical_address from directories where directories.id='.$rootid);
+		$q->execute();
+		$dirdata=$q->fetch();
+		$reqdir=count($dirdata)?$dirdata['physical_address'].'/':$GLOBALS['rootdir'];
+		$root=str_replace($GLOBALS['rootdir'],'',$reqdir);
+	}
+	if(is_numeric($fileid)){
+		$q=$db->prepare('select name from files where id='.$fileid);
+		$q->execute();
+		$filedata=$q->fetch();
+		$filename=$filedata['name'];
+	}
+	$dirname=$root.'/';
 	$caption=kfm_getCaption($dirname,$filename);
 	$thumbnail=$dirname.'.files/'.$width.'x'.$height.' '.$filename;
 	if(!kfm_checkAddr($thumbnail))return 'error: illegal filename "'.$thumbnail.'"';
@@ -203,7 +224,6 @@ function kfm_getThumbnail($dirname,$filename,$width,$height){
 	$save='image'.$type;
 	if(!function_exists($load)||!function_exists($save))return 'server cannot handle image of type "'.$type.'"';
 	$im=imagecreatetruecolor($info[0],$info[1]);
-//	error_reporting(0);
 	imagecopyresized($im,$load($originalfile),0,0,0,0,$info[0],$info[1],$info[0],$info[1]);
 	if($info[0]>$width||$info[1]>$height){
 		$x=$width/$info[0];
@@ -224,10 +244,10 @@ function kfm_loadDirectories($root){
 	global $db;
 	if(is_numeric($root)){
 		$rootid=$root;
-		$q=$db->prepare('select id,physical_address,name from directories where id='.$rootid.'');
+		$q=$db->prepare('select id,physical_address,name from directories where id='.$rootid);
 		$q->execute();
 		$dirdata=$q->fetch();
-		$reqdir=$dirdata['physical_address'].'/';
+		$reqdir=count($dirdata)?$dirdata['physical_address'].'/':$GLOBALS['rootdir'];
 		$root=str_replace($GLOBALS['rootdir'],'',$reqdir);
 	}
 	if(!isset($rootid)){
@@ -256,7 +276,7 @@ function kfm_loadDirectories($root){
 					}
 				}
 				if(!isset($dirshash[$file])){
-					$db->exec('insert into directories (id,name,physical_address,parent) values((select id from directories order by id desc limit 1)+1,"'.addslashes($file).'","'.addslashes($ff1).'",'.$rootid.')');
+					$db->exec('insert into directories (name,physical_address,parent) values("'.addslashes($file).'","'.addslashes($ff1).'",'.$rootid.')');
 					$dirshash[$file]=$db->lastInsertId();
 				}
 				$directories[]=array($file,$directory[1],$dirshash[$file]);
@@ -268,17 +288,36 @@ function kfm_loadDirectories($root){
 	}
 	return 'couldn\'t read directory "'.$reqdir.'"';
 }
-function kfm_loadFiles($root){
+function kfm_loadFiles($root=1){
+	global $db;
+	if(is_numeric($root)){
+		$rootid=$root;
+		$q=$db->prepare('select id,physical_address,name from directories where id='.$rootid.'');
+		$q->execute();
+		$dirdata=$q->fetch();
+		$reqdir=count($dirdata)?$dirdata['physical_address'].'/':$GLOBALS['rootdir'];
+		$root=str_replace($GLOBALS['rootdir'],'',$reqdir);
+	}
 	if(!kfm_checkAddr($root))return;
 	$reqdir=$GLOBALS['rootdir'].$root;
 	if(!is_dir($reqdir))mkdir($reqdir,0755);
 	if(!is_dir($reqdir.'/.files')&&is_writable($reqdir))mkdir($reqdir.'/.files',0755);
 	if($handle=opendir($reqdir)){
+		$q=$db->prepare('select id,name from files where directory="'.$rootid.'"');
+		$q->execute();
+		$filesdb=$q->fetchAll();
+		$fileshash=array();
+		foreach($filesdb as $r)$fileshash[$r['name']]=$r['id'];
 		$files=array();
-		while(false!==($file=readdir($handle)))if(is_file($reqdir.'/'.$file))$files[]=$file;
+		while(false!==($file=readdir($handle)))if(is_file($reqdir.'/'.$file)){
+			if(!isset($fileshash[$file])){
+				$db->exec('insert into files (name,directory) values("'.addslashes($file).'",'.$rootid.')');
+				$fileshash[$file]=$db->lastInsertId();
+			}
+			$files[]=array('name'=>$file,'parent'=>$rootid,'id'=>$fileshash[$file]);
+		}
 		closedir($handle);
-		sort($files);
-		$_SESSION['kfm']=array('currentdir'=>$reqdir,'currentdirpart'=>$root);
+		$_SESSION['kfm']=array('currentdir'=>$reqdir,'currentdirpart'=>$root,'cwd_id'=>$rootid);
 		return array('reqdir'=>$root,'files'=>$files,'uploads_allowed'=>$GLOBALS['kfm_allow_file_uploads']);
 	}
 	return 'couldn\'t read directory';
@@ -288,7 +327,7 @@ function kfm_renameFile($filename,$newfilename){
 	$newfile=$_SESSION['kfm']['currentdir'].'/'.$newfilename;
 	if(file_exists($newfile))return 'error: a file of that name already exists';
 	rename($_SESSION['kfm']['currentdir'].'/'.$filename,$newfile);
-	return kfm_loadFiles($_SESSION['kfm']['currentdirpart']);
+	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
 function kfm_resizeImage($filename,$width,$height){
 	if(!kfm_checkAddr($filename))return;
@@ -323,7 +362,7 @@ function kfm_resizeImage($filename,$width,$height){
 	}
 	$save($im,$originalfile,100);
 	$im=null;
-	return kfm_loadFiles($_SESSION['kfm']['currentdirpart']);
+	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
 function kfm_rm($files,$no_dir=0){
 	if(is_array($files)){
@@ -334,7 +373,7 @@ function kfm_rm($files,$no_dir=0){
 		if(!is_writable($_SESSION['kfm']['currentdir'].'/'.$files))return 'error: "'.$files.'" cannot be deleted'; # TODO: new string
 		unlink($_SESSION['kfm']['currentdir'].'/'.$files);
 	}
-	return $no_dir?0:kfm_loadFiles($_SESSION['kfm']['currentdirpart']);
+	return $no_dir?0:kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
 function kfm_rmdir2($dir){ # adapted from http://php.net/rmdir
 	if(substr($dir,-1,1)=="/")$dir=substr($dir,0,strlen($dir)-1);
@@ -372,7 +411,7 @@ function kfm_rotateImage($filename,$direction){
 			$im=imagerotate($im,$direction,0);
 			$save($im,$_SESSION['kfm']['currentdir'].'/'.$filename,100);
 		}
-		return kfm_loadFiles($_SESSION['kfm']['currentdirpart']);
+		return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 	}
 }
 function kfm_resize_bytes($size){
@@ -388,14 +427,21 @@ function kfm_resize_bytes($size){
 }
 function kfm_saveTextFile($filename,$text){
 	if(kfm_checkAddr($filename))file_put_contents($_SESSION['kfm']['currentdir'].'/'.$filename,$text);
-	return kfm_loadFiles($_SESSION['kfm']['currentdirpart']);
+	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
+}
+function kfm_search($keywords){
+	global $db;
+	$q=$db->prepare('select * from files where name like "%'.addslashes($keywords).'%" order by name');
+	$q->execute();
+	$files=$q->fetchAll();
+	return array('reqdir'=>'','files'=>$files,'uploads_allowed'=>0);
 }
 { # export kaejax stuff
 	kaejax_export(
 		'kfm_changeCaption','kfm_createDirectory','kfm_createEmptyFile','kfm_deleteDirectory',
 		'kfm_downloadFileFromUrl','kfm_getFileDetails','kfm_getTextFile','kfm_getThumbnail','kfm_loadDirectories',
 		'kfm_loadFiles','kfm_moveFiles','kfm_renameFile','kfm_resizeImage','kfm_rm','kfm_rotateImage',
-		'kfm_saveTextFile'
+		'kfm_saveTextFile','kfm_search'
 	);
 	if(!empty($_POST['kaejax']))kaejax_handle_client_request();
 }
