@@ -1,6 +1,7 @@
 <?
 	try{
 		$db=new PDO('sqlite:'.$rootdir.'.files/db');
+		$db_defined=1;
 	}
 	catch(PDOException $e){
 		$db_defined=0;
