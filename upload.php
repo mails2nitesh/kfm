@@ -27,7 +27,7 @@ else $js='parent.kfm_log("error: permission denied for upload to this directory"
 <html>
 	<head>
 		<script type="text/javascript">parent.x_kfm_loadFiles('<?php
-			echo $_SESSION['kfm']['currentdirpart'];
+			echo $_SESSION['kfm']['cwd_id'];
 			?>',parent.kfm_refreshFiles);<?php
 			echo $js;
 			?>
