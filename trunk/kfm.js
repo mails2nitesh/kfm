@@ -1113,8 +1113,8 @@ function kfm_tracerStep(id){
 	setTimeout("kfm_tracerStep("+id+")",25);
 }
 function kfm_viewTextFile(res){
-	var t=newEl('table','kfm_editFileTable').setCss('height:100%;width:100%');
-	t.addRow().setCss('height:100%').addCell(0,2,newEl('div').innerHTML=res);
+	var t=newEl('table','kfm_viewFileTable').setCss('height:100%;width:100%');
+	t.addRow().setCss('height:100%').addCell(0,2).innerHTML=res;
 	$('kfm_right_column').empty().addEl(t);
 }
 function kfm_viewTextFileStarter(fileid){

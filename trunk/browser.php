@@ -85,7 +85,7 @@ function kfm_add_directory_to_db($name,$physical_address,$parent){
 function kfm_add_file_to_db($filename,$directory_id){
 	global $db,$db_method;
 	$sql='insert into files (name,directory) values("'.addslashes($filename).'",'.$directory_id.')';
-	if($db_method=='sqlite'&&$db->getAttribute(PDO::ATTR_SERVER_VERSION)<'3.3'){ # sqlite only supports autoincrement recently
+	if($db_method=='sqlite'&&$db->getAttribute(PDO_ATTR_SERVER_VERSION)<'3.3'){ # sqlite only supports autoincrement recently
 		$q=$db->prepare('select id from files limit 1');
 		$id=$q->execute()?'(select id from files order by id desc limit 1)+1':1;
 		$sql='insert into files (id,name,directory) values('.$id.',"'.addslashes($filename).'",'.$directory_id.')';
@@ -454,10 +454,12 @@ function kfm_search($keywords){
 }
 function kfm_viewTextFile($fileid){
 	global $db;
-	$rf=$db->exec('SELECT * FROM files WHERE id="'.$fileid.'"');
+	$rf=$db->prepare('select * FROM files WHERE id="'.$fileid.'"');
+	$rf->execute();
 	$aFile=$rf->fetch();
 	if(!count($aFile))return 'error: file not found'; # TODO better error
-	$rd=$db->exec('SELECT * FROM directories WHERE id="'.$aFile['directory'].'"');
+	$rd=$db->prepare('SELECT * FROM directories WHERE id="'.$aFile['directory'].'"');
+	$rd->execute();
 	$aDirectory=$rd->fetch();
 	if(!count($aDirectory))return 'error: directory not found'; # TODO better error
 	$file_path=str_replace('//','/',$aDirectory['physical_address'].'/'.$aFile['name']);
