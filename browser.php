@@ -71,17 +71,6 @@ function kaejax_get_javascript(){
 	foreach($GLOBALS['kaejax_export_list'] as $func)$html.=kaejax_get_one_stub($func);
 	return $html;
 }
-function kfm_add_file_to_db($filename,$directory_id){
-	global $db,$db_method;
-	$sql='insert into files (name,directory) values("'.addslashes($filename).'",'.$directory_id.')';
-	if($db_method=='sqlite'&&$db->getAttribute(PDO_ATTR_SERVER_VERSION)<'3.3'){ # sqlite only supports autoincrement recently
-		$q=$db->prepare('select id from files limit 1');
-		$id=$q->execute()?'(select id from files order by id desc limit 1)+1':1;
-		$sql='insert into files (id,name,directory) values('.$id.',"'.addslashes($filename).'",'.$directory_id.')';
-	}
-	$q=$db->prepare($sql);
-	return $q->execute();
-}
 function kfm_add_directory_to_db($name,$physical_address,$parent){
 	global $db,$db_method;
 	$sql='insert into directories (name,physical_address,parent) values("'.addslashes($name).'","'.addslashes($physical_address).'",'.$parent.')';
@@ -89,6 +78,17 @@ function kfm_add_directory_to_db($name,$physical_address,$parent){
 		$q=$db->prepare('select id from directories limit 1');
 		$id=$q->execute()?'(select id from directories order by id desc limit 1)+1':1;
 		$sql='insert into directories (id,name,physical_address,parent) values('.$id.',"'.addslashes($name).'","'.addslashes($physical_address).'",'.$parent.')';
+	}
+	$q=$db->prepare($sql);
+	return $q->execute();
+}
+function kfm_add_file_to_db($filename,$directory_id){
+	global $db,$db_method;
+	$sql='insert into files (name,directory) values("'.addslashes($filename).'",'.$directory_id.')';
+	if($db_method=='sqlite'&&$db->getAttribute(PDO::ATTR_SERVER_VERSION)<'3.3'){ # sqlite only supports autoincrement recently
+		$q=$db->prepare('select id from files limit 1');
+		$id=$q->execute()?'(select id from files order by id desc limit 1)+1':1;
+		$sql='insert into files (id,name,directory) values('.$id.',"'.addslashes($filename).'",'.$directory_id.')';
 	}
 	$q=$db->prepare($sql);
 	return $q->execute();
@@ -306,16 +306,13 @@ function kfm_loadDirectories($root){
 	}
 	return 'couldn\'t read directory "'.$reqdir.'"';
 }
-function kfm_loadFiles($root=1){
+function kfm_loadFiles($rootid=1){
 	global $db;
-	if(is_numeric($root)){
-		$rootid=$root;
-		$q=$db->prepare('select * from directories where id='.$rootid.'');
-		$q->execute();
-		$dirdata=$q->fetch();
-		$reqdir=count($dirdata)?$dirdata['physical_address'].'/':$GLOBALS['rootdir'];
-		$root=str_replace($GLOBALS['rootdir'],'',$reqdir);
-	}
+	$q=$db->prepare('select * from directories where id='.$rootid.'');
+	$q->execute();
+	$dirdata=$q->fetch();
+	$reqdir=count($dirdata)?$dirdata['physical_address'].'/':$GLOBALS['rootdir'];
+	$root=str_replace($GLOBALS['rootdir'],'',$reqdir);
 	if(!kfm_checkAddr($root))return;
 	$reqdir=$GLOBALS['rootdir'].$root;
 	if(!is_dir($reqdir))mkdir($reqdir,0755);
@@ -327,12 +324,13 @@ function kfm_loadFiles($root=1){
 		$fileshash=array();
 		if(is_array($filesdb))foreach($filesdb as $r)$fileshash[$r['name']]=$r['id'];
 		$files=array();
-		while(false!==($file=readdir($handle)))if(is_file($reqdir.'/'.$file)){
-			if(!isset($fileshash[$file])){
-				kfm_add_file_to_db($file,$rootid);
-				$fileshash[$file]=$db->lastInsertId();
+		while(false!==($filename=readdir($handle)))if(is_file($reqdir.'/'.$filename)){
+			if(!isset($fileshash[$filename])){
+				kfm_add_file_to_db($filename,$rootid);
+				$fileshash[$filename]=$db->lastInsertId();
+#return 'error: file not found in db';
 			}
-			$files[]=array('name'=>$file,'parent'=>$rootid,'id'=>$fileshash[$file]);
+			$files[]=array('name'=>$filename,'parent'=>$rootid,'id'=>$fileshash[$filename]);
 		}
 		closedir($handle);
 		$_SESSION['kfm']=array('currentdir'=>$reqdir,'currentdirpart'=>$root,'cwd_id'=>$rootid);
@@ -449,17 +447,34 @@ function kfm_saveTextFile($filename,$text){
 }
 function kfm_search($keywords){
 	global $db;
-	$q=$db->prepare('select * from files where name like "%'.addslashes($keywords).'%" order by name');
+	$q=$db->prepare('select id,name,directory from files where name like "%'.addslashes($keywords).'%" order by name');
 	$q->execute();
 	$files=$q->fetchAll();
 	return array('reqdir'=>'','files'=>$files,'uploads_allowed'=>0);
+}
+function kfm_viewTextFile($fileid){
+	global $db;
+	$rf=$db->exec('SELECT * FROM files WHERE id="'.$fileid.'"');
+	$aFile=$rf->fetch();
+	if(!count($aFile))return 'error: file not found'; # TODO better error
+	$rd=$db->exec('SELECT * FROM directories WHERE id="'.$aFile['directory'].'"');
+	$aDirectory=$rd->fetch();
+	if(!count($aDirectory))return 'error: directory not found'; # TODO better error
+	$file_path=str_replace('//','/',$aDirectory['physical_address'].'/'.$aFile['name']);
+	$code=file_get_contents($file_path);
+	require_once('Text/Highlighter.php');
+	require_once('Text/Highlighter/Renderer/Html.php');
+	$renderer=new Text_Highlighter_Renderer_Html(array('numbers'=>HL_NUMBERS_TABLE,'tabsize'=>4));
+	$hl=&Text_Highlighter::factory('HTML');
+	$hl->setRenderer($renderer);
+	return $hl->highlight($code);
 }
 { # export kaejax stuff
 	kaejax_export(
 		'kfm_changeCaption','kfm_createDirectory','kfm_createEmptyFile','kfm_deleteDirectory',
 		'kfm_downloadFileFromUrl','kfm_getFileDetails','kfm_getTextFile','kfm_getThumbnail','kfm_loadDirectories',
 		'kfm_loadFiles','kfm_moveFiles','kfm_renameFile','kfm_resizeImage','kfm_rm','kfm_rotateImage',
-		'kfm_saveTextFile','kfm_search'
+		'kfm_saveTextFile','kfm_search','kfm_viewTextFile'
 	);
 	if(!empty($_POST['kaejax']))kaejax_handle_client_request();
 }
@@ -467,6 +482,7 @@ function kfm_search($keywords){
 <html>
 	<head>
 		<title>KFM - Kae's File Manager</title>
+		<link rel="stylesheet" href="Text/hilight.css" />
 		<script type="text/javascript" src="lang/<?php
 			echo $kfm_language;
 		?>.js"></script>

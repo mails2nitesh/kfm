@@ -1,5 +1,6 @@
 <?php
 require 'php-api/txt-db-api.php';
+$rootdir = '/Users/bj/Sites/test/';
 error_reporting(E_ALL);
 class btk_database{
 	var $sql;
@@ -49,7 +50,7 @@ class btk_database{
 		$this->query($this->sql);
 	}
 	function exec($sql){
-		$this->query($sql);	
+		return $this->query($sql);	
 	}
 	function query($sql){
 		if($this->php_api){
@@ -87,10 +88,10 @@ class btk_database{
 	}
 }
 
-//$db = new btk_database();
-//$q = $db->prepare("select id,physical_address,name from directories where id='1'");
-//$q->execute();
-//$dirsdb=$q->fetchAll();
-//print_r($dirsdb);
+// 	$db = new btk_database();
+// 	$q=$db->prepare('select id,name,directory from files where name like "%tgz%" order by name');
+// 	$q->execute();
+// 	$files=$q->fetchAll();
+// 	return print_r($files);
 
 ?>
