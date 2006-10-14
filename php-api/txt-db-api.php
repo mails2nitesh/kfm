@@ -46,7 +46,7 @@ $API_HOME_DIR=dirname(__FILE__).'/';
 // e.g. if you have a Database in Directory /home/website/test/TestDB
 // you must set this property to /home/website/test/ 		
 
-$DB_DIR=dirname(__FILE__)."/../databases/";			
+$DB_DIR=WORKPATH;			
 //$DB_DIR="c:\\programme\\apache\\htdocs\\php-api-tests\\";			
 
 

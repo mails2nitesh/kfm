@@ -73,6 +73,7 @@ function kaejax_get_javascript(){
 }
 function kfm_add_directory_to_db($name,$physical_address,$parent){
 	global $db,$db_method;
+	$physical_address = str_replace('//','/', $physical_address);
 	$sql='insert into directories (name,physical_address,parent) values("'.addslashes($name).'","'.addslashes($physical_address).'",'.$parent.')';
 	if($db_method=='sqlite'&&$db->getAttribute(PDO_ATTR_SERVER_VERSION)<'3.3'){ # sqlite only supports autoincrement recently
 		$q=$db->prepare('select id from directories limit 1');
@@ -210,24 +211,22 @@ function kfm_getTextFile($filename){
 }
 function kfm_getThumbnail($fileid,$width,$height){
 	global $db;
-	$q=$db->prepare('select physical_address from directories,files where directories.id=files.directory and files.id='.$fileid);
-	$q->execute();
-	$dirdata=$q->fetch();
+	$qf=$db->prepare("SELECT * FROM files WHERE id='$fileid'");
+	$qf->execute();
+	$filedata = $qf->fetch();
+	$qd=$db->prepare("SELECT * FROM directories WHERE id='$filedata[directory]'");
+	$qd->execute();
+	$dirdata=$qd->fetch();
 	$reqdir=count($dirdata)?$dirdata['physical_address'].'/':$GLOBALS['rootdir'];
 	$dirname=str_replace($GLOBALS['rootdir'],'',$reqdir);
-	if(is_numeric($fileid)){
-		$q=$db->prepare('select name from files where id='.$fileid);
-		$q->execute();
-		$filedata=$q->fetch();
-		$filename=$filedata['name'];
-	}
+	$filename=$filedata['name'];
 	$caption=kfm_getCaption($dirname,$filename);
-	$thumbnail=$dirname.'.files/'.$width.'x'.$height.' '.$filename;
+	$thumbnail=$filedata['id'].' '.$width.'x'.$height.' '.$filename;
 	if(!kfm_checkAddr($thumbnail))return 'error: illegal filename "'.$thumbnail.'"';
-	$originalfile=$GLOBALS['rootdir'].'/'.$dirname.$filename;
+	$originalfile=$GLOBALS['rootdir'].$dirname.$filename;
 	if(!file_exists($originalfile))return 'error: missing file "'.$filename.'"';
-	$thumbnailurl=$GLOBALS['kfm_userfiles_output'].$thumbnail;
-	$thumbnailfile=$GLOBALS['rootdir'].$thumbnail;
+	$thumbnailurl=WORKURL.$thumbnail;
+	$thumbnailfile=WORKPATH.$thumbnail;
 	$info=getimagesize($originalfile);
 	if(file_exists($thumbnailfile))return array($fileid,array('icon'=>$thumbnailurl,'width'=>$info[0],'height'=>$info[1],'caption'=>$caption));
 	if(!$info)return 'error: "'.$filename.'" is not an image';
@@ -453,23 +452,32 @@ function kfm_search($keywords){
 	return array('reqdir'=>'','files'=>$files,'uploads_allowed'=>0);
 }
 function kfm_viewTextFile($fileid){
-	global $db;
+	global $db, $kfm_viewable_extensions, $kfm_highlight_extensions;
 	$rf=$db->prepare('select * FROM files WHERE id="'.$fileid.'"');
 	$rf->execute();
 	$aFile=$rf->fetch();
 	if(!count($aFile))return 'error: file not found'; # TODO better error
-	$rd=$db->prepare('SELECT * FROM directories WHERE id="'.$aFile['directory'].'"');
-	$rd->execute();
-	$aDirectory=$rd->fetch();
-	if(!count($aDirectory))return 'error: directory not found'; # TODO better error
-	$file_path=str_replace('//','/',$aDirectory['physical_address'].'/'.$aFile['name']);
-	$code=file_get_contents($file_path);
-	require_once('Text/Highlighter.php');
-	require_once('Text/Highlighter/Renderer/Html.php');
-	$renderer=new Text_Highlighter_Renderer_Html(array('numbers'=>HL_NUMBERS_TABLE,'tabsize'=>4));
-	$hl=&Text_Highlighter::factory('HTML');
-	$hl->setRenderer($renderer);
-	return $hl->highlight($code);
+	$ext = strtolower(substr(strrchr($aFile['name'],'.'),1));
+	if(in_array($ext, $kfm_viewable_extensions)){
+		$rd=$db->prepare('SELECT * FROM directories WHERE id="'.$aFile['directory'].'"');
+		$rd->execute();
+		$aDirectory=$rd->fetch();
+		if(!count($aDirectory))return 'error: directory not found'; # TODO better error
+		$file_path=str_replace('//','/',$aDirectory['physical_address'].'/'.$aFile['name']);
+		$code=file_get_contents($file_path);
+		if(array_key_exists($ext,$kfm_highlight_extensions)){
+			require_once('Text/Highlighter.php');
+			require_once('Text/Highlighter/Renderer/Html.php');
+			$renderer=new Text_Highlighter_Renderer_Html(array('numbers'=>HL_NUMBERS_TABLE,'tabsize'=>4));
+			$hl=&Text_Highlighter::factory($kfm_highlight_extensions[$ext]);
+			$hl->setRenderer($renderer);
+			return $hl->highlight($code);
+		}else{
+			return $code;
+		}
+	}else{
+		return "error: viewing file is not allowed";
+	}
 }
 { # export kaejax stuff
 	kaejax_export(
