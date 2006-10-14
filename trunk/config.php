@@ -13,6 +13,8 @@ session_start();
 	#   that the server uses mod_rewrite or personal web-sites, etc
 	$kfm_userfiles_output='/sandbox/UserFiles/';
 	
+	# directory in which KFM keeps its database and generated files
+	$kfm_workdirectory = '.files';
 
 	# 1 = users are allowed to upload files
 	# 0 = user are not allowed upload files
@@ -23,6 +25,9 @@ session_start();
 
 	# this array tells KFM what extensions indicate files which may be edited online
 	$kfm_editable_extensions=array('css','html','txt','xhtml','xml');
+
+	# this array tells KFM what extensions indicate files which may be viewed online
+	$kfm_viewable_extensions=array('txt', 'html', 'css', 'sql','xhtml', 'xml', 'php');
 
 	# 0 = only errors will be logged
 	# 1 = everything will be logged
@@ -48,6 +53,35 @@ session_start();
 	);
 	define('LSQUIGG','{');
 	define('RSQUIGG','}');
+	$kfm_highlight_extensions=array('php'=>'PHP', 'html'=>'HTML', 'xhtml'=>'HTML',
+				 'sql'=>'MYSQL', 'js'=>'JAVASCRIPT', 'css'=>'CSS', 'xml'=>'XML');
+}
+{ # work directory
+	$workpath = $rootdir.$kfm_workdirectory; // should be more at the top of this document
+	$workurl = $kfm_userfiles_output.$kfm_workdirectory;
+	$workdir = true;
+	if(substr($workpath,-1)!='/') $workpath.='/';
+	if(substr($workurl,-1)!='/') $workurl.='/';
+	define('WORKPATH', $workpath);
+	define('WORKURL', $workurl);
+	if(is_dir($workpath)){
+		if(!is_writable($workpath)) $workdir = false;
+	}else{
+		# Support for creating the directory
+		$workpath_tmp = substr($workpath,0,-1);
+		if(is_writable(dirname($workpath_tmp))){
+			mkdir($workpath_tmp, 0755);
+		}else{
+			$workdir = false;
+		}
+	}
+	if(!$workdir){
+		# in the future kfm should be able to work without a working directory. Then less functions will be available
+		# If that is the case, an error will be generated that there is limited functionality because there is no proper workdirectory
+		# but that is for the future, now kfm will not run
+		echo 'error: no writable workpath is specified'; # TODO: new string
+		exit;
+	}
 }
 { # sqlite db
 	$db_defined=0;

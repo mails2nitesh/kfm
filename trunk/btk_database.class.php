@@ -1,7 +1,5 @@
 <?php
 require 'php-api/txt-db-api.php';
-$rootdir = '/Users/bj/Sites/test/';
-error_reporting(E_ALL);
 class btk_database{
 	var $sql;
 	var $php_api = false;
