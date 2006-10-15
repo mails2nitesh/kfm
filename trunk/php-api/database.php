@@ -968,8 +968,8 @@ class Database  {
 			} else {
 				$i=0;
 			}
-			for(;$i<count($resultSets);++$i) {
-				if($resultSets[$i] != 0) {
+			for($i=0; $i<count($resultSets); ++$i) {
+				if(is_object($resultSets[$i])){
 					$rsMaster=$rsMaster->joinWithResultSet($resultSets[$i]);
 				}
 			}

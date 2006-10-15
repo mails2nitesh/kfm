@@ -38,7 +38,6 @@ $PRINT_ERRORS=1;			// 0 = Errors are NOT displayed, 1 = Errors are displayed
 $PRINT_WARNINGS=0;			// 0 = Warnings are NOT displayed, 1 = Warnings are displayed
 
 
-
 /***********************************
 		 	Constants 
 ************************************/
