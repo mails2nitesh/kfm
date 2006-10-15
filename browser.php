@@ -154,23 +154,29 @@ function kfm_moveFiles($files,$dir_id){
 		rename($dir.'/'.$file,$to.'/'.$file);
 		$q=$db->prepare('update files set directory='.$dir_id.' where id='.$fid);
 		$q->execute();
+		/* no longer needed // benjamin
 		$icons=glob($dir.'/.files/[0-9]*x[0-9]* '.$file);
 		foreach($icons as $f)unlink($f);
 		if(file_exists($dir.'/.captions/'.$file)){
 			if(!is_dir($to.'/.captions'))mkdir($to.'/.captions',0755);
 			rename($dir.'/.captions/'.$file,$to.'/.captions/'.$file);
-		}
+		}*/
 	}
 	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
 function kfm_getCaption($dirname,$filename){
-	$directory=$GLOBALS['rootdir'].'/'.$dirname.'/.captions';
-	$file=$directory.'/'.$filename;
-	if(!file_exists($file)){
-		if(!is_dir($directory))mkdir($directory,0755);
-		touch($file);
-	}
-	return join('',file($file));
+	// new parameter $fileid benjamin
+	// until then.....
+	return 'caption currently unavailable';
+	global $db;
+	$q=$db->prepare("SELECT caption FROM files WHERE id='$fileid'");
+	$q->execute;
+	$filedata = $q->fetch();
+	if(count($filedata)){
+		return $filedata['caption'];
+	}else{
+		return 'error retrieving caption';
+	}	
 }
 function kfm_getDirectoryProperties($dir){
 	if(strlen($dir))$properties=kfm_getDirectoryProperties(preg_replace('/[^\/]*\/$/','',$dir));
@@ -186,6 +192,7 @@ function kfm_getFileAsArray($filename){
 	return explode("\n",rtrim(file_get_contents($filename)));
 }
 function kfm_getFileDetails($filename){
+	global $db;
 	if(!file_exists($_SESSION['kfm']['currentdir'].'/'.$filename))return;
 	$mimetype=mime_content_type($_SESSION['kfm']['currentdir'].'/'.$filename);
 	$details=array(
@@ -314,8 +321,14 @@ function kfm_loadFiles($rootid=1){
 	$root=str_replace($GLOBALS['rootdir'],'',$reqdir);
 	if(!kfm_checkAddr($root))return;
 	$reqdir=$GLOBALS['rootdir'].$root;
-	if(!is_dir($reqdir))mkdir($reqdir,0755);
-	if(!is_dir($reqdir.'/.files')&&is_writable($reqdir))mkdir($reqdir.'/.files',0755);
+	
+	if(!is_dir($reqdir)){
+		if(is_writable($reqdir)){
+			mkdir($reqdir,0755); // TODO check if writable 
+		}else{
+			return 'error: directory is not writable';
+		}
+	}
 	if($handle=opendir($reqdir)){
 		$q=$db->prepare('select * from files where directory="'.$rootid.'"');
 		$q->execute();
@@ -324,6 +337,7 @@ function kfm_loadFiles($rootid=1){
 		if(is_array($filesdb))foreach($filesdb as $r)$fileshash[$r['name']]=$r['id'];
 		$files=array();
 		while(false!==($filename=readdir($handle)))if(is_file($reqdir.'/'.$filename)){
+			if(in_array(strtolower($filename), $GLOBALS['kfm_banned_files'])) continue;
 			if(!isset($fileshash[$filename])){
 				kfm_add_file_to_db($filename,$rootid);
 				$fileshash[$filename]=$db->lastInsertId();
@@ -346,7 +360,9 @@ function kfm_renameFile($filename,$newfilename){
 }
 function kfm_resizeImage($filename,$width,$height){
 	if(!kfm_checkAddr($filename))return;
-	$icons=glob($_SESSION['kfm']['currentdir'].'/.files/[0-9]*x[0-9]* '.$filename);
+	$icons=glob(WORKPATH.$filename.' [0-9]*x[0-9]* '.$filename);
+	// for the future:
+	//$icons=glob(WORKPATH.$fileid.' [0-9]*x[0-9]* '.$filename);
 	foreach($icons as $f)unlink($f);
 	$originalfile=$_SESSION['kfm']['currentdir'].'/'.$filename;
 	if(!file_exists($originalfile))return;
@@ -407,6 +423,7 @@ function kfm_rmdir2($dir){ # adapted from http://php.net/rmdir
 function kfm_rotateImage($filename,$direction){
 	if(!kfm_checkAddr($filename))return;
 	$icons=glob($_SESSION['kfm']['currentdir'].'/.files/[0-9]*x[0-9]* '.$filename);
+	//$icons=glob(WORKPATH.$fileid.' [0-9]*x[0-9]* '.$filename); //TODO
 	foreach($icons as $f)unlink($f);
 	$info=getimagesize($_SESSION['kfm']['currentdir'].'/'.$filename);
 	if($info){
