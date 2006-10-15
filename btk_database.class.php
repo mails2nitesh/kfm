@@ -32,7 +32,7 @@ class btk_database{
 		if (!file_exists(DB_DIR . "kfm_database/directories.txt")) {
 			$db = new Database("kfm_database");
 			$db->executeQuery("CREATE TABLE directories (id inc, name str, physical_address str, parent str)");
-			$db->executeQuery("INSERT INTO directories VALUES (1,'','".addslashes($rootdir)."','0')");
+			$db->executeQuery("INSERT INTO directories VALUES (1,'','".rtrim(addslashes($rootdir),' /')."','0')");
 		}
 		if (!file_exists(DB_DIR . "kfm_database/files.txt")) {
 			$db = new Database("kfm_database");
