@@ -141,6 +141,8 @@ require_once('includes/kaejax.php');
 			?>";<?php
 			echo kaejax_get_javascript();
 			?>
+			var editable_extensions=["<?php echo join('","',$kfm_editable_extensions);?>"];
+			var viewable_extensions=["<?php echo join('","',$kfm_viewable_extensions);?>"];
 		</script>
 		<style type="text/css">@import "<?php
 		echo 'themes/'.$kfm_theme.'/kfm.css';
