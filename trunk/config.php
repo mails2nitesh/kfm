@@ -55,6 +55,7 @@ session_start();
 	define('RSQUIGG','}');
 	$kfm_highlight_extensions=array('php'=>'PHP', 'html'=>'HTML', 'xhtml'=>'HTML',
 				 'sql'=>'MYSQL', 'js'=>'JAVASCRIPT', 'css'=>'CSS', 'xml'=>'XML');
+	$kfm_banned_files = array('thumbs.db','.ds_store'); //lowercase array
 }
 { # work directory
 	$workpath = $rootdir.$kfm_workdirectory; // should be more at the top of this document
