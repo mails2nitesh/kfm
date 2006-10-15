@@ -695,6 +695,7 @@ function kfm_refreshFiles(res){
 			e=getEvent(e);
 			{ // variables
 				var name=this.kfm_attributes.name,links=[],i,id=this.kfm_attributes.id;
+				var extension=name.replace(/.*\./,'').toLowerCase();
 			}
 			{ // add the links
 				if(selectedFiles.length>1)links.push(['deleteSelectedFiles()',kfm_lang.DeleteFile,'remove']);
@@ -707,11 +708,8 @@ function kfm_refreshFiles(res){
 						links.push(['resizeImage("'+id+'")',kfm_lang.ResizeImage,'']);
 						links.push(['changeCaption("'+id+'")',kfm_lang.ChangeCaption,'edit']);
 					}
-					switch(name.replace(/.*\./,'')){
-						case 'txt':case 'css':case 'html':case 'xhtml':case 'xml':case 'js':
-							links.push(['viewTextFileStarter("'+id+'")','view','edit']);
-							links.push(['editTextFile("'+id+'")',kfm_lang.EditTextFile,'edit']);
-					}
+					if(kfm_inArray(viewable_extensions,extension))links.push(['viewTextFileStarter("'+id+'")','view','edit']);
+					if(kfm_inArray(editable_extensions,extension))links.push(['editTextFile("'+id+'")',kfm_lang.EditTextFile,'edit']);
 				}
 				kfm_createContextMenu(getMouseAt(getEvent(e)),links);
 			}
