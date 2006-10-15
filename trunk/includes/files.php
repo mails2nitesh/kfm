@@ -133,14 +133,22 @@ function _resize_bytes($size){
    $return = number_format($size,0,'','.')." ".$format[$count];
    return $return;
 }
-function _rm($files,$no_dir=0){
-	if(is_array($files)){
-		foreach($files as $f)kfm_rm($f,1);
+function _rm($id,$no_dir=0){
+	if(is_array($id)){
+		foreach($id as $f)kfm_rm($f,1);
 	}
 	else{
-		if(!kfm_checkAddr($files))return;
-		if(!is_writable($_SESSION['kfm']['currentdir'].'/'.$files))return 'error: "'.$files.'" cannot be deleted'; # TODO: new string
-		unlink($_SESSION['kfm']['currentdir'].'/'.$files);
+		global $db;
+		$rf=$db->prepare('select files.name as name,physical_address FROM files,directories WHERE files.id="'.$id.'" and directories.id=files.directory');
+		$rf->execute();
+		$file_data=$rf->fetch();
+		if(count($file_data)){
+			$file_address=$file_data['physical_address'].'/'.$file_data['name'];
+			unlink($file_address);
+			if(file_exists($file_address))return 'error: "'.$file_data['name'].'" cannot be deleted'; # TODO: new string
+			$db->exec('delete from files where id="'.$id.'"');
+		}
+		else return 'error: file #'.$id.' is missing from the database'; #TODO: new string
 	}
 	return $no_dir?0:kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
