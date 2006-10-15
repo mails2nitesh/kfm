@@ -108,7 +108,7 @@ function _rmdir2($dir){ # adapted from http://php.net/rmdir
 		$qd=$db->prepare('SELECT * FROM directories WHERE id="'.$dir.'"');
 		$qd->execute();
 		$dirdata=$qd->fetch();
-		$dir=$GLOBALS['rootdir'].'/'.$dirdata['physical_address'];
+		$dir=$dirdata['physical_address'];
 	}
 	if(substr($dir,-1,1)=="/")$dir=substr($dir,0,strlen($dir)-1);
 	if($handle=opendir($dir)){
@@ -129,13 +129,9 @@ function _rmdir2($dir){ # adapted from http://php.net/rmdir
 			$q=$db->prepare('select id from directories where physical_address like "'.$dirdata['physical_address'].'%"');
 			$q->execute();
 			$dirs=$q->fetchAll();
-			foreach($dirs as $dir){
-				$q=$db->prepare('delete from files where parent="'.$dir['id'].'"');
-				$q->execute();
-			}
+			foreach($dirs as $dir)$db->exec('delete from files where parent="'.$dir['id'].'"');
 		}
-		$q=$db->prepare('delete from directories where physical_address like "'.$dirdata['physical_address'].'%"');
-		$q->execute();
+		$db->exec('delete from directories where physical_address like "'.$dirdata['physical_address'].'%"');
 	}
 }
 ?>
