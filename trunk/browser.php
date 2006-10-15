@@ -360,7 +360,7 @@ function kfm_renameFile($filename,$newfilename){
 }
 function kfm_resizeImage($filename,$width,$height){
 	if(!kfm_checkAddr($filename))return;
-	$icons=glob(WORKPATH.$filename.' [0-9]*x[0-9]* '.$filename);
+	$icons=glob($_SESSION['kfm']['currentdir'].'/.files/[0-9]*x[0-9]* '.$filename);
 	// for the future:
 	//$icons=glob(WORKPATH.$fileid.' [0-9]*x[0-9]* '.$filename);
 	foreach($icons as $f)unlink($f);
