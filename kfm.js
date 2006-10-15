@@ -11,6 +11,7 @@ function Browser(){
 	this.versionMajor=parseInt(this.versionMinor);
 }
 { // variables
+	if(!window.kfm_callerType)window.kfm_callerType='standalone';
 	var browser=new Browser(),loadedScripts=[],kaejax_is_loaded=0,function_urls=[];
 	var kfm_cwd_name='',kfm_cwd_id=0,kfm_cwd_subdirs=[],contextmenu=null,selectedFiles=[],kfm_imageExts=['jpg','jpeg','gif','png','bmp'];
 	var kfm_filesCache=[],kfm_tracers=[],kfm_tracer_v=10,kfm_lastClicked,kfm_unique_classes=[];
