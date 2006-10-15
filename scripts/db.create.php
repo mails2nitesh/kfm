@@ -11,14 +11,25 @@
 		chmod($rootdir.'.files/db',0660);
 		$db->exec('create table parameters(name text, value text)');
 		$db->exec('create table directories(
-			id int not null primary key,
+			id integer not null,
 			name text,
 			physical_address text,
-			parent int not null
+			parent integer not null,
+			primary key (id)
 		)');
 		$db->exec('create table files(
-			id int not null primary key,
-			name text, caption text, directory int not null
+			id integer not null,
+			name text,
+			directory integer not null,
+			primary key (id),
+			foreign key (directory) references directories(id)
+		)');
+		$db->exec('create table image_captions(
+			id integer not null,
+			caption text,
+			file_id integer not null,
+			primary key (id),
+			foreign key (file_id) references files (id)
 		)');
 
 		$db->exec('insert into parameters values("version","0.5.1")');
