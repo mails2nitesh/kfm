@@ -36,7 +36,7 @@ class btk_database{
 		}
 		if (!file_exists(DB_DIR . "kfm_database/files.txt")) {
 			$db = new Database("kfm_database");
-			$db->executeQuery("CREATE TABLE files (id inc, name str, directory str)");
+			$db->executeQuery("CREATE TABLE files (id inc, name str, caption str, directory str)");
 		}
 		$this->php_api = true;
 	}

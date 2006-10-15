@@ -18,7 +18,7 @@
 		)');
 		$db->exec('create table files(
 			id int not null primary key,
-			name text,directory int not null
+			name text, caption text, directory int not null
 		)');
 
 		$db->exec('insert into parameters values("version","0.5.1")');
