@@ -14,7 +14,7 @@ function Browser(){
 	var browser=new Browser(),loadedScripts=[],kaejax_is_loaded=0,function_urls=[];
 	var kfm_cwd_name='',kfm_cwd_id=0,kfm_cwd_subdirs=[],contextmenu=null,selectedFiles=[],kfm_imageExts=['jpg','jpeg','gif','png'];
 	var kfm_filesCache=[],kfm_tracers=[],kfm_tracer_v=10,kfm_lastClicked,kfm_unique_classes=[];
-	var kaejax_timeouts=[],kfm_directories=[];
+	var kaejax_timeouts=[],kfm_directories=[0,{name:'root',pathname:'/'}];
 	var kaejax_replaces={'([89A-F][A-Z0-9])':'%u00$1','22':'"','2C':',','3A':':','5B':'[','5D':']','7B':'{','7D':'}'};
 	for(var a in kaejax_replaces){
 		kaejax_replaces[kaejax_replaces[a]]=eval('/%'+a+'/g');
@@ -325,18 +325,19 @@ function kfm_createSearchPanel(){
 	return kfm_createPanel('Search','kfm_search_panel',t,{maxedState:3}); // TODO: new string
 }
 function kfm_deleteDirectory(id){
-	if(confirm(kfm_lang.DelDirMessage('/'+kfm_directories[id].pathname)))x_kfm_deleteDirectory(id,kfm_deleteDirectoryCheck);
+	if(confirm(kfm_lang.DelDirMessage(kfm_directories[id].pathname)))x_kfm_deleteDirectory(id,kfm_deleteDirectoryCheck);
 }
 function kfm_deleteDirectoryCheck(res){
 	if(res.type&&res.type=='error'){
 		switch(parseInt(res.msg)){
-			case 1: kfm_log('error: illegal directory name "'+res.name+'"'); break; // NEW STRING
+			case 1: kfm_log('error: illegal directory name "'+res.name+'"'); break; // TODO: NEW STRING
 			case 2:{ // not empty
-				var ok=confirm('"'+res.name+'" is not empty\nAre you sure you want to delete it and all its contents?\n*WARNING* THIS IS NOT REVERSIBLE'); // NEW STRING
-				if(ok)x_kfm_deleteDirectory(res.name,1,kfm_deleteDirectoryCheck);
+				var ok=confirm('"'+res.name+'" is not empty\nAre you sure you want to delete it and all its contents?\n*WARNING* THIS IS NOT REVERSIBLE'); // TODO: NEW STRING
+				if(ok)x_kfm_deleteDirectory(res.id,1,kfm_deleteDirectoryCheck);
 				break;
 			}
-			case 3: kfm_log('error: failed to delete directory "'+res.name+'"'); break; // NEW STRING
+			case 3: kfm_log('error: failed to delete directory "'+res.name+'"'); break; // TODO: NEW STRING
+			case 4: kfm_log('error: directory not in database'); break; // TODO: new string
 			default: alert(res.msg);
 		}
 	}
