@@ -128,19 +128,14 @@ require_once('includes/kaejax.php');
 			echo $kfm_language;
 		?>.js"></script>
 		<script type="text/javascript" src="kfm.js"></script>
-		<script type="text/javascript">var starttype="<?php
-			echo isset($_GET['Type'])?$_GET['Type']:'';
-			?>",fckroot="<?php
-			echo $kfm_userfiles;
-			?>",fckrootOutput="<?php
-			echo $kfm_userfiles_output;
-			?>",kfm_log_level=<?php
-			echo $kfm_log_level;
-			?>,kfm_theme="<?php
-			echo $kfm_theme;
-			?>";
-			<?php echo kaejax_get_javascript();?>
-			<?php if(isset($_GET['kfm_callerType']))echo 'window.kfm_callerType="'.addslashes($_GET['kfm_callerType'].'";'?>
+		<script type="text/javascript">
+			var starttype="<?php echo isset($_GET['Type'])?$_GET['Type']:''; ?>";
+			var fckroot="<?php echo $kfm_userfiles; ?>";
+			var fckrootOutput="<?php echo $kfm_userfiles_output; ?>";
+			var kfm_log_level=<?php echo $kfm_log_level; ?>;
+			var kfm_theme="<?php echo $kfm_theme; ?>";
+			<?php echo kaejax_get_javascript(); ?>
+			<?php if(isset($_GET['kfm_callerType']))echo 'var window.kfm_callerType="'.addslashes($_GET['kfm_callerType']).'";'; ?>
 			var editable_extensions=["<?php echo join('","',$kfm_editable_extensions);?>"];
 			var viewable_extensions=["<?php echo join('","',$kfm_viewable_extensions);?>"];
 		</script>

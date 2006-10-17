@@ -86,11 +86,14 @@ session_start();
 }
 { # sqlite db
 	$db_defined=0;
+	$db_create = false;
+	define('DBNAME','db');
+	if(!file_exists(WORKPATH.DBNAME)) $db_create = true;
 	if(class_exists('PDO')&&extension_loaded('pdo_sqlite')){
-		if(!file_exists($rootdir.'.files/db'))include('scripts/db.create.php'); # initialise database
 		try{
-			$db=@new PDO('sqlite:'.$rootdir.'.files/db');
+			$db=@new PDO('sqlite:'.WORKPATH.DBNAME);
 			$db_defined=1;
+			if($db_create) include('scripts/db.create.php');
 			$db_method='sqlite';
 		}
 		catch(PDOException $e){
@@ -98,7 +101,7 @@ session_start();
 	}
 	if(!$db_defined){
 		require 'btk_database.class.php';
-		$db = new btk_database();
+		$db = new btk_database('sqlite');
 		$db_method='btk';
 	}
 	$db_defined=null;

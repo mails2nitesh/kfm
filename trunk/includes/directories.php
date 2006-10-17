@@ -1,4 +1,4 @@
-<?
+<?php
 function _add_directory_to_db($name,$physical_address,$parent){
 	global $db,$db_method;
 	$physical_address = str_replace('//','/', $physical_address);

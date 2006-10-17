@@ -1,4 +1,4 @@
-<?
+<?php
 function _add_file_to_db($filename,$directory_id){
 	global $db,$db_method;
 	$sql='insert into files (name,directory) values("'.addslashes($filename).'",'.$directory_id.')';
@@ -90,7 +90,7 @@ function _loadFiles($rootid=1){
 		if(is_writable($reqdir)){
 			mkdir($reqdir,0755); // TODO check if writable 
 		}else{
-			return 'error: directory is not writable';
+			return "error: directory $reqdir is not writable";
 		}
 	}
 	if($handle=opendir($reqdir)){
