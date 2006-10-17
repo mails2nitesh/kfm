@@ -3,14 +3,15 @@ require 'php-api/txt-db-api.php';
 class btk_database{
 	var $sql;
 	var $php_api = false;
+	var $sqlite = false;
 	var $mysql = false;
 	var $last_inserted_id = false;
 	var $result = false;
 	function __construct(){
 		if(func_num_args()==0){
 			$this->php_api();
-		}elseif(func_num_args()==1 && substr(func_get_arg(0),0,6=='sqlite')){
-			return new PDO(func_get_arg(0));
+		}elseif(func_num_args()==1 && func_get_arg(0) =='sqlite'){
+			$this->sqlite();
 		}else if(false){
 			// mysql support
 		}else{
@@ -40,6 +41,19 @@ class btk_database{
 		}
 		$this->php_api = true;
 	}
+	function sqlite(){
+		global $db_create, $rootdir;
+		$this->sqlite = true;
+		if ($this->db =@sqlite_open(WORKPATH.DBNAME, 0666, $sqliteerror)) {
+			$db_defined = 1;
+			if($db_create){
+				$db =&$this;
+				include 'scripts/db.create.php';
+			}
+		} else {
+   			die($sqliteerror);
+		}
+	}
 	function prepare($sql){
 		$this->sql = $sql;
 		return $this;
@@ -57,8 +71,11 @@ class btk_database{
 			$this->result = $db->executeQuery($sql);
 			if($is_select) $this->last_inserted_id = $db->getLastInsertId ();
 			return $this;
-		}else if(false){
-			// mysql	
+		}else if($this->sqlite){
+			$this->result = sqlite_query($this->db,$sql);
+			if($this->result===false) die(sqlite_last_error($this->db));
+			$this->last_inserted_id = sqlite_last_insert_rowid($this->db);
+			return $this;
 		}else{
 			return false;
 		}
@@ -66,23 +83,35 @@ class btk_database{
 	function lastInsertId(){
 		return $this->last_inserted_id;
 	}
-	function fetchAll(){
-		$data = array();
-		$data_row = array();
-		$colnames = $this->result->getColumnNames();
-		while($this->result->next()){
-			foreach($colnames as $col)$data_row[$col] = $this->result->getCurrentValueByName($col);
-			$data[] = $data_row;
+	function fetchAll(){	
+		if($this->php_api){
+			$data = array();
+			$data_row = array();
+			$colnames = $this->result->getColumnNames();
+			while($this->result->next()){
+				foreach($colnames as $col)$data_row[$col] = $this->result->getCurrentValueByName($col);
+				$data[] = $data_row;
+			}
+			return $data;
+		}else if($this->sqlite){
+			return sqlite_fetch_all($this->result);
+		}else{
+			return false;
 		}
-		return $data;
 	}
 	function fetch(){
-		$result_data = $this->fetchAll();
-		if(count($result_data)){
-			return $result_data[0];
+		if($this->php_api){
+			$result_data = $this->fetchAll();
+			if(count($result_data)){
+				return $result_data[0];
+			}else{
+				return array();
+			}
+		}else if($this->sqlite){
+			return sqlite_fetch_array($this->result, SQLITE_ASSOC);
 		}else{
 			return array();
-		}	
+		}
 	}
 }
 

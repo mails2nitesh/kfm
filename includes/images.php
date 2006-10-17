@@ -1,4 +1,4 @@
-<?
+<?php
 function _changeCaption($filename,$newCaption){
 	include_once('functions.image.php');
 	kfm_functions_image_setCaption($filename,$newCaption);

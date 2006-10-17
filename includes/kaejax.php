@@ -1,4 +1,4 @@
-<?
+<?php
 { # variables
 	$kaejax_js_has_been_shown=0;
 	$kaejax_export_list=array();
