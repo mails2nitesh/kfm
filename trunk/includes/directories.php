@@ -102,6 +102,22 @@ function _loadDirectories($root){
 	}
 	return 'couldn\'t read directory "'.$reqdir.'"';
 }
+function _moveDirectory($from,$to){
+	global $db;
+	$q=$db->query('select * from directories where id="'.$from.'"');
+	$from=$q->fetch();
+	$q=$db->query('select * from directories where id="'.$to.'"');
+	$to=$q->fetch();
+	if(strpos($to['physical_address'],$from['physical_address'])===0)return 'error: cannot move a directory into its own sub-directory'; # TODO: new string
+	if(file_exists($to['physical_address'].'/'.$from['name']))return 'error: "'.$to['physical_address'].'/'.$from['name'].'" already exists'; # TODO: new string
+	rename($from['physical_address'],$to['physical_address'].'/'.$from['name']);
+	if(!file_exists($to['physical_address'].'/'.$from['name']))return 'error: could not move directory'; # TODO: new string
+	$len=strlen(preg_replace('#/[^/]*$#','',$from['physical_address']));
+	$fugly='update directories set physical_address=("'.addslashes($to['physical_address']).'"||substr(physical_address,'.($len+1).',length(physical_address)-'.($len).')) where physical_address like "'.addslashes($from['physical_address']).'/%" or id="'.$from['id'].'"';
+	$db->query($fugly);
+	$db->query('update directories set parent="'.$to['id'].'" where id="'.$from['id'].'"');
+	return _loadDirectories(1);
+}
 function _rmdir2($dir){ # adapted from http://php.net/rmdir
 	if(is_numeric($dir)&&$dir!=0){
 		global $db;

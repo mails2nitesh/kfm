@@ -370,6 +370,16 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 		}
 	}).setCss('cursor:'+(Browser.isIE?'hand':'pointer'));
 	addEvent(folder_name,'click',kfm_changeDirectory);
+	if(parent!=1)addEvent(folder_name,'mousedown',(function(id){
+		return function(e){
+			if(e.button==2)return;
+			addEvent(document,'mouseup',kfm_dir_dragFinish);
+			clearTimeout(window.dragDirectoryTrigger);
+			window.dragDirectoryTrigger=setTimeout(function(){
+				kfm_dir_dragStart(id);
+			},100);
+		};
+	})(parent));
 	r.addCell(0,0,(has_node_control?newLink('javascript:kfm_dir_openNode('+parent+')','[+]','kfm_dir_node_'+parent,'kfm_dir_node_closed'):newEl('span','kfm_dir_node_'+parent,0,' ')),'kfm_dir_lines_'+(is_last?'lastchild':'child'));
 	r.addCell(1,0,folder_name,'kfm_dir_name');
 	{ // subdir holder
@@ -378,6 +388,35 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 		r.addCell(1).id='kfm_directories_subdirs_'+parent;
 	}
 	return t;
+}
+function kfm_dir_drag(e){
+	if(!window.dragType||window.dragType!=3)return;
+	var m=getMouseAt(e);
+	clearSelections();
+	window.drag_wrapper.setCss('display:block;left:'+(m.x+8)+'px;top:'+m.y+'px');
+}
+function kfm_dir_dragFinish(e){
+	clearTimeout(window.dragTrigger);
+	if(!window.dragType||window.dragType!=3)return;
+	window.dragType=0;
+	var dir_from=window.drag_wrapper.dir_id;
+	delEl(['kfm_selection_blocker',window.drag_wrapper]);
+	removeEvent(document,'mousemove',kfm_dir_drag);
+	removeEvent(document,'mouseup',kfm_file_dragFinish);
+	var a=kfm_getContainer(getMouseAt(e),getElsWithClass('kfm_directory_link','DIV')),f=[];
+	dir_to=a?a.node_id:0;
+	if(dir_to==0||dir_to==dir_from)return;
+	x_kfm_moveDirectory(dir_from,dir_to,kfm_refreshDirectories);
+	kfm_selectNone();
+}
+function kfm_dir_dragStart(pid){
+	window.dragType=3;
+	var w=getWindowSize();
+	document.body.addEl(newEl('div','kfm_selection_blocker').setCss('position:absolute;zIndex:20;left:0;top:0;width:'+w.x+'px;height:'+w.y+'px'));
+	window.drag_wrapper=X(newEl('div','kfm_drag_wrapper','directory').setCss('display:none;opacity:.7'),{dir_id:pid});
+	window.drag_wrapper.addEl($('kfm_directory_icon_'+pid).kfm_directoryname);
+	document.body.addEl(window.drag_wrapper);
+	addEvent(document,'mousemove',kfm_dir_drag);
 }
 function kfm_dir_openNode(dir){
 	var node=$('kfm_dir_node_'+dir);

@@ -8,6 +8,7 @@ td{vertical-align:top}
 #kfm_directory_properties{color:#666}
 #kfm_directory_properties strong{display:block;font-weight:bold;border:solid #bababa;border-width:0 1px 1px 0}
 #kfm_drag_wrapper{position:absolute;padding:10px;text-decoration:underline;color:#00f;border:1px solid #000;-moz-border-radius:10px;font-size:smaller;background:#9cf}
+#kfm_drag_wrapper.directory{padding:0 0 0 16px;-moz-border-radius:0;min-width:120px;background:url(folders.gif) no-repeat -48px 0 #fff;}
 #kfm_selection_drag_wrapper{position:absolute;border:1px solid #000;-moz-border-radius:10px;background:#9cf}
 #kfm_left_column{width:240px;position:relative;float:left;background:white;border-right:1px solid #bababa;overflow:hidden}
 #kfm_logs_panel p{border-top:1px solid #bababa;font:10px sans-serif;margin:0;padding:0;color:#666}
