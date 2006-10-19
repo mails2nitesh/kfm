@@ -20,6 +20,10 @@ require_once('includes/kaejax.php');
 		require_once('includes/directories.php');
 		return _getDirectoryProperties($dir);
 	}
+	function kfm_moveDirectory($from,$to){
+		require_once('includes/directories.php');
+		return _moveDirectory($from,$to);
+	}
 	function kfm_loadDirectories($root){
 		require_once('includes/directories.php');
 		return _loadDirectories($root);
@@ -114,7 +118,7 @@ require_once('includes/kaejax.php');
 	kaejax_export(
 		'kfm_changeCaption','kfm_createDirectory','kfm_createEmptyFile','kfm_deleteDirectory',
 		'kfm_downloadFileFromUrl','kfm_getFileDetails','kfm_getTextFile','kfm_getThumbnail','kfm_loadDirectories',
-		'kfm_loadFiles','kfm_moveFiles','kfm_renameFile','kfm_resizeImage','kfm_rm','kfm_rotateImage',
+		'kfm_loadFiles','kfm_moveDirectory','kfm_moveFiles','kfm_renameFile','kfm_resizeImage','kfm_rm','kfm_rotateImage',
 		'kfm_saveTextFile','kfm_search','kfm_viewTextFile'
 	);
 	if(!empty($_POST['kaejax']))kaejax_handle_client_request();
