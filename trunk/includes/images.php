@@ -1,7 +1,7 @@
 <?php
-function _changeCaption($filename,$newCaption){
+function _changeCaption($fid,$newCaption){
 	include_once('functions.image.php');
-	kfm_functions_image_setCaption($filename,$newCaption);
+	kfm_functions_image_setCaption($fid,$newCaption);
 	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
 function _getCaption($dirname,$filename){
@@ -41,9 +41,9 @@ function _getThumbnail($fileid,$width,$height){
 	if(!$info)return 'error: "'.$filename.'" is not an image';
 	$type=0;
 	switch($info[2]){
-		case 1: $type = 'gif'; break;
-		case 2: $type = 'jpeg'; break;
-		case 3: $type = 'png'; break;
+		case 1:$type='gif';break;
+		case 2:$type='jpeg';break;
+		case 3:$type='png';break;
 	}
 	if(!$type)return 'error: unknown image type for "'.$filename.'"';
 	$load='imagecreatefrom'.$type;
@@ -62,15 +62,17 @@ function _getThumbnail($fileid,$width,$height){
 		$im=$imresized;
 		$imresized=null;
 	}
-	$save($im,$thumbnailfile,100);
+	$save($im,$thumbnailfile,($type=='jpeg'?100:9));
 	$im=null;
-	return array($filename,array('icon'=>$thumbnailurl,'width'=>$info[0],'height'=>$info[1],'caption'=>$caption));
+	return array($fileid,array('icon'=>$thumbnailurl,'width'=>$info[0],'height'=>$info[1],'caption'=>$caption));
 }
-function _resizeImage($filename,$width,$height){
+function _resizeImage($fid,$width,$height){
+	global $db;
+	$qf=$db->query("select * from files where id='$fid'");
+	$filedata = $qf->fetch();
+	$filename=$filedata['name'];
 	if(!kfm_checkAddr($filename))return;
 	$icons=glob($_SESSION['kfm']['currentdir'].'/.files/[0-9]*x[0-9]* '.$filename);
-	// for the future:
-	//$icons=glob(WORKPATH.$fileid.' [0-9]*x[0-9]* '.$filename);
 	foreach($icons as $f)unlink($f);
 	$originalfile=$_SESSION['kfm']['currentdir'].'/'.$filename;
 	if(!file_exists($originalfile))return;
@@ -99,14 +101,17 @@ function _resizeImage($filename,$width,$height){
 		$im=$imresized;
 		$imresized=null;
 	}
-	$save($im,$originalfile,100);
+	$save($im,$originalfile,($type=='jpeg'?100:9));
 	$im=null;
 	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
-function _rotateImage($filename,$direction){
+function _rotateImage($fid,$direction){
+	global $db;
+	$qf=$db->query("select * from files where id='$fid'");
+	$filedata = $qf->fetch();
+	$filename=$filedata['name'];
 	if(!kfm_checkAddr($filename))return;
-	$icons=glob($_SESSION['kfm']['currentdir'].'/.files/[0-9]*x[0-9]* '.$filename);
-	//$icons=glob(WORKPATH.$fileid.' [0-9]*x[0-9]* '.$filename); //TODO
+	$icons=glob($_SESSION['kfm']['currentdir'].'/.files/'.$fid.' [0-9]*x[0-9]* '.$filename);
 	foreach($icons as $f)unlink($f);
 	$info=getimagesize($_SESSION['kfm']['currentdir'].'/'.$filename);
 	if($info){
@@ -124,7 +129,7 @@ function _rotateImage($filename,$direction){
 			$im=imagecreatetruecolor($info[0],$info[1]);
 			imagecopyresized($im,$imfile,0,0,0,0,$info[0],$info[1],$info[0],$info[1]);
 			$im=imagerotate($im,$direction,0);
-			$save($im,$_SESSION['kfm']['currentdir'].'/'.$filename,100);
+			$save($im,$_SESSION['kfm']['currentdir'].'/'.$filename,($type=='jpeg'?100:9));
 		}
 		return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 	}
