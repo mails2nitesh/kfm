@@ -1,9 +1,9 @@
 <?php
 # see license.txt for licensing
-function kfm_functions_image_setCaption($filename,$newCaption){
+function kfm_functions_image_setCaption($fid,$newCaption){
 	// parameters: $fileid, $newCaption
 	// until then....
-	return 'caption cannot be set';
+	return 'error: caption cannot be set';
 	global $db;
 	$q = $db->prepare("UPDATE files SET caption = '$newCaption' WHERE id='$fileid'");
 	$q->execute();
