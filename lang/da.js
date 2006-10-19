@@ -155,5 +155,17 @@ InvertSelection:
 LoadingKFM:
 	"Loader KFM",
 Name:
-	"Navn"
+	"Navn",
+FileDetails:
+	"File Details",
+Search:
+	"Search",
+IllegalDirectoryName:
+	"illegal directory name \"%1\"",
+RecursiveDeleteWarning:
+	"\"%1\" is not empty\nAre you sure you want to delete it and all its contents?\n*WARNING* THIS IS NOT REVERSIBLE",
+RmdirFailed:
+	"failed to delete directory \"%1\"",
+DirNotInDb:
+	"directory not in database"
 }

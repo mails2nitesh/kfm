@@ -288,7 +288,7 @@ function kfm_createFileUploadPanel(){
 	return kfm_createPanel(kfm_lang.FileUpload,'kfm_file_upload_panel',[form,iframe],{maxedState:3});
 }
 function kfm_createFileDetailsPanel(){
-	return kfm_createPanel('File Details','kfm_file_details_panel',0,{state:1,abilities:1}); // TODO: new string
+	return kfm_createPanel(kfm_lang.FileDetails,'kfm_file_details_panel',0,{state:1,abilities:1});
 }
 function kfm_createPanel(title,id,subels,vars){
 	// states: 0=minimised,1=maximised,2=fixed-height
@@ -318,12 +318,12 @@ function kfm_createSearchPanel(){
 	{ // create upload form
 		var t=newEl('table','kfm_search_table');
 		var r=t.insertRow(0);
-		r.insertCell(0).appendChild(newText('Search')); // TODO: new string
+		r.insertCell(0).appendChild(newText(kfm_lang.Search));
 		var input=newInput('kfm_search');
 		input.onkeyup=kfm_runSearch;
 		r.insertCell(1).appendChild(input);
 	}
-	return kfm_createPanel('Search','kfm_search_panel',t,{maxedState:3}); // TODO: new string
+	return kfm_createPanel(kfm_lang.Search,'kfm_search_panel',t,{maxedState:3});
 }
 function kfm_deleteDirectory(id){
 	if(confirm(kfm_lang.DelDirMessage(kfm_directories[id].pathname)))x_kfm_deleteDirectory(id,kfm_deleteDirectoryCheck);
@@ -331,14 +331,14 @@ function kfm_deleteDirectory(id){
 function kfm_deleteDirectoryCheck(res){
 	if(res.type&&res.type=='error'){
 		switch(parseInt(res.msg)){
-			case 1: kfm_log('error: illegal directory name "'+res.name+'"'); break; // TODO: NEW STRING
+			case 1: kfm_log('error: '+kfm_lang.IllegalDirectoryName(res.name)); break;
 			case 2:{ // not empty
-				var ok=confirm('"'+res.name+'" is not empty\nAre you sure you want to delete it and all its contents?\n*WARNING* THIS IS NOT REVERSIBLE'); // TODO: NEW STRING
+				var ok=confirm(kfm_lang.RecursiveDeleteWarning(res.name));
 				if(ok)x_kfm_deleteDirectory(res.id,1,kfm_deleteDirectoryCheck);
 				break;
 			}
-			case 3: kfm_log('error: failed to delete directory "'+res.name+'"'); break; // TODO: NEW STRING
-			case 4: kfm_log('error: directory not in database'); break; // TODO: new string
+			case 3: kfm_log('error: '+kfm_lang.RmdirFailed(res.name)); break;
+			case 4: kfm_log('error: '+kfm_lang.DirectoryNotInDb); break;
 			default: alert(res.msg);
 		}
 	}
