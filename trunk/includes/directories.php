@@ -105,18 +105,21 @@ function _loadDirectories($root){
 function _moveDirectory($from,$to){
 	global $db;
 	$q=$db->query('select * from directories where id="'.$from.'"');
-	$from=$q->fetch();
+	$f_r=$q->fetch();
 	$q=$db->query('select * from directories where id="'.$to.'"');
-	$to=$q->fetch();
+	$t_r=$q->fetch();
 	$q=null;
-	if(strpos($to['physical_address'],$from['physical_address'])===0)return 'error: cannot move a directory into its own sub-directory'; # TODO: new string
-	if(file_exists($to['physical_address'].'/'.$from['name']))return 'error: "'.$to['physical_address'].'/'.$from['name'].'" already exists'; # TODO: new string
-	rename($from['physical_address'],$to['physical_address'].'/'.$from['name']);
-	if(!file_exists($to['physical_address'].'/'.$from['name']))return 'error: could not move directory'; # TODO: new string
-	$len=strlen(preg_replace('#/[^/]*$#','',$from['physical_address']));
-	$fugly='update directories set physical_address=("'.addslashes($to['physical_address']).'"||substr(physical_address,'.($len+1).',length(physical_address)-'.($len).')) where physical_address like "'.addslashes($from['physical_address']).'/%" or id="'.$from['id'].'"';
+	$f_add=$f_r['physical_address'];
+	$f_name=$f_r['name'];
+	$t_add=$t_r['physical_address'];
+	if(strpos($t_add,$f_add)===0)return 'error: cannot move a directory into its own sub-directory'; # TODO: new string
+	if(file_exists($t_add.'/'.$f_name))return 'error: "'.$t_add.'/'.$f_name.'" already exists'; # TODO: new string
+	rename($f_add,$t_add.'/'.$f_name);
+	if(!file_exists($t_add.'/'.$f_name))return 'error: could not move directory'; # TODO: new string
+	$len=strlen(preg_replace('#/[^/]*$#','',$f_add));
+	$fugly='update directories set physical_address=("'.addslashes($t_add).'"||substr(physical_address,'.($len+1).',length(physical_address)-'.$len.')) where physical_address like "'.addslashes($f_add).'/%" or id="'.$from.'"';
 	$db->exec($fugly) or die('error: '.print_r($db->errorInfo(),true));
-	$db->exec('update directories set parent="'.$to['id'].'" where id="'.$from['id'].'"') or die('error: '.print_r($db->errorInfo(),true));
+	$db->exec('update directories set parent="'.$to.'" where id="'.$from.'"') or die('error: '.print_r($db->errorInfo(),true));
 	return _loadDirectories(1);
 }
 function _rmdir2($dir){ # adapted from http://php.net/rmdir
