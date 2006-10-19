@@ -142,6 +142,7 @@ function _rm($id,$no_dir=0){
 		$rf=$db->prepare('select files.name as name,physical_address FROM files,directories WHERE files.id="'.$id.'" and directories.id=files.directory');
 		$rf->execute();
 		$file_data=$rf->fetch();
+		$rf=null;
 		if(count($file_data)){
 			$file_address=$file_data['physical_address'].'/'.$file_data['name'];
 			unlink($file_address);
