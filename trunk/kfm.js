@@ -211,8 +211,8 @@ function kfm_contextmenuinit(){
 }
 function kfm_chooseFile(e,o){
 	var el=(o?e:getEventTarget(e)).kfm_attributes;
-	if(!el.image_data)window.opener.SetUrl(fckrootOutput+kfm_cwd_name+'/'+el.filename);
-	else window.opener.SetUrl(fckrootOutput+kfm_cwd_name+'/'+el.filename,0,0,el.image_data.caption);
+	if(!el.image_data)window.opener.SetUrl(fckrootOutput+kfm_cwd_name+'/'+el.name);
+	else window.opener.SetUrl(fckrootOutput+kfm_cwd_name+'/'+el.name,0,0,el.image_data.caption);
 	window.close();
 }
 function kfm_changeCaption(filename){
