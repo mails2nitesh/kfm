@@ -374,8 +374,8 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 		return function(e){
 			if(e.button==2)return;
 			addEvent(document,'mouseup',kfm_dir_dragFinish);
-			clearTimeout(window.dragDirectoryTrigger);
-			window.dragDirectoryTrigger=setTimeout(function(){
+			clearTimeout(window.dragTrigger);
+			window.dragTrigger=setTimeout(function(){
 				kfm_dir_dragStart(id);
 			},100);
 		};
