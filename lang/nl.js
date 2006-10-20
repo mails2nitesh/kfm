@@ -170,5 +170,49 @@ RecursiveDeleteWarning:
 RmdirFailed:
 	"failed to delete directory \"%1\"",
 DirNotInDb:
-	"directory not in database"
+	"directory not in database",
+ShowPanel:
+	"show panel \"%1\"",
+ChangeCaption:
+	"Change Caption",
+NewDirectory:
+	"New Directory",
+Upload:
+	"Upload",
+NewCaptionIsThisCorrect:
+	"New Caption:\n%1\n\nIs this correct?",
+Close:
+	"close",
+Loading:
+	"loading",
+AreYouSureYouWantToCloseKFM:
+	"Are you sure you want to close the KFM window?",
+PleaseSelectFileBeforeRename:
+	"Please select a file before you try to rename it",
+RenameOnlyOneFile:
+	"You can only rename one file at a time",
+RenameFileToWhat:
+	"Rename the file \"%1\" to what?",
+NoRestrictions:
+	"no restrictions",
+Filename:
+	"filename",
+Maximise:
+	"maximise",
+Minimise:
+	"minimise",
+AllowedFileExtensions:
+	"allowed file extensions",
+Filesize:
+	"filesize",
+MoveDown:
+	"move down",
+Mimetype:
+	"mimetype",
+MoveUp:
+	"move up",
+Restore:
+	"restore",
+Caption:
+	"caption"
 }

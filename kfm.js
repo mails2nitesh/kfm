@@ -59,12 +59,12 @@ function kfm(){
 			{ // add the links
 				var links=[],i;
 				var l=left_column.panels_unlocked;
-				links.push(['togglePanelsUnlocked()',l?kfm_lang.LockPanels:kfm_lang.UnlockPanels,l?'lock':'unlock']); // TODO: new string
+				links.push(['togglePanelsUnlocked()',l?kfm_lang.LockPanels:kfm_lang.UnlockPanels,l?'lock':'unlock']);
 				var ps=left_column.panels;
 				for(var i in ps){
 					var p=$(ps[i]);
 					if(!p.visible){
-						links.push(['addPanel("kfm_left_column","'+ps[i]+'")','show panel "'+p.title+'"']); // TODO: new string
+						links.push(['addPanel("kfm_left_column","'+ps[i]+'")',kfm_lang.ShowPanel(p.title)]);
 					}
 				}
 				kfm_createContextMenu(m,links);
@@ -216,10 +216,10 @@ function kfm_chooseFile(e,o){
 	window.close();
 }
 function kfm_changeCaption(id){
-	var el=kfm_filesCache[id],txt='Change Caption'+el.image_data.caption; // TODO: new string
+	var el=kfm_filesCache[id],txt=kfm_lang.ChangeCaption+el.image_data.caption;
 	var newCaption=kfm_prompt(txt,el.image_data.caption);;
 	if(!newCaption||newCaption==el.image_data.caption)return;
-	if(confirm('New Caption:\n'+newCaption+'\n\nIs this correct?')){ // TODO: new string
+	if(confirm(kfm_lang.NewCaptionIsThisCorrect(newCaption))){
 		kfm_filesCache[id]=null;
 		kfm_log(kfm_lang.log_ChangeCaption(id,newCaption));
 		x_kfm_changeCaption(id,newCaption,kfm_refreshFiles);
@@ -255,7 +255,7 @@ function kfm_createContextMenu(m,links){
 	for(i in links)if(links[i][1])contextmenu.addLink('javascript:kfm_'+links[i][0],links[i][1],links[i][2]);
 }
 function kfm_createDirectory(id){
-	var newName=kfm_prompt(kfm_lang.CreateDirMessage(kfm_directories[id].pathname),'New Directory'); // TODO: new string
+	var newName=kfm_prompt(kfm_lang.CreateDirMessage(kfm_directories[id].pathname),kfm_lang.NewDirectory);
 	if(newName&&newName!=''&&!/\/|^\./.test(newName))x_kfm_createDirectory(id,newName,kfm_refreshDirectories);
 }
 function kfm_createEmptyFile(){
@@ -280,7 +280,7 @@ function kfm_createFileUploadPanel(){
 		var form=newForm('upload.php','POST','multipart/form-data','kfm_iframe');
 		var iframe=newEl('iframe','kfm_iframe').setCss('display:none');
 		iframe.src='empty';
-		var submit=newInput('upload','submit','Upload'); // TODO: new string
+		var submit=newInput('upload','submit',kfm_lang.Upload);
 		var input=newInput('kfm_file','file');
 		input.onkeyup=kfm_cancelEvent;
 		form.addEl([input,submit]);
@@ -294,12 +294,12 @@ function kfm_createPanel(title,id,subels,vars){
 	// states: 0=minimised,1=maximised,2=fixed-height
 	var el=X(newEl('div',id,'kfm_panel',[newEl('div',0,'kfm_panel_header',title),newEl('div',0,'kfm_panel_body',subels)]),{
 		state:0,height:0,title:title,abilities:0,visible:1,
-		addCloseButton:function(){if(this.abilities&1)this.addButton('removePanel','','x','close')}, // TODO: new string
-		addMaxButton:function(){this.addButton('maximisePanel','','M','maximise')}, // TODO: new string
-		addMinButton:function(){this.addButton('minimisePanel','','_','minimise')}, // TODO: new string
-		addMoveDownButton:function(){if(this.id!=this.parentNode.panels[this.parentNode.panels.length-1])this.addButton('movePanel',',1','d','move down')}, // TODO: new string
-		addMoveUpButton:function(){if(this.id!=this.parentNode.panels[0])this.addButton('movePanel',',-1','u','move up')}, // TODO: new string
-		addRestoreButton:function(){this.addButton('restorePanel','','r','restore')}, // TODO: new string
+		addCloseButton:function(){if(this.abilities&1)this.addButton('removePanel','','x',kfm_lang.Close)},
+		addMaxButton:function(){this.addButton('maximisePanel','','M',kfm_lang.Maximise)},
+		addMinButton:function(){this.addButton('minimisePanel','','_',kfm_lang.Minimise)},
+		addMoveDownButton:function(){if(this.id!=this.parentNode.panels[this.parentNode.panels.length-1])this.addButton('movePanel',',1','d',kfm_lang.MoveDown)},
+		addMoveUpButton:function(){if(this.id!=this.parentNode.panels[0])this.addButton('movePanel',',-1','u',kfm_lang.MoveUp)},
+		addRestoreButton:function(){this.addButton('restorePanel','','r',kfm_lang.Restore)},
 		addButton:function(f,p,b,t){
 			getElsWithClass('kfm_panel_header','DIV',this)[0].addEl(
 				newLink('javascript:kfm_'+f+'("'+this.parentNode.id+'","'+this.id+'"'+p+')','['+b+']',0,'kfm_panel_header_'+b,t)
@@ -422,7 +422,7 @@ function kfm_dir_openNode(dir){
 	var node=$('kfm_dir_node_'+dir);
 	node.setClass('kfm_dir_node_opened');
 	node.href=node.href.replace(/open/,'close');
-	$('kfm_directories_subdirs_'+dir).empty().addEl('loading'); // TODO: new string
+	$('kfm_directories_subdirs_'+dir).empty().addEl(kfm_lang.Loading);
 	x_kfm_loadDirectories(dir,kfm_refreshDirectories);
 }
 function kfm_dir_closeNode(dir){
@@ -535,7 +535,7 @@ function kfm_keyup(e){
 			break;
 		}
 		case 27:{ // escape
-			if(!window.inPrompt&&confirm("Are you sure you want to close the KFM window?"))window.close(); // TODO: new string
+			if(!window.inPrompt&&confirm(kfm_lang.AreYouSureYouWantToCloseKFM))window.close();
 			break;
 		}
 		case 37:{ // left arrow
@@ -575,11 +575,11 @@ function kfm_keyup(e){
 			break;
 		}
 		case 113:{ // f2
-			if(!selectedFiles.length)return alert('Please select a file before you try to rename it'); // TODO: new string
+			if(!selectedFiles.length)return alert(kfm_lang.PleaseSelectFileBeforeRename);
 			if(selectedFiles.length==1){
 				kfm_renameFile(selectedFiles[0]);
 			}
-			else alert('You can only rename one file at a time'); // TODO: new string
+			else alert(kfm_lang.RenameOnlyOneFile);
 		}
 	}
 }
@@ -820,7 +820,7 @@ function kfm_removePanel(wrapper,panel){
 	kfm_redrawPanels(wrapper);
 }
 function kfm_renameFile(filename){
-	var newName=kfm_prompt('Rename the file "'+filename+'" to what?',filename); // TODO: new string
+	var newName=kfm_prompt(kfm_lang.RenameFileToWhat(filename),filename);
 	if(newName&&newName!=''&&newName!=filename){
 		kfm_filesCache[filename]=null;
 		kfm_log(kfm_lang.RenamedFile(filename,newName));
@@ -955,15 +955,15 @@ function kfm_setDirectoryProperties(properties){
 	wrapper.properties=properties;
 	var table=newEl('table'),row,cell,i;
 	{ // directory name
-		i=properties.allowed_file_extensions.length?properties.allowed_file_extensions.join(', '):'no restrictions'; // TODO: new string
+		i=properties.allowed_file_extensions.length?properties.allowed_file_extensions.join(', '):kfm_lang.NoRestrictions;
 		row=table.addRow();
 		row.addCell(0,0,newEl('strong',0,0,kfm_lang.Name));
 		row.addCell(1,0,'/'+kfm_cwd_name);
 	}
 	{ // allowed file extensions
-		i=properties.allowed_file_extensions.length?properties.allowed_file_extensions.join(', '):'no restrictions'; // TODO: new string
+		i=properties.allowed_file_extensions.length?properties.allowed_file_extensions.join(', '):kfm_lang.NoRestrictions;
 		row=table.addRow();
-		row.addCell(0,0,newEl('strong',0,0,'allowed file extensions')); // TODO: new string
+		row.addCell(0,0,newEl('strong',0,0,kfm_lang.AllowedFileExtensions));
 		row.addCell(1,0,i);
 	}
 	wrapper.addEl(table);
@@ -1018,24 +1018,24 @@ function kfm_showFileDetails(res){
 	var table=newEl('table'),r;
 	{ // filename
 		r=table.addRow();
-		r.addCell(0,0,newEl('strong',0,0,'filename')); // TODO: new string
+		r.addCell(0,0,newEl('strong',0,0,kfm_lang.Filename));
 		r.addCell(1,0,res.filename);
 	}
 	{ // filesize
 		r=table.addRow();
-		r.addCell(0,0,newEl('strong',0,0,'filesize')); // TODO: new string
+		r.addCell(0,0,newEl('strong',0,0,kfm_lang.Filesize));
 		r.addCell(1,0,res.filesize);
 	}
 	{ // mimetype
 		r=table.addRow();
-		r.addCell(0).addEl(newEl('strong',0,0,'mimetype')); // TODO: new string
+		r.addCell(0).addEl(newEl('strong',0,0,kfm_lang.Mimetype));
 		r.addCell(1).addEl(res.mimetype);
 	}
 	switch(res.mimetype.replace(/\/.*/,'')){
 		case 'image':{
 			{ // caption
 				r=table.addRow();
-				r.addCell(0,0,newEl('strong',0,0,'caption')); // TODO: new string
+				r.addCell(0,0,newEl('strong',0,0,kfm_lang.Caption));
 				r.addCell(1).innerHTML=(res.caption).replace(/\n/g,'<br \/>');
 			}
 			break;
@@ -1047,7 +1047,7 @@ function kfm_showFileDetailsPanel(){
 	var el=$('kfm_left_column');
 	kfm_addPanel(el,'kfm_file_details_panel');
 	kfm_redrawPanels(el);
-	getElsWithClass('kfm_panel_body','DIV',$('kfm_file_details_panel'))[0].addEl('loading...'); // TODO: new string
+	getElsWithClass('kfm_panel_body','DIV',$('kfm_file_details_panel'))[0].addEl(kfm_lang.Loading);
 	x_kfm_getFileDetails(selectedFiles[0],kfm_showFileDetails);
 }
 function kfm_showIcon(res,el2){
