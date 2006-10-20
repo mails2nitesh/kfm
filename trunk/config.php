@@ -46,7 +46,7 @@ session_start();
 	$rootdir=str_replace('//','/',$_SERVER['DOCUMENT_ROOT'].$kfm_userfiles.'/');
 	if(!file_exists($rootdir.'.files'))mkdir($rootdir.'.files');
 	if(!isset($_SESSION['kfm']))$_SESSION['kfm']=array(
-		'currentdir'=>$rootdir,
+		'currentdir'=>rtrim($rootdir,' /'),
 		'currentdirpart'=>'/',
 		'cwd_id'=>1,
 		'language'=>''

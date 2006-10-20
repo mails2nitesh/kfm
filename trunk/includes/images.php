@@ -72,7 +72,7 @@ function _resizeImage($fid,$width,$height){
 	$filedata = $qf->fetch();
 	$filename=$filedata['name'];
 	if(!kfm_checkAddr($filename))return;
-	$icons=glob($_SESSION['kfm']['currentdir'].'/.files/[0-9]*x[0-9]* '.$filename);
+	$icons=glob(WORKPATH.$fid.' [0-9]*x[0-9]* '.$filename);
 	foreach($icons as $f)unlink($f);
 	$originalfile=$_SESSION['kfm']['currentdir'].'/'.$filename;
 	if(!file_exists($originalfile))return;
@@ -106,14 +106,15 @@ function _resizeImage($fid,$width,$height){
 	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
 function _rotateImage($fid,$direction){
-	global $db;
-	$qf=$db->query("select * from files where id='$fid'");
-	$filedata = $qf->fetch();
-	$filename=$filedata['name'];
+	//global $db;
+	//$qf=$db->query("SELECT files.name AS name, directories.physical_address AS physical_address FROM files, directories WHERE files.id='$fid' AND directories.id = files.directory");
+	$file = new File($fid);
+	$filename=$file->name;
+	if(!is_writable($file->path)) return "error: no permission to alter file";
 	if(!kfm_checkAddr($filename))return;
-	$icons=glob($_SESSION['kfm']['currentdir'].'/.files/'.$fid.' [0-9]*x[0-9]* '.$filename);
+	$icons=glob(WORKPATH.$fid.' [0-9]*x[0-9]* '.$filename);
 	foreach($icons as $f)unlink($f);
-	$info=getimagesize($_SESSION['kfm']['currentdir'].'/'.$filename);
+	$info=getimagesize($file->path);
 	if($info){
 		$type=0;
 		switch($info[2]){
@@ -125,11 +126,11 @@ function _rotateImage($fid,$direction){
 			$load='imagecreatefrom'.$type;
 			$save='image'.$type;
 			if(!function_exists($load)&&!function_exists($save))return;
-			$imfile=$load($_SESSION['kfm']['currentdir'].'/'.$filename);
+			$imfile=$load($file->path);
 			$im=imagecreatetruecolor($info[0],$info[1]);
 			imagecopyresized($im,$imfile,0,0,0,0,$info[0],$info[1],$info[0],$info[1]);
 			$im=imagerotate($im,$direction,0);
-			$save($im,$_SESSION['kfm']['currentdir'].'/'.$filename,($type=='jpeg'?100:9));
+			$save($im,$file->path,($type=='jpeg'?100:9));
 		}
 		return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 	}

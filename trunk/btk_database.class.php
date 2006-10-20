@@ -7,6 +7,7 @@ class btk_database{
 	var $mysql = false;
 	var $last_inserted_id = false;
 	var $result = false;
+	var $errors = array();
 	function __construct(){
 		if(func_num_args()==0){
 			$this->php_api();
@@ -72,7 +73,8 @@ class btk_database{
 			if($is_select) $this->last_inserted_id = $db->getLastInsertId ();
 			return $this;
 		}else if($this->sqlite){
-			$this->result = sqlite_query($this->db,$sql);
+			$this->result =@sqlite_query($this->db,$sql, SQLITE_ASSOC, $error_msg);
+			if($this->result === false) $this->error($error_msg);
 			if($this->result===false) die(sqlite_last_error($this->db));
 			$this->last_inserted_id = sqlite_last_insert_rowid($this->db);
 			return $this;
@@ -112,6 +114,15 @@ class btk_database{
 		}else{
 			return array();
 		}
+	}
+	function error($msg){
+		$this->errors[]=$msg;
+	}
+	
+	function error_info(){
+		// TODO create this function.
+		//until then....
+		return $this->errors;
 	}
 }
 

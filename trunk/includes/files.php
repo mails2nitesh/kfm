@@ -68,13 +68,14 @@ function _getFileDetails($filename){
 	}
 	return $details;
 }
-function _getTextFile($filename){
-	if(!kfm_checkAddr($filename))return;
-	if(in_array(substr($filename,strrpos($filename,'.')+1),$GLOBALS['kfm_editable_extensions'])){
-		if(!is_writable($_SESSION['kfm']['currentdir'].'/'.$filename))return 'error: "'.$filename.'" is not writable'; # TODO: new string
-		return array(file_get_contents($_SESSION['kfm']['currentdir'].'/'.$filename),$filename);
+function _getTextFile($fid){
+	$file = new File($fid);
+	if(!kfm_checkAddr($file->name))return;
+	if(in_array($file->getExtension(),$GLOBALS['kfm_editable_extensions'])){
+		if(!$file->isWritable()) return 'error: "'.$file->name.'" is not writable'; # TODO: new string
+		return array($file->getContent(),$file->name);
 	}
-	return 'error: "'.$filename.'" cannot be edited (restricted)'; # TODO: new string
+	return 'error: "'.$file->name.'" cannot be edited (restricted)'; # TODO: new string
 }
 function _loadFiles($rootid=1){
 	global $db;
@@ -192,4 +193,5 @@ function _viewTextFile($fileid){
 		return "error: viewing file is not allowed";
 	}
 }
+
 ?>
