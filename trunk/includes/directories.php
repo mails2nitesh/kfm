@@ -3,19 +3,12 @@ function _add_directory_to_db($name,$physical_address,$parent){
 	global $db,$db_method;
 	$physical_address = str_replace('//','/', $physical_address);
 	$sql='insert into directories (name,physical_address,parent) values("'.addslashes($name).'","'.addslashes($physical_address).'",'.$parent.')';
-#	if($db_method=='sqlite'&&$db->getAttribute(PDO::ATTR_SERVER_VERSION)<'3.3'){ # sqlite only supports autoincrement recently
-#		$q=$db->prepare('select id from directories limit 1');
-#		$id=$q->execute()?'(select id from directories order by id desc limit 1)+1':1;
-#		$sql='insert into directories (id,name,physical_address,parent) values('.$id.',"'.addslashes($name).'","'.addslashes($physical_address).'",'.$parent.')';
-#	}
 	$q=$db->prepare($sql);
 	return $q->execute();
 }
 function _createDirectory($parent,$name){
-	global $db;
-	$q=$db->prepare('select id,physical_address,name from directories where id='.$parent);
-	$q->execute();
-	if(!($dirdata=$q->fetch()))return 'error: no data for directory id "'.$parent.'"'; # TODO: new string
+	$dirdata=_getDirectoryDbInfo($parent);
+	if(!count($dirdata))return 'error: no data for directory id "'.$parent.'"'; # TODO: new string
 	$physical_address=$dirdata['physical_address'].'/'.$name;
 	$short_version=str_replace($GLOBALS['rootdir'],'',$physical_address);
 	if(!kfm_checkAddr($physical_address))return 'error: illegal directory name "'.$short_version.'"'; # TODO: new string
@@ -27,9 +20,7 @@ function _createDirectory($parent,$name){
 }
 function _deleteDirectory($id,$recursive=0){
 	global $db;
-	$qd=$db->prepare('SELECT * FROM directories WHERE id="'.$id.'"');
-	$qd->execute();
-	$dirdata=$qd->fetch();
+	$dirdata=_getDirectoryDbInfo($id);
 	if(!count($dirdata))return array('type'=>'error','msg'=>4); # directory not in database
 	$abs_dir=$dirdata['physical_address'];
 	$directory=str_replace($GLOBALS['rootdir'],'',$abs_dir);
@@ -43,6 +34,10 @@ function _deleteDirectory($id,$recursive=0){
 	if(file_exists($abs_dir))return array('type'=>'error','msg'=>3,'name'=>$directory);
 	$parent=strpos($directory,'/')>0?preg_replace('/\/[^\/]*$/','',$directory):'';
 	return kfm_loadDirectories($parent);
+}
+function _getDirectoryDbInfo($id){
+	$q=$GLOBALS['db']->query('select * from directories where id="'.$id.'"');
+	return $q->fetch();
 }
 function _getDirectoryProperties($dir){
 	if(strlen($dir))$properties=kfm_getDirectoryProperties(preg_replace('/[^\/]*\/$/','',$dir));
@@ -58,9 +53,7 @@ function _loadDirectories($root){
 	global $db;
 	if(is_numeric($root)){
 		$rootid=$root;
-		$q=$db->prepare('select id,physical_address,name from directories where id='.$rootid);
-		$q->execute();
-		$dirdata=$q->fetch();
+		$dirdata=_getDirectoryDbInfo($rootid);
 		$reqdir=count($dirdata)?$dirdata['physical_address'].'/':$GLOBALS['rootdir'];
 		$root=str_replace($GLOBALS['rootdir'],'',$reqdir);
 	}
@@ -104,11 +97,8 @@ function _loadDirectories($root){
 }
 function _moveDirectory($from,$to){
 	global $db;
-	$q=$db->query('select * from directories where id="'.$from.'"');
-	$f_r=$q->fetch();
-	$q=$db->query('select * from directories where id="'.$to.'"');
-	$t_r=$q->fetch();
-	$q=null;
+	$f_r=_getDirectoryDbInfo($from);
+	$t_r=_getDirectoryDbInfo($to);
 	$f_add=$f_r['physical_address'];
 	$f_name=$f_r['name'];
 	$t_add=$t_r['physical_address'];
@@ -125,9 +115,7 @@ function _moveDirectory($from,$to){
 function _rmdir2($dir){ # adapted from http://php.net/rmdir
 	if(is_numeric($dir)&&$dir!=0){
 		global $db;
-		$qd=$db->prepare('SELECT * FROM directories WHERE id="'.$dir.'"');
-		$qd->execute();
-		$dirdata=$qd->fetch();
+		$dirdata=_getDirectoryDbInfo($dir);
 		$dir=$dirdata['physical_address'];
 	}
 	if(substr($dir,-1,1)=="/")$dir=substr($dir,0,strlen($dir)-1);
@@ -143,9 +131,7 @@ function _rmdir2($dir){ # adapted from http://php.net/rmdir
 		rmdir($dir);
 	}
 	if(isset($dirdata)){
-		{ # sqlite doesn't appear to honour referential integrity, so files need to be manually removed.
-			# BTK, if your API supports referential integrity (ie, removing a directory will automatically remove files linked to it),
-			#   then you can if() around this using the $db_method variable.
+		{ # sqlite doesn't honour referential integrity, so files need to be manually removed.
 			$q=$db->prepare('select id from directories where physical_address like "'.$dirdata['physical_address'].'%"');
 			$q->execute();
 			$dirs=$q->fetchAll();
