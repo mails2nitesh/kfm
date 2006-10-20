@@ -19,20 +19,14 @@ function _getCaption($dirname,$filename){
 	}	
 }
 function _getThumbnail($fileid,$width,$height){
-	global $db;
-	$qf=$db->prepare("SELECT * FROM files WHERE id='$fileid'");
-	$qf->execute();
-	$filedata = $qf->fetch();
-	$qd=$db->prepare("SELECT * FROM directories WHERE id='$filedata[directory]'");
-	$qd->execute();
-	$dirdata=$qd->fetch();
-	$reqdir=count($dirdata)?$dirdata['physical_address'].'/':$GLOBALS['rootdir'];
+	$file = new File($fileid);
+	$reqdir = $file->directory;
 	$dirname=str_replace($GLOBALS['rootdir'],'',$reqdir);
-	$filename=$filedata['name'];
+	$filename=$file->name;
 	$caption=kfm_getCaption($dirname,$filename);
-	$thumbnail=$filedata['id'].' '.$width.'x'.$height.' '.$filename;
+	$thumbnail=$file->id.' '.$width.'x'.$height.' '.$filename;
 	if(!kfm_checkAddr($thumbnail))return 'error: illegal filename "'.$thumbnail.'"';
-	$originalfile=$GLOBALS['rootdir'].$dirname.$filename;
+	$originalfile=$file->path;
 	if(!file_exists($originalfile))return 'error: missing file "'.$filename.'"';
 	$thumbnailurl=WORKURL.$thumbnail;
 	$thumbnailfile=WORKPATH.$thumbnail;
@@ -67,14 +61,12 @@ function _getThumbnail($fileid,$width,$height){
 	return array($fileid,array('icon'=>$thumbnailurl,'width'=>$info[0],'height'=>$info[1],'caption'=>$caption));
 }
 function _resizeImage($fid,$width,$height){
-	global $db;
-	$qf=$db->query("select * from files where id='$fid'");
-	$filedata = $qf->fetch();
-	$filename=$filedata['name'];
+	$file = new File($fid);
+	$filename=$file->name;
 	if(!kfm_checkAddr($filename))return;
 	$icons=glob(WORKPATH.$fid.' [0-9]*x[0-9]* '.$filename);
 	foreach($icons as $f)unlink($f);
-	$originalfile=$_SESSION['kfm']['currentdir'].'/'.$filename;
+	$originalfile=$file->path;
 	if(!file_exists($originalfile))return;
 	$info=getimagesize($originalfile);
 	if(!$info)return;
