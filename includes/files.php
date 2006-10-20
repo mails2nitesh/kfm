@@ -51,18 +51,18 @@ function _moveFiles($files,$dir_id){
 function _getFileAsArray($filename){
 	return explode("\n",rtrim(file_get_contents($filename)));
 }
-function _getFileDetails($filename){
-	global $db;
-	if(!file_exists($_SESSION['kfm']['currentdir'].'/'.$filename))return;
-	$mimetype=mime_content_type($_SESSION['kfm']['currentdir'].'/'.$filename);
+function _getFileDetails($fid){
+	$file = new File($fid);
+	if(!file_exists($file->path))return;
+	$mimetype=mime_content_type($file->path);
 	$details=array(
-		'filename'=>$filename,
+		'filename'=>$file->name,
 		'mimetype'=>$mimetype,
-		'filesize'=>kfm_resize_bytes(filesize(addslashes($_SESSION['kfm']['currentdir'].'/'.$filename)))
+		'filesize'=>kfm_resize_bytes(filesize(addslashes($file->path)))
 	);
 	switch(preg_replace('/\/.*/','',$mimetype)){
 		case 'image':{
-			$details['caption']=kfm_getCaption($_SESSION['kfm']['currentdirpart'],$filename);
+			$details['caption']=kfm_getCaption($file->id);
 			break;
 		}
 	}
