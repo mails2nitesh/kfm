@@ -4,6 +4,11 @@ function _changeCaption($fid,$newCaption){
 	kfm_functions_image_setCaption($fid,$newCaption);
 	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
+function _createImageResource($file,$info){
+	$im=imagecreatetruecolor($info[0],$info[1]);
+	imagecopyresized($im,$file,0,0,0,0,$info[0],$info[1],$info[0],$info[1]);
+	return $im;
+}
 function _getCaption($dirname,$filename){
 	// new parameter $fileid benjamin
 	// until then.....
@@ -17,6 +22,14 @@ function _getCaption($dirname,$filename){
 	}else{
 		return 'error retrieving caption';
 	}	
+}
+function _getImageType($inf){
+	switch($inf[2]){
+		case 1: return 'gif';
+		case 2: return 'jpeg';
+		case 3: return 'png';
+	}
+	return 0;
 }
 function _getThumbnail($fileid,$width,$height){
 	$file = new File($fileid);
@@ -33,18 +46,12 @@ function _getThumbnail($fileid,$width,$height){
 	$info=getimagesize($originalfile);
 	if(file_exists($thumbnailfile))return array($fileid,array('icon'=>$thumbnailurl,'width'=>$info[0],'height'=>$info[1],'caption'=>$caption));
 	if(!$info)return 'error: "'.$filename.'" is not an image';
-	$type=0;
-	switch($info[2]){
-		case 1:$type='gif';break;
-		case 2:$type='jpeg';break;
-		case 3:$type='png';break;
-	}
-	if(!$type)return 'error: unknown image type for "'.$filename.'"';
+	$type=_getImageType($info);
+	if(!$type)return 'error: unknown image type for "'.$filename.'"'; # TODO: new string
 	$load='imagecreatefrom'.$type;
 	$save='image'.$type;
 	if(!function_exists($load)||!function_exists($save))return 'server cannot handle image of type "'.$type.'"';
-	$im=imagecreatetruecolor($info[0],$info[1]);
-	imagecopyresized($im,$load($originalfile),0,0,0,0,$info[0],$info[1],$info[0],$info[1]);
+	$im=_createImageResource($load($originalfile),$info);
 	if($info[0]>$width||$info[1]>$height){
 		$x=$width/$info[0];
 		$y=$height/$info[1];
@@ -64,24 +71,17 @@ function _resizeImage($fid,$width,$height){
 	$file = new File($fid);
 	$filename=$file->name;
 	if(!kfm_checkAddr($filename))return;
-	$icons=glob(WORKPATH.$fid.' [0-9]*x[0-9]* '.$filename);
-	foreach($icons as $f)unlink($f);
+	_removeIcons($fid);
 	$originalfile=$file->path;
 	if(!file_exists($originalfile))return;
 	$info=getimagesize($originalfile);
 	if(!$info)return;
-	$type=0;
-	switch($info[2]){
-		case 1: $type = 'gif'; break;
-		case 2: $type = 'jpeg'; break;
-		case 3: $type = 'png'; break;
-	}
+	$type=_getImageType($info);
 	if(!$type)return;
 	$load='imagecreatefrom'.$type;
 	$save='image'.$type;
 	if(!function_exists($load)||!function_exists($save))return;
-	$im=imagecreatetruecolor($info[0],$info[1]);
-	imagecopyresized($im,$load($originalfile),0,0,0,0,$info[0],$info[1],$info[0],$info[1]);
+	$im=_createImageResource($load($originalfile),$info);
 	if($info[0]>$width||$info[1]>$height){
 		$x=$width/$info[0];
 		$y=$height/$info[1];
@@ -98,33 +98,27 @@ function _resizeImage($fid,$width,$height){
 	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
 function _rotateImage($fid,$direction){
-	//global $db;
-	//$qf=$db->query("SELECT files.name AS name, directories.physical_address AS physical_address FROM files, directories WHERE files.id='$fid' AND directories.id = files.directory");
 	$file = new File($fid);
 	$filename=$file->name;
 	if(!is_writable($file->path)) return "error: no permission to alter file";
 	if(!kfm_checkAddr($filename))return;
-	$icons=glob(WORKPATH.$fid.' [0-9]*x[0-9]* '.$filename);
-	foreach($icons as $f)unlink($f);
+	_removeIcons($fid);
 	$info=getimagesize($file->path);
 	if($info){
-		$type=0;
-		switch($info[2]){
-			case 1: $type = 'gif'; break;
-			case 2: $type = 'jpeg'; break;
-			case 3: $type = 'png'; break;
-		}
+		$type=_getImageType($info);
 		if($type){
 			$load='imagecreatefrom'.$type;
 			$save='image'.$type;
 			if(!function_exists($load)&&!function_exists($save))return;
-			$imfile=$load($file->path);
-			$im=imagecreatetruecolor($info[0],$info[1]);
-			imagecopyresized($im,$imfile,0,0,0,0,$info[0],$info[1],$info[0],$info[1]);
+			$im=_createImageResource($load($file->path),$info);
 			$im=imagerotate($im,$direction,0);
 			$save($im,$file->path,($type=='jpeg'?100:9));
 		}
 		return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 	}
+}
+function _removeIcons($id){
+	$icons=glob($_SESSION['kfm']['currentdir'].'/.files/'.$id.' [0-9]*x[0-9]*.*');
+	foreach($icons as $f)unlink($f);
 }
 ?>
