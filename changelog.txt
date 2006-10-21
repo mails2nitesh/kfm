@@ -1,5 +1,8 @@
 numbers in parentheses are the bug numbers as recorded at http://mantis.verens.com/
 
+0.6
+	      new function to view syntax-hightlighted text-file contents
+
 0.5
 	(20)	allow editing of text files, using a notepad clone or FCKeditor
 	(77)	directories with no sub-directories should not have open/close nodes

@@ -1,6 +1,6 @@
 KFM - Kae's File Manager
 
-version 0.5
+version 0.6
 
 built by Kae: kae@verens.com
 
@@ -8,14 +8,10 @@ LICENSE
 see license.txt for licensing
 
 ABOUT
-a project which emulates a desktop file manager environment.
+a project which emulates a file manager environment.
 
 INSTALLATION INSTRUCTIONS
-for fckeditor:
-  - unzip in /editor/plugins/
-  - add "FCKConfig.Plugins.Add('kfm');" to your fckconfig.js
-for standalone:
-	- see http://kfm.verens.com/docs-1---standalone-kfm
+http://kfm.verens.com/documentation
 
 FOR FEATURES AND OTHER STUFF
 http://kfm.verens.com/
