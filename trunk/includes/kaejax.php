@@ -35,7 +35,7 @@ function kaejax_get_js_repr($value=''){
 }
 function kaejax_handle_client_request(){
 	if(!isset($_POST['kaejax']))return;
-	require_once('JSON.php');
+	require_once('includes/JSON.php');
 	$json=new Services_JSON();
 	$obj=$json->decode(stripslashes($_POST['kaejax']));
 	$fs=$obj->c;

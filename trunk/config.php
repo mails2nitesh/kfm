@@ -100,8 +100,8 @@ session_start();
 		}
 	}
 	if(!$db_defined){
-		require 'btk_database.class.php';
-		$db = new btk_database('sqlite');
+		require_once('includes/btk_database.class.php');
+		$db=new btk_database('sqlite');
 		$db_method='btk';
 	}
 	$db_defined=null;
