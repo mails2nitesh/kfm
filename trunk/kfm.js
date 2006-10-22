@@ -1153,7 +1153,8 @@ function kfm_tracerStep(id){
 }
 function kfm_viewTextFile(res){
 	var t=newEl('table','kfm_viewFileTable').setCss('height:100%;width:100%');
-	t.addRow().setCss('height:100%').addCell(0,2).innerHTML=res;
+	t.addRow().addCell(0,1).innerHTML = res.topmenu;
+	t.addRow().setCss('height:100%;').addCell(0,2).innerHTML=res.content;
 	$('kfm_right_column').empty().addEl(t);
 }
 function kfm_viewTextFileStarter(fileid){
