@@ -133,7 +133,7 @@ FilenameAlreadyExists:
 
 // new in 0.5
 EditTextFile:
-	"Editer fichier text",
+	"Editer fichier texte",
 CloseWithoutSavingQuestion:
 	"Etes-vous certain de vouloir fermer sans enregistrer?",
 CloseWithoutSaving:
@@ -145,80 +145,80 @@ SaveThenCloseQuestion:
 
 // new in 0.6
 LockPanels:
-	"lock panels",
+	"verrouiller les panneaux",
 UnlockPanels:
-	"unlock panels",
+	"déverrouiller les panneaux",
 CreateEmptyFile:
-	"create empty file",
+	"créer un fichier vide",
 DownloadFileFromUrl:
-	"download file from URL",
+	"télécharger un fichier",
 DirectoryProperties:
-	"Directory Properties",
+	"Propiétés de Dossier",
 SelectAll:
-	"select all",
+	"tout sélectionner",
 SelectNone:
-	"select none",
+	"tout désélectionner",
 InvertSelection:
-	"invert selection",
+	"inverser la sélection",
 LoadingKFM:
-	"loading KFM",
+	"chargement de KFM",
 Name:
-	"name",
+	"Nom",
 FileDetails:
-	"File Details",
+	"Details de Fichier",
 Search:
-	"Search",
+	"Chercher",
 IllegalDirectoryName:
-	"illegal directory name \"%1\"",
+	"Nom de dossier incorrect \"%1\"",
 RecursiveDeleteWarning:
-	"\"%1\" is not empty\nAre you sure you want to delete it and all its contents?\n*WARNING* THIS IS NOT REVERSIBLE",
+	"\"%1\" n'est pas vide\nVoulez-vous vraiment le supprimer ainsi que tout son contenu?\n*ATTENTION* CECI N'EST PAS ANNULABLE",
 RmdirFailed:
-	"failed to delete directory \"%1\"",
+	"impossible de supprimer le dossier \"%1\"",
 DirNotInDb:
-	"directory not in database",
+	"dossier inconnu dans la base de données",
 ShowPanel:
-	"show panel \"%1\"",
+	"afficher le panneau \"%1\"",
 ChangeCaption:
-	"Change Caption",
+	"Changer le Titre",
 NewDirectory:
-	"New Directory",
+	"Nouveau Dossier",
 Upload:
-	"Upload",
+	"Envoyer",
 NewCaptionIsThisCorrect:
-	"New Caption:\n%1\n\nIs this correct?",
+	"Nouveau titre:\n%1\n\nEst-ce correct?",
 Close:
-	"close",
+	"fermer",
 Loading:
-	"loading",
+	"chargement",
 AreYouSureYouWantToCloseKFM:
-	"Are you sure you want to close the KFM window?",
+	"Voulez-vous vraiment fermer la fenêtre KFM?",
 PleaseSelectFileBeforeRename:
-	"Please select a file before you try to rename it",
+	"Veuillez sélectionner un fichier avant de renommer",
 RenameOnlyOneFile:
-	"You can only rename one file at a time",
+	"Vous ne pouvez renommer qu'un fichier à la fois",
 RenameFileToWhat:
-	"Rename the file \"%1\" to what?",
+	"Renommer le fichier \"%1\" en?",
 NoRestrictions:
-	"no restrictions",
+	"aucune restriction",
 Filename:
-	"filename",
+	"nome de fichier",
 Maximise:
-	"maximise",
+	"agrandir",
 Minimise:
-	"minimise",
+	"réduire",
 AllowedFileExtensions:
-	"allowed file extensions",
+	"extensions permises",
 Filesize:
-	"filesize",
+	"taille",
 MoveDown:
-	"move down",
+	"descendre",
 Mimetype:
-	"mimetype",
+	"type MIME",
 MoveUp:
-	"move up",
+	"monter",
 Restore:
-	"restore",
+	"restorer",
 Caption:
-	"caption"
+	"titre"
 }
 
