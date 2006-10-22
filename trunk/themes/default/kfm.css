@@ -47,21 +47,48 @@ div.kfm_panel_header a{float:right;text-decoration:none}
 
 .kfm_empty{font-style:italic;color:#666}
 
-.kfm_file_icon{display:block;margin:5px;float:left;min-height:20px;background:url(icons/empty.png) no-repeat top center;padding:64px 10px 5px 10px;text-align:center;color:#00f;border:1px solid #fff;-moz-border-radius:10px;width:108px;overflow-x:hidden}
+.kfm_file_icon{display:block;margin:5px;float:left;min-height:20px;background:url(icons/64x64/mimetypes/unknown.png) no-repeat top center;padding:64px 10px 5px 10px;text-align:center;color:#00f;border:1px solid #fff;-moz-border-radius:10px;width:108px;overflow-x:hidden}
 .kfm_file_icon span.filename{text-decoration:underline}
-.kfm_file_icon.kfm_icontype_bmp{background-image:url(icons/image.png)}
-.kfm_file_icon.kfm_icontype_doc{background-image:url(icons/document.png)}
-.kfm_file_icon.kfm_icontype_gif{background-image:url(icons/image.png)}
-.kfm_file_icon.kfm_icontype_jpg{background-image:url(icons/image.png)}
-.kfm_file_icon.kfm_icontype_jpeg{background-image:url(icons/image.png)}
-.kfm_file_icon.kfm_icontype_mdb{background-image:url(icons/database.png)}
-.kfm_file_icon.kfm_icontype_png{background-image:url(icons/image.png)}
-.kfm_file_icon.kfm_icontype_tiff{background-image:url(icons/image.png)}
-.kfm_file_icon.kfm_icontype_tbz2{background-image:url(icons/zip.png)}
-.kfm_file_icon.kfm_icontype_tgz{background-image:url(icons/zip.png)}
-.kfm_file_icon.kfm_icontype_txt{background-image:url(icons/txt.png)}
-.kfm_file_icon.kfm_icontype_xls{background-image:url(icons/spreadsheet.png)}
-.kfm_file_icon.kfm_icontype_zip{background-image:url(icons/zip.png)}
+.kfm_file_icon.kfm_icontype_bz2{background-image:url(icons/64x64/mimetypes/bz2.png)}
+.kfm_file_icon.kfm_icontype_aac2{background-image:url(icons/64x64/mimetypes/aac2.png)}
+.kfm_file_icon.kfm_icontype_aac{background-image:url(icons/64x64/mimetypes/aac.png)}
+.kfm_file_icon.kfm_icontype_ape{background-image:url(icons/64x64/mimetypes/ape.png)}
+.kfm_file_icon.kfm_icontype_avi2{background-image:url(icons/64x64/mimetypes/avi2.png)}
+.kfm_file_icon.kfm_icontype_avi{background-image:url(icons/64x64/mimetypes/avi.png)}
+.kfm_file_icon.kfm_icontype_bz2{background-image:url(icons/64x64/mimetypes/bz2.png)}
+.kfm_file_icon.kfm_icontype_chm{background-image:url(icons/64x64/mimetypes/chm.png)}
+.kfm_file_icon.kfm_icontype_core{background-image:url(icons/64x64/mimetypes/core.png)}
+.kfm_file_icon.kfm_icontype_deb{background-image:url(icons/64x64/mimetypes/deb.png)}
+.kfm_file_icon.kfm_icontype_doc{background-image:url(icons/64x64/mimetypes/doc.png)}
+.kfm_file_icon.kfm_icontype_document{background-image:url(icons/64x64/mimetypes/document.png)}
+.kfm_file_icon.kfm_icontype_empty{background-image:url(icons/64x64/mimetypes/empty.png)}
+.kfm_file_icon.kfm_icontype_flac{background-image:url(icons/64x64/mimetypes/flac.png)}
+.kfm_file_icon.kfm_icontype_folder_setting{background-image:url(icons/64x64/mimetypes/folder_setting.png)}
+.kfm_file_icon.kfm_icontype_font{background-image:url(icons/64x64/mimetypes/font.png)}
+.kfm_file_icon.kfm_icontype_font_truetype{background-image:url(icons/64x64/mimetypes/font_truetype.png)}
+.kfm_file_icon.kfm_icontype_gz{background-image:url(icons/64x64/mimetypes/gz.png)}
+.kfm_file_icon.kfm_icontype_mov{background-image:url(icons/64x64/mimetypes/mov.png)}
+.kfm_file_icon.kfm_icontype_mp3{background-image:url(icons/64x64/mimetypes/mp3.png)}
+.kfm_file_icon.kfm_icontype_mp4{background-image:url(icons/64x64/mimetypes/mp4.png)}
+.kfm_file_icon.kfm_icontype_odt{background-image:url(icons/64x64/mimetypes/odt.png)}
+.kfm_file_icon.kfm_icontype_ogg{background-image:url(icons/64x64/mimetypes/ogg.png)}
+.kfm_file_icon.kfm_icontype_qt{background-image:url(icons/64x64/mimetypes/qt.png)}
+.kfm_file_icon.kfm_icontype_ram{background-image:url(icons/64x64/mimetypes/ram.png)}
+.kfm_file_icon.kfm_icontype_rar{background-image:url(icons/64x64/mimetypes/rar.png)}
+.kfm_file_icon.kfm_icontype_rm{background-image:url(icons/64x64/mimetypes/rm.png)}
+.kfm_file_icon.kfm_icontype_rmvb{background-image:url(icons/64x64/mimetypes/rmvb.png)}
+.kfm_file_icon.kfm_icontype_rpm{background-image:url(icons/64x64/mimetypes/rpm.png)}
+.kfm_file_icon.kfm_icontype_rtf{background-image:url(icons/64x64/mimetypes/rtf.png)}
+.kfm_file_icon.kfm_icontype_rt{background-image:url(icons/64x64/mimetypes/rt.png)}
+.kfm_file_icon.kfm_icontype_rv{background-image:url(icons/64x64/mimetypes/rv.png)}
+.kfm_file_icon.kfm_icontype_svg{background-image:url(icons/64x64/mimetypes/svg.png)}
+.kfm_file_icon.kfm_icontype_sxw{background-image:url(icons/64x64/mimetypes/sxw.png)}
+.kfm_file_icon.kfm_icontype_tar{background-image:url(icons/64x64/mimetypes/tar.png)}
+.kfm_file_icon.kfm_icontype_tgz{background-image:url(icons/64x64/mimetypes/tgz.png)}
+.kfm_file_icon.kfm_icontype_txt2{background-image:url(icons/64x64/mimetypes/txt2.png)}
+.kfm_file_icon.kfm_icontype_txt{background-image:url(icons/64x64/mimetypes/txt.png)}
+.kfm_file_icon.kfm_icontype_unknown{background-image:url(icons/64x64/mimetypes/unknown.png)}
+.kfm_file_icon.kfm_icontype_zip{background-image:url(icons/64x64/mimetypes/zip.png)}
 div:hover.kfm_file_icon{background-color:#f0f8ff;border-color:#bababa}
 div.kfm_file_icon.selected{background-color:#9cf;border-color:#000}
 
