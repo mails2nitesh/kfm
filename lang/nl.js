@@ -160,59 +160,59 @@ LoadingKFM:
 Name:
 	"naam",
 FileDetails:
-	"File Details",
+	"Eigenschappen",
 Search:
-	"Search",
+	"Zoek",
 IllegalDirectoryName:
-	"illegal directory name \"%1\"",
+	"Verkeerde mapnaam \"%1\"",
 RecursiveDeleteWarning:
-	"\"%1\" is not empty\nAre you sure you want to delete it and all its contents?\n*WARNING* THIS IS NOT REVERSIBLE",
+	"\"%1\" is niet leeg\nWeet u zeker dat u het met alle inhoud wilt verwijderen?\n*WAARSCHUWING* DIT IS NIET TERUG TE DRAAIEN",
 RmdirFailed:
-	"failed to delete directory \"%1\"",
+	"de map \"%1\" kon niet worden verwijderd",
 DirNotInDb:
-	"directory not in database",
+	"map not in database",
 ShowPanel:
-	"show panel \"%1\"",
+	"Toon paneel \"%1\"",
 ChangeCaption:
-	"Change Caption",
+	"Verander Titel",
 NewDirectory:
-	"New Directory",
+	"Nieuwe map",
 Upload:
 	"Upload",
 NewCaptionIsThisCorrect:
-	"New Caption:\n%1\n\nIs this correct?",
+	"Nieuwe Titel:\n%1\n\nIs dit juist?",
 Close:
-	"close",
+	"Sluit",
 Loading:
-	"loading",
+	"laden",
 AreYouSureYouWantToCloseKFM:
-	"Are you sure you want to close the KFM window?",
+	"Weet u zeker dat u het KFM venster wilt sluiten?",
 PleaseSelectFileBeforeRename:
-	"Please select a file before you try to rename it",
+	"Selecteer een bestand voordat u het wilt hernoemen",
 RenameOnlyOneFile:
-	"You can only rename one file at a time",
+	"U kunt maar een bestand tegelijk hernoemen",
 RenameFileToWhat:
-	"Rename the file \"%1\" to what?",
+	"Hernoem bestand \"%1\" naar?",
 NoRestrictions:
-	"no restrictions",
+	"geen restricties",
 Filename:
-	"filename",
+	"bestandsnaam",
 Maximise:
-	"maximise",
+	"maximaliseer",
 Minimise:
-	"minimise",
+	"minimaliseer",
 AllowedFileExtensions:
-	"allowed file extensions",
+	"toegestane extensies",
 Filesize:
-	"filesize",
+	"bestandsgrootte",
 MoveDown:
-	"move down",
+	"verplaats omlaag",
 Mimetype:
 	"mimetype",
 MoveUp:
-	"move up",
+	"verplaats omhoog",
 Restore:
-	"restore",
+	"herstel",
 Caption:
-	"caption"
+	"titel"
 }
