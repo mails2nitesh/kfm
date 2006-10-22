@@ -1,4 +1,4 @@
-*{font:14px sans-serif}
+*{font:12px sans-serif}
 html{height:100%} /* solves a bug in Konqueror */
 body{margin:0;padding:0;height:100%}
 form{padding:0;margin:0}
@@ -14,6 +14,7 @@ td{vertical-align:top}
 #kfm_logs_panel p{border-top:1px solid #bababa;font:10px sans-serif;margin:0;padding:0;color:#666}
 #kfm_logs_panel p:first-child{border:none}
 #kfm_right_column{overflow:auto;position:relative;height:100%;background:white}
+#kfm_right_column div.kfm_panel_header{background:url(bitsandpieces/panelheader-bg.png) repeat-x}
 #kfm_right_column #kfm_editFileTable textarea{background:#eee;font-style:italic}
 #kfm_right_column #kfm_editFileTable td{text-align:center}
 #kfm_search_table{width:100%}
@@ -28,20 +29,20 @@ td{vertical-align:top}
 .contextmenu tr:hover *{background:#efefde;font-style:italic}
 .contextmenu a{display:block;color:#000;text-decoration:none}
 
-div.kfm_panel{position:relative;width:240px}
+div.kfm_panel{position:relative;width:240px;background:url(bitsandpieces/panelheader-bg.png) repeat-x}
 div.kfm_panel_body{width:240px;overflow:auto}
 #kfm_file_upload_panel div.kfm_panel_body{overflow:hidden}
-div.kfm_panel_header{background:#9cf url(bitsandpieces/panels_inactive.gif) right top no-repeat;border-bottom:1px solid #bababa;padding:0 5px;position:relative;font-size:12px;line-height:16px}
+div.kfm_panel_header{background:url(bitsandpieces/panelheader.png) right -23px no-repeat;padding:0 5px;position:relative;font-size:12px;line-height:23px}
 #left_column div.kfm_panel_header{width:240px}
 html>body #left_column div.kfm_panel_header{width:230px}
-div.kfm_panel_header a{font-size:0;text-indent:-4000px;position:absolute;height:16px;width:20px;background-image:url(bitsandpieces/panels_active.gif)}
+div.kfm_panel_header a{font-size:0;text-indent:-4000px;position:absolute;height:23px;width:20px;background-image:url(bitsandpieces/panelheader.png)}
 div.kfm_panel_header a:hover{background-image:url(bitsandpieces/panels_hovered.gif)}
-div.kfm_panel_header a.kfm_panel_header_x{right:0;background-position:-82px 0}
-div.kfm_panel_header a.kfm_panel_header_M{right:21px;background-position:-61px 0}
-div.kfm_panel_header a.kfm_panel_header_r{right:21px;background-position:-61px 0}
-div.kfm_panel_header a.kfm_panel_header__{right:41px;background-position:-41px 0}
-div.kfm_panel_header a.kfm_panel_header_u{right:61px;background-position:-21px 0}
-div.kfm_panel_header a.kfm_panel_header_d{right:82px;background-position:0 0}
+div.kfm_panel_header a.kfm_panel_header_x{right:0;background-position:-102px 0}
+div.kfm_panel_header a.kfm_panel_header_M{right:21px;background-position:-81px 0}
+div.kfm_panel_header a.kfm_panel_header_r{right:21px;background-position:-81px 0}
+div.kfm_panel_header a.kfm_panel_header__{right:41px;background-position:-61px 0}
+div.kfm_panel_header a.kfm_panel_header_u{display:none}
+div.kfm_panel_header a.kfm_panel_header_d{display:none}
 div.kfm_panel_header a{float:right;text-decoration:none}
 
 .kfm_empty{font-style:italic;color:#666}
