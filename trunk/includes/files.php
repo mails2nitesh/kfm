@@ -2,11 +2,6 @@
 function _add_file_to_db($filename,$directory_id){
 	global $db,$db_method;
 	$sql='insert into files (name,directory) values("'.addslashes($filename).'",'.$directory_id.')';
-	if($db_method=='sqlite'&&$db->getAttribute(PDO::ATTR_SERVER_VERSION)<'3.3'){ # sqlite only supports autoincrement recently
-		$q=$db->prepare('select id from files limit 1');
-		$id=$q->execute()?'(select id from files order by id desc limit 1)+1':1;
-		$sql='insert into files (id,name,directory) values('.$id.',"'.addslashes($filename).'",'.$directory_id.')';
-	}
 	$q=$db->prepare($sql);
 	return $q->execute();
 }
