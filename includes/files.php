@@ -161,29 +161,26 @@ function _search($keywords){
 	return array('reqdir'=>'','files'=>$files,'uploads_allowed'=>0);
 }
 function _viewTextFile($fileid){
-	global $db, $kfm_viewable_extensions, $kfm_highlight_extensions;
-	$rf=$db->prepare('select * FROM files WHERE id="'.$fileid.'"');
-	$rf->execute();
-	$aFile=$rf->fetch();
-	if(!count($aFile))return 'error: file not found'; # TODO better error
-	$ext = strtolower(substr(strrchr($aFile['name'],'.'),1));
+	global $kfm_viewable_extensions, $kfm_highlight_extensions, $kfm_editable_extensions;
+	$file = new File($fileid);
+	$ext = $file->getExtension();
+	$topmenu = $file->name;
+	if(in_array($ext, $kfm_editable_extensions) && $file->isWritable())
+		$topmenu.="<a href='javascript:kfm_editTextFile(".$file->id.");' class='button'>Edit</a>";
+	$topmenu .="<a href=\"javascript:alert('try another time');\" class='button'>Close</a>";
 	if(in_array($ext, $kfm_viewable_extensions)){
-		$rd=$db->prepare('SELECT * FROM directories WHERE id="'.$aFile['directory'].'"');
-		$rd->execute();
-		$aDirectory=$rd->fetch();
-		if(!count($aDirectory))return 'error: directory not found'; # TODO better error
-		$file_path=str_replace('//','/',$aDirectory['physical_address'].'/'.$aFile['name']);
-		$code=file_get_contents($file_path);
+		$code=file_get_contents($file->path);
 		if(array_key_exists($ext,$kfm_highlight_extensions)){
 			require_once('Text/Highlighter.php');
 			require_once('Text/Highlighter/Renderer/Html.php');
 			$renderer=new Text_Highlighter_Renderer_Html(array('numbers'=>HL_NUMBERS_TABLE,'tabsize'=>4));
 			$hl=&Text_Highlighter::factory($kfm_highlight_extensions[$ext]);
 			$hl->setRenderer($renderer);
-			return $hl->highlight($code);
-		}else{
-			return $code;
+			$code = $hl->highlight($code);
+		}else if($ext == 'txt'){
+			$code = nl2br($code);
 		}
+		return array('fid'=>$fileid, 'content'=>$code, 'topmenu'=>$topmenu);
 	}else{
 		return "error: viewing file is not allowed";
 	}
