@@ -148,7 +148,7 @@ CreateEmptyFile:
 DownloadFileFromUrl:
 	"download bestand van URL",
 DirectoryProperties:
-	"Directory Eigenschappen",
+	"Map Eigenschappen",
 SelectAll:
 	"Alles selecteren",
 SelectNone:
@@ -160,37 +160,37 @@ LoadingKFM:
 Name:
 	"naam",
 FileDetails:
-	"Eigenschappen",
+	"Bestand Details",
 Search:
 	"Zoek",
 IllegalDirectoryName:
-	"Verkeerde mapnaam \"%1\"",
+	"ongeldige mapnaam \"%1\"",
 RecursiveDeleteWarning:
-	"\"%1\" is niet leeg\nWeet u zeker dat u het met alle inhoud wilt verwijderen?\n*WAARSCHUWING* DIT IS NIET TERUG TE DRAAIEN",
+	"\"%1\" is niet leeg\nWeet u zeker dat u dit wilt verwijderen met alle onderliggende bestanden en mappen?\n*WAARSCHUWING* DIT IS NIET TERUG TE DRAAIEN",
 RmdirFailed:
-	"de map \"%1\" kon niet worden verwijderd",
+	"kan map niet verwijderen \"%1\"",
 DirNotInDb:
-	"map not in database",
+	"map niet in database",
 ShowPanel:
-	"Toon paneel \"%1\"",
+	"laat paneel \"%1\" zien",
 ChangeCaption:
-	"Verander Titel",
+	"Wijzig Titel",
 NewDirectory:
-	"Nieuwe map",
+	"Nieuwe Map",
 Upload:
 	"Upload",
 NewCaptionIsThisCorrect:
 	"Nieuwe Titel:\n%1\n\nIs dit juist?",
 Close:
-	"Sluit",
+	"sluit",
 Loading:
 	"laden",
 AreYouSureYouWantToCloseKFM:
 	"Weet u zeker dat u het KFM venster wilt sluiten?",
 PleaseSelectFileBeforeRename:
-	"Selecteer een bestand voordat u het wilt hernoemen",
+	"Selecteer een bestand voordat u het wil hernoemen",
 RenameOnlyOneFile:
-	"U kunt maar een bestand tegelijk hernoemen",
+	"U kunt één bestand per keer hernoemen",
 RenameFileToWhat:
 	"Hernoem bestand \"%1\" naar?",
 NoRestrictions:
@@ -198,19 +198,19 @@ NoRestrictions:
 Filename:
 	"bestandsnaam",
 Maximise:
-	"maximaliseer",
+	"maximalizeren",
 Minimise:
-	"minimaliseer",
+	"minimalizeren",
 AllowedFileExtensions:
-	"toegestane extensies",
+	"toegestane bestandsextensies",
 Filesize:
 	"bestandsgrootte",
 MoveDown:
-	"verplaats omlaag",
+	"naar beneden",
 Mimetype:
 	"mimetype",
 MoveUp:
-	"verplaats omhoog",
+	"naar boven",
 Restore:
 	"herstel",
 Caption:
