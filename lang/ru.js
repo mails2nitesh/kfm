@@ -175,8 +175,7 @@ RecursiveDeleteWarning:
 RmdirFailed:
 	"failed to delete directory \"%1\"",
 DirNotInDb:
-	"directory not in database"
-},
+	"directory not in database",
 ShowPanel:
 	"show panel \"%1\"",
 ChangeCaption:
@@ -221,3 +220,4 @@ Restore:
 	"restore",
 Caption:
 	"caption"
+}

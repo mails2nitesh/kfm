@@ -6,12 +6,12 @@ session_start();
 	# where are the files located on the hard-drive, relative to the website's root directory?
 	# In the default example, the user-files are at http://kfm.verens.com/sandbox/UserFiles/
 	# Note that this is the actual file-system location of the files.
-	$kfm_userfiles='/UserFiles/';
+	$kfm_userfiles='/sandbox/UserFiles/';
 	
 	# what should be added to the server's root URL to find the URL of the user files?
 	# Note that this is usually the same as $kfm_userfiles, but could be different in the case
 	#   that the server uses mod_rewrite or personal web-sites, etc
-	$kfm_userfiles_output='/UserFiles/';
+	$kfm_userfiles_output='/sandbox/UserFiles/';
 	
 	# directory in which KFM keeps its database and generated files
 	$kfm_workdirectory = '.files';
