@@ -21,7 +21,7 @@ var kfm_lang=
 {
 
 Dir:
-	"ltr",
+	"Verzeichnis",
 ErrorPrefix:
 	"Fehler: ",
 
@@ -165,59 +165,59 @@ LoadingKFM:
 Name:
 	"Name",
 FileDetails:
-	"File Details",
+	"Datei Eigenschaften",
 Search:
-	"Search",
+	"Suche",
 IllegalDirectoryName:
-	"illegal directory name \"%1\"",
+	"Falscher Verzeichnisname \"%1\"",
 RecursiveDeleteWarning:
-	"\"%1\" is not empty\nAre you sure you want to delete it and all its contents?\n*WARNING* THIS IS NOT REVERSIBLE",
+	"\"%1\" ist nicht leer\nSind Sie sicher das Sie das Verzeichnis und seinen gesamten Inhalt löschen möchten?\n*WARNUNG* DAS IST NICHT WIEDER UMKEHRBAR.",
 RmdirFailed:
-	"failed to delete directory \"%1\"",
+	"Gescheitert beim Versuch das Verzeichnis zu löschen \"%1\"",
 DirNotInDb:
-	"directory not in database",
+	"Verzeichnis nicht in der Datenbank",
 ShowPanel:
-	"show panel \"%1\"",
+	"Zeige Panel \"%1\"",
 ChangeCaption:
-	"Change Caption",
+	"Überschrift ändern",
 NewDirectory:
-	"New Directory",
+	"neues Verzeichnis",
 Upload:
-	"Upload",
+	"Hochladen",
 NewCaptionIsThisCorrect:
-	"New Caption:\n%1\n\nIs this correct?",
+	"Neue Überschrift:\n%1\n\nIst das so richtig?",
 Close:
-	"close",
+	"schliessen",
 Loading:
-	"loading",
+	"laden",
 AreYouSureYouWantToCloseKFM:
-	"Are you sure you want to close the KFM window?",
+	"Sind Sie sicher das Sie das KFM Fenster schliessen möchten?",
 PleaseSelectFileBeforeRename:
-	"Please select a file before you try to rename it",
+	"Bitte wählen Sie eine Datei aus bevor Sie sie umbenennen",
 RenameOnlyOneFile:
-	"You can only rename one file at a time",
+	"Sie können Dateien nur nacheinander umbennen",
 RenameFileToWhat:
-	"Rename the file \"%1\" to what?",
+	"Umbennen der Datei \"%1\" zu was?",
 NoRestrictions:
-	"no restrictions",
+	"keine Einschränkungen",
 Filename:
-	"filename",
+	"Dateiname",
 Maximise:
-	"maximise",
+	"maximieren",
 Minimise:
-	"minimise",
+	"minimieren",
 AllowedFileExtensions:
-	"allowed file extensions",
+	"erlaubte Dateinamen Erweiterungen",
 Filesize:
-	"filesize",
+	"Dateigrösse",
 MoveDown:
-	"move down",
+	"nach unten",
 Mimetype:
-	"mimetype",
+	"Mimetype",
 MoveUp:
-	"move up",
+	"nach oben",
 Restore:
-	"restore",
+	"wiederherstellen",
 Caption:
-	"caption"
+	"Überschrift"
 }
