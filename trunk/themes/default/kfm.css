@@ -35,12 +35,15 @@ div.kfm_panel_body{width:240px;overflow:auto}
 div.kfm_panel_header{background:url(bitsandpieces/panelheader.png) right -23px no-repeat;padding:0 5px;position:relative;font-size:12px;line-height:23px}
 #left_column div.kfm_panel_header{width:240px}
 html>body #left_column div.kfm_panel_header{width:230px}
-div.kfm_panel_header a{font-size:0;text-indent:-4000px;position:absolute;height:23px;width:20px;background-image:url(bitsandpieces/panelheader.png)}
-div.kfm_panel_header a:hover{background-image:url(bitsandpieces/panels_hovered.gif)}
+div.kfm_panel_header a{font-size:0;text-indent:-4000px;position:absolute;height:23px;width:20px;background-image:url(bitsandpieces/panelheader.png);top:0}
 div.kfm_panel_header a.kfm_panel_header_x{right:0;background-position:-102px 0}
+div.kfm_panel_header a.kfm_panel_header_x:hover{right:0;background-position:-102px -46px}
 div.kfm_panel_header a.kfm_panel_header_M{right:21px;background-position:-81px 0}
+div.kfm_panel_header a.kfm_panel_header_M:hover{right:21px;background-position:-81px -46px}
 div.kfm_panel_header a.kfm_panel_header_r{right:21px;background-position:-81px 0}
+div.kfm_panel_header a.kfm_panel_header_r:hover{right:21px;background-position:-81px -46px}
 div.kfm_panel_header a.kfm_panel_header__{right:41px;background-position:-61px 0}
+div.kfm_panel_header a.kfm_panel_header__:hover{right:41px;background-position:-61px -46px}
 div.kfm_panel_header a.kfm_panel_header_u{display:none}
 div.kfm_panel_header a.kfm_panel_header_d{display:none}
 div.kfm_panel_header a{float:right;text-decoration:none}
@@ -117,3 +120,6 @@ div.kfm_file_icon.selected{background-color:#9cf;border-color:#000}
 .button:hover{
 	color:#f00;
 }
+
+/* IE-specific crap */
+.ie .kfm_panel_header{height:23px}
