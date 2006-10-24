@@ -1354,8 +1354,8 @@ function X(d,s){
 	for(var p in s)d[p]=s[p];
 	return d;
 }
-if(browser.isIE)loadJS('kfm-ie.js');
-if(browser.isKonqueror)loadJS('kfm-konqueror.js');
+if(browser.isIE)loadJS('j/kfm-ie.js');
+if(browser.isKonqueror)loadJS('j/kfm-konqueror.js');
 var json={
 	m:{
 		'\b': '\\b',

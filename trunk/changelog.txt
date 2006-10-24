@@ -2,6 +2,20 @@ numbers in parentheses are the bug numbers as recorded at http://mantis.verens.c
 
 0.6
 	      new function to view syntax-hightlighted text-file contents
+	(79)	should be possible to move directories 
+	(78)	should be able to rename directories 
+	(11)	ability to search for files 
+	(32)	add meta directory ".files" 
+	(74)	kaejax needs to be rewritten 
+	(40)	open Rename popup by using F2 
+	(101)	Escape key close manager ?  
+	(96)	cannot delete directories that contain files/directories 
+	(105)	Panel 'File Details' doesnt work with arrowkeys 
+	(106)	implement up/down arrow key navigation for files 
+	(114)	path addition $kfm_userfiles_server / $kfm_userfiles_web 
+	(115)	Problems with path
+	(116)	File Detail giving error when file is selected
+	(119)	Not displaying not writable directories 
 
 0.5
 	(20)	allow editing of text files, using a notepad clone or FCKeditor
