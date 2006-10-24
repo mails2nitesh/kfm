@@ -17,9 +17,11 @@ function Browser(){
 	var kfm_filesCache=[],kfm_tracers=[],kfm_tracer_v=10,kfm_lastClicked,kfm_unique_classes=[];
 	var kaejax_timeouts=[],kfm_directories=[0,{name:'root',pathname:'/'}];
 	var kaejax_replaces={'([89A-F][A-Z0-9])':'%u00$1','22':'"','2C':',','3A':':','5B':'[','5D':']','7B':'{','7D':'}'};
-	for(var a in kaejax_replaces){
-		kaejax_replaces[kaejax_replaces[a]]=eval('/%'+a+'/g');
-		delete kaejax_replaces[a];
+	if(!browser.isIE){
+		for(var a in kaejax_replaces){
+			kaejax_replaces[kaejax_replaces[a]]=eval('/%'+a+'/g');
+			delete kaejax_replaces[a];
+		}
 	}
 }
 function kfm(){
@@ -875,6 +877,11 @@ function kfm_prompt(txt,val){
 	setTimeout('window.inPrompt=0',1);
 	return newVal;
 }
+function kfm_sanitise_ajax(d){
+	var r=kaejax_replaces;
+	for(var a in r)d=d.replace(r[a],a);
+	return d;
+}
 function kfm_selectAll(){
 	kfm_selectNone();
 	var a,b=$('kfm_right_column').fileids;
@@ -1244,10 +1251,10 @@ function kaejax_do_call(func_name,args){
 	window.kaejax_timeouts[uri].c[l]={f:func_name,c:args[args.length-1],v:v2};
 }
 function kaejax_sendRequests(uri){
-	var r=kaejax_replaces,t=window.kaejax_timeouts[uri];
+	var t=window.kaejax_timeouts[uri];
 	window.kaejax_timeouts[uri]=null;
 	var x=new XMLHttpRequest(),post_data="kaejax="+escape(json.s.object(t)).replace(/%([89A-F][A-Z0-9])/g,'%u00$1');
-	for(a in r)post_data=post_data.replace(r[a],a);
+	post_data=kfm_sanitise_ajax(post_data);
 	x.open('POST',uri,true);
 	x.setRequestHeader("Method","POST "+uri+" HTTP/1.1");
 	x.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
