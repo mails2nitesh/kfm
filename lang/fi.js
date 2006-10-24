@@ -8,7 +8,7 @@
  * 	Finnish language file.
  *
  * File Authors:
- * 	hannu@padasjoenlentokerho.fi
+ * 	hnpilot@phnet.fi
  */
 
 var kfm_lang=
@@ -70,7 +70,7 @@ DelFileMessage:
 DelMultipleFilesMessage:
 	"Haluatko varmasti poistaa seuraavat tiedostot?\n\n'",
 DownloadFileFromMessage:
-	"Lataa tiedsto mistä?",
+	"Lataa tiedosto mistä?",
 FileSavedAsMessage:
 	"Millä nimellä tiedosto tallennetaan?",
 
