@@ -13,11 +13,11 @@ if($kfm_allow_file_uploads){
 		else{
 			$imgtype=exif_imagetype($to);
 			if($imgtype){
-				require_once('functions.image.php');
+				require_once('includes/images.php');
 				$comment='';
 				$data=exif_read_data($to,0,true);
 				if(is_array($data)&&isset($data['COMMENT'])&&is_array($data['COMMENT']))$comment=join("\n",$data['COMMENT']);
-				kfm_functions_image_setCaption($filename,$comment);
+				_setCaption($filename,$comment);
 			}
 		}
 	}

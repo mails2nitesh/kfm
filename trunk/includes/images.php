@@ -1,7 +1,7 @@
 <?php
 function _changeCaption($fid,$newCaption){
 	include_once('functions.image.php');
-	kfm_functions_image_setCaption($fid,$newCaption);
+	_setCaption($fid,$newCaption);
 	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
 function _createImageResource($file,$info){
@@ -120,5 +120,16 @@ function _rotateImage($fid,$direction){
 function _removeIcons($id){
 	$icons=glob($_SESSION['kfm']['currentdir'].'/.files/'.$id.' [0-9]*x[0-9]*.*');
 	foreach($icons as $f)unlink($f);
+}
+function _setCaption($fid,$newCaption){
+	// parameters: $fileid, $newCaption
+	// until then....
+	return 'error: caption cannot be set';
+	global $db;
+	$q = $db->prepare("UPDATE files SET caption = '$newCaption' WHERE id='$fileid'");
+	$q->execute();
+	// checks for succes in the future
+	// until then.... assume success
+	return true;
 }
 ?>
