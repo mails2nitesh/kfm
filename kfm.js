@@ -93,6 +93,7 @@ function kfm(){
 		};
 	}
 	{ // draw areas to screen and load files and directory info
+		document.body.addClass(browser.isIE?'ie':(browser.isFirefox?'firefox':''));
 		document.body.empty().addEl([left_column,right_column]);
 		x_kfm_loadFiles(1,kfm_refreshFiles);
 		x_kfm_loadDirectories(1,kfm_refreshDirectories);
