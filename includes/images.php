@@ -100,7 +100,7 @@ function _resizeImage($fid,$width,$height){
 function _rotateImage($fid,$direction){
 	$file = new File($fid);
 	$filename=$file->name;
-	if(!is_writable($file->path)) return "error: no permission to alter file";
+	if(!$file->isWritable()) return "error: no permission to alter file";
 	if(!kfm_checkAddr($filename))return;
 	_removeIcons($fid);
 	$info=getimagesize($file->path);
@@ -117,8 +117,8 @@ function _rotateImage($fid,$direction){
 		return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 	}
 }
-function _removeIcons($id){
-	$icons=glob($_SESSION['kfm']['currentdir'].'/.files/'.$id.' [0-9]*x[0-9]*.*');
+function _removeIcons($fid){
+	$icons=glob(WORKPATH.$fid.' [0-9]*x[0-9]*.*');
 	foreach($icons as $f)unlink($f);
 }
 function _setCaption($fid,$newCaption){

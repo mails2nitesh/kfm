@@ -1,5 +1,4 @@
 <?php
-require 'php-api/txt-db-api.php';
 class btk_database{
 	var $sql;
 	var $php_api = false;
@@ -22,22 +21,23 @@ class btk_database{
 	
 	function php_api(){
 		global $rootdir;
-		if (!file_exists(DB_DIR ."kfm_database")) {
+		if (!file_exists(WORKDIR.DBNAME)) {
+			require 'php-api/txt-db-api.php';
 			$db = new Database(ROOT_DATABASE);
-			$db->executeQuery("CREATE DATABASE kfm_database");
+			$db->executeQuery("CREATE DATABASE ".DBNAME);
 		}
-		if (!file_exists(DB_DIR . "kfm_database/parameters.txt")) {
-			$db = new Database("kfm_database");
+		if (!file_exists(DB_DIR.DBNAME."/parameters.txt")) {
+			$db = new Database(DBNAME);
 			$db->executeQuery("CREATE TABLE parameters (name str, value str)");
 			$db->executeQuery("INSERT INTO parameters (name, value) VALUES ('version','0.5.1')");
 		}
-		if (!file_exists(DB_DIR . "kfm_database/directories.txt")) {
-			$db = new Database("kfm_database");
+		if (!file_exists(DB_DIR.DBNAME."/directories.txt")) {
+			$db = new Database(DBNAME);
 			$db->executeQuery("CREATE TABLE directories (id inc, name str, physical_address str, parent str)");
 			$db->executeQuery("INSERT INTO directories VALUES (1,'','".rtrim(addslashes($rootdir),' /')."','0')");
 		}
-		if (!file_exists(DB_DIR . "kfm_database/files.txt")) {
-			$db = new Database("kfm_database");
+		if (!file_exists(DB_DIR.DBNAME."/files.txt")) {
+			$db = new Database(DBNAME);
 			$db->executeQuery("CREATE TABLE files (id inc, name str, caption str, directory str)");
 		}
 		$this->php_api = true;
@@ -75,7 +75,7 @@ class btk_database{
 		}else if($this->sqlite){
 			$this->result =@sqlite_query($this->db,$sql, SQLITE_ASSOC, $error_msg);
 			if($this->result === false) $this->error($error_msg);
-			if($this->result===false) die(sqlite_last_error($this->db));
+			//if($this->result===false) die(sqlite_last_error($this->db));
 			$this->last_inserted_id = sqlite_last_insert_rowid($this->db);
 			return $this;
 		}else{
