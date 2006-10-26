@@ -44,7 +44,11 @@ class File{
 		}
 		$dotext = strrchr($filename,'.');
 		if($dotext === false) return false;
-		return substr($dotext,1);
+		return strtolower(substr($dotext,1));
+	}
+	function isImage(){
+		if(in_array($this->getExtension(),array('jpg', 'jpeg', 'gif', 'png', 'bmp'))) return true;
+		return false;
 	}
 }
 ?>
