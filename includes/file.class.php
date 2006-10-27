@@ -63,5 +63,9 @@ class File extends Object{
 		if(in_array($this->getExtension(),array('jpg', 'jpeg', 'gif', 'png', 'bmp'))) return true;
 		return false;
 	}
+	function setContent($content){
+		$result = file_put_contents($this->path, $content);
+		if(!$result) $this->error('error setting file content');
+	}
 }
 ?>

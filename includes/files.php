@@ -65,7 +65,7 @@ function _getTextFile($fid){
 	if(!kfm_checkAddr($file->name))return;
 	if(in_array($file->getExtension(),$GLOBALS['kfm_editable_extensions'])){
 		if(!$file->isWritable()) return 'error: "'.$file->name.'" is not writable'; # TODO: new string
-		return array($file->getContent(),$file->name);
+		return array('content'=>$file->getContent(),'name'=>$file->name, 'id'=>$file->id);
 	}
 	return 'error: "'.$file->name.'" cannot be edited (restricted)'; # TODO: new string
 }
@@ -146,9 +146,13 @@ function _rm($id,$no_dir=0){
 	}
 	return $no_dir?0:kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
-function _saveTextFile($filename,$text){
+function _saveTextFile($fid,$text){
+	$f = new File($fid);
+	$f->setContent($text);
+	return $f->errors()?$f->getErrors():'file saved';
+	/*
 	if(kfm_checkAddr($filename))file_put_contents($_SESSION['kfm']['currentdir'].'/'.$filename,$text);
-	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
+	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);*/
 }
 function _search($keywords){
 	global $db;
