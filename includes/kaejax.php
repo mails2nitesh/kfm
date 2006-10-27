@@ -4,40 +4,11 @@
 	$kaejax_export_list=array();
 	$kaejax_is_loaded=strstr($_SERVER['REQUEST_URI'],'kaejax_is_loaded');
 }	
-function kaejax_get_js_repr($value=''){
-	$type=gettype($value);
-	if($type=='boolean'||$type=='integer')return 'parseInt('.$value.')';
-	elseif($type=='double')return 'parseFloat('.$value.')';
-	elseif($type=='array'||$type=='object'){
-		if($type=='array'){
-			$isNumeric=1;
-			foreach(array_keys($value) as $key)if(!is_numeric($key))$isNumeric=0;
-		}
-		if($type=='array'&&$isNumeric){
-			$arr=array();
-			foreach($value as $k=>$v)$arr[]=kaejax_get_js_repr($v);
-			return '['.join(',',$arr).']';
-		}
-		$s='';
-		if($type=='object')$value=get_object_vars($value);
-		foreach($value as $k=>$v){
-			$esc_key=kaejax_esc($k);
-			if(is_numeric($k))$s.=$k.':'.kaejax_get_js_repr($v).',';
-			else $s.=$esc_key.':'.kaejax_get_js_repr($v).',';
-		}
-		return '('.LSQUIGG.substr($s,0,-1).RSQUIGG.')';
-	} 
-	else{
-		$esc_val=kaejax_esc($value);
-		$s='"'.utf8_encode($esc_val).'"';
-		return $s;
-	}
-}
 function kaejax_handle_client_request(){
 	if(!isset($_POST['kaejax']))return;
 	require_once('includes/JSON.php');
 	$json=new Services_JSON();
-	$obj=$json->decode(stripslashes($_POST['kaejax']));
+	$obj=$json->decode($_POST['kaejax']);
 	$fs=$obj->c;
 	if(!is_array($fs)){ # something wrong
 		echo "error: unknown data sent from client.\n\n";
