@@ -3,11 +3,15 @@
  *
  */
  
-class File{
+class File extends Object{
 	var $id = -1;
 	var $name = '';
 	var $directory = '';
 	var $path = '';
+	var $mimetype = '';
+	var $size;
+	var $type;
+
 	function __construct(){
 		if(func_num_args()==1){
 			global $db;
@@ -18,6 +22,15 @@ class File{
 			$this->name = $filedata['name'];
 			$this->directory = $filedata['directory'];
 			$this->path = $filedata['directory'].'/'.$filedata['name'];
+			if(!file_exists($this->path)){
+				$this->error('File cannot be found');
+				return false;
+			}
+			$mimetype = mime_content_type($this->path);
+			$pos = strpos($mimetype,';');
+			$this->mimetype = ($pos===false)?$mimetype:substr($mimetype,0,$pos);
+			$this->type = trim(substr(strstr($this->mimetype,'/'),1));
+			$this->size = filesize($this->path);
 		}
 	}
 	function isWritable(){
