@@ -49,17 +49,14 @@ function _getFileAsArray($filename){
 function _getFileDetails($fid){
 	$file = new File($fid);
 	if(!file_exists($file->path))return;
-	$mimetype=mime_content_type($file->path);
 	$details=array(
 		'filename'=>$file->name,
-		'mimetype'=>$mimetype,
+		'mimetype'=>$file->mimetype,
 		'filesize'=>kfm_resize_bytes(filesize(addslashes($file->path)))
 	);
-	switch(preg_replace('/\/.*/','',$mimetype)){
-		case 'image':{
-			$details['caption']=kfm_getCaption($file->id);
-			break;
-		}
+	if($file->isImage()){
+		$im = new Image($file);
+		$details['caption'] = $im->caption;
 	}
 	return $details;
 }

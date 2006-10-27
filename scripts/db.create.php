@@ -1,6 +1,6 @@
 <?php
 	if($db_defined){
-		chmod(WORKDIR.DBNAME,0660);
+		chmod(WORKPATH.DBNAME,0660);
 		$db->exec('create table parameters(name text, value text)');
 		$db->exec('create table directories(
 			id INTEGER PRIMARY KEY,
