@@ -242,6 +242,10 @@ function kfm_changeDirectory(e){
 	x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);
 	x_kfm_loadDirectories(kfm_cwd_id,kfm_refreshDirectories);
 }
+function kfm_clearMessage(message){
+	$('message').setCss('textDecoration:none').innerHTML=message;
+	setTimeout('kfm_hideMessage()',5000);
+}
 function kfm_createContextMenu(m,links){
 	if(!window.contextmenu_loading)kfm_closeContextMenu();
 	if(!contextmenu){
@@ -516,6 +520,9 @@ function kfm_getWindow(){
 function kfm_hasPanel(wrapper,panel){
 	for(var i in wrapper.panels)if(wrapper.panels[i]==panel)return true;
 	return false;
+}
+function kfm_hideMessage(){
+	$('message').setCss('display:none');
 }
 function kfm_inArray(haystack,needle){
 	var i;
@@ -981,6 +988,9 @@ function kfm_setDirectoryProperties(properties){
 	}
 	wrapper.addEl(table);
 }
+function kfm_setMessage(message){
+	var m=$('message').setCss('display:block;textDecoration:blink').innerHTML=message;
+}
 function kfm_shiftFileSelectionLR(dir){
 	if(selectedFiles.length>1)return;
 	var na=$('kfm_right_column').fileids,a=0,ns=na.length;
@@ -1091,26 +1101,10 @@ function kfm_showTextFile(res){
 	var r2=t.addRow();
 	r2.addCell(0,1,res.name);
 	r2.addCell(1,1,newLink('javascript:kfm_viewTextFileStarter('+res.id+')','View',0,'button'));
-	r2.addCell(2,1,newLink('javascript:if(confirm(kfm_lang.SaveThenCloseQuestion)){setMessage("saving file...");x_kfm_saveTextFile('+res.id+',$("kfm_textfile").value,kfm_fileSaved);}','Save',0,'button'));
+	r2.addCell(2,1,newLink('javascript:if(confirm(kfm_lang.SaveThenCloseQuestion)){kfm_setMessage("saving file...");x_kfm_saveTextFile('+res.id+',$("kfm_textfile").value,kfm_clearMessage);}','Save',0,'button'));
 	r2.addCell(3,1,newLink('javascript:if(confirm(kfm_lang.CloseWithoutSavingQuestion))x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);',kfm_lang.CloseWithoutSaving,0,'button'));
 	t.addRow().setCss('height:100%').addCell(0,4,newInput('kfm_textfile','textarea',res.content,'kfm_textfile').setCss('width:100%;height:100%'));
 	$('kfm_right_column').empty().addEl(t);
-}
-function kfm_fileSaved(res){
-	clearMessage(res);
-}
-function setMessage(message){
-	$('message').innerHTML = message;
-	$('message').style.display = 'block';
-	$('message').style.textDecoration = 'blink';
-}
-function clearMessage(message){
-	$('message').innerHTML = message;
-	$('message').style.textDecoration = 'none';
-	setTimeout('hideMessage()', 5000);
-}
-function hideMessage(){
-	$('message').style.display = 'none';
 }
 function kfm_togglePanelsUnlocked(){
 	$('kfm_left_column').panels_unlocked=1-$('kfm_left_column').panels_unlocked;
