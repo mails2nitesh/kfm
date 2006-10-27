@@ -1,16 +1,13 @@
 <?php
-class btk_database{
+class btk_database extends Object{
 	var $sql;
-	var $php_api = false;
 	var $sqlite = false;
 	var $mysql = false;
 	var $last_inserted_id = false;
 	var $result = false;
-	var $errors = array();
 	function __construct(){
-		if(func_num_args()==0){
-			$this->php_api();
-		}elseif(func_num_args()==1 && func_get_arg(0) =='sqlite'){
+
+		if(func_num_args()==1 && func_get_arg(0) =='sqlite'){
 			$this->sqlite();
 		}else if(false){
 			// mysql support
@@ -18,30 +15,7 @@ class btk_database{
 			return false;
 		}
 	}
-	
-	function php_api(){
-		global $rootdir;
-		if (!file_exists(WORKDIR.DBNAME)) {
-			require 'php-api/txt-db-api.php';
-			$db = new Database(ROOT_DATABASE);
-			$db->executeQuery("CREATE DATABASE ".DBNAME);
-		}
-		if (!file_exists(DB_DIR.DBNAME."/parameters.txt")) {
-			$db = new Database(DBNAME);
-			$db->executeQuery("CREATE TABLE parameters (name str, value str)");
-			$db->executeQuery("INSERT INTO parameters (name, value) VALUES ('version','0.5.1')");
-		}
-		if (!file_exists(DB_DIR.DBNAME."/directories.txt")) {
-			$db = new Database(DBNAME);
-			$db->executeQuery("CREATE TABLE directories (id inc, name str, physical_address str, parent str)");
-			$db->executeQuery("INSERT INTO directories VALUES (1,'','".rtrim(addslashes($rootdir),' /')."','0')");
-		}
-		if (!file_exists(DB_DIR.DBNAME."/files.txt")) {
-			$db = new Database(DBNAME);
-			$db->executeQuery("CREATE TABLE files (id inc, name str, caption str, directory str)");
-		}
-		$this->php_api = true;
-	}
+
 	function sqlite(){
 		global $db_create, $rootdir;
 		$this->sqlite = true;
@@ -66,13 +40,7 @@ class btk_database{
 		return $this->query($sql);	
 	}
 	function query($sql){
-		if($this->php_api){
-			$is_select = (strtoupper(substr($sql,0,6))=='INSERT');
-			$db= new Database('kfm_database');
-			$this->result = $db->executeQuery($sql);
-			if($is_select) $this->last_inserted_id = $db->getLastInsertId ();
-			return $this;
-		}else if($this->sqlite){
+		if($this->sqlite){
 			$this->result =@sqlite_query($this->db,$sql, SQLITE_ASSOC, $error_msg);
 			if($this->result === false) $this->error($error_msg);
 			//if($this->result===false) die(sqlite_last_error($this->db));
@@ -86,30 +54,14 @@ class btk_database{
 		return $this->last_inserted_id;
 	}
 	function fetchAll(){	
-		if($this->php_api){
-			$data = array();
-			$data_row = array();
-			$colnames = $this->result->getColumnNames();
-			while($this->result->next()){
-				foreach($colnames as $col)$data_row[$col] = $this->result->getCurrentValueByName($col);
-				$data[] = $data_row;
-			}
-			return $data;
-		}else if($this->sqlite){
+		if($this->sqlite){
 			return sqlite_fetch_all($this->result);
 		}else{
 			return false;
 		}
 	}
 	function fetch(){
-		if($this->php_api){
-			$result_data = $this->fetchAll();
-			if(count($result_data)){
-				return $result_data[0];
-			}else{
-				return array();
-			}
-		}else if($this->sqlite){
+		if($this->sqlite){
 			return sqlite_fetch_array($this->result, SQLITE_ASSOC);
 		}else{
 			return array();
@@ -125,11 +77,4 @@ class btk_database{
 		return $this->errors;
 	}
 }
-
-// 	$db = new btk_database();
-// 	$q=$db->prepare('select id,name,directory from files where name like "%tgz%" order by name');
-// 	$q->execute();
-// 	$files=$q->fetchAll();
-// 	return print_r($files);
-
 ?>
