@@ -165,10 +165,8 @@ function _viewTextFile($fileid){
 	global $kfm_viewable_extensions, $kfm_highlight_extensions, $kfm_editable_extensions;
 	$file = new File($fileid);
 	$ext = $file->getExtension();
-	$topmenu = $file->name;
-	if(in_array($ext, $kfm_editable_extensions) && $file->isWritable())
-		$topmenu.="<a href='javascript:kfm_editTextFile(".$file->id.");' class='button'>Edit</a>";
-	$topmenu .="<a href=\"javascript:alert('try another time');\" class='button'>Close</a>";
+	$buttons_to_show=1; # boolean values - 1=Close, 2=Edit
+	if(in_array($ext, $kfm_editable_extensions) && $file->isWritable())$buttons_to_show+=2;
 	if(in_array($ext, $kfm_viewable_extensions)){
 		$code=file_get_contents($file->path);
 		if(array_key_exists($ext,$kfm_highlight_extensions)){
@@ -181,9 +179,9 @@ function _viewTextFile($fileid){
 		}else if($ext == 'txt'){
 			$code = nl2br($code);
 		}
-		return array('fid'=>$fileid, 'content'=>$code, 'topmenu'=>$topmenu);
+		return array('id'=>$fileid, 'content'=>$code, 'buttons_to_show'=>$buttons_to_show,'name'=>$file->name);
 	}else{
-		return "error: viewing file is not allowed";
+		return "error: viewing file is not allowed"; # TODO: new string
 	}
 }
 
