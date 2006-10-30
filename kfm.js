@@ -414,7 +414,7 @@ function kfm_dir_dragFinish(e){
 	var dir_from=window.drag_wrapper.dir_id;
 	delEl(['kfm_selection_blocker',window.drag_wrapper]);
 	removeEvent(document,'mousemove',kfm_dir_drag);
-	removeEvent(document,'mouseup',kfm_file_dragFinish);
+	removeEvent(document,'mouseup',kfm_dir_dragFinish);
 	var a=kfm_getContainer(getMouseAt(e),getElsWithClass('kfm_directory_link','DIV')),f=[];
 	dir_to=a?a.node_id:0;
 	if(dir_to==0||dir_to==dir_from)return;
