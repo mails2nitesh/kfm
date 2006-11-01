@@ -67,5 +67,16 @@ class File extends Object{
 		$result = file_put_contents($this->path, $content);
 		if(!$result) $this->error('error setting file content');
 	}
+
+	/* Function that returns the size in a readable way
+	 * expects input size in bytes
+	 * if no input parameter is given, the size of the file object is taken
+	 */
+	function size2str(){
+		$size = func_num_args()?func_get_arg(0):$this->size;
+		$format = array("B","KB","MB","GB","TB","PB","EB","ZB","YB");
+		$n = floor(log($size)/log(1024));
+		return round($size/pow(1024,$n),1).' '.$format[$n];
+	}
 }
 ?>

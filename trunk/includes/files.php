@@ -52,7 +52,7 @@ function _getFileDetails($fid){
 	$details=array(
 		'filename'=>$file->name,
 		'mimetype'=>$file->mimetype,
-		'filesize'=>kfm_resize_bytes(filesize(addslashes($file->path)))
+		'filesize'=>$file->size2str()
 	);
 	if($file->isImage()){
 		$im = new Image($file);
