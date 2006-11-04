@@ -47,7 +47,6 @@ session_start();
 	if(!file_exists($rootdir.'.files'))mkdir($rootdir.'.files');
 	if(!isset($_SESSION['kfm']))$_SESSION['kfm']=array(
 		'currentdir'=>rtrim($rootdir,' /'),
-		'currentdirpart'=>'/',
 		'cwd_id'=>1,
 		'language'=>''
 	);

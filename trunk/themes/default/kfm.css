@@ -7,9 +7,9 @@ td{vertical-align:top}
 #kfm_directories .kfm_dir_name.kfm_directory_open{background:url(folders.gif) -48px -18px no-repeat #fe9}
 #kfm_directory_properties{color:#666}
 #kfm_directory_properties strong{display:block;font-weight:bold;border:solid #bababa;border-width:0 1px 1px 0}
-#kfm_drag_wrapper{position:absolute;padding:10px;text-decoration:underline;color:#00f;border:1px solid #000;-moz-border-radius:10px;font-size:smaller;background:#9cf}
+#kfm_drag_wrapper{position:absolute;padding:10px;text-decoration:underline;color:#00f;border:1px solid #000;-moz-border-radius:10px;font-size:smaller;background:#eee}
 #kfm_drag_wrapper.directory{padding:0 0 0 16px;-moz-border-radius:0;min-width:120px;background:url(folders.gif) no-repeat -48px 0 #fff;}
-#kfm_selection_drag_wrapper{position:absolute;border:1px solid #000;-moz-border-radius:10px;background:#9cf}
+#kfm_selection_drag_wrapper{position:absolute;border:1px solid #000;-moz-border-radius:10px;background:#eee}
 #kfm_left_column{width:240px;position:relative;float:left;background:white;border-right:1px solid #bababa;overflow:hidden}
 #kfm_logs_panel p{border-top:1px solid #bababa;font:10px sans-serif;margin:0;padding:0;color:#666}
 #kfm_logs_panel p:first-child{border:none}
@@ -93,7 +93,7 @@ div.kfm_panel_header a{float:right;text-decoration:none}
 .kfm_file_icon.kfm_icontype_unknown{background-image:url(icons/64x64/mimetypes/unknown.png)}
 .kfm_file_icon.kfm_icontype_zip{background-image:url(icons/64x64/mimetypes/zip.png)}
 div:hover.kfm_file_icon{background-color:#f0f8ff;border-color:#bababa}
-div.kfm_file_icon.selected{background-color:#9cf;border-color:#000}
+div.kfm_file_icon.selected{background-color:#eee;border-color:#000}
 
 #kfm_directories,#kfm_directories table{border-spacing:0;margin:0;width:100%}
 #kfm_directories td{padding:0}
@@ -106,7 +106,7 @@ div.kfm_file_icon.selected{background-color:#9cf;border-color:#000}
 #kfm_directories .kfm_dir_lines_lastchild a.kfm_dir_node_closed{background:url(folders.gif) -32px 0px no-repeat}
 #kfm_directories .kfm_dir_lines_nochild{width:16px;background:url(folders.gif) 0 0 repeat-y}
 #kfm_directories .kfm_dir_name{background:url(folders.gif) no-repeat -48px 0;text-indent:18px;color:blue;text-decoration:underline;position:relative}
-#kfm_directories .kfm_dir_name.kfm_directory_open{background:url(folders.gif) -48px -18px no-repeat; background-color:#fe9}
+#kfm_directories .kfm_dir_name.kfm_directory_open{background:url(folders.gif) -48px -18px no-repeat; background-color:#eee}
 #kfm_directories .kfm_dir_name div:hover{color:red}
 #message{top:2px; right:3px; position:absolute; z-index:10000; background-color: #f00; color: #000; font-weight:bold;}
 .button{margin-left:15px;color:#fff;background:#666;font-weight:bold;text-decoration:none;padding:2px 4px;display:block;text-align:center;border:2px solid;border-color:#ccc #999 #999 #ccc}
