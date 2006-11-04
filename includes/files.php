@@ -78,13 +78,10 @@ function _loadFiles($rootid=1){
 	$root=str_replace($GLOBALS['rootdir'],'',$reqdir);
 	if(!kfm_checkAddr($root))return;
 	$reqdir=$GLOBALS['rootdir'].$root;
-	
-	if(!is_dir($reqdir)){
-		if(is_writable($reqdir)){
-			mkdir($reqdir,0755); // TODO check if writable 
-		}else{
-			return "error: directory $reqdir is not writable";
-		}
+	if(!is_dir($reqdir))return 'error: "'.$reqdir.'" is not a directory'; # TODO: new string
+	if(!is_writable($reqdir)){
+		chmod($reqdir,0755);
+		if(!is_writable($reqdir))return 'error: failed to make "'.$reqdir.'" writable'; # TODO: new string
 	}
 	if($handle=opendir($reqdir)){
 		$q=$db->prepare('select * from files where directory="'.$rootid.'"');
@@ -98,12 +95,14 @@ function _loadFiles($rootid=1){
 			if(!isset($fileshash[$filename])){
 				kfm_add_file_to_db($filename,$rootid);
 				$fileshash[$filename]=$db->lastInsertId();
-#return 'error: file not found in db';
 			}
 			$files[]=array('name'=>$filename,'parent'=>$rootid,'id'=>$fileshash[$filename]);
 		}
 		closedir($handle);
-		$_SESSION['kfm']=array('currentdir'=>$reqdir,'currentdirpart'=>$root,'cwd_id'=>$rootid);
+		{ # update session data
+			$_SESSION['kfm']['currentdir']=$reqdir;
+			$_SESSION['kfm']['cwd_id']=$rootid;
+		}
 		return array('reqdir'=>$root,'files'=>$files,'uploads_allowed'=>$GLOBALS['kfm_allow_file_uploads']);
 	}
 	return 'couldn\'t read directory';
