@@ -157,59 +157,59 @@ LoadingKFM:
 Name:
 	"Navn",
 FileDetails:
-	"File Details",
+	"Egenskaber",
 Search:
-	"Search",
+	"Søg",
 IllegalDirectoryName:
-	"illegal directory name \"%1\"",
+	"ikke gyldigt mappenavn \"%1\"",
 RecursiveDeleteWarning:
-	"\"%1\" is not empty\nAre you sure you want to delete it and all its contents?\n*WARNING* THIS IS NOT REVERSIBLE",
+	"\"%1\" indeholder filer\nVil du slette mappen og alt indhold?\n*ADVARSEL* DENNE HANDLING KAN IKKE FORTRYDES",
 RmdirFailed:
-	"failed to delete directory \"%1\"",
+	"kunne ikke slette mappen \"%1\"",
 DirNotInDb:
-	"directory not in database",
+	"mappen kunne ikke findes i databasen",
 ShowPanel:
-	"show panel \"%1\"",
+	"vis panel \"%1\"",
 ChangeCaption:
-	"Change Caption",
+	"Ret beskrivelse", 
 NewDirectory:
-	"New Directory",
+	"Ny mappe",
 Upload:
 	"Upload",
 NewCaptionIsThisCorrect:
-	"New Caption:\n%1\n\nIs this correct?",
+	"Ny beskrivelse:\n%1\n\nEr dette korrekt?",
 Close:
-	"close",
+	"luk",
 Loading:
-	"loading",
+	"indlæser",
 AreYouSureYouWantToCloseKFM:
-	"Are you sure you want to close the KFM window?",
+	"Vil du lukke KFM vinduet?",
 PleaseSelectFileBeforeRename:
-	"Please select a file before you try to rename it",
+	"Du skal vælge en fil før du kan omdøbe den",
 RenameOnlyOneFile:
-	"You can only rename one file at a time",
+	"Du kan kun omdøbe én fil af gangen",
 RenameFileToWhat:
-	"Rename the file \"%1\" to what?",
+	"Omdøb filen \"%1\" til?",
 NoRestrictions:
-	"no restrictions",
+	"ingen restriktioner",
 Filename:
-	"filename",
+	"filnavn",
 Maximise:
-	"maximise",
+	"maksimer",
 Minimise:
-	"minimise",
+	"minimer",
 AllowedFileExtensions:
-	"allowed file extensions",
+	"tilladte filtyper",
 Filesize:
-	"filesize",
+	"størrelse",
 MoveDown:
-	"move down",
+	"ryk ned",
 Mimetype:
 	"mimetype",
 MoveUp:
-	"move up",
+	"ryk op",
 Restore:
-	"restore",
+	"gendan",
 Caption:
-	"caption"
+	"beskrivelse"
 }
