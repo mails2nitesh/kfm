@@ -22,6 +22,6 @@
 		)');
 
 		$db->exec('insert into parameters values("version","0.5.1")');
-		$db->exec('insert into directories values(1,"","'.rtrim(addslashes($rootdir),' /').'",0)');
+		$db->exec('insert into directories values(1,"","'.rtrim(addslashes($rootdir)).'",0)');
 	}
 ?>
