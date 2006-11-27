@@ -55,6 +55,10 @@ class btk_database extends Object{
 	}
 	function fetchAll(){	
 		if($this->sqlite){
+			if(!$this->result){
+				$this->error('No result for fetchAll. SQL='.$this->sql);
+				return false;
+			}
 			return sqlite_fetch_all($this->result);
 		}else{
 			return false;
@@ -62,6 +66,10 @@ class btk_database extends Object{
 	}
 	function fetch(){
 		if($this->sqlite){
+			if(!$this->result){
+				$this->error('No result for fetch. SQL='.$this->sql);
+				return array();
+			}
 			return sqlite_fetch_array($this->result, SQLITE_ASSOC);
 		}else{
 			return array();
