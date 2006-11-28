@@ -40,7 +40,20 @@ session_start();
 	# to use a different theme, replace 'default' with the name of the theme's directory.
 	$kfm_theme='default';
 
+	# the default for this is 'sqlite', which should be correct for most systems.
+	# if you are having problems, try 'mysql' instead
+	# NOTE: sqlite support is currently broken. please use mysql instead
+	$kfm_db_type='mysql'; # values allowed: sqlite, mysql
+
+	# the following options should only be filled if you are not using sqlite
+	$kfm_db_host='localhost';
+	$kfm_db_name='kfm';
+	$kfm_db_username='kfm';
+	$kfm_db_password='kfm';
 }
+
+
+
 # the rest of this is code. if you're not a developer, then stop reading now, and close your text editor.
 { # variables
 	$rootdir=str_replace('//','/',$_SERVER['DOCUMENT_ROOT'].$kfm_userfiles.'/');
@@ -83,25 +96,58 @@ session_start();
 		exit;
 	}
 }
-{ # sqlite db
+{ # database
 	$db_defined=0;
-	$db_create = false;
-	define('DBNAME','db');
-	if(!file_exists(WORKPATH.DBNAME)) $db_create = true;
-	if(class_exists('PDO')&&extension_loaded('pdo_sqlite')){
-		try{
-			$db=@new PDO('sqlite:'.WORKPATH.DBNAME);
+	switch($kfm_db_type){
+		case 'sqlite': {
+			require_once('MDB2.php');
+			$db_create = false;
+			define('DBNAME','db');
+			if(!file_exists(WORKPATH.DBNAME))$db_create=true;
+			$dsn=array('phptype'=>'sqlite','database'=>WORKPATH.DBNAME,'mode'=>'0644');
+			$db=&MDB2::factory($dsn);
+			if(PEAR::isError($db))die($db->getMessage());
+echo 'test5';
+			if($db_create)include('scripts/db.sqlite.create.php');
+echo 'test6';
 			$db_defined=1;
-			if($db_create) include('scripts/db.create.php');
-			$db_method='sqlite';
+/*
+			if(class_exists('PDO')&&extension_loaded('pdo_sqlite')){
+				try{
+					$db=@new PDO('sqlite:'.WORKPATH.DBNAME);
+					$db_defined=1;
+					if($db_create)include('scripts/db.sqlite.create.php');
+				}
+				catch(PDOException $e){
+				}
+			}
+			if(!$db_defined){
+				require_once('includes/btk_database.class.php');
+				$db=new btk_database('sqlite');
+			}
+*/
 		}
-		catch(PDOException $e){
+		case 'mysql': {
+			require_once('MDB2.php');
+			$dsn='mysql://'.$kfm_db_username.':'.$kfm_db_password.'@'.$kfm_db_host.'/'.$kfm_db_name;
+			$db=&MDB2::factory($dsn);
+			if(PEAR::isError($db))die($db->getMessage());
+			$db->setFetchMode(MDB2_FETCHMODE_ASSOC);
+			$res=&$db->query('show tables');
+			if(!$res->numRows()){
+				include('scripts/db.mysql.create.php');
+			}
+			else $db_defined=1;
+			break;
+		}
+		default: {
+			echo 'unknown database type specified ($kfm_db_type)'; # TODO: new string
+			exit;
 		}
 	}
 	if(!$db_defined){
-		require_once('includes/btk_database.class.php');
-		$db=new btk_database('sqlite');
-		$db_method='btk';
+		echo 'failed to connect to database'; # TODO: new string
+		exit;
 	}
 	$db_defined=null;
 }
