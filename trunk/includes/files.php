@@ -1,9 +1,8 @@
 <?php
 function _add_file_to_db($filename,$directory_id){
-	global $db,$db_method;
+	global $db;
 	$sql='insert into files (name,directory) values("'.addslashes($filename).'",'.$directory_id.')';
-	$q=$db->prepare($sql);
-	return $q->execute();
+	return $db->query($sql);
 }
 function _createEmptyFile($filename){
 	if(!kfm_checkAddr($_SESSION['kfm']['currentdir'].'/'.$filename))return 'error: filename not allowed';
@@ -18,21 +17,18 @@ function _downloadFileFromUrl($url,$filename){
 }
 function _moveFiles($files,$dir_id){
 	global $db;
-	$q=$db->prepare('select id,physical_address,name from directories where id='.$dir_id);
-	$q->execute();
-	if(!($dirdata=$q->fetch()))return 'error: no data for directory id "'.$dir_id.'"'; # TODO: new string
+	$q=$db->query('select id,physical_address,name from directories where id='.$dir_id);
+	if(!($dirdata=$q->fetchRow()))return 'error: no data for directory id "'.$dir_id.'"'; # TODO: new string
 	$to=$dirdata['physical_address'].'/';
 	if(!kfm_checkAddr($to))return 'error: illegal directory "'.$to.'"'; # TODO: new string
 	foreach($files as $fid){
-		$q=$db->prepare('select directories.physical_address as da,files.name as fn from files,directories where directories.id=files.directory and files.id='.$fid);
-		$q->execute();
-		if(!($filedata=$q->fetch()))return 'error: no data for file id "'.$file.'"'; # TODO: new string
+		$q=$db->query('select directories.physical_address as da,files.name as fn from files,directories where directories.id=files.directory and files.id='.$fid);
+		if(!($filedata=$q->fetchRow()))return 'error: no data for file id "'.$file.'"'; # TODO: new string
 		$dir=$filedata['da'];
 		$file=$filedata['fn'];
 		if(!kfm_checkAddr($dir.'/'.$file))return;
 		rename($dir.'/'.$file,$to.'/'.$file);
-		$q=$db->prepare('update files set directory='.$dir_id.' where id='.$fid);
-		$q->execute();
+		$q=$db->query('update files set directory='.$dir_id.' where id='.$fid);
 		/* no longer needed // benjamin
 		$icons=glob($dir.'/.files/[0-9]*x[0-9]* '.$file);
 		foreach($icons as $f)unlink($f);
@@ -71,9 +67,8 @@ function _getTextFile($fid){
 }
 function _loadFiles($rootid=1){
 	global $db;
-	$q=$db->prepare('select * from directories where id='.$rootid.'');
-	$q->execute();
-	$dirdata=$q->fetch();
+	$q=$db->query('select * from directories where id='.$rootid.'');
+	$dirdata=$q->fetchRow();
 	$reqdir=count($dirdata)?$dirdata['physical_address'].'/':$GLOBALS['rootdir'];
 	$root=str_replace($GLOBALS['rootdir'],'',$reqdir);
 	if(!kfm_checkAddr($root))return;
@@ -84,8 +79,7 @@ function _loadFiles($rootid=1){
 		if(!is_writable($reqdir))return 'error: failed to make "'.$reqdir.'" writable'; # TODO: new string
 	}
 	if($handle=opendir($reqdir)){
-		$q=$db->prepare('select * from files where directory="'.$rootid.'"');
-		$q->execute();
+		$q=$db->query('select * from files where directory="'.$rootid.'"');
 		$filesdb=$q->fetchAll();
 		$fileshash=array();
 		if(is_array($filesdb))foreach($filesdb as $r)$fileshash[$r['name']]=$r['id'];
@@ -131,9 +125,8 @@ function _rm($id,$no_dir=0){
 	}
 	else{
 		global $db;
-		$rf=$db->prepare('select files.name as name,physical_address FROM files,directories WHERE files.id="'.$id.'" and directories.id=files.directory');
-		$rf->execute();
-		$file_data=$rf->fetch();
+		$rf=$db->query('select files.name as name,physical_address FROM files,directories WHERE files.id="'.$id.'" and directories.id=files.directory');
+		$file_data=$rf->fetchRow();
 		$rf=null;
 		if(count($file_data)){
 			$file_address=$file_data['physical_address'].'/'.$file_data['name'];
@@ -155,8 +148,7 @@ function _saveTextFile($fid,$text){
 }
 function _search($keywords){
 	global $db;
-	$q=$db->prepare('select id,name,directory from files where name like "%'.addslashes($keywords).'%" order by name');
-	$q->execute();
+	$q=$db->query('select id,name,directory from files where name like "%'.addslashes($keywords).'%" order by name');
 	$files=$q->fetchAll();
 	return array('reqdir'=>'','files'=>$files,'uploads_allowed'=>0);
 }
