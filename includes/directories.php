@@ -1,6 +1,6 @@
 <?php
 function _add_directory_to_db($name,$physical_address,$parent){
-	global $db,$db_method;
+	global $db;
 	$physical_address = str_replace('//','/', $physical_address);
 	$sql='insert into directories (name,physical_address,parent) values("'.addslashes($name).'","'.addslashes($physical_address).'",'.$parent.')';
 	return $db->exec($sql);
@@ -36,7 +36,7 @@ function _deleteDirectory($id,$recursive=0){
 }
 function _getDirectoryDbInfo($id){
 	$q=$GLOBALS['db']->query('select * from directories where id='.$id);
-	return $q->fetch();
+	return $q->fetchRow();
 }
 function _getDirectoryProperties($dir){
 	if(strlen($dir))$properties=kfm_getDirectoryProperties(preg_replace('/[^\/]*\/$/','',$dir));
@@ -59,7 +59,7 @@ function _loadDirectories($root){
 	if(!isset($rootid)){
 		$reqdir=str_replace('//','/',$GLOBALS['rootdir'].$root);
 		$q=$db->query('select id from directories where physical_address="'.addslashes($reqdir).'"');
-		$r=$q->fetch();
+		$r=$q->fetchRow();
 		$rootid=$r['id'];
 	}
 	if(!kfm_checkAddr($root))return 'error: illegal address "'.$root.'"';
@@ -104,7 +104,8 @@ function _moveDirectory($from,$to){
 	rename($f_add,$t_add.'/'.$f_name);
 	if(!file_exists($t_add.'/'.$f_name))return 'error: could not move directory'; # TODO: new string
 	$len=strlen(preg_replace('#/[^/]*$#','',$f_add));
-	$fugly='update directories set physical_address=("'.addslashes($t_add).'"||substr(physical_address,'.($len+1).',length(physical_address)-'.$len.')) where physical_address like "'.addslashes($f_add).'/%" or id='.$from;
+	if($GLOBALS['kfm_db_type']=='sqlite')$fugly='update directories set physical_address=("'.addslashes($t_add).'"||substr(physical_address,'.($len+1).',length(physical_address)-'.$len.')) where physical_address like "'.addslashes($f_add).'/%" or id='.$from;
+	else $fugly='update directories set physical_address=concat("'.addslashes($t_add).'",substr(physical_address,'.$len.'-length(physical_address))) where physical_address like "'.addslashes($f_add).'/%" or id='.$from;
 	$db->exec($fugly) or die('error: '.print_r($db->errorInfo(),true));
 	$db->exec('update directories set parent="'.$to.'" where id='.$from) or die('error: '.print_r($db->errorInfo(),true));
 	return _loadDirectories(1);

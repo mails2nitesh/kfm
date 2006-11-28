@@ -23,7 +23,7 @@ class btk_database extends Object{
 			$db_defined = 1;
 			if($db_create){
 				$db =&$this;
-				include 'scripts/db.create.php';
+				include 'scripts/db.sqlite.create.php';
 			}
 		} else {
    			die($sqliteerror);
