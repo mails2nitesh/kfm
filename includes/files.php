@@ -75,8 +75,7 @@ function _loadFiles($rootid=1){
 	$reqdir=$GLOBALS['rootdir'].$root;
 	if(!is_dir($reqdir))return 'error: "'.$reqdir.'" is not a directory'; # TODO: new string
 	if(!is_writable($reqdir)){
-		chmod($reqdir,0755);
-		if(!is_writable($reqdir))return 'error: failed to make "'.$reqdir.'" writable'; # TODO: new string
+		if(!chmod($reqdir,0755))return 'error: failed to make "'.$reqdir.'" writable'; # TODO: new string
 	}
 	if($handle=opendir($reqdir)){
 		$q=$db->query('select * from files where directory="'.$rootid.'"');
