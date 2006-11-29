@@ -18,7 +18,7 @@ class File extends Object{
 			$this->id = func_get_arg(0);
 			$qf=$db->query('SELECT files.id AS id, files.name AS name, directories.physical_address AS directory FROM files, directories
 				WHERE files.id='.$this->id.' AND directories.id = files.directory');
-			$filedata = $qf->fetch();
+			$filedata = $qf->fetchRow();
 			$this->name = $filedata['name'];
 			$this->directory = $filedata['directory'];
 			$this->path = $filedata['directory'].'/'.$filedata['name'];
