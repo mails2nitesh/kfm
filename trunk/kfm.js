@@ -370,8 +370,8 @@ function kfm_deleteSelectedFiles(){
 	}
 }
 function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
-	var r=t.addRow(),c,pdir=parent_addr+name;
-	var folder_name=X(newEl('div','kfm_directory_icon_'+parent,'kfm_directory_link '+(kfm_cwd_name==pdir?'':'kfm_directory_open'),name==''?'root':name),{
+	var r=t.addRow(),c,pdir=parent_addr+name,name=(name==''?'root':name),name_text=newEl('span','directory_name_'+parent,0,'0');
+	var el=X(newEl('div','kfm_directory_icon_'+parent,'kfm_directory_link '+(kfm_cwd_name==pdir?'':'kfm_directory_open'),name_text),{
 		kfm_directoryname:pdir,
 		node_id:parent,
 		contextmenu:function(e){
@@ -381,8 +381,10 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 			kfm_createContextMenu(getMouseAt(getEvent(e)),links);
 		}
 	}).setCss('cursor:'+(Browser.isIE?'hand':'pointer'));
-	addEvent(folder_name,'click',kfm_changeDirectory);
-	if(parent!=1)addEvent(folder_name,'mousedown',(function(id){
+	r.addCell(0,0,(has_node_control?newLink('javascript:kfm_dir_openNode('+parent+')','[+]','kfm_dir_node_'+parent,'kfm_dir_node_closed'):newEl('span','kfm_dir_node_'+parent,0,' ')),'kfm_dir_lines_'+(is_last?'lastchild':'child'));
+	r.addCell(1,0,el,'kfm_dir_name');
+	addEvent(el,'click',kfm_changeDirectory);
+	if(parent!=1)addEvent(el,'mousedown',(function(id){
 		return function(e){
 			if(e.button==2)return;
 			addEvent(document,'mouseup',kfm_dir_dragFinish);
@@ -392,8 +394,22 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 			},100);
 		};
 	})(parent));
-	r.addCell(0,0,(has_node_control?newLink('javascript:kfm_dir_openNode('+parent+')','[+]','kfm_dir_node_'+parent,'kfm_dir_node_closed'):newEl('span','kfm_dir_node_'+parent,0,' ')),'kfm_dir_lines_'+(is_last?'lastchild':'child'));
-	r.addCell(1,0,folder_name,'kfm_dir_name');
+	{ // fix name width
+		var reqHeight=name_text.offsetHeight;
+		name_text.innerHTML=name;
+		el=name_text;
+		el.style.position='absolute';
+		if(reqHeight&&el.offsetHeight>reqHeight){
+			var filename=name;
+			el.title=name;
+			do{
+				filename=filename.substring(0,filename.length-1);
+				el.innerHTML=filename+'[...]';
+			}while(el.offsetHeight>reqHeight);
+			el.empty().addEl([newEl('span',0,'filename',filename),newEl('span',0,0,'[...]').setCss('color:red;textDecoration:none')]);
+		}
+		el.style.position='inherit';
+	}
 	{ // subdir holder
 		r=t.addRow();
 		r.addCell(0,0,' ',is_last?0:'kfm_dir_lines_nochild');
@@ -802,9 +818,9 @@ function kfm_refreshFiles(res){
 				var extension='';
 				var filename=name;
 			}
+			el.title=name;
 			var name=el.getElementsByTagName('span')[0];
 			name.delClass('filename');
-			el.title=name;
 			do{
 				filename=filename.substring(0,filename.length-1);
 				name.innerHTML=filename+'[...]'+extension;
