@@ -740,7 +740,8 @@ function kfm_refreshDirectories(res){
 }
 function kfm_refreshFiles(res){
 	if(res.toString()===res)return kfm_log(res);
-	var files=[],a,b,fileids=[],wrapper=$('kfm_right_column');
+	var files=[],a,b,fileids=[],wrapper=$('kfm_right_column').empty();
+	wrapper.addEl(newEl('div',0,'kfm_panel_header',kfm_lang.CurrentWorkingDir(res.reqdir)));
 	for(a in res.files){
 		var name=res.files[a].name,ext=name.replace(/.*\./,''),el,b,fullfilename=kfm_cwd_name+'/'+name,id=res.files[a].id;
 		el=newEl('div','kfm_file_icon_'+id,'kfm_file_icon kfm_icontype_'+ext,newEl('span',0,'filename',name)).setCss('cursor:'+(Browser.isIE?'hand':'pointer'));
@@ -789,15 +790,7 @@ function kfm_refreshFiles(res){
 		}
 		files[a]=el;
 		fileids[a]=id;
-	}
-	wrapper.fileids=fileids;
-	wrapper.empty().addEl([
-		newEl('div',0,'kfm_panel_header',kfm_lang.CurrentWorkingDir(res.reqdir)),
-		files.length?files:newEl('span',0,'kfm_empty',kfm_lang.DirEmpty(res.reqdir))
-	]);
-	for(a in res.files){
-		var name=res.files[a].name,id=res.files[a].id;
-		var el=$('kfm_file_icon_'+id);
+		wrapper.addEl(el);
 		var reqWidth=el.offsetWidth;
 		el.style.width='auto';
 		if(el.offsetWidth>reqWidth){
@@ -821,6 +814,8 @@ function kfm_refreshFiles(res){
 		el.style.width=reqWidth;
 		el.style.width=reqWidth-(el.offsetWidth-reqWidth);
 	}
+	wrapper.fileids=fileids;
+	if(!files.length)wrapper.addEl(newEl('span',0,'kfm_empty',kfm_lang.DirEmpty(res.reqdir)));
 	document.title=res.reqdir;
 	kfm_lastClicked=null;
 	kfm_log(kfm_lang.FilesRefreshed);
