@@ -219,9 +219,16 @@ function kfm_contextmenuinit(){
 }
 function kfm_chooseFile(e,o){
 	var el=(o?e:getEventTarget(e)).kfm_attributes;
-	if(!el.image_data)window.opener.SetUrl(fckrootOutput+kfm_cwd_name+'/'+el.name);
-	else window.opener.SetUrl(fckrootOutput+kfm_cwd_name+'/'+el.name,0,0,el.image_data.caption);
-	window.close();
+	var url=document.location.toString().replace(/browser.*/,'get.php?id='+el.id);
+	if(kfm_file_handler=='fckeditor'){
+		if(!el.image_data)window.opener.SetUrl(url);
+		else window.opener.SetUrl(url,0,0,el.image_data.caption);
+		window.close();
+	}
+	else if(kfm_file_handler=='download'){
+		url+='&forcedownload=1';
+		document.location=url;
+	}
 }
 function kfm_changeCaption(id){
 	var el=kfm_filesCache[id],txt=kfm_lang.ChangeCaption+el.image_data.caption;

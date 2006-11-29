@@ -1,7 +1,7 @@
 <?php
 # see license.txt for licensing
 require_once('framework.php');
-include('config.php');
+require_once('config.php');
 require_once('includes/kaejax.php');
 
 { # directory functions
@@ -138,6 +138,7 @@ require_once('includes/kaejax.php');
 			var starttype="<?php echo isset($_GET['Type'])?$_GET['Type']:''; ?>";
 			var fckroot="<?php echo $kfm_userfiles; ?>";
 			var fckrootOutput="<?php echo $kfm_userfiles_output; ?>";
+			var kfm_file_handler="<?php echo $kfm_file_handler; ?>";
 			var kfm_log_level=<?php echo $kfm_log_level; ?>;
 			var kfm_theme="<?php echo $kfm_theme; ?>";
 			<?php echo kaejax_get_javascript(); ?>
