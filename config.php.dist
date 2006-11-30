@@ -1,5 +1,6 @@
 <?php
 # see license.txt for licensing
+error_reporting(E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE);
 session_start();
 { # configuration
 
@@ -40,6 +41,9 @@ session_start();
 	# to use a different theme, replace 'default' with the name of the theme's directory.
 	$kfm_theme='default';
 
+	# what happens if someone double-clicks a file or presses enter on one?
+	$kfm_file_handler='download'; # values allowed: download, fckeditor
+
 	# the default for this is 'sqlite', which should be correct for most systems.
 	# if you are having problems, try 'mysql' instead
 	# NOTE: sqlite support is currently broken. please use mysql instead
@@ -50,14 +54,42 @@ session_start();
 	$kfm_db_name='kfm';
 	$kfm_db_username='kfm';
 	$kfm_db_password='kfm';
+
+	define('ERROR_LOG_LEVEL',1); # 0=none, 1=errors, 2=1+warnings, 3=2+notices, 4=3+unknown
 }
 
 
 
 # the rest of this is code. if you're not a developer, then stop reading now, and close your text editor.
+function kfm_error_log($errno,$errstr,$errfile,$errline){
+	if(!ERROR_LOG_LEVEL)return;
+	switch ($errno) {
+		case E_USER_ERROR:{
+			if(ERROR_LOG_LEVEL>2)$msg='error|'.$errno.'|'.$errfile.'|'.$errline.'|'.$errstr."\n";
+			break;
+		}
+		case E_USER_WARNING:{
+			if(ERROR_LOG_LEVEL>1)$msg='warning|'.$errno.'|'.$errfile.'|'.$errline.'|'.$errstr."\n";
+			break;
+		}
+		case E_USER_NOTICE:{
+			if(ERROR_LOG_LEVEL)$msg='notice|'.$errno.'|'.$errfile.'|'.$errline.'|'.$errstr."\n";
+			break;
+		}
+		default:{
+			if(ERROR_LOG_LEVEL>3)$msg='unknown|'.$errno.'|'.$errfile.'|'.$errline.'|'.$errstr."\n";
+			break;
+		}
+	}
+	if($msg&&$handle=fopen(WORKPATH.'errors.log', 'a')){
+		@fwrite($handle, date('Y-m-d H:i:s').' '.$msg."\n" );
+		@fclose($handle);
+	}
+}
+set_error_handler('kfm_error_log');
 { # variables
 	$rootdir=str_replace('//','/',$_SERVER['DOCUMENT_ROOT'].$kfm_userfiles.'/');
-	if(!file_exists($rootdir.'.files'))mkdir($rootdir.'.files');
+	if(!file_exists($rootdir.$kfm_workdirectory))mkdir($rootdir.$kfm_workdirectory);
 	if(!isset($_SESSION['kfm']))$_SESSION['kfm']=array(
 		'currentdir'=>rtrim($rootdir,' /'),
 		'cwd_id'=>1,
@@ -107,9 +139,7 @@ session_start();
 			$dsn=array('phptype'=>'sqlite','database'=>WORKPATH.DBNAME,'mode'=>'0644');
 			$db=&MDB2::factory($dsn);
 			if(PEAR::isError($db))die($db->getMessage());
-echo 'test5';
 			if($db_create)include('scripts/db.sqlite.create.php');
-echo 'test6';
 			$db_defined=1;
 /*
 			if(class_exists('PDO')&&extension_loaded('pdo_sqlite')){
