@@ -19,7 +19,7 @@
 		foreign key (file_id) references files (id)
 	)');
 
-	$db->query('insert into parameters values("version","0.5.1")');
+	$db->query('insert into parameters values("version","'.KFM_VERSION.'")');
 	$res=$db->query('insert into directories values(1,"","'.rtrim(addslashes($rootdir)).'",0)');
 	if(!PEAR::isError($res))$db_defined=1;
 ?>

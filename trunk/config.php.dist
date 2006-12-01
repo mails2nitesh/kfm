@@ -1,6 +1,6 @@
 <?php
 # see license.txt for licensing
-error_reporting(E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE);
+//error_reporting(E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE);
 session_start();
 { # configuration
 
@@ -52,8 +52,8 @@ session_start();
 	# the following options should only be filled if you are not using sqlite
 	$kfm_db_host='localhost';
 	$kfm_db_name='kfm';
-	$kfm_db_username='kfm';
-	$kfm_db_password='kfm';
+	$kfm_db_username='benjamin';
+	$kfm_db_password='benjamin';
 
 	define('ERROR_LOG_LEVEL',1); # 0=none, 1=errors, 2=1+warnings, 3=2+notices, 4=3+unknown
 }
@@ -63,6 +63,7 @@ session_start();
 # the rest of this is code. if you're not a developer, then stop reading now, and close your text editor.
 function kfm_error_log($errno,$errstr,$errfile,$errline){
 	if(!ERROR_LOG_LEVEL)return;
+	$msg = false;
 	switch ($errno) {
 		case E_USER_ERROR:{
 			if(ERROR_LOG_LEVEL>2)$msg='error|'.$errno.'|'.$errfile.'|'.$errline.'|'.$errstr."\n";
@@ -88,6 +89,7 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 }
 set_error_handler('kfm_error_log');
 { # variables
+	define('KFM_VERSION', '7.0');
 	$rootdir=str_replace('//','/',$_SERVER['DOCUMENT_ROOT'].$kfm_userfiles.'/');
 	if(!file_exists($rootdir.$kfm_workdirectory))mkdir($rootdir.$kfm_workdirectory);
 	if(!isset($_SESSION['kfm']))$_SESSION['kfm']=array(
@@ -157,6 +159,7 @@ set_error_handler('kfm_error_log');
 			}
 */
 		}
+		break;
 		case 'mysql': {
 			require_once('MDB2.php');
 			$dsn='mysql://'.$kfm_db_username.':'.$kfm_db_password.'@'.$kfm_db_host.'/'.$kfm_db_name;
@@ -164,6 +167,7 @@ set_error_handler('kfm_error_log');
 			if(PEAR::isError($db))die($db->getMessage());
 			$db->setFetchMode(MDB2_FETCHMODE_ASSOC);
 			$res=&$db->query('show tables');
+			//if(PEAR::isError($res))die($res->getMessage());
 			if(!$res->numRows()){
 				include('scripts/db.mysql.create.php');
 			}
@@ -171,7 +175,7 @@ set_error_handler('kfm_error_log');
 			break;
 		}
 		default: {
-			echo 'unknown database type specified ($kfm_db_type)'; # TODO: new string
+			echo "unknown database type specified ($kfm_db_type)"; # TODO: new string
 			exit;
 		}
 	}
