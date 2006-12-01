@@ -34,7 +34,7 @@ class btk_database extends Object{
 		return $this;
 	}
 	function execute(){
-		$this->query($this->sql);
+		return $this->query($this->sql);
 	}
 	function exec($sql){
 		return $this->query($sql);	
