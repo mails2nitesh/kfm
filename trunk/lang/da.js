@@ -211,5 +211,7 @@ MoveUp:
 Restore:
 	"gendan",
 Caption:
-	"beskrivelse"
+	"beskrivelse",
+CopyFromURL:
+	"Copy from URL"
 }

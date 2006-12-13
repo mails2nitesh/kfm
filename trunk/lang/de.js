@@ -219,5 +219,7 @@ MoveUp:
 Restore:
 	"wiederherstellen",
 Caption:
-	"Überschrift"
+	"Überschrift",
+CopyFromURL:
+	"Copy from URL"
 }

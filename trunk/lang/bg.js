@@ -222,5 +222,7 @@ MoveUp:
 Restore:
 	"Възстанови",
 Caption:
-	"Заглавие"
+	"Заглавие",
+CopyFromURL:
+	"Copy from URL"
 }

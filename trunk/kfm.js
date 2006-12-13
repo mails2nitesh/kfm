@@ -86,7 +86,6 @@ function kfm(){
 		right_column.contextmenu=function(e){
 			var links=[],i;
 			links.push(['createEmptyFile()',kfm_lang.CreateEmptyFile,'filenew']);
-			links.push(['downloadFileFromUrl()',kfm_lang.DownloadFileFromUrl,'filesaveas']);
 			if(selectedFiles.length!=$('kfm_right_column').fileids.length)links.push(['selectAll()',kfm_lang.SelectAll,'ark_selectall']);
 			if(selectedFiles.length)links.push(['selectNone()',kfm_lang.SelectNone,'']);
 			links.push(['selectInvert()',kfm_lang.InvertSelection,'']);
@@ -296,15 +295,32 @@ function kfm_createEmptyFile(){
 }
 function kfm_createFileUploadPanel(){
 	{ // create upload form
-		var form=newForm('upload.php','POST','multipart/form-data','kfm_iframe');
-		var iframe=newEl('iframe','kfm_iframe').setCss('display:none');
-		iframe.src='empty';
-		var submit=newInput('upload','submit',kfm_lang.Upload);
-		var input=newInput('kfm_file','file');
-		input.onkeyup=kfm_cancelEvent;
-		form.addEl([input,submit]);
+		var sel=newSelectbox('uploadType',[kfm_lang.Upload,kfm_lang.CopyFromURL],0,0,function(){
+			var copy=parseInt(this.selectedIndex);
+			$('kfm_uploadForm').setCss('display:'+(copy?'none':'block'));
+			$('kfm_copyForm').setCss('display:'+(copy?'block':'none'));
+		});
+		{ // upload from computer
+			var f1=newForm('upload.php','POST','multipart/form-data','kfm_iframe');
+			f1.id='kfm_uploadForm';
+			var iframe=newEl('iframe','kfm_iframe').setCss('display:none');
+			iframe.src='empty';
+			var submit=newInput('upload','submit',kfm_lang.Upload);
+			var input=newInput('kfm_file','file');
+			input.onkeyup=kfm_cancelEvent;
+			f1.addEl([input,submit]);
+		}
+		{ // copy from URL
+			var f2=newEl('div','kfm_copyForm');
+			f2.setCss('display:none');
+			var submit2=newInput('upload','submit',kfm_lang.CopyFromURL);
+			var inp2=newInput('kfm_url');
+			inp2.setCss('width:100%');
+			submit2.onclick=kfm_downloadFileFromUrl;
+			f2.addEl([inp2,submit2]);
+		}
 	}
-	return kfm_createPanel(kfm_lang.FileUpload,'kfm_file_upload_panel',[form,iframe],{maxedState:3});
+	return kfm_createPanel(kfm_lang.FileUpload,'kfm_file_upload_panel',[sel,f1,iframe,f2],{maxedState:3});
 }
 function kfm_createFileDetailsPanel(){
 	return kfm_createPanel(kfm_lang.FileDetails,'kfm_file_details_panel',0,{state:1,abilities:1});
@@ -467,8 +483,7 @@ function kfm_dir_closeNode(dir){
 	$('kfm_directories_subdirs_'+dir).empty();
 }
 function kfm_downloadFileFromUrl(){
-	var url=unescape(kfm_prompt(kfm_lang.DownloadFileFromMessage));
-	if(!url)return;
+	var url=$('kfm_url').value;
 	if(url.substring(0,4)!='http'){
 		kfm_log(kfm_lang.UrlNotValidLog);
 		return;
@@ -488,6 +503,7 @@ function kfm_downloadFileFromUrl(){
 		}
 	}while(not_ok);
 	x_kfm_downloadFileFromUrl(url,filename,kfm_refreshFiles);
+	$('kfm_url').value='';
 }
 function kfm_editTextFile(filename){
 	x_kfm_getTextFile(filename,kfm_showTextFile);
@@ -1383,6 +1399,21 @@ function newLink(h,t,id,c,title){
 	var a=newEl('a',id,c,t);
 	X(a,{href:h,title:title});
 	return a;
+}
+function newSelectbox(name,keys,vals,s,f){
+	var el2=newEl('select',name),el3,s2=0,i;
+	if(!s)s=0;
+	if(!vals)vals=keys;
+	for(i in vals){
+		var v1=vals[i].toString();
+		var v2=v1.length>20?v1.substr(0,27)+'...':v1;
+		el3=X(newEl('option',0,0,v2),{value:keys[i],title:v1});
+		if(keys[i]==s)s2=i;
+		el2.addEl(el3);
+	}
+	el2.selectedIndex=s2;
+	if(f)el2.onchange=f;
+	return el2;
 }
 function newText(a){
 	return document.createTextNode(a);

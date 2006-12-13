@@ -214,5 +214,7 @@ MoveUp:
 Restore:
 	"herstel",
 Caption:
-	"titel"
+	"titel",
+CopyFromURL:
+	"Copy from URL"
 }

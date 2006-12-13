@@ -222,5 +222,7 @@ MoveUp:
 Restore:
 	"ripristina",
 Caption:
-	"descrizione"
+	"descrizione",
+CopyFromURL:
+	"Copy from URL"
 }
