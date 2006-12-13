@@ -222,5 +222,7 @@ MoveUp:
 Restore:
 	"palauta",
 Caption:
-	"otsikko"
+	"otsikko",
+CopyFromURL:
+	"Copy from URL"
 }

@@ -217,5 +217,7 @@ MoveUp:
 Restore:
 	"restore",
 Caption:
-	"caption"
+	"caption",
+CopyFromURL:
+	"Copy from URL"
 }
