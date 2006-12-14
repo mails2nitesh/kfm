@@ -237,6 +237,7 @@ function kfm_changeCaption(id){
 }
 function kfm_changeDirectory(e){
 	var el=getEventTarget(e),a,els=getElsWithClass('kfm_directory_open','TD');
+	if(browser.isIE)while(el&&!el.node_id)el=el.parentNode;
 	kfm_cwd_name=el.kfm_directoryname;
 	kfm_cwd_id=el.node_id;
 	for(a in els)els[a].delClass('kfm_directory_open');
