@@ -221,6 +221,8 @@ Restore:
 Caption:
 	"titre",
 CopyFromURL:
-	"Copy from URL"
+	"Copy from URL",
+ExtractZippedFile:
+	"Extract zipped file"
 }
 

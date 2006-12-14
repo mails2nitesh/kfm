@@ -15,20 +15,22 @@ function _downloadFileFromUrl($url,$filename){
 	if(!$file)return 'error: could not download file "'.$url.'"';
 	return(file_put_contents($_SESSION['kfm']['currentdir'].'/'.$filename,$file))?kfm_loadFiles($_SESSION['kfm']['cwd_id']):'error: could not write file "'.$filename.'"';
 }
-function _moveFiles($files,$dir_id){
-	global $db;
-	$q=$db->query('select id,physical_address,name from directories where id='.$dir_id);
-	if(!($dirdata=$q->fetchRow()))return 'error: no data for directory id "'.$dir_id.'"'; # TODO: new string
-	$to=$dirdata['physical_address'].'/';
-	if(!kfm_checkAddr($to))return 'error: illegal directory "'.$to.'"'; # TODO: new string
-	foreach($files as $fid){
-		$q=$db->query('select directories.physical_address as da,files.name as fn from files,directories where directories.id=files.directory and files.id='.$fid);
-		if(!($filedata=$q->fetchRow()))return 'error: no data for file id "'.$file.'"'; # TODO: new string
-		$dir=$filedata['da'];
-		$file=$filedata['fn'];
-		if(!kfm_checkAddr($dir.'/'.$file))return;
-		rename($dir.'/'.$file,$to.'/'.$file);
-		$q=$db->query('update files set directory='.$dir_id.' where id='.$fid);
+function _extractZippedFile($id){
+	# adapted from bholub's post at http://php.net/zip
+	$file=new File($id);
+	$dir=$file->directory.'/';
+	$zip=zip_open($dir.$file->name);
+	while($zip_entry=zip_read($zip)){
+		$entry=zip_entry_open($zip,$zip_entry);
+		$filename=zip_entry_name($zip_entry);
+		$target_dir=$dir.substr($filename,0,strrpos($filename,'/'));
+		$filesize=zip_entry_filesize($zip_entry);
+		if(is_dir($target_dir)||mkdir($target_dir)){
+			if($filesize>0){
+				$contents=zip_entry_read($zip_entry,$filesize);
+				file_put_contents($dir.$filename,$contents);
+			}
+		}
 	}
 	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
@@ -50,7 +52,7 @@ function _getFileDetails($fid){
 	return $details;
 }
 function _getTextFile($fid){
-	$file = new File($fid);
+	$file=new File($fid);
 	if(!kfm_checkAddr($file->name))return;
 	if(in_array($file->getExtension(),$GLOBALS['kfm_editable_extensions'])){
 		if(!$file->isWritable()) return 'error: "'.$file->name.'" is not writable'; # TODO: new string
@@ -89,6 +91,23 @@ function _loadFiles($rootid=1){
 		return array('reqdir'=>$root,'files'=>$files,'uploads_allowed'=>$GLOBALS['kfm_allow_file_uploads']);
 	}
 	return 'couldn\'t read directory';
+}
+function _moveFiles($files,$dir_id){
+	global $db;
+	$q=$db->query('select id,physical_address,name from directories where id='.$dir_id);
+	if(!($dirdata=$q->fetchRow()))return 'error: no data for directory id "'.$dir_id.'"'; # TODO: new string
+	$to=$dirdata['physical_address'].'/';
+	if(!kfm_checkAddr($to))return 'error: illegal directory "'.$to.'"'; # TODO: new string
+	foreach($files as $fid){
+		$q=$db->query('select directories.physical_address as da,files.name as fn from files,directories where directories.id=files.directory and files.id='.$fid);
+		if(!($filedata=$q->fetchRow()))return 'error: no data for file id "'.$file.'"'; # TODO: new string
+		$dir=$filedata['da'];
+		$file=$filedata['fn'];
+		if(!kfm_checkAddr($dir.'/'.$file))return;
+		rename($dir.'/'.$file,$to.'/'.$file);
+		$q=$db->query('update files set directory='.$dir_id.' where id='.$fid);
+	}
+	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
 function _renameFile($filename,$newfilename){
 	if(!kfm_checkAddr($filename)||!kfm_checkAddr($newfilename))return 'error: cannot rename "'.$filename.'" to "'.$newfilename.'"';

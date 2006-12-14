@@ -47,6 +47,10 @@ require_once('includes/kaejax.php');
 		require_once('includes/files.php');
 		return _downloadFileFromUrl($url,$filename);
 	}
+	function kfm_extractZippedFile($id){
+		require_once('includes/files.php');
+		return _extractZippedFile($id);
+	}
 	function kfm_getFileAsArray($filename){
 		require_once('includes/files.php');
 		return _getFileAsArray($filename);
@@ -117,8 +121,8 @@ require_once('includes/kaejax.php');
 
 { # export kaejax stuff
 	kaejax_export(
-		'kfm_changeCaption','kfm_createDirectory','kfm_createEmptyFile','kfm_deleteDirectory',
-		'kfm_downloadFileFromUrl','kfm_getFileDetails','kfm_getTextFile','kfm_getThumbnail','kfm_loadDirectories',
+		'kfm_changeCaption','kfm_createDirectory','kfm_createEmptyFile','kfm_deleteDirectory','kfm_downloadFileFromUrl',
+		'kfm_extractZippedFile','kfm_getFileDetails','kfm_getTextFile','kfm_getThumbnail','kfm_loadDirectories',
 		'kfm_loadFiles','kfm_moveDirectory','kfm_moveFiles','kfm_renameFile','kfm_resizeImage','kfm_rm','kfm_rotateImage',
 		'kfm_saveTextFile','kfm_search','kfm_viewTextFile'
 	);

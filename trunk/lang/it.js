@@ -224,5 +224,7 @@ Restore:
 Caption:
 	"descrizione",
 CopyFromURL:
-	"Copy from URL"
+	"Copy from URL",
+ExtractZippedFile:
+	"Extract zipped file"
 }
