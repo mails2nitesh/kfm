@@ -505,8 +505,11 @@ function kfm_downloadFileFromUrl(){
 	x_kfm_downloadFileFromUrl(url,filename,kfm_refreshFiles);
 	$('kfm_url').value='';
 }
-function kfm_editTextFile(filename){
-	x_kfm_getTextFile(filename,kfm_showTextFile);
+function kfm_editTextFile(id){
+	x_kfm_getTextFile(id,kfm_showTextFile);
+}
+function kfm_extractZippedFile(id){
+	x_kfm_extractZippedFile(id,kfm_refreshFiles);
 }
 function kfm_file_drag(e){
 	if(!window.dragType||window.dragType!=1)return;
@@ -803,6 +806,7 @@ function kfm_refreshFiles(res){
 						links.push(['resizeImage('+id+')',kfm_lang.ResizeImage,'']);
 						links.push(['changeCaption('+id+')',kfm_lang.ChangeCaption,'edit']);
 					}
+					if(kfm_inArray(['zip'],extension))links.push(['extractZippedFile("'+id+'")',kfm_lang.ExtractZippedFile,'']);
 					if(kfm_inArray(viewable_extensions,extension))links.push(['viewTextFileStarter("'+id+'")','view','edit']);
 					if(kfm_inArray(editable_extensions,extension))links.push(['editTextFile("'+id+'")',kfm_lang.EditTextFile,'edit']);
 				}

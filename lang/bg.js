@@ -224,5 +224,7 @@ Restore:
 Caption:
 	"Заглавие",
 CopyFromURL:
-	"Copy from URL"
+	"Copy from URL",
+ExtractZippedFile:
+	"Extract zipped file"
 }
