@@ -6,16 +6,10 @@ class Image extends File{
 	var $thumb_url;
 	var $thumb_path;
 	var $info = array();  // info from getimagesize
-	
 	function __construct($file){
-		if(is_object($file) && $file->isImage()){
-			parent::__construct($file->id);
-		}else if(is_numeric($file)){
-			parent::__construct($file);
-			
-		}else{
-			return false;
-		}
+		if(is_object($file) && $file->isImage())parent::__construct($file->id);
+		else if(is_numeric($file))parent::__construct($file);
+		else return false;
 		// TODO select image data and set the properties
 		$this->caption = 'Not yet available';
 		$this->info = getimagesize($this->path);
@@ -24,12 +18,10 @@ class Image extends File{
 		$this->height = $this->info[1];
 		$this->setThumbnail();
 	}
-	
 	function setCaption($caption){
 		// Add to database
 		// $this->caption = $caption;
 	}
-	
 	function setThumbnail($width=64,$height=64){
 		$thumbname=$this->id.' '.$width.'x'.$height.' '.$this->name;
 		if(!isset($this->info['mime'])||!in_array($this->info['mime'],array('image/jpeg','image/gif','image/png')))return false;
@@ -37,7 +29,6 @@ class Image extends File{
 		$this->thumb_path=WORKPATH.$thumbname;
 		if(!file_exists($this->thumb_path))$this->createThumb($width,$height);
 	}
-	
 	function createThumb($width=64,$height=64){
 		$this->deleteThumbs();
 		$load='imagecreatefrom'.$this->type;
@@ -53,7 +44,18 @@ class Image extends File{
 		imagedestroy($thumb); 
 		imagedestroy($im);
 	}
-	
+	function Image($file){
+		if(is_object($file) && $file->isImage())parent::__construct($file->id);
+		else if(is_numeric($file))parent::__construct($file);
+		else return false;
+		// TODO select image data and set the properties
+		$this->caption = 'Not yet available';
+		$this->info = getimagesize($this->path);
+		$this->type=str_replace('image/','',$this->info['mime']);
+		$this->width = $this->info[0];
+		$this->height = $this->info[1];
+		$this->setThumbnail();
+	}
 	function resize($new_width, $new_height=-1){
 		if(!$this->isWritable()){
 			$this->error('Image is not writable, so cannot be resized');
@@ -70,7 +72,6 @@ class Image extends File{
 		imagedestroy($imresized); 
 		imagedestroy($im);
 	}
-	
 	function rotate($direction){
 		if(!$this->isWritable()){
 			$this->error('Image is not writable, so cannot be rotated');

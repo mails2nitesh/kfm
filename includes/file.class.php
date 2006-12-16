@@ -12,6 +12,26 @@ class File extends Object{
 	var $size = 0;
 	var $type;
 
+	function File(){
+		if(func_num_args()==1){
+			global $db;
+			$this->id = func_get_arg(0);
+			$qf=$db->query('SELECT files.id AS id, files.name AS name, directories.physical_address AS directory FROM files, directories
+				WHERE files.id='.$this->id.' AND directories.id = files.directory');
+			$filedata = $qf->fetchRow();
+			$this->name = $filedata['name'];
+			$this->directory = $filedata['directory'];
+			$this->path = $filedata['directory'].'/'.$filedata['name'];
+			if(!file_exists($this->path)){
+				$this->error('File cannot be found');
+				return false;
+			}
+			$mimetype = mime_content_type($this->path);
+			$pos = strpos($mimetype,';');
+			$this->mimetype = ($pos===false)?$mimetype:substr($mimetype,0,$pos);
+			$this->type = trim(substr(strstr($this->mimetype,'/'),1));
+		}
+	}
 	function __construct(){
 		if(func_num_args()==1){
 			global $db;
