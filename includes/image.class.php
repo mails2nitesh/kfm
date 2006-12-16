@@ -32,7 +32,7 @@ class Image extends File{
 	
 	function setThumbnail($width=64,$height=64){
 		$thumbname=$this->id.' '.$width.'x'.$height.' '.$this->name;
-		if(!in_array($this->info['mime'],array('image/jpeg','image/gif','image/png')))return false;
+		if(!isset($this->info['mime'])||!in_array($this->info['mime'],array('image/jpeg','image/gif','image/png')))return false;
 		$this->thumb_url=WORKURL.$thumbname;
 		$this->thumb_path=WORKPATH.$thumbname;
 		if(!file_exists($this->thumb_path))$this->createThumb($width,$height);
