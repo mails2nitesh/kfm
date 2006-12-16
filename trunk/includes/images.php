@@ -15,8 +15,9 @@ function _getCaption($dirname,$filename){
 }
 
 function _getThumbnail($fileid,$width,$height){
-	$im = new Image($fileid);
-	return array($fileid, array('icon'=>$im->thumb_url, 'width'=>$im->width, 'height'=>$im->height, 'caption'=>$im->caption));
+	$im=new Image($fileid);
+	$im->setThumbnail($width,$height);
+	return array($fileid,array('icon'=>$im->thumb_url,'width'=>$im->width,'height'=>$im->height,'caption'=>$im->caption));
 }
 function _resizeImage($fid,$width,$height){
 	$im = new Image($fid);

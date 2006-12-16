@@ -19,6 +19,7 @@ class Image extends File{
 		// TODO select image data and set the properties
 		$this->caption = 'Not yet available';
 		$this->info = getimagesize($this->path);
+		$this->type=str_replace('image/','',$this->info['mime']);
 		$this->width = $this->info[0];
 		$this->height = $this->info[1];
 		$this->setThumbnail();
@@ -29,25 +30,24 @@ class Image extends File{
 		// $this->caption = $caption;
 	}
 	
-	function setThumbnail($width=64, $height=64){
-
-		$thumbname =$this->id.' '.$width.'x'.$height.' '.$this->name;
-		if(!in_array($this->type,array('jpeg', 'gif', 'png'))) return false;
-		$this->thumb_url = WORKURL.$thumbname;
-		$this->thumb_path = WORKPATH.$thumbname;
-		if(!file_exists($this->thumb_path)) $this->createThumb($width, $height);
+	function setThumbnail($width=64,$height=64){
+		$thumbname=$this->id.' '.$width.'x'.$height.' '.$this->name;
+		if(!in_array($this->info['mime'],array('image/jpeg','image/gif','image/png')))return false;
+		$this->thumb_url=WORKURL.$thumbname;
+		$this->thumb_path=WORKPATH.$thumbname;
+		if(!file_exists($this->thumb_path))$this->createThumb($width,$height);
 	}
 	
-	function createThumb($width=64, $height=64){
+	function createThumb($width=64,$height=64){
 		$this->deleteThumbs();
 		$load='imagecreatefrom'.$this->type;
 		$save='image'.$this->type;
 		$ratio = min($width/$this->width, $height/$this->height);
 		$thumb_width = $this->width*$ratio;
 		$thumb_height = $this->height*$ratio;
-		if(!function_exists($load)||!function_exists($save))$this->error('server cannot handle image of type "'.$this->type.'"');
-		$im = $load($this->path);
-		$thumb = imagecreatetruecolor($thumb_width,$thumb_height);
+		if(!function_exists($load)||!function_exists($save))return $this->error('server cannot handle image of type "'.$this->type.'"');
+		$im=$load($this->path);
+		$thumb=imagecreatetruecolor($thumb_width,$thumb_height);
 		imagecopyresampled($thumb,$im,0,0,0,0,$thumb_width,$thumb_height,$this->width,$this->height);
 		$save($thumb,$this->thumb_path,($this->type=='jpeg'?100:9));
 		imagedestroy($thumb); 
