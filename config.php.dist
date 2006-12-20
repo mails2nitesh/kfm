@@ -2,7 +2,7 @@
 # see license.txt for licensing
 error_reporting(E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE);
 session_start();
-{ # configuration
+{ # configuration - this section is for all users of KFM
 
 	# where are the files located on the hard-drive, relative to the website's root directory?
 	# In the default example, the user-files are at http://kfm.verens.com/sandbox/UserFiles/
@@ -25,10 +25,10 @@ session_start();
 	$kfm_banned_extensions=array('php','cfm','asp','cgi','pl');
 
 	# this array tells KFM what extensions indicate files which may be edited online
-	$kfm_editable_extensions=array('css','html','txt','xhtml','xml');
+	$kfm_editable_extensions=array('css','html','js','txt','xhtml','xml');
 
 	# this array tells KFM what extensions indicate files which may be viewed online
-	$kfm_viewable_extensions=array('txt', 'html', 'css', 'sql','xhtml', 'xml', 'php');
+	$kfm_viewable_extensions=array('css','js','txt','html', 'sql','xhtml', 'xml', 'php');
 
 	# 0 = only errors will be logged
 	# 1 = everything will be logged
@@ -58,9 +58,21 @@ session_start();
 	define('ERROR_LOG_LEVEL',1); # 0=none, 1=errors, 2=1+warnings, 3=2+notices, 4=3+unknown
 }
 
+{ # API - for programmers only
+	if(file_exists('api/config.php'))include('api/config.php');
+}
 
 
-# the rest of this is code. if you're not a developer, then stop reading now, and close your text editor.
+
+
+# the rest of this is code meant for KFM developers only. if you're not a KFM developer, then stop reading now, and close your text editor.
+
+
+
+
+
+
+
 function kfm_error_log($errno,$errstr,$errfile,$errline){
 	if(!ERROR_LOG_LEVEL)return;
 	$msg = false;
