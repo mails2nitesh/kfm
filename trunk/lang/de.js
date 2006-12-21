@@ -221,7 +221,7 @@ Restore:
 Caption:
 	"Überschrift",
 CopyFromURL:
-	"Copy from URL",
+	"kopieren von URL",
 ExtractZippedFile:
-	"Extract zipped file"
+	"entpacken einer gepackten Datei"
 }
