@@ -216,7 +216,7 @@ Restore:
 Caption:
 	"titel",
 CopyFromURL:
-	"Copy from URL",
+	"Kopieren van URL",
 ExtractZippedFile:
-	"Extract zipped file"
+	"Uitpakken zipbestand"
 }
