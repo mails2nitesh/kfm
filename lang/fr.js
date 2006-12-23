@@ -117,7 +117,7 @@ FileNameNotAllowd:
 CouldNotWriteFile:
 	'erreur: impossible d\'écrire le fichier "%1".',
 CouldNotRemoveDir:
-	"impossible de supprimer le dossier.\nassurez-vous qu'il est vide",
+	"Impossible de supprimer le dossier.\nAssurez-vous qu'il est vide",
 UrlNotValid:
 	'erreur: l\'URL doit commencer par "http:"',
 CouldNotDownloadFile:
@@ -153,7 +153,7 @@ CreateEmptyFile:
 DownloadFileFromUrl:
 	"télécharger un fichier",
 DirectoryProperties:
-	"Propiétés de Dossier",
+	"Propriétés de Dossier",
 SelectAll:
 	"tout sélectionner",
 SelectNone:
@@ -165,13 +165,13 @@ LoadingKFM:
 Name:
 	"Nom",
 FileDetails:
-	"Details de Fichier",
+	"Propriétés de Fichier",
 Search:
 	"Chercher",
 IllegalDirectoryName:
 	"Nom de dossier incorrect \"%1\"",
 RecursiveDeleteWarning:
-	"\"%1\" n'est pas vide\nVoulez-vous vraiment le supprimer ainsi que tout son contenu?\n*ATTENTION* CECI N'EST PAS ANNULABLE",
+	"\"%1\" n'est pas vide\nVoulez-vous vraiment le supprimer ainsi que tout son contenu?\n*ATTENTION* CECI EST IRREVERSIBLE",
 RmdirFailed:
 	"impossible de supprimer le dossier \"%1\"",
 DirNotInDb:
@@ -201,7 +201,7 @@ RenameFileToWhat:
 NoRestrictions:
 	"aucune restriction",
 Filename:
-	"nome de fichier",
+	"nom de fichier",
 Maximise:
 	"agrandir",
 Minimise:
@@ -221,8 +221,7 @@ Restore:
 Caption:
 	"titre",
 CopyFromURL:
-	"Copy from URL",
+	"Copier d'un URL",
 ExtractZippedFile:
-	"Extract zipped file"
+	"Décompresser le fichier"
 }
-
