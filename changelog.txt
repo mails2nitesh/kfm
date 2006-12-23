@@ -1,5 +1,17 @@
 numbers in parentheses are the bug numbers as recorded at http://mantis.verens.com/
 
+0.7
+	      Bulgarian language file
+	(84)  add ability to zip/unzip files
+	(127)	use MDB2to allow usage of MySQL and PostGres as well as SQLite
+	(33)	add an fpassthru script to handle authentication
+	(117)	i have error report in my DOM...whta is mean
+	(100)	Style issues
+	(80)	directory names should use the truncation method
+	(128)	display render is slow when viewing large lists of files
+	(122)	use sqlite for meta-data, etc
+	(108) "download from url" is not user-friendly
+
 0.6
 	      new function to view syntax-hightlighted text-file contents
 	(79)	should be possible to move directories 
