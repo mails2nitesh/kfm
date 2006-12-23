@@ -18,6 +18,16 @@
 		file_id integer not null,
 		foreign key (file_id) references files (id)
 	)');
+	$db->query('create table tags(
+		id INTEGER PRIMARY KEY,
+		name text
+	)');
+	$db->query('create table tagged_files(
+		file_id INTEGER,
+		tag_id  INTEGER,
+		foreign key(file_id) references files(id),
+		foreign key(tag_id) references tags(id)
+	)');
 
 	$db->query('insert into parameters values("version","'.KFM_VERSION.'")');
 	$db->query('insert into directories values(1,"","'.rtrim(addslashes($rootdir), ' /').'",0)');

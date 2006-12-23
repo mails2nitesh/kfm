@@ -101,7 +101,7 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 }
 set_error_handler('kfm_error_log');
 { # variables
-	define('KFM_VERSION', '7.0');
+	define('KFM_VERSION', '0.7.1');
 	$rootdir=str_replace('//','/',$_SERVER['DOCUMENT_ROOT'].$kfm_userfiles.'/');
 	if(!file_exists($rootdir.$kfm_workdirectory))mkdir($rootdir.$kfm_workdirectory);
 	if(!isset($_SESSION['kfm']))$_SESSION['kfm']=array(
