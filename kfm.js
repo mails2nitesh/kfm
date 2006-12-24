@@ -143,7 +143,7 @@ function kfm_addMethods(el){
 			return this;
 		},
 		getClass:function(){return this.className?this.className:''},
-		hasClass:function(c){return eval('/(^| )'+c+'( |$)/').test(this.getClass())},
+		hasClass:function(c){return new RegExp('(\\s|^)'+c+'(\\s|$)').test(this.className)},
 		setClass:function(c,u){
 			this.className=c?c:'';
 			if(!u)return;
@@ -447,10 +447,10 @@ function kfm_dir_dragFinish(e){
 	clearTimeout(window.dragTrigger);
 	if(!window.dragType||window.dragType!=3)return;
 	window.dragType=0;
-	var dir_from=window.drag_wrapper.dir_id;
-	delEl(['kfm_selection_blocker',window.drag_wrapper]);
 	removeEvent(document,'mousemove',kfm_dir_drag);
 	removeEvent(document,'mouseup',kfm_dir_dragFinish);
+	var dir_from=window.drag_wrapper.dir_id;
+	delEl(['kfm_selection_blocker',window.drag_wrapper]);
 	var a=kfm_getContainer(getMouseAt(e),getElsWithClass('kfm_directory_link','DIV')),f=[];
 	dir_to=a?a.node_id:0;
 	if(dir_to==0||dir_to==dir_from)return;
