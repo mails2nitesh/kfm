@@ -804,7 +804,7 @@ function kfm_refreshFiles(res){
 						links.push(['javascript:kfm_changeCaption('+id+')',kfm_lang.ChangeCaption,'edit']);
 					}
 					if(kfm_inArray(['zip'],extension))links.push(['javascript:kfm_extractZippedFile("'+id+'")',kfm_lang.ExtractZippedFile,'']);
-					if(kfm_inArray(viewable_extensions,extension))links.push(['javascript:kfm_viewTextFileStarter("'+id+'")','view','edit']);
+					if(kfm_inArray(viewable_extensions,extension))links.push(['javascript:x_kfm_viewTextFile('+id+',kfm_viewTextFile)','view','edit']);
 					if(kfm_inArray(editable_extensions,extension))links.push(['javascript:kfm_editTextFile("'+id+'")',kfm_lang.EditTextFile,'edit']);
 				}
 				kfm_createContextMenu(getMouseAt(getEvent(e)),links);
@@ -1131,11 +1131,10 @@ function kfm_showIcon(res,el2){
 	}
 }
 function kfm_showTextFile(res){
-	//if(!isArray(res))return kfm_log(res);
 	var t=newEl('table','kfm_editFileTable').setCss('height:100%;width:100%');
 	var r2=t.addRow();
 	r2.addCell(0,1,res.name);
-	r2.addCell(1,1,newLink('javascript:kfm_viewTextFileStarter('+res.id+')','View',0,'button'));
+	r2.addCell(1,1,newLink('javascript:x_kfm_viewTextFile('+res.id+',kfm_viewTextFile)','View',0,'button'));
 	r2.addCell(2,1,newLink('javascript:if(confirm(kfm_lang.SaveThenCloseQuestion)){kfm_setMessage("saving file...");x_kfm_saveTextFile('+res.id+',$("kfm_textfile").value,kfm_clearMessage);}','Save',0,'button'));
 	r2.addCell(3,1,newLink('javascript:if(confirm(kfm_lang.CloseWithoutSavingQuestion))x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);',kfm_lang.CloseWithoutSaving,0,'button'));
 	t.addRow().setCss('height:100%').addCell(0,4,newInput('kfm_textfile','textarea',res.content,'kfm_textfile').setCss('width:100%;height:100%'));
@@ -1219,9 +1218,6 @@ function kfm_viewTextFile(res){
 	if(res.buttons_to_show&1)r.addCell(c++,1,newLink('javascript:x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);',kfm_lang.Close,0,'button'));
 	t.addRow().setCss('height:100%;').addCell(0,c).innerHTML=res.content;
 	$('kfm_right_column').empty().addEl(t);
-}
-function kfm_viewTextFileStarter(fileid){
-	x_kfm_viewTextFile(fileid,kfm_viewTextFile);
 }
 
 function $(){
