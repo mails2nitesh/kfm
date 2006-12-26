@@ -111,7 +111,6 @@ div.kfm_file_icon.selected{background-color:#eee;border-color:#000}
 #message{top:2px; right:3px; position:absolute; z-index:10000; background-color: #f00; color: #000; font-weight:bold;}
 .button{margin-left:15px;color:#fff;background:#666;font-weight:bold;text-decoration:none;padding:2px 4px;display:block;text-align:center;border:2px solid;border-color:#ccc #999 #999 #ccc}
 .button:hover{color:#f00;background:#fff}
-}
 
 /* IE-specific crap */
 .ie .kfm_panel_header{height:23px}
