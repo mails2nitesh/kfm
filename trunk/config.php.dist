@@ -24,11 +24,12 @@ session_start();
 	# use this array to ban dangerous files from being uploaded.
 	$kfm_banned_extensions=array('php','cfm','asp','cgi','pl');
 
-	# this array tells KFM what extensions indicate files which may be edited online
+	# this array tells KFM what extensions indicate files which may be edited online.
 	$kfm_editable_extensions=array('css','html','js','txt','xhtml','xml');
 
-	# this array tells KFM what extensions indicate files which may be viewed online
-	$kfm_viewable_extensions=array('css','js','txt','html', 'sql','xhtml', 'xml', 'php');
+	# this array tells KFM what extensions indicate files which may be viewed online.
+	# the contents of $kfm_editable_extensions will be added automatically.
+	$kfm_viewable_extensions=array('sql','php');
 
 	# 0 = only errors will be logged
 	# 1 = everything will be logged
@@ -44,8 +45,7 @@ session_start();
 	# what happens if someone double-clicks a file or presses enter on one?
 	$kfm_file_handler='download'; # values allowed: download, fckeditor
 
-	# the default for this is 'sqlite', which should be correct for most systems.
-	# if you are having problems, try 'mysql' instead
+	# what type of database to use
 	$kfm_db_type='mysql'; # values allowed: sqlite, mysql, pgsql
 
 	# the following options should only be filled if you are not using sqlite
@@ -245,6 +245,9 @@ set_error_handler('kfm_error_log');
 	{ # still no language chosen? use the first available one then
 		if($kfm_language=='')$kfm_language=$kfm_available_languages[0];
 	}
+}
+{ # make a few corrections to the config where necessary
+	foreach($kfm_editable_extensions as $v)if(!in_array($v,$kfm_viewable_extensions))$kfm_viewable_extensions[]=$v;
 }
 { # common functions
 	function kfm_checkAddr($addr){
