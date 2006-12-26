@@ -65,7 +65,7 @@ function kfm(){
 				var ps=left_column.panels;
 				for(var i in ps){
 					var p=$(ps[i]);
-					if(!p.visible)links.push(['javascript:kfm_addPanel("kfm_left_column","'+ps[i]+'")',kfm_lang.ShowPanel(p.title)]);
+					if(!p.visible)links.push(['javascript:kfm_addPanel("kfm_left_column","'+ps[i]+'")',kfm_lang.ShowPanel(p.panel_title)]);
 				}
 				kfm_createContextMenu(m,links);
 			}
@@ -325,7 +325,7 @@ function kfm_createFileDetailsPanel(){
 function kfm_createPanel(title,id,subels,vars){
 	// states: 0=minimised,1=maximised,2=fixed-height
 	var el=X(newEl('div',id,'kfm_panel',[newEl('div',0,'kfm_panel_header',title),newEl('div',0,'kfm_panel_body',subels)]),{
-		state:0,height:0,title:title,abilities:0,visible:1,
+		state:0,height:0,panel_title:title,abilities:0,visible:1,
 		addCloseButton:function(){if(this.abilities&1)this.addButton('removePanel','','x',kfm_lang.Close)},
 		addMaxButton:function(){this.addButton('maximisePanel','','M',kfm_lang.Maximise)},
 		addMinButton:function(){this.addButton('minimisePanel','','_',kfm_lang.Minimise)},
@@ -703,7 +703,7 @@ function kfm_redrawPanels(wrapper){
 			el.addMoveDownButton();
 			el.addMoveUpButton();
 		}
-		els[els.length]=el.title;
+		els[els.length]=el.panel_title;
 		head.addEl(els);
 	}
 	for(i in fixed_height){
@@ -719,7 +719,7 @@ function kfm_redrawPanels(wrapper){
 			el.addMoveDownButton();
 			el.addMoveUpButton();
 		}
-		els[els.length]=el.title;
+		els[els.length]=el.panel_title;
 		head.addEl(els);
 	}
 	for(i in fixed_height_maxed){
@@ -733,7 +733,7 @@ function kfm_redrawPanels(wrapper){
 			el.addMoveDownButton();
 			el.addMoveUpButton();
 		}
-		els[els.length]=el.title;
+		els[els.length]=el.panel_title;
 		head.addEl(els);
 	}
 	if(maximised.length)var size=(height-minheight)/maximised.length;
@@ -749,7 +749,7 @@ function kfm_redrawPanels(wrapper){
 			el.addMoveDownButton();
 			el.addMoveUpButton();
 		}
-		els[els.length]=el.title;
+		els[els.length]=el.panel_title;
 		head.addEl(els);
 	}
 }

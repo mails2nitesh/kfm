@@ -54,6 +54,10 @@ session_start();
 	$kfm_db_username='username';
 	$kfm_db_password='password';
 
+	# we would like to keep track of installations, to see how many there are, and what versions are in use.
+	# if you do not want us to have this information, then set the following variable to '1'.
+	$kfm_dont_send_metrics=0;
+
 	define('ERROR_LOG_LEVEL',1); # 0=none, 1=errors, 2=1+warnings, 3=2+notices, 4=3+unknown
 }
 
