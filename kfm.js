@@ -1212,11 +1212,12 @@ function kfm_tracerStep(id){
 }
 function kfm_viewTextFile(res){
 	var t=newEl('table','kfm_viewFileTable').setCss('height:100%;width:100%');
-	var r=t.addRow(),c=0;
+	var r=t.addRow(),c=0,wrapper=newEl('div').setCss('overflow:auto;width:100%;height:100%');
 	r.addCell(c++,1,res.name);
 	if(res.buttons_to_show&2)r.addCell(c++,1,newLink('javascript:kfm_editTextFile('+res.id+')','Edit',0,'button'));
 	if(res.buttons_to_show&1)r.addCell(c++,1,newLink('javascript:x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);',kfm_lang.Close,0,'button'));
-	t.addRow().setCss('height:100%;').addCell(0,c).innerHTML=res.content;
+	var cell=t.addRow().setCss('height:100%;').addCell(0,c).addEl(wrapper);
+	wrapper.innerHTML=res.content;
 	$('kfm_right_column').empty().addEl(t);
 }
 
