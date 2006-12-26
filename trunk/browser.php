@@ -157,5 +157,15 @@ require_once('includes/kaejax.php');
 	<body>
 		<noscript>KFM relies on JavaScript. Please either turn on JavaScript in your browser, or <a href="http://www.getfirefox.com/">get Firefox</a> if your browser does not support JavaScript.</noscript>
 		<script type="text/javascript">setTimeout('kfm()',10);</script>
+		<?php
+			if(!$kfm_dont_send_metrics){
+				$today=date('Y-m-d');
+				if($kfm_parameters['last_registration']!=$today){
+					echo '<img src="http://kfm.verens.com/extras/register.php?version='.urlencode(KFM_VERSION).'&amp;domain_name='.urlencode($_SERVER['SERVER_NAME']).'" />';
+					$db->query("delete from parameters where name='last_registration'");
+					$db->query("insert into parameters (name,value) values ('last_registration','".$today."')");
+				}
+			}
+		?>
 	</body>
 </html>
