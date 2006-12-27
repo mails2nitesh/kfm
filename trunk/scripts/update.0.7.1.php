@@ -1,5 +1,4 @@
 <?php
-echo 'test';
 switch($kfm_db_type){
 	case 'mysql':{
 		require 'scripts/db.mysql.update.0.7.1.php';
