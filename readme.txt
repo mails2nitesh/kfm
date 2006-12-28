@@ -1,5 +1,5 @@
 KFM - Kae's File Manager
-version 0.6
+version 0.7
 
 LICENSE
 see license.txt for licensing
