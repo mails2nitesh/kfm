@@ -943,9 +943,10 @@ function kfm_selectInvert(){
 function kfm_selectNone(){
 	if(kfm_lastClicked)$('kfm_file_icon_'+kfm_lastClicked).delClass('last_clicked');
 	for(var i=selectedFiles.length;i>-1;--i)kfm_removeFromSelection(selectedFiles[i]);
+	kfm_selectionCheck();
 }
 function kfm_selectionCheck(){
-	if(selectedFiles.length==1)kfm_showFileDetailsPanel();
+	if(selectedFiles.length==1)kfm_run_delayed('file_details','if(selectedFiles.length==1)x_kfm_getFileDetails(selectedFiles[0],kfm_showFileDetails);');
 	else kfm_showFileDetails();
 }
 function kfm_selection_drag(e){
@@ -1069,8 +1070,11 @@ function kfm_shiftFileSelectionUD(dir){
 	kfm_addToSelection(na[a]);
 }
 function kfm_showFileDetails(res){
-	var fd=$('kfm_file_details_panel');
-	if(!fd)kfm_addPanel('kfm_left_column','kfm_file_details_panel');
+	var fd=$('kfm_file_details_panel'),el=$('kfm_left_column');
+	if(!fd){
+		kfm_addPanel('kfm_left_column','kfm_file_details_panel');
+		kfm_redrawPanels(el);
+	}
 	var body=getElsWithClass('kfm_panel_body','DIV',$('kfm_file_details_panel'))[0].empty();
 	if(!res)return;
 	var table=newEl('table'),r;
@@ -1100,13 +1104,6 @@ function kfm_showFileDetails(res){
 		}
 	}
 	body.addEl(table);
-}
-function kfm_showFileDetailsPanel(){
-	var el=$('kfm_left_column');
-	kfm_addPanel(el,'kfm_file_details_panel');
-	kfm_redrawPanels(el);
-	getElsWithClass('kfm_panel_body','DIV',$('kfm_file_details_panel'))[0].addEl(kfm_lang.Loading);
-	x_kfm_getFileDetails(selectedFiles[0],kfm_showFileDetails);
 }
 function kfm_showIcon(res,el2){
 	if(!isArray(res)){
@@ -1175,7 +1172,6 @@ function kfm_toggleSelectedFile(e){
 	if(kfm_lastClicked)$('kfm_file_icon_'+kfm_lastClicked).delClass('last_clicked');
 	kfm_lastClicked=id;
 	$('kfm_file_icon_'+id).addClass('last_clicked');
-	if(selectedFiles.length==1)kfm_showFileDetailsPanel();
 }
 function kfm_tracer(f,t){
 	var ef=$(f),et=$(t);
