@@ -43,13 +43,21 @@ function _getFileDetails($fid){
 	$details=array(
 		'filename'=>$file->name,
 		'mimetype'=>$file->mimetype,
-		'filesize'=>$file->size2str()
+		'filesize'=>$file->size2str(),
+		'tags'=>$file->getTags()
 	);
 	if($file->isImage()){
 		$im = new Image($file);
 		$details['caption'] = $im->caption;
 	}
 	return $details;
+}
+function _getTagName($id){
+	global $db;
+	$q=$db->query("select name from tags where id=".$id);
+	$r=$q->fetchRow();
+	if(count($r))return array($id,$r['name']);
+	return array($id,'UNKNOWN TAG '.$id);
 }
 function _getTextFile($fid){
 	$file=new File($fid);
@@ -164,6 +172,30 @@ function _search($keywords){
 	$q=$db->query("select id,name,directory from files where name like '%".addslashes($keywords)."%' order by name");
 	$files=$q->fetchAll();
 	return array('reqdir'=>'','files'=>$files,'uploads_allowed'=>0);
+}
+function _tagAdd($recipients,$tagList){
+	global $db;
+	if(!is_array($recipients))$recipients=array($recipients);
+	$arr=explode(',',$tagList);
+	$tagList=array();
+	foreach($arr as $v){
+		$v=ltrim(rtrim($v));
+		if($v)$tagList[]=$v;
+	}
+	if(count($tagList))foreach($tagList as $tag){
+		$q=$db->query("select id from tags where name='".addslashes($tag)."'");
+		$r=$q->fetchRow();
+		if(count($r)){
+			$tag_id=$r['id'];
+			$db->query("delete from tagged_files where tag_id=".$tag_id." and (file_id=".join(' or file_id=',$recipients).")");
+		}
+		else{
+			$q=$db->query("insert into tags set name='".addslashes($tag)."'");
+			$tag_id=$db->lastInsertId();
+		}
+		foreach($recipients as $file_id)$db->query("insert into tagged_files (tag_id,file_id) values(".$tag_id.",".$file_id.")");
+	}
+	return _getFileDetails($recipients[0]);
 }
 function _viewTextFile($fileid){
 	global $kfm_viewable_extensions, $kfm_highlight_extensions, $kfm_editable_extensions;

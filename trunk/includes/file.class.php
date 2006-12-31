@@ -77,6 +77,13 @@ class File extends Object{
 		if(!$this->size)$this->size=filesize($this->path);
 		return $this->size;
 	}
+	function getTags(){
+		global $db;
+		$q=$db->query("select tag_id from tagged_files where file_id=".$this->id);
+		$arr=array();
+		foreach($q->fetchAll() as $r)$arr[]=$r['tag_id'];
+		return $arr;
+	}
 	function isImage(){
 		return in_array($this->getExtension(),array('jpg', 'jpeg', 'gif', 'png', 'bmp'));
 	}
