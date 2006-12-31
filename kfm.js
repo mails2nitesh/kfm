@@ -807,6 +807,8 @@ function kfm_refreshFiles(res){
 					if(kfm_inArray(viewable_extensions,extension))links.push(['javascript:x_kfm_viewTextFile('+id+',kfm_viewTextFile)','view','edit']);
 					if(kfm_inArray(editable_extensions,extension))links.push(['javascript:kfm_editTextFile("'+id+'")',kfm_lang.EditTextFile,'edit']);
 				}
+//				links.push(['javascript:kfm_tagAdd('+id+')','add tag to file(s)']);
+//				links.push(['javascript:kfm_tagRemove('+id+')','remove tag from file(s)']);
 				kfm_createContextMenu(getMouseAt(getEvent(e)),links);
 			}
 		}
@@ -869,12 +871,13 @@ function kfm_removePanel(wrapper,panel){
 	$(panel).visible=0;
 	kfm_redrawPanels(wrapper);
 }
-function kfm_renameFile(filename){
+function kfm_renameFile(id){
+	var filename=$('kfm_file_icon_'+id).kfm_attributes.name;
 	var newName=kfm_prompt(kfm_lang.RenameFileToWhat(filename),filename);
 	if(newName&&newName!=''&&newName!=filename){
-		kfm_filesCache[filename]=null;
+		kfm_filesCache[id]=null;
 		kfm_log(kfm_lang.RenamedFile(filename,newName));
-		x_kfm_renameFile(filename,newName,kfm_refreshFiles);
+		x_kfm_renameFile(id,newName,kfm_refreshFiles);
 	}
 }
 function kfm_removeFromSelection(id){
@@ -1076,7 +1079,10 @@ function kfm_showFileDetails(res){
 		kfm_redrawPanels(el);
 	}
 	var body=getElsWithClass('kfm_panel_body','DIV',$('kfm_file_details_panel'))[0].empty();
-	if(!res)return;
+	if(!res){
+		body.innerHTML='no files selected'; // TODO: new string
+		return;
+	}
 	var table=newEl('table'),r;
 	{ // filename
 		r=table.addRow();
@@ -1136,6 +1142,14 @@ function kfm_showTextFile(res){
 	r2.addCell(3,1,newLink('javascript:if(confirm(kfm_lang.CloseWithoutSavingQuestion))x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);',kfm_lang.CloseWithoutSaving,0,'button'));
 	t.addRow().setCss('height:100%').addCell(0,4,newInput('kfm_textfile','textarea',res.content,'kfm_textfile').setCss('width:100%;height:100%'));
 	$('kfm_right_column').empty().addEl(t);
+}
+function kfm_tagAdd(id){
+	var newName=kfm_prompt(kfm_lang.RenameFileToWhat(filename),filename);
+	if(newName&&newName!=''&&newName!=filename){
+		kfm_filesCache[filename]=null;
+		kfm_log(kfm_lang.RenamedFile(filename,newName));
+		x_kfm_renameFile(filename,newName,kfm_refreshFiles);
+	}
 }
 function kfm_togglePanelsUnlocked(){
 	$('kfm_left_column').panels_unlocked=1-$('kfm_left_column').panels_unlocked;
