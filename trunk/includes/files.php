@@ -109,11 +109,16 @@ function _moveFiles($files,$dir_id){
 	}
 	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
-function _renameFile($filename,$newfilename){
+function _renameFile($fid,$newfilename){
+	global $db;
+	$file=new File($fid);
+	if(!file_exists($file->path))return;
+	$filename=$file->name;
 	if(!kfm_checkAddr($filename)||!kfm_checkAddr($newfilename))return 'error: cannot rename "'.$filename.'" to "'.$newfilename.'"';
 	$newfile=$_SESSION['kfm']['currentdir'].'/'.$newfilename;
 	if(file_exists($newfile))return 'error: a file of that name already exists';
 	rename($_SESSION['kfm']['currentdir'].'/'.$filename,$newfile);
+	$db->query("update files set name='".addslashes($newfilename)."' where id=".$fid);
 	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
 function _resize_bytes($size){
@@ -140,7 +145,7 @@ function _rm($id,$no_dir=0){
 			$file_address=$file_data['physical_address'].'/'.$file_data['name'];
 			unlink($file_address);
 			if(file_exists($file_address))return 'error: "'.$file_data['name'].'" cannot be deleted'; # TODO: new string
-			$db->exec('delete from files where id="'.$id.'"');
+			$db->query('delete from files where id="'.$id.'"');
 		}
 		else return 'error: file #'.$id.' is missing from the database'; #TODO: new string
 	}
