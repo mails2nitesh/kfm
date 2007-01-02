@@ -235,8 +235,8 @@ function kfm_changeCaption(id){
 		x_kfm_changeCaption(id,newCaption,kfm_refreshFiles);
 	}
 }
-function kfm_changeDirectory(el){
-	var a,els=getElsWithClass('kfm_directory_open','TD');
+function kfm_changeDirectory(id){
+	var el=$(id),a,els=getElsWithClass('kfm_directory_open','TD');
 	if(browser.isIE)while(el&&!el.node_id)el=el.parentNode;
 	kfm_cwd_name=el.kfm_directoryname;
 	kfm_cwd_id=el.node_id;
@@ -405,7 +405,7 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 	r.addCell(1,0,el,'kfm_dir_name');
 	addEvent(el,'click',function(){
 		clearTimeout(window.dragTrigger);
-		kfm_changeDirectory(this);
+		setTimeout('kfm_changeDirectory("'+this.id+'");',1);
 	});
 	if(parent!=1)addEvent(el,'mousedown',(function(id){
 		return function(e){
@@ -1145,10 +1145,10 @@ function kfm_showTextFile(res){
 	$('kfm_right_column').empty().addEl(t);
 }
 function kfm_shrinkName(name,wrapper,text,size,maxsize,extension){
-	var filename,position=step=Math.ceil(name.length/2),direction;
+	var filename,position=step=Math.ceil(name.length/2),direction,postfix='[...]'+extension;
 	do{
 		filename=name.substring(0,position);
-		text.innerHTML=filename+'[...]'+extension;
+		text.innerHTML=filename+postfix;
 		direction=(wrapper[size]>maxsize)?-1:1;
 		step=Math.ceil(step/2);
 		position=position+step*direction;
