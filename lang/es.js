@@ -139,7 +139,7 @@ CloseWithoutSaving:
 SaveThenClose:
 	"Guardar y cerrar",
 SaveThenCloseQuestion:
-	"¿Guardar los cambios?"
+	"¿Guardar los cambios?",
 
 // new in 0.6
 LockPanels:
