@@ -389,6 +389,7 @@ function kfm_deleteSelectedFiles(){
 		x_kfm_rm(selectedFiles,kfm_refreshFiles);
 	}
 }
+var iters=0;
 function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 	var r=t.addRow(),c,pdir=parent_addr+name,name=(name==''?'root':name),name_text=newEl('span','directory_name_'+parent,0,'0');
 	var el=X(newEl('div','kfm_directory_icon_'+parent,'kfm_directory_link '+(kfm_cwd_name==pdir?'':'kfm_directory_open'),name_text),{
@@ -422,10 +423,19 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 		if(reqHeight&&el.offsetHeight>reqHeight){
 			var filename=name;
 			el.title=name;
+			var step=Math.ceil(name.length/2),done=0,direction=-1;
+			var position=step;
 			do{
-				filename=filename.substring(0,filename.length-1);
+				filename=name.substring(0,position);
 				el.innerHTML=filename+'[...]';
-			}while(el.offsetHeight>reqHeight);
+				direction=(el.offsetHeight>reqHeight)?-1:1;
+				if(step>1){
+					step=Math.ceil(step/2);
+					position=position+step*direction;
+				}
+				else done=1;
+			}while(!done);
+			filename=name.substring(0,position-1);
 			el.empty().addEl([newEl('span',0,'filename',filename),newEl('span',0,0,'[...]').setCss('color:red;textDecoration:none')]);
 		}
 		if(!browser.isIE)el.style.position='inherit';
@@ -435,6 +445,7 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 		r.addCell(0,0,' ',is_last?0:'kfm_dir_lines_nochild');
 		r.addCell(1).id='kfm_directories_subdirs_'+parent;
 	}
+window.status=iters;
 	return t;
 }
 function kfm_dir_drag(e){
