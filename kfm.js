@@ -421,8 +421,8 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 		el=name_text;
 		el.style.position='absolute';
 		if(reqHeight&&el.offsetHeight>reqHeight){
-			var filename,step=Math.ceil(name.length/2),done=0,direction=-1;
 			el.title=name;
+			var filename,step=Math.ceil(name.length/2),done=0,direction=-1;
 			var position=step;
 			do{
 				filename=name.substring(0,position);
@@ -797,75 +797,85 @@ function kfm_refreshFiles(res){
 	var files=[],a,b,fileids=[],wrapper=$('kfm_right_column').empty();
 	wrapper.addEl(newEl('div',0,'kfm_panel_header',kfm_lang.CurrentWorkingDir(res.reqdir)));
 	for(a in res.files){
-		var name=res.files[a].name,ext=name.replace(/.*\./,''),el,b,fullfilename=kfm_cwd_name+'/'+name,id=res.files[a].id;
-		el=newEl('div','kfm_file_icon_'+id,'kfm_file_icon kfm_icontype_'+ext,newEl('span',0,'filename',name)).setCss('cursor:'+(Browser.isIE?'hand':'pointer'));
-		addEvent(el,'click',kfm_toggleSelectedFile);
-		addEvent(el,'dblclick',kfm_chooseFile);
-		el.contextmenu=function(e){
-			e=getEvent(e);
-			{ // variables
-				var name=this.kfm_attributes.name,links=[],i,id=this.kfm_attributes.id;
-				var extension=name.replace(/.*\./,'').toLowerCase();
-			}
-			{ // add the links
-				if(selectedFiles.length>1)links.push(['javascript:kfm_deleteSelectedFiles()',kfm_lang.DeleteFile,'remove']);
-				else{
-					links.push(['javascript:kfm_deleteFile('+id+')',kfm_lang.DeleteFile,'remove']);
-					links.push(['javascript:kfm_renameFile('+id+')',kfm_lang.RenameFile,'edit']);
-					if(this.kfm_attributes.image_data){
-						links.push(['javascript:kfm_rotateImage('+id+',270)',kfm_lang.RotateClockwise,'rotate_cw']);
-						links.push(['javascript:kfm_rotateImage('+id+',90)',kfm_lang.RotateAntiClockwise,'rotate_ccw']);
-						links.push(['javascript:kfm_resizeImage('+id+')',kfm_lang.ResizeImage,'']);
-						links.push(['javascript:kfm_changeCaption('+id+')',kfm_lang.ChangeCaption,'edit']);
-					}
-					if(kfm_inArray(['zip'],extension))links.push(['javascript:kfm_extractZippedFile("'+id+'")',kfm_lang.ExtractZippedFile,'']);
-					if(kfm_inArray(viewable_extensions,extension))links.push(['javascript:x_kfm_viewTextFile('+id+',kfm_viewTextFile)','view','edit']);
-					if(kfm_inArray(editable_extensions,extension))links.push(['javascript:kfm_editTextFile("'+id+'")',kfm_lang.EditTextFile,'edit']);
+		var name=res.files[a].name,ext=name.replace(/.*\./,''),b,fullfilename=kfm_cwd_name+'/'+name,id=res.files[a].id;
+		var el=newEl('div','kfm_file_icon_'+id,'kfm_file_icon kfm_icontype_'+ext,newEl('span',0,'filename',name)).setCss('cursor:'+(Browser.isIE?'hand':'pointer'));
+		{ // add events
+			addEvent(el,'click',kfm_toggleSelectedFile);
+			addEvent(el,'dblclick',kfm_chooseFile);
+			el.contextmenu=function(e){
+				e=getEvent(e);
+				{ // variables
+					var name=this.kfm_attributes.name,links=[],i,id=this.kfm_attributes.id;
+					var extension=name.replace(/.*\./,'').toLowerCase();
 				}
-				links.push(['javascript:kfm_tagAdd('+id+')','add tag to file(s)']);
-				kfm_createContextMenu(getMouseAt(getEvent(e)),links);
+				{ // add the links
+					if(selectedFiles.length>1)links.push(['javascript:kfm_deleteSelectedFiles()',kfm_lang.DeleteFile,'remove']);
+					else{
+						links.push(['javascript:kfm_deleteFile('+id+')',kfm_lang.DeleteFile,'remove']);
+						links.push(['javascript:kfm_renameFile('+id+')',kfm_lang.RenameFile,'edit']);
+						if(this.kfm_attributes.image_data){
+							links.push(['javascript:kfm_rotateImage('+id+',270)',kfm_lang.RotateClockwise,'rotate_cw']);
+							links.push(['javascript:kfm_rotateImage('+id+',90)',kfm_lang.RotateAntiClockwise,'rotate_ccw']);
+							links.push(['javascript:kfm_resizeImage('+id+')',kfm_lang.ResizeImage,'']);
+							links.push(['javascript:kfm_changeCaption('+id+')',kfm_lang.ChangeCaption,'edit']);
+						}
+						if(kfm_inArray(['zip'],extension))links.push(['javascript:kfm_extractZippedFile("'+id+'")',kfm_lang.ExtractZippedFile,'']);
+						if(kfm_inArray(viewable_extensions,extension))links.push(['javascript:x_kfm_viewTextFile('+id+',kfm_viewTextFile)','view','edit']);
+						if(kfm_inArray(editable_extensions,extension))links.push(['javascript:kfm_editTextFile("'+id+'")',kfm_lang.EditTextFile,'edit']);
+					}
+					links.push(['javascript:kfm_tagAdd('+id+')','add tag to file(s)']);
+					kfm_createContextMenu(getMouseAt(getEvent(e)),links);
+				}
 			}
+			addEvent(el,'mousedown',(function(id){
+				return function(e){
+					if(e.button==2)return;
+					addEvent(document,'mouseup',kfm_file_dragFinish);
+					clearTimeout(window.dragSelectionTrigger);
+					window.dragTrigger=setTimeout(function(){
+						kfm_file_dragStart(id);
+					},100);
+				};
+			})(id));
 		}
-		addEvent(el,'mousedown',(function(id){
-			return function(e){
-				if(e.button==2)return;
-				addEvent(document,'mouseup',kfm_file_dragFinish);
-				clearTimeout(window.dragSelectionTrigger);
-				window.dragTrigger=setTimeout(function(){
-					kfm_file_dragStart(id);
-				},100);
-			};
-		})(id));
-		if(kfm_filesCache[id]){
-			el.kfm_attributes=kfm_filesCache[id];
-			if(kfm_filesCache[id].image_data)kfm_showIcon([id,kfm_filesCache[id].image_data],el);
+		{ // file attributes
+			if(kfm_filesCache[id]){
+				el.kfm_attributes=kfm_filesCache[id];
+				if(kfm_filesCache[id].image_data)kfm_showIcon([id,kfm_filesCache[id].image_data],el);
+			}
+			else{
+				el.kfm_attributes=res.files[a];
+				for(b in kfm_imageExts)if(kfm_imageExts[b]==ext)x_kfm_getThumbnail(id,64,64,kfm_showIcon);
+			}
+			files[a]=el;
+			fileids[a]=id;
 		}
-		else{
-			el.kfm_attributes=res.files[a];
-			for(b in kfm_imageExts)if(kfm_imageExts[b]==ext)x_kfm_getThumbnail(id,64,64,kfm_showIcon);
-		}
-		files[a]=el;
-		fileids[a]=id;
 		wrapper.addEl(el);
 		var reqWidth=el.offsetWidth;
 		el.style.width='auto';
 		if(el.offsetWidth>reqWidth){
-			if(name.indexOf('.')>-1){
-				var extension=name.replace(/.*\.([^.]*)$/,'$1');
-				var filename=name.replace(/\.[^.]*$/,'')+'.';
-			}
-			else{
-				var extension='';
-				var filename=name;
-			}
+			var extension='';
 			el.title=name;
-			var name=el.getElementsByTagName('span')[0];
-			name.delClass('filename');
+			if(name.indexOf('.')>-1){
+				extension=name.replace(/.*\.([^.]*)$/,'$1');
+				name=name.replace(/\.[^.]*$/,'')+'.';
+			}
+			var nameEl=el.getElementsByTagName('span')[0];
+			nameEl.delClass('filename');
+			var filename,step=Math.ceil(name.length/2),done=0,direction=-1;
+			var position=step;
 			do{
-				filename=filename.substring(0,filename.length-1);
-				name.innerHTML=filename+'[...]'+extension;
-			}while(el.offsetWidth>reqWidth);
-			name.empty().addEl([newEl('span',0,'filename',filename),newEl('span',0,0,'[...]').setCss('color:red;textDecoration:none'),newEl('span',0,'filename',extension)]);
+				filename=name.substring(0,position);
+				nameEl.innerHTML=filename+'[...]'+extension;
+				direction=(el.offsetWidth>reqWidth)?-1:1;
+				if(step>1){
+					step=Math.ceil(step/2);
+					position=position+step*direction;
+				}
+				else done=1;
+			}while(!done);
+			filename=name.substring(0,position-1);
+			nameEl.empty().addEl([newEl('span',0,'filename',filename),newEl('span',0,0,'[...]').setCss('color:red;textDecoration:none'),newEl('span',0,'filename',extension)]);
 		}
 		el.style.width=reqWidth;
 		el.style.width=reqWidth-(el.offsetWidth-reqWidth);
