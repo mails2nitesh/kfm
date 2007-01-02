@@ -236,6 +236,7 @@ function kfm_changeCaption(id){
 	}
 }
 function kfm_changeDirectory(e){
+	clearTimeout(window.dragTrigger);
 	var el=getEventTarget(e),a,els=getElsWithClass('kfm_directory_open','TD');
 	if(browser.isIE)while(el&&!el.node_id)el=el.parentNode;
 	kfm_cwd_name=el.kfm_directoryname;
@@ -389,7 +390,6 @@ function kfm_deleteSelectedFiles(){
 		x_kfm_rm(selectedFiles,kfm_refreshFiles);
 	}
 }
-var iters=0;
 function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 	var r=t.addRow(),c,pdir=parent_addr+name,name=(name==''?'root':name),name_text=newEl('span','directory_name_'+parent,0,'0');
 	var el=X(newEl('div','kfm_directory_icon_'+parent,'kfm_directory_link '+(kfm_cwd_name==pdir?'':'kfm_directory_open'),name_text),{
@@ -421,9 +421,8 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 		el=name_text;
 		el.style.position='absolute';
 		if(reqHeight&&el.offsetHeight>reqHeight){
-			var filename=name;
+			var filename,step=Math.ceil(name.length/2),done=0,direction=-1;
 			el.title=name;
-			var step=Math.ceil(name.length/2),done=0,direction=-1;
 			var position=step;
 			do{
 				filename=name.substring(0,position);
@@ -445,7 +444,6 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 		r.addCell(0,0,' ',is_last?0:'kfm_dir_lines_nochild');
 		r.addCell(1).id='kfm_directories_subdirs_'+parent;
 	}
-window.status=iters;
 	return t;
 }
 function kfm_dir_drag(e){
@@ -982,7 +980,7 @@ function kfm_selection_dragFinish(e){
 	delEl(window.drag_wrapper);
 	removeEvent(document,'mousemove',kfm_selection_drag);
 	removeEvent(document,'mouseup',kfm_selection_dragFinish);
-	var fileids=$('kfm_right_column').fileids,counted=0;
+	var fileids=$('kfm_right_column').fileids;
 	kfm_selectNone();
 	var lastfile=$('kfm_file_icon_'+fileids[fileids.length-1]);
 	if(y1>getOffset(lastfile,'Top')+lastfile.offsetHeight)return;
@@ -990,7 +988,6 @@ function kfm_selection_dragFinish(e){
 		var file=fileids[f],icon=$('kfm_file_icon_'+file);
 		var x3=getOffset(icon,'Left'),y3=getOffset(icon,'Top');
 		var x4=x3+icon.offsetWidth,y4=y3+icon.offsetHeight;
-		counted++;
 		if(
 			kfm_isPointInBox(x3,y3,x1,y1,x2,y2)||
 			kfm_isPointInBox(x4,y3,x1,y1,x2,y2)||
@@ -1003,7 +1000,6 @@ function kfm_selection_dragFinish(e){
 			(x1>=x3&&x2<=x4&&y1<=y3&&y2>=y4)||
 			(x1<=x3&&x2>=x4&&y1>=y3&&y2<=y4)
 		)kfm_addToSelection(file);
-		window.status=counted;
 	}
 	kfm_selectionCheck();
 }
