@@ -268,6 +268,9 @@ function kfm_createContextMenu(m,links){
 	}
 	var i,rows=contextmenu.rows.length;
 	for(i in links)if(links[i][1])contextmenu.addLink(links[i][0],links[i][1],links[i][2]);
+	var w=contextmenu.offsetWidth,h=contextmenu.offsetHeight,ws=getWindowSize();
+	if(h+m.y>ws.y)contextmenu.style.top=(ws.y-h)+'px';
+	if(w+m.x>ws.x)contextmenu.style.left=(m.x-w)+'px';
 }
 function kfm_createDirectory(id){
 	var newName=kfm_prompt(kfm_lang.CreateDirMessage(kfm_directories[id].pathname),kfm_lang.NewDirectory);
