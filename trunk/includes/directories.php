@@ -29,7 +29,7 @@ function _deleteDirectory($id,$recursive=0){
 		if(!$ok)return array('type'=>'error','msg'=>2,'name'=>$directory,'id'=>$id); # directory not empty
 	}
 	kfm_rmdir2($id);
-	if(file_exists($abs_dir))return array('type'=>'error','msg'=>3,'name'=>$directory);
+	if(file_exists($abs_dir))return array('type'=>'error','msg'=>3,'name'=>$directory); # failed to delete directory
 	$parent=strpos($directory,'/')>0?preg_replace('/\/[^\/]*$/','',$directory):'';
 	return kfm_loadDirectories($parent);
 }
