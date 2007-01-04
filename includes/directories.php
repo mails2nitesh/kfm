@@ -101,7 +101,7 @@ function _moveDirectory($from,$to){
 	if(strpos($t_add,$f_add)===0)return 'error: cannot move a directory into its own sub-directory'; # TODO: new string
 	if(file_exists($t_add.'/'.$f_name))return 'error: "'.$t_add.'/'.$f_name.'" already exists'; # TODO: new string
 	rename($f_add,$t_add.'/'.$f_name);
-	if(!file_exists($t_add.'/'.$f_name))return 'error: could not move directory'; # TODO: new string
+	if(!file_exists($t_add.'/'.$f_name))return 'error: could not move directory "'.$f_add.'" to "'.$t_add.'/'.$f_name.'"'; # TODO: new string
 	$len=strlen(preg_replace('#/[^/]*$#','',$f_add));
 	switch($GLOBALS['kfm_db_type']){
 		case 'sqlite': case 'pgsql': {
