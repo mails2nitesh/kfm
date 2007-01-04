@@ -65,7 +65,7 @@ function kfm(){
 				var ps=left_column.panels;
 				for(var i in ps){
 					var p=$(ps[i]);
-					if(!p.visible)links.push(['javascript:kfm_addPanel("kfm_left_column","'+ps[i]+'")',kfm_lang.ShowPanel(p.panel_title)]);
+					if(!p.visible)links.push(['javascript:kfm_addPanel("kfm_left_column","'+ps[i]+'")',kfm_lang.ShowPanel(p.panel_title),'show_panel']);
 				}
 				kfm_createContextMenu(m,links);
 			}
@@ -84,8 +84,8 @@ function kfm(){
 			var links=[],i;
 			links.push(['javascript:kfm_createEmptyFile()',kfm_lang.CreateEmptyFile,'filenew']);
 			if(selectedFiles.length!=$('kfm_right_column').fileids.length)links.push(['javascript:kfm_selectAll()',kfm_lang.SelectAll,'ark_selectall']);
-			if(selectedFiles.length)links.push(['javascript:kfm_selectNone()',kfm_lang.SelectNone,'']);
-			links.push(['javascript:kfm_selectInvert()',kfm_lang.InvertSelection,'']);
+			if(selectedFiles.length)links.push(['javascript:kfm_selectNone()',kfm_lang.SelectNone,'select_none']);
+			links.push(['javascript:kfm_selectInvert()',kfm_lang.InvertSelection,'invert_selection']);
 			kfm_createContextMenu(getMouseAt(getEvent(e,1)),links);
 		};
 	}
@@ -809,14 +809,14 @@ function kfm_refreshFiles(res){
 						if(this.kfm_attributes.image_data){
 							links.push(['javascript:kfm_rotateImage('+id+',270)',kfm_lang.RotateClockwise,'rotate_cw']);
 							links.push(['javascript:kfm_rotateImage('+id+',90)',kfm_lang.RotateAntiClockwise,'rotate_ccw']);
-							links.push(['javascript:kfm_resizeImage('+id+')',kfm_lang.ResizeImage,'']);
+							links.push(['javascript:kfm_resizeImage('+id+')',kfm_lang.ResizeImage,'resize_image']);
 							links.push(['javascript:kfm_changeCaption('+id+')',kfm_lang.ChangeCaption,'edit']);
 						}
-						if(kfm_inArray(['zip'],extension))links.push(['javascript:kfm_extractZippedFile("'+id+'")',kfm_lang.ExtractZippedFile,'']);
+						if(kfm_inArray(['zip'],extension))links.push(['javascript:kfm_extractZippedFile("'+id+'")',kfm_lang.ExtractZippedFile,'extract_zip']);
 						if(kfm_inArray(viewable_extensions,extension))links.push(['javascript:x_kfm_viewTextFile('+id+',kfm_viewTextFile)','view','edit']);
 						if(kfm_inArray(editable_extensions,extension))links.push(['javascript:kfm_editTextFile("'+id+'")',kfm_lang.EditTextFile,'edit']);
 					}
-					links.push(['javascript:kfm_tagAdd('+id+')','add tag to file(s)']);
+					links.push(['javascript:kfm_tagAdd('+id+')','add tag to file(s)','add_tags']);
 					kfm_createContextMenu(getMouseAt(getEvent(e)),links);
 				}
 			}
