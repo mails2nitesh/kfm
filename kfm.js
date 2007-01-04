@@ -1144,10 +1144,15 @@ function kfm_showTextFile(res){
 	var r2=t.addRow();
 	r2.addCell(0,1,res.name);
 	r2.addCell(1,1,newLink('javascript:x_kfm_viewTextFile('+res.id+',kfm_viewTextFile)','View',0,'button'));
-	r2.addCell(2,1,newLink('javascript:if(confirm(kfm_lang.SaveThenCloseQuestion)){kfm_setMessage("saving file...");x_kfm_saveTextFile('+res.id+',$("kfm_textfile").value,kfm_clearMessage);}','Save',0,'button'));
-	r2.addCell(3,1,newLink('javascript:if(confirm(kfm_lang.CloseWithoutSavingQuestion))x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);',kfm_lang.CloseWithoutSaving,0,'button'));
-	t.addRow().setCss('height:100%').addCell(0,4,newInput('kfm_textfile','textarea',res.content,'kfm_textfile').setCss('width:100%;height:100%'));
+	r2.addCell(2,1,newLink('javascript:if(confirm(kfm_lang.SaveThenCloseQuestion)){kfm_setMessage("saving file...");$("codepress-ondemand").value=CodePress.getCode();x_kfm_saveTextFile('+res.id+',$("codepress-ondemand").value,kfm_clearMessage);}','Save',0,'button'));
+	r2.addCell(3,1,newLink('javascript:if($("codepress-ondemand").value==CodePress.getCode() || confirm( kfm_lang.CloseWithoutSavingQuestion))x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);',kfm_lang.CloseWithoutSaving,0,'button'));
+	r2.addCell(4,1,newLink('javascript:CodePress.setCode("codepress-ondemand")','load code',0,'button'));
+	//t.addRow().setCss('height:100%').addCell(0,4,newInput('kfm_textfile','textarea',res.content,'kfm_textfile').setCss('width:100%;height:100%'));
+	r3=t.addRow().setCss('height:100%').addCell(0,5);
+	r3.innerHTML = '<iframe id="codepress" src="codepress/codepress.php" width="100%" height="100%"></iframe><textarea id="codepress-ondemand" name="codepress-ondemand" style="display:none" lang="'+res.lang+'"></textarea>';
 	$('kfm_right_column').empty().addEl(t);
+	$('codepress-ondemand').value = res.content;
+	//CodePress.setCode('codepress-ondemand');
 }
 function kfm_shrinkName(name,wrapper,text,size,maxsize,extension){
 	var filename,position=step=Math.ceil(name.length/2),direction,postfix='[...]'+extension;
