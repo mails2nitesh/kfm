@@ -715,8 +715,8 @@ function kfm_refreshFiles(res){
 	var files=[],a,b,fileids=[],wrapper=$('kfm_right_column').empty();
 	wrapper.addEl(newEl('div',0,'kfm_panel_header',kfm_lang.CurrentWorkingDir(res.reqdir)));
 	for(a in res.files){
-		var name=res.files[a].name,ext=name.replace(/.*\./,''),b,fullfilename=kfm_cwd_name+'/'+name,id=res.files[a].id;
-		var el=newEl('div','kfm_file_icon_'+id,'kfm_file_icon kfm_icontype_'+ext,newEl('span',0,'filename',name)).setCss('cursor:'+(Browser.isIE?'hand':'pointer'));
+		var name=res.files[a].name,ext=name.replace(/.*\./,''),b,fullfilename=kfm_cwd_name+'/'+name,id=res.files[a].id,nameEl=newEl('span',0,'filename',name);
+		var el=newEl('div','kfm_file_icon_'+id,'kfm_file_icon kfm_icontype_'+ext).setCss('cursor:'+(Browser.isIE?'hand':'pointer'));
 		{ // add events
 			addEvent(el,'click',kfm_toggleSelectedFile);
 			addEvent(el,'dblclick',kfm_chooseFile);
@@ -770,6 +770,7 @@ function kfm_refreshFiles(res){
 		}
 		wrapper.addEl(el);
 		var reqWidth=el.offsetWidth;
+		el.appendChild(nameEl);
 		el.style.width='auto';
 		if(el.offsetWidth>reqWidth){
 			var extension='';
