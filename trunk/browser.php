@@ -140,6 +140,9 @@ require_once('includes/kaejax.php');
 ?>
 <html>
 	<head>
+		<style type="text/css">@import "<?php
+		echo 'themes/'.$kfm_theme.'/kfm.css';
+		?>";</style>
 		<title>KFM - Kae's File Manager</title>
 		<style type="text/css"><?php
 			echo preg_replace('/\s+/',' ',file_get_contents('Text/hilight.css'));
@@ -161,9 +164,6 @@ require_once('includes/kaejax.php');
 			var editable_extensions=["<?php echo join('","',$kfm_editable_extensions);?>"];
 			var viewable_extensions=["<?php echo join('","',$kfm_viewable_extensions);?>"];
 		</script>
-		<style type="text/css">@import "<?php
-		echo 'themes/'.$kfm_theme.'/kfm.css';
-		?>";</style>
 	</head>
 	<body>
 		<noscript>KFM relies on JavaScript. Please either turn on JavaScript in your browser, or <a href="http://www.getfirefox.com/">get Firefox</a> if your browser does not support JavaScript.</noscript>
