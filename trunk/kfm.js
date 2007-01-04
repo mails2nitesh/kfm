@@ -961,8 +961,11 @@ function kfm_selectNone(){
 	kfm_selectionCheck();
 }
 function kfm_selectionCheck(){
-	if(selectedFiles.length==1)kfm_run_delayed('file_details','if(selectedFiles.length==1)x_kfm_getFileDetails(selectedFiles[0],kfm_showFileDetails);');
-	else kfm_showFileDetails();
+	if(selectedFiles.length==1){
+		getElsWithClass('kfm_panel_body','DIV',$('kfm_file_details_panel')).innerHTML='loading';
+		kfm_run_delayed('file_details','if(selectedFiles.length==1)x_kfm_getFileDetails(selectedFiles[0],kfm_showFileDetails);');
+	}
+	else kfm_run_delayed('file_details','if(!selectedFiles.length)kfm_showFileDetails();');
 }
 function kfm_selection_drag(e){
 	if(!window.dragType||window.dragType!=2)return;
