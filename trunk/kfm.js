@@ -178,7 +178,7 @@ function kfm_addPanel(wrapper,panel){
 	else if(panel=='kfm_file_details_panel')el=kfm_createFileDetailsPanel();
 	else if(panel=='kfm_file_upload_panel')el=kfm_createFileUploadPanel();
 	else if(panel=='kfm_search_panel')el=kfm_createSearchPanel();
-	else if(panel=='kfm_logs_panel')el=kfm_createPanel(kfm_lang.Logs,'kfm_logs_panel',newEl('p',0,0,kfm_lang.LoadingKFM));
+	else if(panel=='kfm_logs_panel')el=kfm_createPanel(kfm_lang.Logs,'kfm_logs_panel',newEl('p',0,0,kfm_lang.LoadingKFM),{order:100});
 	else{
 		kfm_log(kfm_lang.NoPanel(panel));
 		return;
@@ -323,7 +323,7 @@ function kfm_createFileUploadPanel(){
 	return kfm_createPanel(kfm_lang.FileUpload,'kfm_file_upload_panel',[sel,f1,iframe,f2],{maxedState:3,state:3,order:2});
 }
 function kfm_createFileDetailsPanel(){
-	return kfm_createPanel(kfm_lang.FileDetails,'kfm_file_details_panel',0,{abilities:1});
+	return kfm_createPanel(kfm_lang.FileDetails,'kfm_file_details_panel',0,{abilities:1,order:4});
 }
 function kfm_createPanel(title,id,subels,vars){
 	// states:    0=minimised,1=maximised,2=fixed-height, 3=fixed-height-maxed
@@ -1138,7 +1138,10 @@ function kfm_showIcon(res,el2){
 	var file=res[0],image_data=res[1];
 	var el=(el2&&!isArray(el2))?el2:$('kfm_file_icon_'+file);
 	if(!el||!image_data)return;
-	if(image_data.caption)el.title=image_data.caption.replace(/\n/g,' ');
+	if(image_data.caption){
+		if(el.title)el.title+=', caption: ';
+		el.title+=image_data.caption.replace(/\n/g,' ');
+	}
 	if(image_data.icon){
 		if(!kfm_filesCache[file])image_data.icon=image_data.icon+'?'+Math.random();
 		var img=newImg(image_data.icon).setCss('width:1px;height:1px');
