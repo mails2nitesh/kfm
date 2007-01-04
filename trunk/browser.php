@@ -141,12 +141,15 @@ require_once('includes/kaejax.php');
 <html>
 	<head>
 		<title>KFM - Kae's File Manager</title>
-		<link rel="stylesheet" href="Text/hilight.css" />
-		<script type="text/javascript" src="lang/<?php
-			echo $kfm_language;
-		?>.js"></script>
-		<script type="text/javascript" src="kfm.js"></script>
+		<style type="text/css"><?php
+			echo preg_replace('/\s+/',' ',file_get_contents('Text/hilight.css'));
+		?></style>
 		<script type="text/javascript">
+
+<?php
+	echo file_get_contents('lang/'.$kfm_language.'.js');
+	echo file_get_contents('kfm.js');
+?>
 			var starttype="<?php echo isset($_GET['Type'])?$_GET['Type']:''; ?>";
 			var fckroot="<?php echo $kfm_userfiles; ?>";
 			var fckrootOutput="<?php echo $kfm_userfiles_output; ?>";

@@ -238,11 +238,11 @@ function kfm_changeCaption(id){
 }
 function kfm_changeDirectory(id){
 	setTimeout('clearTimeout(window.dragTrigger);',1);
-	var el=$(id),a,els=getElsWithClass('kfm_directory_open','TD');
+	var el=$(id),a,els=getElsWithClass('kfm_directory_open','td');
 	if(browser.isIE)while(el&&!el.node_id)el=el.parentNode;
 	kfm_cwd_name=el.kfm_directoryname;
 	kfm_cwd_id=el.node_id;
-	for(a in els)els[a].delClass('kfm_directory_open');
+	for(var a=0;a<els.length;++a)els[a].delClass('kfm_directory_open');
 	el.parentNode.addClass('kfm_directory_open');
 	setTimeout('x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);x_kfm_loadDirectories(kfm_cwd_id,kfm_refreshDirectories);',20);
 }
@@ -305,7 +305,7 @@ function kfm_createFileUploadPanel(){
 			var f1=newForm('upload.php','POST','multipart/form-data','kfm_iframe');
 			f1.id='kfm_uploadForm';
 			var iframe=newEl('iframe','kfm_iframe').setCss('display:none');
-			iframe.src='empty';
+			iframe.src='javascript:false';
 			var submit=newInput('upload','submit',kfm_lang.Upload);
 			var input=newInput('kfm_file','file');
 			input.onkeyup=kfm_cancelEvent;
