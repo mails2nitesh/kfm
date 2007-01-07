@@ -4,7 +4,6 @@ function _changeCaption($fid,$newCaption){
 	$im->setCaption($newCaption);
 	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
-
 function _getCaption($dirname,$filename){
 	// new parameter $fileid benjamin
 	// until then.....
@@ -13,7 +12,6 @@ function _getCaption($dirname,$filename){
 	$im = new Image($fid);
 	return $im->caption;
 }
-
 function _getThumbnail($fileid,$width,$height){
 	$im=new Image($fileid);
 	$im->setThumbnail($width,$height);
@@ -28,5 +26,8 @@ function _rotateImage($fid,$direction){
 	$im = new Image($fid);
 	$im->rotate($direction);
 	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
+}
+function _setCaption($fid,$caption){
+	
 }
 ?>
