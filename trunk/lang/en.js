@@ -68,7 +68,7 @@ DelDirMessage:
 DelFileMessage:
 	"Are you sure you want to delete the file \"%1\"",
 DelMultipleFilesMessage:
-	"Are you sure you want to delete the following files?\n\n'",
+	"Are you sure you want to delete the following files?\n\n",
 DownloadFileFromMessage:
 	"Download file from where?",
 FileSavedAsMessage:
