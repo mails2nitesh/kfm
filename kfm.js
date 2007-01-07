@@ -390,7 +390,9 @@ function kfm_deleteFile(id){
 	}
 }
 function kfm_deleteSelectedFiles(){
-	if(confirm(kfm_lang.DelMultipleFilesMessage+selectedFiles.join('\n'))){
+	var names=[];
+	for(var i=0;i<selectedFiles.length;++i)names.push($('kfm_file_icon_'+selectedFiles[i]).kfm_attributes.name);
+	if(confirm(kfm_lang.DelMultipleFilesMessage+names.join('\n'))){
 		for(var i in selectedFiles)kfm_filesCache[selectedFiles[i]]=null;
 		x_kfm_rm(selectedFiles,kfm_refreshFiles);
 	}
