@@ -16,19 +16,26 @@ function _downloadFileFromUrl($url,$filename){
 	return(file_put_contents($_SESSION['kfm']['currentdir'].'/'.$filename,$file))?kfm_loadFiles($_SESSION['kfm']['cwd_id']):'error: could not write file "'.$filename.'"';
 }
 function _extractZippedFile($id){
-	# adapted from bholub's post at http://php.net/zip
 	$file=new File($id);
 	$dir=$file->directory.'/';
-	$zip=zip_open($dir.$file->name);
-	while($zip_entry=zip_read($zip)){
-		$entry=zip_entry_open($zip,$zip_entry);
-		$filename=zip_entry_name($zip_entry);
-		$target_dir=$dir.substr($filename,0,strrpos($filename,'/'));
-		$filesize=zip_entry_filesize($zip_entry);
-		if(is_dir($target_dir)||mkdir($target_dir)){
-			if($filesize>0){
-				$contents=zip_entry_read($zip_entry,$filesize);
-				file_put_contents($dir.$filename,$contents);
+	{ # try native system unzip command
+		$res=-1;
+		$arr=array();
+		exec('unzip -o "'.$dir.$file->name.'" -x -d "'.$dir.'"',$arr,$res);
+	}
+	if($res){ # try PHP unzip command
+		return 'error: unzip failed';
+		$zip=zip_open($dir.$file->name);
+		while($zip_entry=zip_read($zip)){
+			$entry=zip_entry_open($zip,$zip_entry);
+			$filename=zip_entry_name($zip_entry);
+			$target_dir=$dir.substr($filename,0,strrpos($filename,'/'));
+			$filesize=zip_entry_filesize($zip_entry);
+			if(is_dir($target_dir)||mkdir($target_dir)){
+				if($filesize>0){
+					$contents=zip_entry_read($zip_entry,$filesize);
+					file_put_contents($dir.$filename,$contents);
+				}
 			}
 		}
 	}
