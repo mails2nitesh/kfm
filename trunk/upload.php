@@ -12,8 +12,8 @@ if($kfm_allow_file_uploads){
 		if(!file_exists($to))$js='parent.kfm_log("error: failure to save tmp file \"'.$tmpname.'\" to location \"'.$to.'\"")'; # TODO new string
 		else{
 			$imgtype=exif_imagetype($to);
+			include('includes/images.php');
 			if($imgtype){
-				require_once('includes/images.php');
 				$comment='';
 				$data=exif_read_data($to,0,true);
 				if(is_array($data)&&isset($data['COMMENT'])&&is_array($data['COMMENT']))$comment=join("\n",$data['COMMENT']);
