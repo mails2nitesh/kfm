@@ -1,6 +1,6 @@
 <?php
 # see license.txt for licensing
-include('config.php');
+include('initialise.php');
 $js='';
 if($kfm_allow_file_uploads){
 	$filename=$_FILES['kfm_file']['name'];
