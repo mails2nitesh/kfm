@@ -6,7 +6,7 @@ if(!is_numeric($id)){
 	echo 'error: invalid id'; # TODO: new string
 	exit;
 }
-$q=$db->query('select physical_address,files.name as name from directories,files where directory=directories.id and files.id='.$id);
+$q=$db->query("select physical_address,files.name as name from ".$kfm_db_prefix."directories,".$kfm_db_prefix."files where directory=directories.id and files.id=".$id);
 $r=$q->fetchRow();
 if(!count($r)){
 	echo 'error: file id #'.$id.' not found in database'; # TODO: new string

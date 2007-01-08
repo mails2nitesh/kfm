@@ -46,6 +46,7 @@ $kfm_file_handler='download'; # values allowed: download, fckeditor
 $kfm_db_type='mysql'; # values allowed: sqlite, mysql, pgsql
 
 # the following options should only be filled if you are not using sqlite
+$kfm_db_prefix='kfm_';
 $kfm_db_host='localhost';
 $kfm_db_name='kfm';
 $kfm_db_username='username';

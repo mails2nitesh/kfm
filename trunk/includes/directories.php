@@ -1,8 +1,8 @@
 <?php
 function _add_directory_to_db($name,$physical_address,$parent){
-	global $db;
+	global $db,$kfm_db_prefix;
 	$physical_address = str_replace('//','/', $physical_address);
-	$sql="insert into directories (name,physical_address,parent) values('".addslashes($name)."','".addslashes($physical_address)."',".$parent.")";
+	$sql="insert into ".$kfm_db_prefix."directories (name,physical_address,parent) values('".addslashes($name)."','".addslashes($physical_address)."',".$parent.")";
 	return $db->exec($sql);
 }
 function _createDirectory($parent,$name){
@@ -34,7 +34,8 @@ function _deleteDirectory($id,$recursive=0){
 	return kfm_loadDirectories($parent);
 }
 function _getDirectoryDbInfo($id){
-	$q=$GLOBALS['db']->query('select * from directories where id='.$id);
+	global $db,$kfm_db_prefix;
+	$q=$db->query("select * from ".$kfm_db_prefix."directories where id=".$id);
 	return $q->fetchRow();
 }
 function _getDirectoryProperties($dir){
@@ -48,7 +49,7 @@ function _getDirectoryProperties($dir){
 	return $properties;
 }
 function _loadDirectories($root){
-	global $db;
+	global $db,$kfm_db_prefix;
 	if(is_numeric($root)){
 		$rootid=$root;
 		$dirdata=_getDirectoryDbInfo($rootid);
@@ -57,14 +58,14 @@ function _loadDirectories($root){
 	}
 	if(!isset($rootid)){
 		$reqdir=str_replace('//','/',$GLOBALS['rootdir'].$root);
-		$q=$db->query("select id from directories where physical_address='".addslashes($reqdir)."'");
+		$q=$db->query("select id from ".$kfm_db_prefix."directories where physical_address='".addslashes($reqdir)."'");
 		$r=$q->fetchRow();
 		$rootid=$r['id'];
 	}
 	if(!kfm_checkAddr($root))return 'error: illegal address "'.$root.'"';
 	if(!is_dir($reqdir))mkdir($reqdir,0755);
 	if($handle=opendir($reqdir)){
-		$q=$db->query('select id,name from directories where parent='.$rootid);
+		$q=$db->query("select id,name from ".$kfm_db_prefix."directories where parent=".$rootid);
 		$dirsdb=$q->fetchAll();
 		$dirshash=array();
 		if(is_array($dirsdb))foreach($dirsdb as $r)$dirshash[$r['name']]=$r['id'];
@@ -92,7 +93,7 @@ function _loadDirectories($root){
 	return 'couldn\'t read directory "'.$reqdir.'"';
 }
 function _moveDirectory($from,$to){
-	global $db;
+	global $db,$kfm_db_prefix;
 	$f_r=_getDirectoryDbInfo($from);
 	$t_r=_getDirectoryDbInfo($to);
 	$f_add=$f_r['physical_address'];
@@ -105,21 +106,21 @@ function _moveDirectory($from,$to){
 	$len=strlen(preg_replace('#/[^/]*$#','',$f_add));
 	switch($GLOBALS['kfm_db_type']){
 		case 'sqlite': case 'pgsql': {
-			$fugly="update directories set physical_address=('".addslashes($t_add)."'||substr(physical_address,".($len+1).",length(physical_address)-".$len.")) where physical_address like '".addslashes($f_add)."/%' or id=".$from;
+			$fugly="update ".$kfm_db_prefix."directories set physical_address=('".addslashes($t_add)."'||substr(physical_address,".($len+1).",length(physical_address)-".$len.")) where physical_address like '".addslashes($f_add)."/%' or id=".$from;
 			break;
 		}
 		case 'mysql': {
-			$fugly='update directories set physical_address=concat("'.addslashes($t_add).'",substr(physical_address,'.$len.'-length(physical_address))) where physical_address like "'.addslashes($f_add).'/%" or id='.$from;
+			$fugly="update ".$kfm_db_prefix."directories set physical_address=concat('".addslashes($t_add)."',substr(physical_address,".$len."-length(physical_address))) where physical_address like '".addslashes($f_add)."/%' or id=".$from;
 			break;
 		}
 	}
 	$db->exec($fugly) or die('error: '.print_r($db->errorInfo(),true));
-	$db->exec('update directories set parent="'.$to.'" where id='.$from) or die('error: '.print_r($db->errorInfo(),true));
+	$db->exec("update ".$kfm_db_prefix."directories set parent=".$to." where id=".$from) or die('error: '.print_r($db->errorInfo(),true));
 	return _loadDirectories(1);
 }
 function _rmdir2($dir){ # adapted from http://php.net/rmdir
 	if(is_numeric($dir)&&$dir!=0){
-		global $db;
+		global $db,$kfm_db_prefix;
 		$dirdata=_getDirectoryDbInfo($dir);
 		$dir=$dirdata['physical_address'];
 	}
@@ -137,11 +138,11 @@ function _rmdir2($dir){ # adapted from http://php.net/rmdir
 	}
 	if(isset($dirdata)){
 		{ # sqlite doesn't honour referential integrity, so files need to be manually removed.
-			$q=$db->query('select id from directories where physical_address like "'.$dirdata['physical_address'].'%"');
+			$q=$db->query("select id from ".$kfm_db_prefix."directories where physical_address like '".$dirdata['physical_address']."%'");
 			$dirs=$q->fetchAll();
-			foreach($dirs as $dir)$db->exec('delete from files where parent="'.$dir['id'].'"');
+			foreach($dirs as $dir)$db->exec("delete from ".$kfm_db_prefix."files where parent=".$dir["id"]);
 		}
-		$db->exec('delete from directories where physical_address like "'.$dirdata['physical_address'].'%"');
+		$db->exec("delete from ".$kfm_db_prefix."directories where physical_address like '".$dirdata['physical_address']."%'");
 	}
 }
 ?>
