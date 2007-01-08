@@ -1,7 +1,7 @@
 <?php
 # see license.txt for licensing
 require_once('framework.php');
-require_once('config.php');
+require_once('initialise.php');
 require_once('includes/kaejax.php');
 
 { # directory functions

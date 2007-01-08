@@ -1,6 +1,6 @@
 <?php
 # see license.txt for licensing
-require_once('config.php');
+require_once('initialise.php');
 $id=$_GET['id'];
 if(!is_numeric($id)){
 	echo 'error: invalid id'; # TODO: new string
