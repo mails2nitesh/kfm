@@ -90,7 +90,7 @@ set_error_handler('kfm_error_log');
 			$db=&MDB2::factory($dsn);
 			if(PEAR::isError($db))die($db->getMessage());
 			$db->setFetchMode(MDB2_FETCHMODE_ASSOC);
-			$res=&$db->query('show tables');
+			$res=&$db->query("show tables like '".$kfm_db_prefix."%'");
 			if(!$res->numRows())include('scripts/db.mysql.create.php');
 			else $db_defined=1;
 			break;
@@ -101,7 +101,7 @@ set_error_handler('kfm_error_log');
 			$db=&MDB2::factory($dsn);
 			if(PEAR::isError($db))die($db->getMessage());
 			$db->setFetchMode(MDB2_FETCHMODE_ASSOC);
-			$res=&$db->query("SELECT tablename from pg_tables where tableowner=current_user AND tablename NOT LIKE 'pg_%' AND tablename NOT LIKE 'sql_%'");
+			$res=&$db->query("SELECT tablename from pg_tables where tableowner=current_user AND tablename NOT LIKE 'pg_%' AND tablename NOT LIKE 'sql_%' AND tablename LIKE '".$kfm_db_prefix."%'");
 			if($res->numRows()<1)include('scripts/db.pgsql.create.php');
 			else $db_defined=1;
 			break;
@@ -132,7 +132,7 @@ set_error_handler('kfm_error_log');
 }
 { # get kfm parameters and check for updates
 	$kfm_parameters=array();
-	$q=$db->query('select * from parameters');
+	$q=$db->query("select * from ".$kfm_db_prefix."parameters");
 	$rs=$q->fetchAll();
 	foreach($rs as $r)$kfm_parameters[$r['name']]=$r['value'];
 	if($kfm_parameters['version']!=KFM_VERSION)require 'scripts/update.0.7.1.php';

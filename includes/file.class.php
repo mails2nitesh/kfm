@@ -14,10 +14,11 @@ class File extends Object{
 
 	function File(){
 		if(func_num_args()==1){
-			global $db;
-			$this->id = func_get_arg(0);
-			$qf=$db->query('SELECT files.id AS id, files.name AS name, directories.physical_address AS directory FROM files, directories
-				WHERE files.id='.$this->id.' AND directories.id = files.directory');
+			global $db,$kfm_db_prefix;
+			$this->id=func_get_arg(0);
+			$qf=$db->query("SELECT ".$kfm_db_prefix."files.id AS id,".$kfm_db_prefix."files.name AS name,".$kfm_db_prefix."directories.physical_address AS directory
+				FROM ".$kfm_db_prefix."files,".$kfm_db_prefix."directories
+				WHERE ".$kfm_db_prefix."files.id=".$this->id." AND ".$kfm_db_prefix."directories.id=".$kfm_db_prefix."files.directory");
 			$filedata = $qf->fetchRow();
 			$this->name = $filedata['name'];
 			$this->directory = $filedata['directory'];
@@ -34,10 +35,11 @@ class File extends Object{
 	}
 	function __construct(){
 		if(func_num_args()==1){
-			global $db;
+			global $db,$kfm_db_prefix;
 			$this->id = func_get_arg(0);
-			$qf=$db->query('SELECT files.id AS id, files.name AS name, directories.physical_address AS directory FROM files, directories
-				WHERE files.id='.$this->id.' AND directories.id = files.directory');
+			$qf=$db->query("SELECT ".$kfm_db_prefix."files.id AS id,".$kfm_db_prefix."files.name AS name,".$kfm_db_prefix."directories.physical_address AS directory
+				FROM ".$kfm_db_prefix."files,".$kfm_db_prefix."directories
+				WHERE ".$kfm_db_prefix."files.id=".$this->id." AND ".$kfm_db_prefix."directories.id=".$kfm_db_prefix."files.directory");
 			$filedata = $qf->fetchRow();
 			$this->name = $filedata['name'];
 			$this->directory = $filedata['directory'];
@@ -78,8 +80,8 @@ class File extends Object{
 		return $this->size;
 	}
 	function getTags(){
-		global $db;
-		$q=$db->query("select tag_id from tagged_files where file_id=".$this->id);
+		global $db,$kfm_db_prefix;
+		$q=$db->query("select tag_id from ".$kfm_db_prefix."tagged_files where file_id=".$this->id);
 		$arr=array();
 		foreach($q->fetchAll() as $r)$arr[]=$r['tag_id'];
 		return $arr;
