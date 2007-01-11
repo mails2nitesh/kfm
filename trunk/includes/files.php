@@ -70,11 +70,13 @@ function _getTextFile($fid){
 	$file=new File($fid);
 	if(!kfm_checkAddr($file->name))return;
 	if(in_array($file->getExtension(),$GLOBALS['kfm_editable_extensions'])){
-		if(!$file->isWritable()) return 'error: "'.$file->name.'" is not writable'; # TODO: new string
+		if(!$file->isWritable()) return 'error: '.$file->name.' is not writable'; # TODO: new string
+		$cp_supported = array('php', 'javascript', 'java', 'perl', 'html', 'css', 'php');
 		$lang_indicator = str_replace(
-			array('php', 'js', 'j', 'pl', 'html', 'css'),
-			array('PHP', 'JavaScript', 'Java', 'Perl', 'HTML', 'CSS'),
+			array('php', 'js', 'java', 'pl', 'html', 'css', 'asp'),
+			$cp_supported,
 			$file->getExtension());
+		if(!in_array($lang_indicator, $cp_supported)) $lang_indicator = 'text';
 		return array('content'=>$file->getContent(),'name'=>$file->name, 'id'=>$file->id, 'lang'=>$lang_indicator);
 	}
 	return 'error: "'.$file->name.'" cannot be edited (restricted)'; # TODO: new string
