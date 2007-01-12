@@ -12,25 +12,25 @@
 		name text,
 		directory integer not null,
 		primary key (id),
-		foreign key (directory) references directories(id)
+		foreign key (directory) references ".$kfm_db_prefix."directories(id)
 	)");
 	$db->query("create table ".$kfm_db_prefix."image_captions(
 		id serial,
 		caption text,
 		file_id integer not null,
 		primary key (id),
-		foreign key (file_id) references files (id)
+		foreign key (file_id) references ".$kfm_db_prefix."files(id)
 	)");
 	$db->query("create table ".$kfm_db_prefix."tags(
 		id serial,
-		name text
+		name text,
 		primary key (id)
 	)");
 	$db->query("create table ".$kfm_db_prefix."tagged_files(
 		file_id INTEGER,
 		tag_id  INTEGER,
-		foreign key (file_id) references files (id),
-		foreign key (tag_id) references tags (id)
+		foreign key (file_id) references ".$kfm_db_prefix."files (id),
+		foreign key (tag_id) references ".$kfm_db_prefix."tags (id)
 	)");
 
 	$db->query("insert into ".$kfm_db_prefix."parameters values('version','".KFM_VERSION."')");
