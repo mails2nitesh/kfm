@@ -9,6 +9,7 @@ $kfm_userfiles='/sandbox/UserFiles/';
 # what should be added to the server's root URL to find the URL of the user files?
 # Note that this is usually the same as $kfm_userfiles, but could be different in the case
 #   that the server uses mod_rewrite or personal web-sites, etc
+# Use the value 'get.php' if you want to use the KFM file handler script to manager file downloads.
 $kfm_userfiles_output='/sandbox/UserFiles/';
 
 # directory in which KFM keeps its database and generated files
