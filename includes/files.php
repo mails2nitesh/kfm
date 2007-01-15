@@ -45,7 +45,7 @@ function _getFileAsArray($filename){
 	return explode("\n",rtrim(file_get_contents($filename)));
 }
 function _getFileDetails($fid){
-	$file = new File($fid);
+	$file=new File($fid);
 	if(!file_exists($file->path))return;
 	$details=array(
 		'filename'=>$file->name,
@@ -58,6 +58,14 @@ function _getFileDetails($fid){
 		$details['caption'] = $im->caption;
 	}
 	return $details;
+}
+function _getFileUrl($fid){
+	global $kfm_userfiles_output;
+	$file=new File($fid);
+	if(!file_exists($file->path))return 'javascript:alert("missing file")';
+	if($kfm_userfiles_output=='get.php')$url=preg_replace('/browser\.php.*/','get.php?id='.$fid,$_SERVER['REQUEST_URI']);
+	else $url=$kfm_userfiles_output.'/'.$file->name;
+	return $url;
 }
 function _getTagName($id){
 	global $db,$kfm_db_prefix;
