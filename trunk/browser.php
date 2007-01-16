@@ -155,7 +155,7 @@ require_once('includes/kaejax.php');
 
 <?php
 	echo file_get_contents('lang/'.$kfm_language.'.js');
-	echo file_get_contents('kfm.js');
+	echo file_get_contents('j/kfm.js');
 ?>
 			var starttype="<?php echo isset($_GET['Type'])?$_GET['Type']:''; ?>";
 			var fckroot="<?php echo $kfm_userfiles; ?>";
