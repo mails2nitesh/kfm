@@ -156,6 +156,17 @@ require_once('includes/kaejax.php');
 <?php
 	echo file_get_contents('lang/'.$kfm_language.'.js');
 	echo file_get_contents('j/kfm.js');
+	echo file_get_contents('j/alerts.js');
+	echo file_get_contents('j/contextmenu.js');
+	echo file_get_contents('j/directories.js');
+	echo file_get_contents('j/file.selections.js');
+	echo file_get_contents('j/file.text-editing.js');
+	echo file_get_contents('j/files.js');
+	echo file_get_contents('j/images.and.icons.js');
+	echo file_get_contents('j/panels.js');
+	echo file_get_contents('j/tags.js');
+	echo file_get_contents('j/tracers.js');
+	echo file_get_contents('j/common.js');
 ?>
 			var starttype="<?php echo isset($_GET['Type'])?$_GET['Type']:''; ?>";
 			var fckroot="<?php echo $kfm_userfiles; ?>";
