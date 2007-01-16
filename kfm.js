@@ -216,15 +216,13 @@ function kfm_contextmenuinit(){
 function kfm_chooseFile(e,o){
 	var el=(o?e:getEventTarget(e)).kfm_attributes,url=fckrootOutput;
 	x_kfm_getFileUrl(el.id,function(url){
-		alert(url);
-		return;
 		if(kfm_file_handler=='fckeditor'){
 			if(!el.image_data)window.opener.SetUrl(url);
 			else window.opener.SetUrl(url,0,0,el.image_data.caption);
 			window.close();
 		}
 		else if(kfm_file_handler=='download'){
-			url+='&forcedownload=1';
+			if(/get.php/.test(url))url+='&forcedownload=1';
 			document.location=url;
 		}
 	});
