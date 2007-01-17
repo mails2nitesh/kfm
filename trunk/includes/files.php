@@ -111,7 +111,8 @@ function _loadFiles($rootid=1){
 				kfm_add_file_to_db($filename,$rootid);
 				$fileshash[$filename]=$db->lastInsertId();
 			}
-			$files[]=array('name'=>$filename,'parent'=>$rootid,'id'=>$fileshash[$filename]);
+			$writable = is_writable($reqdir.'/'.$filename)?true:false;
+			$files[]=array('name'=>$filename,'parent'=>$rootid,'id'=>$fileshash[$filename], 'writable'=>$writable);
 		}
 		closedir($handle);
 		{ # update session data
