@@ -61,10 +61,11 @@ function _getFileDetails($fid){
 }
 function _getFileUrl($fid){
 	global $kfm_userfiles_output;
+	$cwd=$_SESSION['kfm']['currentdir'];
 	$file=new File($fid);
 	if(!file_exists($file->path))return 'javascript:alert("missing file")';
 	if($kfm_userfiles_output=='get.php')$url=preg_replace('/browser\.php.*/','get.php?id='.$fid,$_SERVER['REQUEST_URI']);
-	else $url=$kfm_userfiles_output.'/'.$file->name;
+	else $url=$kfm_userfiles_output.$cwd.$file->name;
 	return $url;
 }
 function _getTagName($id){
