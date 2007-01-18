@@ -18,10 +18,6 @@ function kfm_sanitise_ajax(d){
 	return d;
 }
 
-function XMLHttpRequest(){
-	var l=(ScriptEngineMajorVersion()>=5)?"Msxml2":"Microsoft";
-	return new ActiveXObject(l+".XMLHTTP")
-}
 function clearSelections(){
 	document.selection.empty();
 }

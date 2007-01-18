@@ -207,7 +207,13 @@ function X(d,s){
 	for(var p in s)d[p]=s[p];
 	return d;
 }
-if(browser.isIE)loadJS('j/browser-specific.ie.js');
+if(browser.isIE){
+	function XMLHttpRequest(){
+		var l=(ScriptEngineMajorVersion()>=5)?"Msxml2":"Microsoft";
+		return new ActiveXObject(l+".XMLHTTP")
+	}
+	loadJS('j/browser-specific.ie.js');
+}
 if(browser.isKonqueror)loadJS('j/browser-specific.konqueror.js');
 var json={
 	m:{
