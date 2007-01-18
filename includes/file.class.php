@@ -104,5 +104,16 @@ class File extends Object{
 		$n = floor(log($size)/log(1024));
 		return round($size/pow(1024,$n),1).' '.$format[$n];
 	}
+
+	function getUrl(){
+		global $rootdir, $kfm_userfiles_output;
+		$cwd=str_replace($rootdir,'',$_SESSION['kfm']['currentdir']);
+		if(!file_exists($this->path))return 'javascript:alert("missing file")';
+		if($kfm_userfiles_output=='get.php')
+			$url=preg_replace('/browser\.php.*/','get.php?id='.$this->id,$_SERVER['REQUEST_URI']);
+		else 
+			$url=str_replace('//','/',$kfm_userfiles_output.$cwd.'/'.$this->name);
+		return $url;
+	}
 }
 ?>
