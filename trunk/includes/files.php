@@ -60,6 +60,8 @@ function _getFileDetails($fid){
 	return $details;
 }
 function _getFileUrl($fid){
+	$file= new File($fid);
+	return $file->getUrl();
 	global $kfm_userfiles_output;
 	$cwd=$_SESSION['kfm']['currentdir'];
 	$root=$_SERVER['DOCUMENT_ROOT'];
