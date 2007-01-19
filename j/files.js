@@ -133,11 +133,21 @@ function kfm_refreshFiles(res){
 function kfm_renameFile(id){
 	var filename=$('kfm_file_icon_'+id).kfm_attributes.name;
 	var newName=kfm_prompt(kfm_lang.RenameFileToWhat(filename),filename);
-	if(newName&&newName!=''&&newName!=filename){
-		kfm_filesCache[id]=null;
-		kfm_log(kfm_lang.RenamedFile(filename,newName));
-		x_kfm_renameFile(id,newName,kfm_refreshFiles);
-	}
+	if(!newName||newName==filename)return;
+	kfm_filesCache[id]=null;
+	kfm_log(kfm_lang.RenamedFile(filename,newName));
+	x_kfm_renameFile(id,newName,kfm_refreshFiles);
+}
+function kfm_renameFiles(){
+	var nameTemplate=kfm_prompt('How would you like to rename the files?\n\nexample: "images-***.jpg" will rename files to "images-001.jpg", "images-002.jpg", ...'); // TODO: new string
+	if(!nameTemplate)return;
+	if(!/\*/.test(nameTemplate))return alert('You must place the wildcard character * somewhere in the filename template');
+	if(/\*[^*]+\*/.test(nameTemplate))return alert('If you use multiple wildcards in the filename template, they must be grouped together');
+	var asterisks=nameTemplate.replace(/[^*]/g,'').length;
+alert(asterisks+"\n"+selectedFiles.length+"\n"+(''+selectedFiles.length).length);
+	if(asterisks<(''+selectedFiles.length).length)return alert('You need more than '+asterisks+' * characters to create '+selectedFiles.length+' filenames');
+	for(var i=0;i<selectedFiles.length;++i)kfm_filesCache[selectedFiles[i]]=null;
+	x_kfm_renameFiles(selectedFiles,nameTemplate,kfm_refreshFiles);
 }
 function kfm_runSearch(){
 	kfm_run_delayed('search','x_kfm_search("'+$('kfm_search').value+'",kfm_refreshFiles)');
