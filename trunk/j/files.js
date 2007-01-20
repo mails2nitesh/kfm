@@ -139,13 +139,16 @@ function kfm_renameFile(id){
 	x_kfm_renameFile(id,newName,kfm_refreshFiles);
 }
 function kfm_renameFiles(){
-	var nameTemplate=kfm_prompt('How would you like to rename the files?\n\nexample: "images-***.jpg" will rename files to "images-001.jpg", "images-002.jpg", ...'); // TODO: new string
-	if(!nameTemplate)return;
-	if(!/\*/.test(nameTemplate))return alert('You must place the wildcard character * somewhere in the filename template');
-	if(/\*[^*]+\*/.test(nameTemplate))return alert('If you use multiple wildcards in the filename template, they must be grouped together');
-	var asterisks=nameTemplate.replace(/[^*]/g,'').length;
-alert(asterisks+"\n"+selectedFiles.length+"\n"+(''+selectedFiles.length).length);
-	if(asterisks<(''+selectedFiles.length).length)return alert('You need more than '+asterisks+' * characters to create '+selectedFiles.length+' filenames');
+	var nameTemplate='',ok=false;
+	do{
+		nameTemplate=kfm_prompt('How would you like to rename these files?\n\nexample: "images-***.jpg" will rename files to "images-001.jpg", "images-002.jpg", ...',nameTemplate); // TODO: new string
+		var asterisks=nameTemplate.replace(/[^*]/g,'').length;
+		if(!nameTemplate)return;
+		if(!/\*/.test(nameTemplate))alert('You must place the wildcard character * somewhere in the filename template'); // TODO: new string
+		else if(/\*[^*]+\*/.test(nameTemplate))alert('If you use multiple wildcards in the filename template, they must be grouped together'); // TODO: new string
+		else if(asterisks<(''+selectedFiles.length).length)alert('You need more than '+asterisks+' * characters to create '+selectedFiles.length+' filenames'); // TODO: new string
+		else ok=true;
+	}while(!ok);
 	for(var i=0;i<selectedFiles.length;++i)kfm_filesCache[selectedFiles[i]]=null;
 	x_kfm_renameFiles(selectedFiles,nameTemplate,kfm_refreshFiles);
 }
