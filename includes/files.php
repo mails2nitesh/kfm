@@ -136,16 +136,27 @@ function _moveFiles($files,$dir_id){
 	}
 	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
-function _renameFile($fid,$newfilename){
+function _renameFile($fid,$newfilename,$refreshFiles=true){
 	global $db,$kfm_db_prefix;
 	$file=new File($fid);
 	if(!file_exists($file->path))return;
 	$filename=$file->name;
-	if(!kfm_checkAddr($filename)||!kfm_checkAddr($newfilename))return 'error: cannot rename "'.$filename.'" to "'.$newfilename.'"';
+	if(!kfm_checkAddr($filename)||!kfm_checkAddr($newfilename))return 'error: cannot rename "'.$filename.'" to "'.$newfilename.'"'; # TODO: new string
 	$newfile=$_SESSION['kfm']['currentdir'].'/'.$newfilename;
-	if(file_exists($newfile))return 'error: a file of that name already exists';
+	if(file_exists($newfile))return 'error: a file of that name already exists'; # TODO: new string
 	rename($_SESSION['kfm']['currentdir'].'/'.$filename,$newfile);
 	$db->query("update ".$kfm_db_prefix."files set name='".addslashes($newfilename)."' where id=".$fid);
+	if($refreshFiles)return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
+}
+function _renameFiles($files,$template){
+	$prefix=preg_replace('/\*.*/','',$template);
+	$postfix=preg_replace('/.*\*/','',$template);
+	$precision=strlen(preg_replace('/[^*]/','',$template));
+	for($i=1;$i<count($files)+1;++$i){
+		$num=str_pad($i,$precision,'0',STR_PAD_LEFT);
+		$ret=_renameFile($files[$i-1],$prefix.$num.$postfix,false);
+		if($ret)return $ret; # error detected
+	}
 	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
 function _resize_bytes($size){

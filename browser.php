@@ -83,6 +83,10 @@ require_once('includes/kaejax.php');
 		require_once('includes/files.php');
 		return _renameFile($filename,$newfilename);
 	}
+	function kfm_renameFiles($files,$template){
+		require_once('includes/files.php');
+		return _renameFiles($files,$template);
+	}
 	function kfm_resize_bytes($size){
 		require_once('includes/files.php');
 		return _resize_bytes($size);
@@ -130,12 +134,11 @@ require_once('includes/kaejax.php');
 		return _rotateImage($filename,$direction);
 	}
 }
-
 { # export kaejax stuff
 	kaejax_export(
 		'kfm_changeCaption','kfm_createDirectory','kfm_createEmptyFile','kfm_deleteDirectory','kfm_downloadFileFromUrl',
 		'kfm_extractZippedFile','kfm_getFileDetails','kfm_getFileUrl','kfm_getTagName','kfm_getTextFile','kfm_getThumbnail','kfm_loadDirectories',
-		'kfm_loadFiles','kfm_moveDirectory','kfm_moveFiles','kfm_renameFile','kfm_resizeImage','kfm_rm','kfm_rotateImage',
+		'kfm_loadFiles','kfm_moveDirectory','kfm_moveFiles','kfm_renameFile','kfm_renameFiles','kfm_resizeImage','kfm_rm','kfm_rotateImage',
 		'kfm_saveTextFile','kfm_search','kfm_tagAdd','kfm_viewTextFile'
 	);
 	if(!empty($_POST['kaejax']))kaejax_handle_client_request();

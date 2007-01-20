@@ -84,7 +84,7 @@ function kfm(){
 		right_column.contextmenu=function(e){
 			var links=[],i;
 			links.push(['javascript:kfm_createEmptyFile()',kfm_lang.CreateEmptyFile,'filenew']);
-//			if(selectedFiles.length>1)links.push(['javascript:kfm_renameFiles()',kfm_lang.RenameFile,'edit']);
+			if(selectedFiles.length>1)links.push(['javascript:kfm_renameFiles()',kfm_lang.RenameFile,'edit']);
 			if(selectedFiles.length!=$('kfm_right_column').fileids.length)links.push(['javascript:kfm_selectAll()',kfm_lang.SelectAll,'ark_selectall']);
 			if(selectedFiles.length)links.push(['javascript:kfm_selectNone()',kfm_lang.SelectNone,'select_none']);
 			links.push(['javascript:kfm_selectInvert()',kfm_lang.InvertSelection,'invert_selection']);
