@@ -131,6 +131,7 @@ function kfm_refreshDirectories(res){
 	if(d==1){
 		var p=$('kfm_directories');
 		p.parentNode.replaceChild(kfm_dir_addLink(newEl('table','kfm_directories'),'','',1,0,1),p);
+		$('kfm_directory_icon_1').parentNode.addClass('kfm_directory_open');
 	}
 	dirwrapper=$('kfm_directories_subdirs_'+d);
 	var t=newEl('table'),r,c,l,n='kfm_dir_node_'+d,ln=0;
