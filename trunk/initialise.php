@@ -40,7 +40,7 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 }
 set_error_handler('kfm_error_log');
 { # variables
-	define('KFM_VERSION', '0.7.1');
+	define('KFM_VERSION',file_get_contents('version.txt'));
 	$rootdir=str_replace('//','/',$_SERVER['DOCUMENT_ROOT'].$kfm_userfiles.'/');
 	if(!file_exists($rootdir.$kfm_workdirectory))mkdir($rootdir.$kfm_workdirectory);
 	if(!isset($_SESSION['kfm']))$_SESSION['kfm']=array(
@@ -135,7 +135,7 @@ set_error_handler('kfm_error_log');
 	$q=$db->query("select * from ".$kfm_db_prefix."parameters");
 	$rs=$q->fetchAll();
 	foreach($rs as $r)$kfm_parameters[$r['name']]=$r['value'];
-	if($kfm_parameters['version']!=KFM_VERSION)require 'scripts/update.0.7.1.php';
+	if($kfm_parameters['version']!=KFM_VERSION)require 'scripts/update.0.7.2.php';
 }
 { # languages
 	$kfm_language='';

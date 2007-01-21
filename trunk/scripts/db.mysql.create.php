@@ -10,13 +10,22 @@
 		id INTEGER PRIMARY KEY auto_increment,
 		name text,
 		directory integer not null,
-		foreign key (directory) references directories(id)
+		foreign key (directory) references ".$kfm_db_prefix."directories(id)
 	)");
-	$db->query("create table ".$kfm_db_prefix."image_captions(
+	$db->query("create table ".$kfm_db_prefix."files_images(
 		id INTEGER PRIMARY KEY auto_increment,
 		caption text,
 		file_id integer not null,
-		foreign key (file_id) references files (id)
+		width integer default 0,
+		height integer default 0,
+		foreign key (file_id) references ".$kfm_db_prefix."files (id)
+	)");
+	$db->query("create table ".$kfm_db_prefix."files_images_thumbs(
+		id INTEGER PRIMARY KEY auto_increment,
+		image_id integer not null,
+		width integer default 0,
+		height integer default 0,
+		foreign key (image_id) references ".$kfm_db_prefix."files_images (id)
 	)");
 	$db->query("create table ".$kfm_db_prefix."tags(
 		id INTEGER PRIMARY KEY auto_increment,
@@ -25,8 +34,8 @@
 	$db->query("create table ".$kfm_db_prefix."tagged_files(
 		file_id	INTEGER,
 		tag_id	INTEGER,
-		foreign key (file_id) references files (id),
-		foreign key (tag_id) references tags (id)
+		foreign key (file_id) references ".$kfm_db_prefix."files (id),
+		foreign key (tag_id) references ".$kfm_db_prefix."tags (id)
 	)");
 
 	$db->query("insert into ".$kfm_db_prefix."parameters values('version','".KFM_VERSION."')");
