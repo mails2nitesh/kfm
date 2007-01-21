@@ -1,20 +1,21 @@
 function addEvent(o,e,f){
 	switch(e){
 		case 'click':{
-			f=(function(f){return function(e){if(e.button==1)f(e)}})(f);
+			o.kfm_click=f;
+			f=function(e){
+				if(e.button==1)this.kfm_click(e);
+			};
 			break;
 		}
 		case 'contextmenu':{
 			e='mousedown';
-			f=(function(f){
-				return function(e){
-					if(e.button==2){
-						e.preventDefault();
-						f(e);
-					}
+			o.kfm_contextmenu=f;
+			f=function(e){
+				if(e.button==2){
+					e.preventDefault();
+					this.kfm_contextmenu(e);
 				}
-			})(f);
-			break;
+			};
 		}
 	}
 	o.addEventListener(e,f,false);
