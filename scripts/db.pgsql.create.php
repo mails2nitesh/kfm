@@ -14,12 +14,22 @@
 		primary key (id),
 		foreign key (directory) references ".$kfm_db_prefix."directories(id)
 	)");
-	$db->query("create table ".$kfm_db_prefix."image_captions(
+	$db->query("create table ".$kfm_db_prefix."files_images(
 		id serial,
 		caption text,
 		file_id integer not null,
+		width integer default 0,
+		height integer default 0,
 		primary key (id),
 		foreign key (file_id) references ".$kfm_db_prefix."files(id)
+	)");
+	$db->query("create table ".$kfm_db_prefix."files_images_thumbs(
+		id serial,
+		image_id integer not null,
+		width integer default 0,
+		height integer default 0,
+		primary key (id),
+		foreign key (image_id) references ".$kfm_db_prefix."files_images(id)
 	)");
 	$db->query("create table ".$kfm_db_prefix."tags(
 		id serial,
