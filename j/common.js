@@ -9,18 +9,6 @@ function $(){
 	}
 	return a;
 }
-if(browser.isIE){
-	window.addEvent=function addEvent(o,t,f){
-		o['e'+t+f]=f;
-		o[t+f]=function(){o['e'+t+f](window.event)}
-		o.attachEvent('on'+t,o[t+f]);
-	};
-}
-else{
-	window.addEvent=function addEvent(o,t,f) {
-		o.addEventListener(t,f,false);
-	};
-}
 function clearSelections(){
 	window.getSelection().removeAllRanges();
 }
@@ -214,7 +202,9 @@ if(browser.isIE){
 	}
 	loadJS('j/browser-specific.ie.js');
 }
-if(browser.isKonqueror)loadJS('j/browser-specific.konqueror.js');
+if(browser.isKonqueror){
+	loadJS('j/browser-specific.konqueror.js');
+}
 var json={
 	m:{
 		'\b': '\\b',
