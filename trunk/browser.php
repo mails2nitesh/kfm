@@ -170,6 +170,15 @@ require_once('includes/kaejax.php');
 	echo file_get_contents('j/tags.js');
 	echo file_get_contents('j/tracers.js');
 	echo file_get_contents('j/common.js');
+	{ # browser-specific functions
+		require_once('Detect.php');
+		$browser=new Net_UserAgent_Detect();
+		{ # addEvent
+			if($browser->isIE())echo file_get_contents('j/addEvent.ie.js');
+			else if($browser->getBrowserString()=='Konqueror/Safari')echo file_get_contents('j/addEvent.konqueror.js');
+			else echo file_get_contents('j/addEvent.js');
+		}
+	}
 ?>
 			var starttype="<?php echo isset($_GET['Type'])?$_GET['Type']:''; ?>";
 			var fckroot="<?php echo $kfm_userfiles; ?>";
