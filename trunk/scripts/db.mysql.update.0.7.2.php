@@ -1,7 +1,8 @@
 <?php
 	$db->query("alter table directories rename ".$kfm_db_prefix."directories");
 	$db->query("alter table files rename ".$kfm_db_prefix."files");
-	$db->query("alter table image_captions rename ".$kfm_db_prefix."files_images");
+	$db->query("alter table image_captions rename ".$kfm_db_prefix."image_captions");
+	$db->query("alter table ".$kfm_db_prefix."image_captions rename ".$kfm_db_prefix."files_images");
 	$db->query("alter table parameters rename ".$kfm_db_prefix."parameters");
 	$db->query("alter table tags rename ".$kfm_db_prefix."tags");
 	$db->query("alter table tagged_files rename ".$kfm_db_prefix."tagged_files");
