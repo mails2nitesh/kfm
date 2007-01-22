@@ -38,7 +38,7 @@ DeleteDir:
 RenameDir:
 	"athainmnigh",
 
-//file
+// file
 DeleteFile:
 	"scrios",
 RenameFile:
@@ -74,7 +74,7 @@ DownloadFileFromMessage:
 FileSavedAsMessage:
 	"Cad is mian leat an comhad a ainmniú?",
 
-//resize file
+// resize file
 CurrentSize:
 	"Méid Reatha: \"%1\" x \"%2\"\n",
 NewWidth:
@@ -97,8 +97,8 @@ NotMoreThanOneFile:
 	"earráid: ní féidir ach comhad amhain a roghnóidh ag ám amhain",
 UnknownPanelState:
 	"earráid: stáit panéil nach bhfuil fios faoi.",
-//MissingDirWrapper:
-//	"earráid: missing directory wrapper: \"kfm_directories%1\".",
+// MissingDirWrapper:
+// 	"earráid: missing directory wrapper: \"kfm_directories%1\".",
 SetStylesError:
 	"earráid: ní féidir \"%1\" a cur mar \"%2\.",
 NoPanel:

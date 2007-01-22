@@ -157,37 +157,51 @@ require_once('includes/kaejax.php');
 		<script type="text/javascript">
 
 <?php
-	echo file_get_contents('lang/'.$kfm_language.'.js');
-	echo file_get_contents('j/kfm.js');
-	echo file_get_contents('j/alerts.js');
-	echo file_get_contents('j/contextmenu.js');
-	echo file_get_contents('j/directories.js');
-	echo file_get_contents('j/file.selections.js');
-	echo file_get_contents('j/file.text-editing.js');
-	echo file_get_contents('j/files.js');
-	echo file_get_contents('j/images.and.icons.js');
-	echo file_get_contents('j/panels.js');
-	echo file_get_contents('j/tags.js');
-	echo file_get_contents('j/tracers.js');
-	echo file_get_contents('j/common.js');
+	$js='';
+	$js.=file_get_contents('lang/'.$kfm_language.'.js');
+	$js.=file_get_contents('j/kfm.js');
+	$js.=file_get_contents('j/alerts.js');
+	$js.=file_get_contents('j/contextmenu.js');
+	$js.=file_get_contents('j/directories.js');
+	$js.=file_get_contents('j/file.selections.js');
+	$js.=file_get_contents('j/file.text-editing.js');
+	$js.=file_get_contents('j/files.js');
+	$js.=file_get_contents('j/images.and.icons.js');
+	$js.=file_get_contents('j/panels.js');
+	$js.=file_get_contents('j/tags.js');
+	$js.=file_get_contents('j/tracers.js');
+	$js.=file_get_contents('j/common.js');
 	{ # browser-specific functions
 		require_once('Detect.php');
 		$browser=new Net_UserAgent_Detect();
 		{ # addEvent
-			if($browser->isIE())echo file_get_contents('j/addEvent.ie.js');
-			else if($browser->getBrowserString()=='Konqueror/Safari')echo file_get_contents('j/addEvent.konqueror.js');
-			else echo file_get_contents('j/addEvent.js');
+			if($browser->isIE())$js.=file_get_contents('j/addEvent.ie.js');
+			else if($browser->getBrowserString()=='Konqueror/Safari')$js.=file_get_contents('j/addEvent.konqueror.js');
+			else $js.=file_get_contents('j/addEvent.js');
 		}
 		{ # getWindow
-			if($browser->isIE())echo file_get_contents('j/getWindow.ie.js');
-			else if($browser->getBrowserString()=='Konqueror/Safari')echo file_get_contents('j/getWindow.konqueror.js');
-			else echo file_get_contents('j/getWindow.js');
+			if($browser->isIE())$js.=file_get_contents('j/getWindow.ie.js');
+			else if($browser->getBrowserString()=='Konqueror/Safari')$js.=file_get_contents('j/getWindow.konqueror.js');
+			else $js.=file_get_contents('j/getWindow.js');
 		}
 		{ # getWindowSize
-			if($browser->isIE())echo file_get_contents('j/getWindowSize.ie.js');
-			else echo file_get_contents('j/getWindowSize.js');
+			if($browser->isIE())$js.=file_get_contents('j/getWindowSize.ie.js');
+			else $js.=file_get_contents('j/getWindowSize.js');
 		}
 	}
+	$js=preg_replace('#// .*|[\t]#','',$js); # strip single-line comments and tabs
+	$js=preg_replace('#/\*.*?\*/#ims','',$js); # strip multi-line comments
+	$js=preg_replace('#;\n}#ims','}',$js);
+	$js=preg_replace('#:\n"#ims',':"',$js);
+	$jsnew=$js;
+	do{
+		$redo=0;
+		$jsnew=preg_replace('#\n\n#ims',"\n",$jsnew);
+		$jsnew=preg_replace('#([{}])\n([{}])#ims','\1\2',$jsnew);
+		if($js!=$jsnew)$redo=1;
+		$js=$jsnew;
+	}while($redo);
+	echo $js;
 ?>
 			var starttype="<?php echo isset($_GET['Type'])?$_GET['Type']:''; ?>";
 			var fckroot="<?php echo $kfm_userfiles; ?>";

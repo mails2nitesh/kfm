@@ -38,7 +38,7 @@ DeleteDir:
 RenameDir:
 	"nimeä uudelleen",
 
-//file
+// file
 DeleteFile:
 	"poista",
 RenameFile:
@@ -74,7 +74,7 @@ DownloadFileFromMessage:
 FileSavedAsMessage:
 	"Millä nimellä tiedosto tallennetaan?",
 
-//resize file
+// resize file
 CurrentSize:
 	"Nykyinen koko: \"%1\" x \"%2\"\n",
 NewWidth:
@@ -97,8 +97,8 @@ NotMoreThanOneFile:
 	"virhe: et voi valita kuin yhden tiedoston kerrallaan",
 UnknownPanelState:
 	"virhe: tuntematon tila.",
-//MissingDirWrapper:
-//	"error: puuttuva tiedoston wrapperi: \"kfm_directories%1\".",
+// MissingDirWrapper:
+// 	"error: puuttuva tiedoston wrapperi: \"kfm_directories%1\".",
 SetStylesError:
 	"virhe:  \"%1\" ei voi asettaa \"%2\:ksi.",
 NoPanel:
