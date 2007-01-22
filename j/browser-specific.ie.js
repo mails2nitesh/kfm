@@ -30,11 +30,6 @@ function getWindowScrollAt(){
 	d=document.documentElement;
 	return {x:d.scrollLeft,y:d.scrollTop};
 }
-function getWindowSize(){
-	var a=document.documentElement,b=document.body;
-	if(a&&(a.clientWidth||a.clientHeight))return {x:a.clientWidth,y:a.clientHeight};
-	return {x:b.clientWidth,y:b.clientHeight};
-}
 function newEl(t,id,cn,chld){
 	if(t=='iframe')return newEl('<iframe name="'+id+'" src="empty"></iframe>');
 	var el=document.createElement(t);
