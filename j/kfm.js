@@ -57,7 +57,6 @@ function kfm(){
 			e=getEvent(e);
 			{ // variables
 				var row,cell,cells,m=getMouseAt(e),rows=0,target=kfm_getParentEl(getEventTarget(e),'DIV');
-//				while(target.tagName!='DIV'&&target)target=target.parentNode;
 			}
 			{ // add the links
 				var links=[],i;

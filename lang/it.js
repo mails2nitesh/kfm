@@ -38,7 +38,7 @@ DeleteDir:
 RenameDir:
 	"rinomina",
 
-//file
+// file
 DeleteFile:
 	"elimina",
 RenameFile:
@@ -74,7 +74,7 @@ DownloadFileFromMessage:
 FileSavedAsMessage:
 	"In che formato deve essere salvato il file?",
 
-//resize file
+// resize file
 CurrentSize:
 	"Misure attuali: \"%1\" x \"%2\"\n",
 NewWidth:
@@ -97,8 +97,8 @@ NotMoreThanOneFile:
 	"errore: non puoi sceglierne piu\' di uno alla volta",
 UnknownPanelState:
 	"errore: stato del pannello sconosciuto.",
-//MissingDirWrapper:
-//	"error: missing directory wrapper: \"kfm_directories%1\".",
+// MissingDirWrapper:
+// 	"error: missing directory wrapper: \"kfm_directories%1\".",
 SetStylesError:
 	"errore: impossibile impostare \"%1\" a \"%2\.",
 NoPanel:

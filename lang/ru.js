@@ -35,7 +35,7 @@ DeleteDir:
 RenameDir:
 	"переименовать",
 
-//file
+// file
 DeleteFile:
 	"удалить",
 RenameFile:
@@ -71,7 +71,7 @@ DownloadFileFromMessage:
 FileSavedAsMessage:
 	"Как будет сохранён файл?",
 
-//resize file
+// resize file
 CurrentSize:
 	"Текущий размер: \"%1\" x \"%2\"\n",
 NewWidth:
@@ -94,8 +94,8 @@ NotMoreThanOneFile:
 	"ошибка: нельзя выбрать больше одного файла за раз",
 UnknownPanelState:
 	"ошибка: неизвестное состояние панели.",
-//MissingDirWrapper:
-//	"error: missing directory wrapper: \"kfm_directories%1\".",
+// MissingDirWrapper:
+// 	"error: missing directory wrapper: \"kfm_directories%1\".",
 SetStylesError:
 	"ошибка: нельзя установить \"%1\" в \"%2\.",
 NoPanel:

@@ -38,7 +38,7 @@ DeleteDir:
 RenameDir:
 	"rename",
 
-//file
+// file
 DeleteFile:
 	"delete",
 RenameFile:
@@ -74,7 +74,7 @@ DownloadFileFromMessage:
 FileSavedAsMessage:
 	"What should the file be saved as?",
 
-//resize file
+// resize file
 CurrentSize:
 	"Current Size: \"%1\" x \"%2\"\n",
 NewWidth:
@@ -97,8 +97,8 @@ NotMoreThanOneFile:
 	"error: you cannot choose more than one file at a time",
 UnknownPanelState:
 	"error: unknown panel state.",
-//MissingDirWrapper:
-//	"error: missing directory wrapper: \"kfm_directories%1\".",
+// MissingDirWrapper:
+// 	"error: missing directory wrapper: \"kfm_directories%1\".",
 SetStylesError:
 	"error: cannot set \"%1\" to \"%2\.",
 NoPanel:
