@@ -4,13 +4,13 @@ function kfm_closeContextMenu(){
 	contextmenu=null;
 }
 function kfm_contextmenuinit(){
-	addEvent(kfm_getWindow(),'click',function(e){
+	addEvent(getWindow(),'click',function(e){
 		if(!contextmenu)return;
 		var c=contextmenu,m=getMouseAt(e);
 		var l=c.offsetLeft,t=c.offsetTop;
 		if(m.x<l||m.x>l+c.offsetWidth||m.y<t||m.y>t+c.offsetHeight)kfm_closeContextMenu();
 	});
-	kfm_getWindow().oncontextmenu=function(e){
+	getWindow().oncontextmenu=function(e){
 		e=getEvent(e);
 		kfm_cancelEvent(e,1);
 	}

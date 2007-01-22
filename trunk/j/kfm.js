@@ -182,9 +182,6 @@ function kfm_getParentEl(c,t){
 	while(c.tagName!=t&&c)c=c.parentNode;
 	return c;
 }
-function kfm_getWindow(){
-	return window;
-}
 function kfm_hideMessage(){
 	$('message').setCss('display:none');
 }

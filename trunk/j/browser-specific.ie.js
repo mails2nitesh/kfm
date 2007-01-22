@@ -10,9 +10,6 @@ function kfm_cancelEvent(e,c){
 	e.cancelBubble=true;
 	if(c)e.returnValue=false; // contextmenu
 }
-function kfm_getWindow(){
-	return document.body;
-}
 function kfm_sanitise_ajax(d){
 	for(var a in window.kaejax_replaces_regexps)d=d.replace(kaejax_replaces_regexps[a],kaejax_replaces_replacements[a]);
 	return d;
