@@ -178,6 +178,11 @@ require_once('includes/kaejax.php');
 			else if($browser->getBrowserString()=='Konqueror/Safari')echo file_get_contents('j/addEvent.konqueror.js');
 			else echo file_get_contents('j/addEvent.js');
 		}
+		{ # getWindow
+			if($browser->isIE())echo file_get_contents('j/getWindow.ie.js');
+			else if($browser->getBrowserString()=='Konqueror/Safari')echo file_get_contents('j/getWindow.konqueror.js');
+			else echo file_get_contents('j/getWindow.js');
+		}
 		{ # getWindowSize
 			if($browser->isIE())echo file_get_contents('j/getWindowSize.ie.js');
 			else echo file_get_contents('j/getWindowSize.js');
