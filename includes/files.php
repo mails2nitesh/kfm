@@ -106,7 +106,7 @@ function _loadFiles($rootid=1){
 				kfm_add_file_to_db($filename,$rootid);
 				$fileshash[$filename]=$db->lastInsertId();
 			}
-			$writable = is_writable($reqdir.'/'.$filename)?true:false;
+			$writable = is_writable(str_replace('//','/',$reqdir.'/'.$filename))?true:false;
 			$files[]=array('name'=>$filename,'parent'=>$rootid,'id'=>$fileshash[$filename], 'writable'=>$writable);
 		}
 		closedir($handle);

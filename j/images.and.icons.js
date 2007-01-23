@@ -50,3 +50,6 @@ function kfm_showIcon(res,el2){
 		kfm_filesCache[file]=el.kfm_attributes;
 	}
 }
+function kfm_showImage(url){
+	window.open(url,'kfm_image');
+}
