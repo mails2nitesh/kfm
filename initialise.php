@@ -2,12 +2,12 @@
 # see license.txt for licensing
 error_reporting(E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE);
 session_start();
-
 if(!file_exists('configuration.php')){
 	echo '<em>Missing <code>configuration.php</code>!</em><p>If this is a fresh installation of KFM, then please rename <code>configuration.php.dist</code> to <code>configuration.php</code>, and edit it according to your project\'s needs.</p><p>If this is an upgraded version of KFM, please remove the parts of your old <code>config.php</code> which do not exist in <code>configuration.php.dist</code>, then rename it to <code>configuration.php</code>.</p>';
 	exit;
 }
 require('configuration.php');
+
 
 { # API - for programmers only
 	if(file_exists('api/config.php'))include('api/config.php');
@@ -50,9 +50,12 @@ set_error_handler('kfm_error_log');
 	);
 	define('LSQUIGG','{');
 	define('RSQUIGG','}');
+	define('KFM_DIR', dirname(__FILE__));
 	$kfm_highlight_extensions=array('php'=>'PHP', 'html'=>'HTML', 'xhtml'=>'HTML',
 				 'sql'=>'MYSQL', 'js'=>'JAVASCRIPT', 'css'=>'CSS', 'xml'=>'XML');
-	$kfm_banned_files = array('thumbs.db','.ds_store'); # lowercase array
+	if(!is_array($kfm_banned_files))$kfm_banned_files = array();
+	array_push($kfm_banned_files, 'thumbs.db', '.ds_store'); # lowercase array
+	if(!is_array($kfm_banned_folders)) $kfm_banned_folders = array();
 }
 { # work directory
 	$workpath = $rootdir.$kfm_workdirectory; // should be more at the top of this document

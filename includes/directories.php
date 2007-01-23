@@ -49,7 +49,7 @@ function _getDirectoryProperties($dir){
 	return $properties;
 }
 function _loadDirectories($root){
-	global $db,$kfm_db_prefix;
+	global $db,$kfm_db_prefix, $kfm_banned_folders;
 	if(is_numeric($root)){
 		$rootid=$root;
 		$dirdata=_getDirectoryDbInfo($rootid);
@@ -71,6 +71,7 @@ function _loadDirectories($root){
 		if(is_array($dirsdb))foreach($dirsdb as $r)$dirshash[$r['name']]=$r['id'];
 		$directories=array();
 		while(false!==($file=readdir($handle))){
+			if(in_array(strtolower($file), $kfm_banned_folders)) continue;
 			$ff1=$reqdir.$file;
 			if(is_dir($ff1)&&strpos($file,'.')!==0){
 				$directory=array($file,0);

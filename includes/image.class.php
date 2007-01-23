@@ -7,20 +7,42 @@ class Image extends File{
 	var $thumb_path;
 	var $info = array();  // info from getimagesize
 	function __construct($file){
+		$this->Image($file);
+	}
+	function Image($file){
 		if(is_object($file) && $file->isImage())parent::__construct($file->id);
 		else if(is_numeric($file))parent::__construct($file);
 		else return false;
 		// TODO select image data and set the properties
 		$this->caption = 'Not yet available';
+		$this->image_id = $this->getImageId();
 		$this->info = getimagesize($this->path);
 		$this->type=str_replace('image/','',$this->info['mime']);
 		$this->width = $this->info[0];
 		$this->height = $this->info[1];
 		$this->setThumbnail();
 	}
+
+	function getImageId(){
+		global $db, $kfm_db_prefix;
+		$sql="SELECT id, caption FROM ".$kfm_db_prefix."files_images WHERE file_id='".$this->id."'";
+		$res = $db->query($sql);
+		if(!$res->numRows()){ // Create an image entry
+			$sql="INSERT INTO ".$kfm_db_prefix."files_images (file_id, caption) VALUES ('".$this->id."','".$this->name."')";
+			$this->caption = $this->name;
+			$db->exec($sql);
+			return $db->lastInsertId($kfm_db_prefix.'files_images','id');
+		}else{ // get information
+			$row = $res->fetchRow();
+			$this->caption = $row['caption'];
+			return $row['id'];
+		}
+	}
 	function setCaption($caption){
-		// Add to database
-		// $this->caption = $caption;
+		global $db, $kfm_db_prefix;
+		$sql = 'UPDATE '.$kfm_db_prefix.'files_images SET caption="'.$caption.'" WHERE file_id="'.$this->id.'"';
+		$db->exec($sql);
+		$this->caption = $caption;
 	}
 	function setThumbnail($width=64,$height=64){
 		$thumbname=$this->id.' '.$width.'x'.$height.' '.$this->name;
@@ -43,18 +65,6 @@ class Image extends File{
 		$save($thumb,$this->thumb_path,($this->type=='jpeg'?100:9));
 		imagedestroy($thumb); 
 		imagedestroy($im);
-	}
-	function Image($file){
-		if(is_object($file) && $file->isImage())parent::__construct($file->id);
-		else if(is_numeric($file))parent::__construct($file);
-		else return false;
-		// TODO select image data and set the properties
-		$this->caption = 'Not yet available';
-		$this->info = getimagesize($this->path);
-		$this->type=str_replace('image/','',$this->info['mime']);
-		$this->width = $this->info[0];
-		$this->height = $this->info[1];
-		$this->setThumbnail();
 	}
 	function resize($new_width, $new_height=-1){
 		if(!$this->isWritable()){

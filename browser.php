@@ -117,10 +117,6 @@ require_once('includes/kaejax.php');
 		require_once('includes/images.php');
 		return _changeCaption($filename,$newCaption);
 	}
-	function kfm_getCaption($dirname,$filename){
-		require_once('includes/images.php');
-		return _getCaption($dirname,$filename);
-	}
 	function kfm_getThumbnail($fileid,$width,$height){
 		require_once('includes/images.php');
 		return _getThumbnail($fileid,$width,$height);
