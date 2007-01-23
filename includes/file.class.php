@@ -112,7 +112,7 @@ class File extends Object{
 		if($kfm_userfiles_output=='get.php')
 			$url=preg_replace('/browser\.php.*/','get.php?id='.$this->id,$_SERVER['REQUEST_URI']);
 		else 
-			$url=str_replace('//','/',$kfm_userfiles_output.$cwd.'/'.$this->name);
+			$url=str_replace('//','/',$kfm_userfiles_output.'/'.$cwd.'/'.$this->name);
 		return $url;
 	}
 }

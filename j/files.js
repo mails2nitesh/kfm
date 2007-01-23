@@ -74,7 +74,7 @@ function kfm_refreshFiles(res){
 								links.push(['javascript:kfm_rotateImage('+id+',90)',kfm_lang.RotateAntiClockwise,'rotate_ccw']);
 								links.push(['javascript:kfm_resizeImage('+id+')',kfm_lang.ResizeImage,'resize_image']);
 							}
-							links.push(['javascript:kfm_showImage(\''+fckrootOutput+res.reqdir+name+'\')','View image']);
+							links.push(['javascript:x_kfm_getFileUrl('+id+',kfm_showImage)','View image']);
 							links.push(['javascript:kfm_changeCaption('+id+')',kfm_lang.ChangeCaption,'edit']);
 						}
 						if(kfm_inArray(['zip'],extension))links.push(['javascript:kfm_extractZippedFile("'+id+'")',kfm_lang.ExtractZippedFile,'extract_zip']);
