@@ -52,6 +52,7 @@ function kfm_refreshFiles(res){
 	for(a in res.files){
 		var name=res.files[a].name,ext=name.replace(/.*\./,''),b,fullfilename=kfm_cwd_name+'/'+name,id=res.files[a].id,nameEl=newEl('span',0,'filename',name);
 		var el=newEl('div','kfm_file_icon_'+id,'kfm_file_icon kfm_icontype_'+ext).setCss('cursor:'+(Browser.isIE?'hand':'pointer'));
+		var writable = res.files[a].writable;
 		{ // add events
 			addEvent(el,'click',kfm_toggleSelectedFile);
 			addEvent(el,'dblclick',kfm_chooseFile);
@@ -60,6 +61,7 @@ function kfm_refreshFiles(res){
 				{ // variables
 					var name=this.kfm_attributes.name,links=[],i,id=this.kfm_attributes.id;
 					var extension=name.replace(/.*\./,'').toLowerCase();
+					var writable=this.kfm_attributes.writable;
 				}
 				{ // add the links
 					if(selectedFiles.length>1)links.push(['javascript:kfm_deleteSelectedFiles()',kfm_lang.DeleteFile,'remove']);
@@ -67,14 +69,17 @@ function kfm_refreshFiles(res){
 						links.push(['javascript:kfm_deleteFile('+id+')',kfm_lang.DeleteFile,'remove']);
 						links.push(['javascript:kfm_renameFile('+id+')',kfm_lang.RenameFile,'edit']);
 						if(this.kfm_attributes.image_data){
-							links.push(['javascript:kfm_rotateImage('+id+',270)',kfm_lang.RotateClockwise,'rotate_cw']);
-							links.push(['javascript:kfm_rotateImage('+id+',90)',kfm_lang.RotateAntiClockwise,'rotate_ccw']);
-							links.push(['javascript:kfm_resizeImage('+id+')',kfm_lang.ResizeImage,'resize_image']);
+							if(writable){
+								links.push(['javascript:kfm_rotateImage('+id+',270)',kfm_lang.RotateClockwise,'rotate_cw']);
+								links.push(['javascript:kfm_rotateImage('+id+',90)',kfm_lang.RotateAntiClockwise,'rotate_ccw']);
+								links.push(['javascript:kfm_resizeImage('+id+')',kfm_lang.ResizeImage,'resize_image']);
+							}
+							links.push(['javascript:kfm_showImage(\''+fckrootOutput+res.reqdir+name+'\')','View image']);
 							links.push(['javascript:kfm_changeCaption('+id+')',kfm_lang.ChangeCaption,'edit']);
 						}
 						if(kfm_inArray(['zip'],extension))links.push(['javascript:kfm_extractZippedFile("'+id+'")',kfm_lang.ExtractZippedFile,'extract_zip']);
 						if(kfm_inArray(viewable_extensions,extension))links.push(['javascript:x_kfm_viewTextFile('+id+',kfm_viewTextFile)','view','edit']);
-						if(res.files[a].writable && kfm_inArray(editable_extensions,extension))links.push(['javascript:kfm_editTextFile("'+id+'")',kfm_lang.EditTextFile,'edit']);
+						if(writable && kfm_inArray(editable_extensions,extension))links.push(['javascript:kfm_editTextFile("'+id+'")',kfm_lang.EditTextFile,'edit']);
 					}
 					links.push(['javascript:kfm_tagAdd('+id+')','add tag to file(s)','add_tags']);
 					kfm_createContextMenu(getMouseAt(getEvent(e)),links);
