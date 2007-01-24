@@ -62,7 +62,7 @@ class Image extends File{
 		$thumb_width=$this->width*$ratio;
 		$thumb_height=$this->height*$ratio;
 		if(!$this->useImageMagick($this->path,'resize '.$thumb_width.'x'.$thumb_height,$this->thumb_path))return;
-		$this->createResizedImage($this->thumb_path,$thumb_width,$thumb_height);
+		$this->createResizedCopy($this->thumb_path,$thumb_width,$thumb_height);
 	}
 	function resize($new_width, $new_height=-1){
 		if(!$this->isWritable()){
@@ -72,7 +72,7 @@ class Image extends File{
 		$this->deleteThumbs();
 		if($new_height==-1)$new_height=$this->height*$new_width/$this->width;
 		if(!$this->useImageMagick($this->path,'resize '.$new_width.'x'.$new_height,$this->path))return;
-		$this->createResizedImage($this->path,$new_width,$new_height);
+		$this->createResizedCopy($this->path,$new_width,$new_height);
 	}
 	function rotate($direction){
 		if(!$this->isWritable()){
@@ -100,7 +100,7 @@ class Image extends File{
 		exec(IMAGEMAGICK_PATH.' "'.$from.'" -'.$action.' "'.$to.'"',$arr,$retval);
 		return $retval;
 	}
-	function createResizedImage($to,$width,$height){
+	function createResizedCopy($to,$width,$height){
 		$load='imagecreatefrom'.$this->type;
 		$save='image'.$this->type;
 		if(!function_exists($load)||!function_exists($save))return $this->error('server cannot handle image of type "'.$this->type.'"');
