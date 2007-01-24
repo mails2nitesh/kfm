@@ -1,16 +1,16 @@
 <?php
 class Object{
-	var $errors = array();
+	var $error_array = array();
 	function error($message){
-		$this->errors[] = $message;
+		$this->error_array[] = $message;
 	}
-	function errors(){
-		if(count($this->errors)) return true;
+	function hasErrors(){
+		if(count($this->error_array)) return true;
 		return false;
 	}
 	function getErrors(){
 		// short term ugly solution
-		implode(" ", $this->errors);
+		return 'error: '.implode("_", $this->error_array);
 	}
 }
 ?>

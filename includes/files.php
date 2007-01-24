@@ -170,25 +170,20 @@ function _resize_bytes($size){
    $return = number_format($size,0,'','.')." ".$format[$count];
    return $return;
 }
-function _rm($id,$no_dir=0){
+function _rm($id){
 	if(is_array($id)){
 		foreach($id as $f)kfm_rm($f,1);
 	}
 	else{
-		global $db,$kfm_db_prefix;
-		$rf=$db->query("select ".$kfm_db_prefix."files.name as name,physical_address FROM ".$kfm_db_prefix."files,".$kfm_db_prefix."directories
-			WHERE ".$kfm_db_prefix."files.id=".$id." and ".$kfm_db_prefix."directories.id=".$kfm_db_prefix."files.directory");
-		$file_data=$rf->fetchRow();
-		$rf=null;
-		if(count($file_data)){
-			$file_address=$file_data['physical_address'].'/'.$file_data['name'];
-			unlink($file_address);
-			if(file_exists($file_address))return 'error: "'.$file_data['name'].'" cannot be deleted'; # TODO: new string
-			$db->query("delete from ".$kfm_db_prefix."files where id=".$id);
+		$file = new File($id);
+		if($file->isImage()){
+			$im = new Image($file->id);
+			if(!$im->delete()) return $im->getErrors();
+		}else{
+			if(!$file->delete()) return $file->getErrors();
 		}
-		else return 'error: file #'.$id.' is missing from the database'; #TODO: new string
+		return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 	}
-	return $no_dir?0:kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
 function _saveTextFile($fid,$text){
 	$f = new File($fid);

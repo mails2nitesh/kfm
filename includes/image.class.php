@@ -48,6 +48,14 @@ class Image extends File{
 		$this->thumb_path=WORKPATH.$thumbname;
 		if(!file_exists($this->thumb_path))$this->createThumb($width,$height);
 	}
+	function delete(){
+		global $db, $kfm_db_prefix;
+		parent::delete();
+		$this->deleteThumbs();
+		$sql = 'DELETE FROM '.$kfm_db_prefix.'files_images WHERE file_id='.$this->id;
+		$db->exec($sql);
+		return !$this->hasErrors();
+	}
 	function createThumb($width=64,$height=64){
 		$this->deleteThumbs();
 		$ratio = min($width/$this->width, $height/$this->height);
@@ -56,7 +64,7 @@ class Image extends File{
 		{ # use ImageMagick if available (GD is memory-hungry)
 			$retval=true;
 			$arr=array();
-			exec('/usr/bin/convert '.$this->path.' -resize '.$thumb_width.'x'.$thumb_height.' '.$this->thumb_path,$arr,$retval);
+			exec(IMAGEMAGICK_PATH.' '.$this->path.' -resize '.$thumb_width.'x'.$thumb_height.' '.$this->thumb_path,$arr,$retval);
 			if(!$retval)return;
 		}
 		{ # else use GD
@@ -83,7 +91,7 @@ class Image extends File{
 		{ # use ImageMagick if available (GD is memory-hungry)
 			$retval=true;
 			$arr=array();
-			exec('/usr/bin/convert '.$this->path.' -resize '.$new_width.'x'.$new_height.' '.$this->path,$arr,$retval);
+			exec(IMAGEMAGICK_PATH.' '.$this->path.' -resize '.$new_width.'x'.$new_height.' '.$this->path,$arr,$retval);
 			if(!$retval)return;
 		}
 		{ # else use GD
@@ -108,7 +116,7 @@ class Image extends File{
 		{ # use ImageMagick if available (imagerotate() is memory-hungry, and does not do transparencies))
 			$retval=true;
 			$arr=array();
-			exec('/usr/bin/convert -rotate -'.$direction.' '.$this->path.' '.$this->path,$arr,$retval);
+			exec(IMAGEMAGICK_PATH.' -rotate -'.$direction.' '.$this->path.' '.$this->path,$arr,$retval);
 			if(!$retval)return;
 		}
 		{ # else use GD

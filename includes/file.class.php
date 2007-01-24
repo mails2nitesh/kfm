@@ -54,6 +54,16 @@ class File extends Object{
 		if($dotext === false) return false;
 		return strtolower(substr($dotext,1));
 	}
+	function delete(){
+		global $db, $kfm_db_prefix;
+		if(unlink($this->path)){
+			$sql = 'DELETE FROM '.$kfm_db_prefix.'files WHERE id='.$this->id;
+			$db->exec($sql);
+		}else{
+			$this->error("unable to delete file ".$this->name);
+		}
+		return !$this->hasErrors();
+	}
 	function getSize(){
 		if(!$this->size)$this->size=filesize($this->path);
 		return $this->size;
