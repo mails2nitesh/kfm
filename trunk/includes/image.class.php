@@ -45,7 +45,7 @@ class Image extends File{
 		$thumbname=$this->id.' '.$width.'x'.$height.' '.$this->name;
 		if(!isset($this->info['mime'])||!in_array($this->info['mime'],array('image/jpeg','image/gif','image/png')))return false;
 		$this->thumb_url=WORKURL.$thumbname;
-		$this->thumb_path=WORKPATH.$thumbname;
+		$this->thumb_path=str_replace('//','/',WORKPATH.$thumbname);
 		if(!file_exists($this->thumb_path))$this->createThumb($width,$height);
 	}
 	function delete(){
@@ -61,12 +61,7 @@ class Image extends File{
 		$ratio = min($width/$this->width, $height/$this->height);
 		$thumb_width = $this->width*$ratio;
 		$thumb_height = $this->height*$ratio;
-		{ # use ImageMagick if available (GD is memory-hungry)
-			$retval=true;
-			$arr=array();
-			exec(IMAGEMAGICK_PATH.' '.$this->path.' -resize '.$thumb_width.'x'.$thumb_height.' '.$this->thumb_path,$arr,$retval);
-			if(!$retval)return;
-		}
+		if(!$this->useImageMagick($this->path,'resize '.$thumb_width.'x'.$thumb_height,$this->thumb_path))return;
 		{ # else use GD
 			$load='imagecreatefrom'.$this->type;
 			$save='image'.$this->type;
@@ -88,12 +83,7 @@ class Image extends File{
 		}
 		$this->deleteThumbs();
 		if($new_height==-1)$new_height = $this->height*$new_width/$this->width;
-		{ # use ImageMagick if available (GD is memory-hungry)
-			$retval=true;
-			$arr=array();
-			exec(IMAGEMAGICK_PATH.' '.$this->path.' -resize '.$new_width.'x'.$new_height.' '.$this->path,$arr,$retval);
-			if(!$retval)return;
-		}
+		if(!$this->useImageMagick($this->path,'resize '.$new_width.'x'.$new_height,$this->path))return;
 		{ # else use GD
 			$load='imagecreatefrom'.$this->type;
 			$save='image'.$this->type;
@@ -113,12 +103,7 @@ class Image extends File{
 			return false;
 		}
 		$this->deleteThumbs();
-		{ # use ImageMagick if available (imagerotate() is memory-hungry, and does not do transparencies))
-			$retval=true;
-			$arr=array();
-			exec(IMAGEMAGICK_PATH.' -rotate -'.$direction.' '.$this->path.' '.$this->path,$arr,$retval);
-			if(!$retval)return;
-		}
+		if(!$this->useImageMagick($this->path,'rotate -'.$direction,$this->path))return;
 		{ # else use GD
 			$load='imagecreatefrom'.$this->type;
 			$save='image'.$this->type;
@@ -131,6 +116,12 @@ class Image extends File{
 	function deleteThumbs(){
 		$icons=glob(WORKPATH.$this->id.' [0-9]*x[0-9]*.*');
 		foreach($icons as $f)unlink($f);
+	}
+	function useImageMagick($from,$action,$to){
+		$retval=true;
+		$arr=array();
+		exec(IMAGEMAGICK_PATH.' "'.$from.'" -'.$action.' "'.$to.'"',$arr,$retval);
+		return $retval;
 	}
 }
 ?>
