@@ -168,6 +168,7 @@ require_once('includes/kaejax.php');
 	$js.=file_get_contents('j/tracers.js');
 	$js.=file_get_contents('j/common.js');
 	{ # browser-specific functions
+		if(!isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))$_SERVER['HTTP_ACCEPT_LANGUAGE']='';
 		require_once('Detect.php');
 		$browser=new Net_UserAgent_Detect();
 		{ # addEvent
