@@ -56,7 +56,7 @@ set_error_handler('kfm_error_log');
 	if(!is_array($kfm_banned_files))$kfm_banned_files = array();
 	array_push($kfm_banned_files, 'thumbs.db', '.ds_store'); # lowercase array
 	if(!is_array($kfm_banned_folders)) $kfm_banned_folders = array();
-	define('IMAGEMAGICK_PATH',isset($imagemagick_path)?$imagemagick_path:'/usr/bin/convert');
+	define('IMAGEMAGICK_PATH',isset($kfm_imagemagick_path)?$kfm_imagemagick_path:'/usr/bin/convert');
 }
 { # work directory
 	$workpath = $rootdir.$kfm_workdirectory; // should be more at the top of this document
