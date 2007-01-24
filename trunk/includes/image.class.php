@@ -50,20 +50,28 @@ class Image extends File{
 	}
 	function createThumb($width=64,$height=64){
 		$this->deleteThumbs();
-		$load='imagecreatefrom'.$this->type;
-		$save='image'.$this->type;
 		$ratio = min($width/$this->width, $height/$this->height);
 		$thumb_width = $this->width*$ratio;
 		$thumb_height = $this->height*$ratio;
-		if(!function_exists($load)||!function_exists($save))return $this->error('server cannot handle image of type "'.$this->type.'"');
-		$im=$load($this->path);
-		$thumb=imagecreatetruecolor($thumb_width,$thumb_height);
-		imagealphablending($thumb,false);
-		imagecopyresampled($thumb,$im,0,0,0,0,$thumb_width,$thumb_height,$this->width,$this->height);
-		imagesavealpha($thumb,true);
-		$save($thumb,$this->thumb_path,($this->type=='jpeg'?100:9));
-		imagedestroy($thumb); 
-		imagedestroy($im);
+		{ # use ImageMagick if available (GD is memory-hungry)
+			$retval=true;
+			$arr=array();
+			exec('/usr/bin/convert '.$this->path.' -resize '.$thumb_width.'x'.$thumb_height.' '.$this->thumb_path,$arr,$retval);
+			if(!$retval)return;
+		}
+		{ # else use GD
+			$load='imagecreatefrom'.$this->type;
+			$save='image'.$this->type;
+			if(!function_exists($load)||!function_exists($save))return $this->error('server cannot handle image of type "'.$this->type.'"');
+			$im=$load($this->path);
+			$thumb=imagecreatetruecolor($thumb_width,$thumb_height);
+			imagealphablending($thumb,false);
+			imagecopyresampled($thumb,$im,0,0,0,0,$thumb_width,$thumb_height,$this->width,$this->height);
+			imagesavealpha($thumb,true);
+			$save($thumb,$this->thumb_path,($this->type=='jpeg'?100:9));
+			imagedestroy($thumb); 
+			imagedestroy($im);
+		}
 	}
 	function resize($new_width, $new_height=-1){
 		if(!$this->isWritable()){
@@ -72,16 +80,24 @@ class Image extends File{
 		}
 		$this->deleteThumbs();
 		if($new_height==-1)$new_height = $this->height*$new_width/$this->width;
-		$load='imagecreatefrom'.$this->type;
-		$save='image'.$this->type;
-		$im = $load($this->path);
-		$imresized=imagecreatetruecolor($new_width,$new_height);
-		imagealphablending($imresized,false);
-		imagecopyresampled($imresized,$im,0,0,0,0,$new_width,$new_height,$this->width,$this->height);
-		imagesavealpha($thumb,true);
-		$save($imresized,$this->path,($this->type=='jpeg'?100:9));
-		imagedestroy($imresized); 
-		imagedestroy($im);
+		{ # use ImageMagick if available (GD is memory-hungry)
+			$retval=true;
+			$arr=array();
+			exec('/usr/bin/convert '.$this->path.' -resize '.$new_width.'x'.$new_height.' '.$this->path,$arr,$retval);
+			if(!$retval)return;
+		}
+		{ # else use GD
+			$load='imagecreatefrom'.$this->type;
+			$save='image'.$this->type;
+			$im = $load($this->path);
+			$imresized=imagecreatetruecolor($new_width,$new_height);
+			imagealphablending($imresized,false);
+			imagecopyresampled($imresized,$im,0,0,0,0,$new_width,$new_height,$this->width,$this->height);
+			imagesavealpha($thumb,true);
+			$save($imresized,$this->path,($this->type=='jpeg'?100:9));
+			imagedestroy($imresized); 
+			imagedestroy($im);
+		}
 	}
 	function rotate($direction){
 		if(!$this->isWritable()){
