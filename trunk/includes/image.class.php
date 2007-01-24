@@ -58,7 +58,9 @@ class Image extends File{
 		if(!function_exists($load)||!function_exists($save))return $this->error('server cannot handle image of type "'.$this->type.'"');
 		$im=$load($this->path);
 		$thumb=imagecreatetruecolor($thumb_width,$thumb_height);
+		imagealphablending($thumb,false);
 		imagecopyresampled($thumb,$im,0,0,0,0,$thumb_width,$thumb_height,$this->width,$this->height);
+		imagesavealpha($thumb,true);
 		$save($thumb,$this->thumb_path,($this->type=='jpeg'?100:9));
 		imagedestroy($thumb); 
 		imagedestroy($im);
@@ -74,7 +76,9 @@ class Image extends File{
 		$save='image'.$this->type;
 		$im = $load($this->path);
 		$imresized=imagecreatetruecolor($new_width,$new_height);
+		imagealphablending($imresized,false);
 		imagecopyresampled($imresized,$im,0,0,0,0,$new_width,$new_height,$this->width,$this->height);
+		imagesavealpha($thumb,true);
 		$save($imresized,$this->path,($this->type=='jpeg'?100:9));
 		imagedestroy($imresized); 
 		imagedestroy($im);
@@ -85,12 +89,20 @@ class Image extends File{
 			return false;
 		}
 		$this->deleteThumbs();
-		$load='imagecreatefrom'.$this->type;
-		$save='image'.$this->type;
-		$im  =  $load($this->path);
-		$im=imagerotate($im,$direction,0);
-		$save($im,$this->path,($this->type=='jpeg'?100:9));
-		imagedestroy($im);
+		{ # use ImageMagick if available (imagerotate() is memory-hungry, and does not do transparencies))
+			$retval=true;
+			$arr=array();
+			exec('/usr/bin/convert -rotate -'.$direction.' '.$this->path.' '.$this->path,$arr,$retval);
+			if(!$retval)return;
+		}
+		{ # else use GD
+			$load='imagecreatefrom'.$this->type;
+			$save='image'.$this->type;
+			$im=$load($this->path);
+			$im=imagerotate($im,$direction,0);
+			$save($im,$this->path,($this->type=='jpeg'?100:9));
+			imagedestroy($im);
+		}
 	}
 	function deleteThumbs(){
 		$icons=glob(WORKPATH.$this->id.' [0-9]*x[0-9]*.*');
