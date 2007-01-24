@@ -33,27 +33,6 @@ class File extends Object{
 			$this->type = trim(substr(strstr($this->mimetype,'/'),1));
 		}
 	}
-	function __construct(){
-		if(func_num_args()==1){
-			global $db,$kfm_db_prefix;
-			$this->id = func_get_arg(0);
-			$qf=$db->query("SELECT ".$kfm_db_prefix."files.id AS id,".$kfm_db_prefix."files.name AS name,".$kfm_db_prefix."directories.physical_address AS directory
-				FROM ".$kfm_db_prefix."files,".$kfm_db_prefix."directories
-				WHERE ".$kfm_db_prefix."files.id=".$this->id." AND ".$kfm_db_prefix."directories.id=".$kfm_db_prefix."files.directory");
-			$filedata = $qf->fetchRow();
-			$this->name = $filedata['name'];
-			$this->directory = $filedata['directory'];
-			$this->path = $filedata['directory'].'/'.$filedata['name'];
-			if(!file_exists($this->path)){
-				$this->error('File cannot be found');
-				return false;
-			}
-			$mimetype = mime_content_type($this->path);
-			$pos = strpos($mimetype,';');
-			$this->mimetype = ($pos===false)?$mimetype:substr($mimetype,0,$pos);
-			$this->type = trim(substr(strstr($this->mimetype,'/'),1));
-		}
-	}
 	function isWritable(){
 		return (($this->id==-1)||!is_writable($this->path))?false:true;
 	}

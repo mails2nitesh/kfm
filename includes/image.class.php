@@ -6,9 +6,6 @@ class Image extends File{
 	var $thumb_url;
 	var $thumb_path;
 	var $info = array();  // info from getimagesize
-	function __construct($file){
-		$this->Image($file);
-	}
 	function Image($file){
 		if(is_object($file) && $file->isImage())parent::__construct($file->id);
 		else if(is_numeric($file))parent::__construct($file);
