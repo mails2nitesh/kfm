@@ -95,6 +95,7 @@ class Image extends File{
 		foreach($icons as $f)unlink($f);
 	}
 	function useImageMagick($from,$action,$to){
+		if(!file_exists(IMAGEMAGICK_PATH))return true;
 		$retval=true;
 		$arr=array();
 		exec(IMAGEMAGICK_PATH.' "'.$from.'" -'.$action.' "'.$to.'"',$arr,$retval);
