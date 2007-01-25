@@ -103,7 +103,7 @@ function kfm_refreshFiles(res){
 			}
 			else{
 				el.kfm_attributes=res.files[a];
-				for(b in kfm_imageExts)if(kfm_imageExts[b]==ext)x_kfm_getThumbnail(id,64,64,kfm_showIcon);
+				for(b in kfm_imageExts)if(kfm_imageExts[b]==ext.toLowerCase())x_kfm_getThumbnail(id,64,64,kfm_showIcon);
 			}
 			files[a]=el;
 			fileids[a]=id;
