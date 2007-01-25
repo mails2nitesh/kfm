@@ -218,7 +218,7 @@ require_once('includes/kaejax.php');
 		<?php
 			if(!$kfm_dont_send_metrics){
 				$today=date('Y-m-d');
-				if($kfm_parameters['last_registration']!=$today){
+				if(!isset($kfm_parameters['last_registration'])||$kfm_parameters['last_registration']!=$today){
 					echo '<img src="http://kfm.verens.com/extras/register.php?version='.urlencode(KFM_VERSION).'&amp;domain_name='.urlencode($_SERVER['SERVER_NAME']).'" />';
 					$db->query("delete from ".$kfm_db_prefix."parameters where name='last_registration'");
 					$db->query("insert into ".$kfm_db_prefix."parameters (name,value) values ('last_registration','".$today."')");
