@@ -69,7 +69,7 @@ function kaejax_do_call(func_name,args){
 function kaejax_sendRequests(uri){
 	var t=window.kaejax_timeouts[uri];
 	window.kaejax_timeouts[uri]=null;
-	var x=new XMLHttpRequest(),post_data="kaejax="+escape(json.s.object(t)).replace(/%([89A-F][A-Z0-9])/g,'%u00$1');
+	var x=new XMLHttpRequest(),post_data="kaejax="+escape(json.s.object(t).replace(/\+/g,'%2B')).replace(/%([89A-F][A-Z0-9])/g,'%u00$1');
 	post_data=kfm_sanitise_ajax(post_data);
 	x.open('POST',uri,true);
 	x.setRequestHeader("Method","POST "+uri+" HTTP/1.1");
