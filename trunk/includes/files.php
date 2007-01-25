@@ -188,7 +188,7 @@ function _rm($id){
 function _saveTextFile($fid,$text){
 	$f = new File($fid);
 	$f->setContent($text);
-	return $f->errors()?$f->getErrors():'file saved';
+	return $f->hasErrors()?$f->getErrors():'file saved';
 	/*
 	if(kfm_checkAddr($filename))file_put_contents($_SESSION['kfm']['currentdir'].'/'.$filename,$text);
 	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);*/
