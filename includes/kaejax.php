@@ -8,7 +8,7 @@ function kaejax_handle_client_request(){
 	if(!isset($_POST['kaejax']))return;
 	require_once('includes/JSON.php');
 	$json=new Services_JSON();
-	$obj=$json->decode($_POST['kaejax']);
+	$obj=$json->decode(str_replace('%2B','+',$_POST['kaejax']));
 	$fs=$obj->c;
 	if(!is_array($fs)){ # something wrong
 		echo "error: unknown data sent from client.\n\n";
