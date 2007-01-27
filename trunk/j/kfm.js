@@ -10,21 +10,6 @@ function Browser(){
 	if(this.isIE)this.versionMinor=parseFloat(ua.substring(ua.indexOf('MSIE')+5));
 	this.versionMajor=parseInt(this.versionMinor);
 }
-{ // variables
-	var kfm_directory_over=0;
-	if(!window.kfm_callerType)window.kfm_callerType='standalone';
-	var browser=new Browser(),loadedScripts=[],kaejax_is_loaded=0,function_urls=[];
-	var kfm_cwd_name='',kfm_cwd_id=0,kfm_cwd_subdirs=[],contextmenu=null,selectedFiles=[],kfm_imageExts=['jpg','jpeg','gif','png','bmp'];
-	var kfm_filesCache=[],kfm_tags=[],kfm_tracers=[],kfm_tracer_v=10,kfm_lastClicked,kfm_unique_classes=[];
-	var kaejax_timeouts=[],kfm_directories=[0,{name:'root',pathname:'/'}];
-	var kaejax_replaces={'([89A-F][A-Z0-9])':'%u00$1','22':'"','2C':',','3A':':','5B':'[','5D':']','7B':'{','7D':'}'};
-	if(!browser.isIE){
-		for(var a in kaejax_replaces){
-			kaejax_replaces[kaejax_replaces[a]]=eval('/%'+a+'/g');
-			delete kaejax_replaces[a];
-		}
-	}
-}
 function kfm(){
 	{ // extend language objects
 		for(var j in kfm_lang){
@@ -274,11 +259,6 @@ function kfm_run_delayed(name,call){
 	name=name+'_timeout';
 	if(window[name])clearTimeout(window[name]);
 	window[name]=setTimeout(call,500);
-}
-function kfm_sanitise_ajax(d){
-	var r=kaejax_replaces;
-	for(var a in r)d=d.replace(r[a],a);
-	return d;
 }
 function kfm_shrinkName(name,wrapper,text,size,maxsize,extension){
 	var filename,position=step=Math.ceil(name.length/2),direction,postfix='[...]'+extension;
