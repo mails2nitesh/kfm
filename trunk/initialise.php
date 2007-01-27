@@ -2,6 +2,7 @@
 # see license.txt for licensing
 error_reporting(E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE);
 session_start();
+set_include_path(get_include_path().PATH_SEPARATOR .'pear');
 if(!file_exists('configuration.php')){
 	echo '<em>Missing <code>configuration.php</code>!</em><p>If this is a fresh installation of KFM, then please rename <code>configuration.php.dist</code> to <code>configuration.php</code>, and edit it according to your project\'s needs.</p><p>If this is an upgraded version of KFM, please remove the parts of your old <code>config.php</code> which do not exist in <code>configuration.php.dist</code>, then rename it to <code>configuration.php</code>.</p>';
 	exit;
