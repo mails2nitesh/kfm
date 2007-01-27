@@ -153,8 +153,7 @@ function kfm_shiftFileSelectionLR(dir){
 		else if(!a)a=ns;
 	}
 	else a=dir>0?-1:ns;
-	kfm_selectNone();
-	kfm_addToSelection(na[a+dir]);
+	kfm_selectSingleFile(na[a+dir]);
 }
 function kfm_shiftFileSelectionUD(dir){
 	if(selectedFiles.length>1)return;
@@ -183,8 +182,7 @@ function kfm_shiftFileSelectionUD(dir){
 		}
 	}
 	else a=dir>0?0:ns-1;
-	kfm_selectNone();
-	kfm_addToSelection(na[a]);
+	kfm_selectSingleFile(na[a]);
 }
 function kfm_toggleSelectedFile(e){
 	kfm_cancelEvent(e);
@@ -217,4 +215,12 @@ function kfm_toggleSelectedFile(e){
 	if(kfm_lastClicked)$('kfm_file_icon_'+kfm_lastClicked).delClass('last_clicked');
 	kfm_lastClicked=id;
 	$('kfm_file_icon_'+id).addClass('last_clicked');
+}
+function kfm_selectSingleFile(id){
+	kfm_selectNone();
+	kfm_addToSelection(id);
+	var panel=$('kfm_right_column'),el=$('kfm_file_icon_'+id);
+	var offset=panel.scrollTop,panelHeight=panel.offsetHeight,elTop=getOffset(el,'Top'),elHeight=el.offsetHeight;
+	if(elTop+elHeight-offset>panelHeight)panel.scrollTop=elTop-panelHeight+elHeight;
+	else if(elTop<offset)panel.scrollTop=elTop;
 }
