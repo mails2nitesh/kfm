@@ -155,6 +155,7 @@ require_once('includes/kaejax.php');
 <?php
 	$js='';
 	$js.=file_get_contents('lang/'.$kfm_language.'.js');
+	$js.=file_get_contents('j/variables.js');
 	$js.=file_get_contents('j/kfm.js');
 	$js.=file_get_contents('j/alerts.js');
 	$js.=file_get_contents('j/contextmenu.js');
@@ -171,6 +172,10 @@ require_once('includes/kaejax.php');
 		if(!isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))$_SERVER['HTTP_ACCEPT_LANGUAGE']='';
 		require_once('Detect.php');
 		$browser=new Net_UserAgent_Detect();
+		{ # kaejax_replaces
+			if($browser->isIE())$js.=file_get_contents('j/kaejax_replaces.ie.js');
+			else $js.=file_get_contents('j/kaejax_replaces.js');
+		}
 		{ # addEvent
 			if($browser->isIE())$js.=file_get_contents('j/addEvent.ie.js');
 			else if($browser->getBrowserString()=='Konqueror/Safari')$js.=file_get_contents('j/addEvent.konqueror.js');
