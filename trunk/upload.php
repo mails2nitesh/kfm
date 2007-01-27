@@ -15,8 +15,22 @@ if($kfm_allow_file_uploads){
 			include('includes/images.php');
 			if($imgtype){
 				$comment='';
-				$data=exif_read_data($to,0,true);
-				if(is_array($data)&&isset($data['COMMENT'])&&is_array($data['COMMENT']))$comment=join("\n",$data['COMMENT']);
+				if($imgtype==1){ # gif
+					$file=file_get_contents($to);
+					$arr=explode('!',$file);
+					$found=0;
+					for($i=0;$i<count($arr)&&!$found;++$i){
+						$block=$arr[$i];
+						if(substr($block,0,2)==chr(254).chr(21)){
+							$found=1;
+							$comment=substr($block,2,strpos($block,0)-1);
+						}
+					}
+				}
+				else{
+					$data=exif_read_data($to,0,true);
+					if(is_array($data)&&isset($data['COMMENT'])&&is_array($data['COMMENT']))$comment=join("\n",$data['COMMENT']);
+				}
 				_setCaption($filename,$comment);
 			}
 		}
