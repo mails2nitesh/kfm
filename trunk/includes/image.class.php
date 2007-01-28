@@ -20,10 +20,31 @@ class Image extends File{
 		$this->setThumbnail();
 	}
 
+	function delete(){
+		global $db, $kfm_db_prefix;
+		parent::delete();
+		$this->deleteThumbs();
+		$sql = 'DELETE FROM '.$kfm_db_prefix.'files_images WHERE file_id='.$this->id;
+		$db->exec($sql);
+		return !$this->hasErrors();
+	}
+	function deleteThumbs(){
+		global $db;
+		$q=$db->query("SELECT id FROM ".$kfm_db_prefix."files_images_thumbs WHERE image_id=".$this->id);
+		$rs=$q->fetchAll();
+		foreach($rs as $r){
+			$icons=glob(WORKPATH.'thumbnails/'.$r['id'].'.*');
+			foreach($icons as $f)unlink($f);
+		}
+		$q=null;
+		$db->exec("DELETE FROM ".$kfm_db_prefix."files_images_thumbs WHERE image_id=".$this->id);
+		$icons=glob(WORKPATH.$this->id.' [0-9]*x[0-9]*.*');
+		foreach($icons as $f)unlink($f);
+	}
 	function getImageId(){
 		global $db, $kfm_db_prefix;
-		$sql="SELECT id, caption FROM ".$kfm_db_prefix."files_images WHERE file_id='".$this->id."'";
-		$res = $db->query($sql);
+		$sql="SELECT id,caption FROM ".$kfm_db_prefix."files_images WHERE file_id='".$this->id."'";
+		$res=$db->query($sql);
 		if(!$res->numRows()){ // Create an image entry
 			$sql="INSERT INTO ".$kfm_db_prefix."files_images (file_id, caption) VALUES ('".$this->id."','".$this->name."')";
 			$this->caption = $this->name;
@@ -42,27 +63,35 @@ class Image extends File{
 		$this->caption = $caption;
 	}
 	function setThumbnail($width=64,$height=64){
+		global $db;
 		$thumbname=$this->id.' '.$width.'x'.$height.' '.$this->name;
 		if(!isset($this->info['mime'])||!in_array($this->info['mime'],array('image/jpeg','image/gif','image/png')))return false;
-		$this->thumb_url=WORKURL.$thumbname;
-		$this->thumb_path=str_replace('//','/',WORKPATH.$thumbname);
-		if(!file_exists($this->thumb_path))$this->createThumb($width,$height);
-	}
-	function delete(){
-		global $db, $kfm_db_prefix;
-		parent::delete();
-		$this->deleteThumbs();
-		$sql = 'DELETE FROM '.$kfm_db_prefix.'files_images WHERE file_id='.$this->id;
-		$db->exec($sql);
-		return !$this->hasErrors();
+		$q=$db->query("SELECT id FROM ".$kfm_db_prefix."files_images_thumbs WHERE image_id=".$this->id." and width<=".$width." and height<=".$height." and (width=".$width." or height=".$height.")");
+		if($q->numRows()){
+			$r=$q->fetchRow();
+			$id=$r['id'];
+		}
+		else{
+			$q=null;
+			$id=$this->createThumb($width,$height);
+		}
+		$thumbname=$id.'.'.preg_replace('/.*\//','',$this->info['mime']);
+		$this->thumb_url=WORKURL.'thumbs/'.$thumbname;
+		$this->thumb_path=str_replace('//','/',WORKPATH.'thumbs/'.$thumbname);
 	}
 	function createThumb($width=64,$height=64){
+		global $db;
+		if(!is_dir(WORKPATH.'thumbs'))mkdir(WORKPATH.'thumbs');
 		$this->deleteThumbs();
 		$ratio=min($width/$this->width,$height/$this->height);
 		$thumb_width=$this->width*$ratio;
 		$thumb_height=$this->height*$ratio;
-		if(!$this->useImageMagick($this->path,'resize '.$thumb_width.'x'.$thumb_height,$this->thumb_path))return;
-		$this->createResizedCopy($this->thumb_path,$thumb_width,$thumb_height);
+		$db->exec("INSERT INTO ".$kfm_db_prefix."files_images_thumbs (image_id,width,height) VALUES(".$this->id.",".$thumb_width.",".$thumb_height.")");
+		$id=$db->lastInsertId($kfm_db_prefix.'files_images_thumbs','id');
+		$file=WORKPATH.'thumbs/'.$id.'.'.preg_replace('/.*\//','',$this->info['mime']);
+		if(!$this->useImageMagick($this->path,'resize '.$thumb_width.'x'.$thumb_height,$file))return;
+		$this->createResizedCopy($file,$thumb_width,$thumb_height);
+		return $id;
 	}
 	function resize($new_width, $new_height=-1){
 		if(!$this->isWritable()){
@@ -89,10 +118,6 @@ class Image extends File{
 			$save($im,$this->path,($this->type=='jpeg'?100:9));
 			imagedestroy($im);
 		}
-	}
-	function deleteThumbs(){
-		$icons=glob(WORKPATH.$this->id.' [0-9]*x[0-9]*.*');
-		foreach($icons as $f)unlink($f);
 	}
 	function useImageMagick($from,$action,$to){
 		if(isset($_ENV['OS'])&&strpos($_ENV['OS'],'Windows')!==false)return true; # windows doesn't run ImageMagick
