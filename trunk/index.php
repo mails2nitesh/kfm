@@ -148,7 +148,7 @@ require_once('includes/kaejax.php');
 		?>";</style>
 		<title>KFM - Kae's File Manager</title>
 		<style type="text/css"><?php
-			echo preg_replace('/\s+/',' ',file_get_contents('Text/hilight.css'));
+			echo preg_replace('/\s+/',' ',file_get_contents('pear/Text/hilight.css'));
 		?></style>
 		<script type="text/javascript">
 
