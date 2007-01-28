@@ -120,7 +120,6 @@ class Image extends File{
 		}
 	}
 	function useImageMagick($from,$action,$to){
-		if(isset($_ENV['OS'])&&strpos($_ENV['OS'],'Windows')!==false)return true; # windows doesn't run ImageMagick
 		if(!file_exists(IMAGEMAGICK_PATH))return true;
 		$retval=true;
 		$arr=array();
