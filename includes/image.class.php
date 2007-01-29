@@ -93,7 +93,6 @@ class Image extends File{
 		$id=$db->lastInsertId($kfm_db_prefix.'files_images_thumbs','id');
 		$file=WORKPATH.'thumbs/'.$id;
 		if($this->useImageMagick($this->path,'resize '.$thumb_width.'x'.$thumb_height,$file))$this->createResizedCopy($file,$thumb_width,$thumb_height);
-		copy($file,$file.'.'.preg_replace('/.*\//','',$this->info['mime']));
 		return $id;
 	}
 	function resize($new_width, $new_height=-1){
