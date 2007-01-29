@@ -75,9 +75,12 @@ class Image extends File{
 			$q=null;
 			$id=$this->createThumb($width,$height);
 		}
-		$thumbname=$id.'.'.preg_replace('/.*\//','',$this->info['mime']);
-		$this->thumb_url=WORKURL.'thumbs/'.$thumbname;
-		$this->thumb_path=str_replace('//','/',WORKPATH.'thumbs/'.$thumbname);
+		$this->thumb_url='get.php?type=thumb&id='.$id;
+		$this->thumb_path=str_replace('//','/',WORKPATH.'thumbs/'.$id);
+		if(!file_exists($this->thumb_path)){
+			copy(WORKPATH.'thumbs/'.$id.'.'.preg_replace('/.*\//','',$this->info['mime']),$this->thumb_path);
+			unlink(WORKPATH.'thumbs/'.$id.'.'.preg_replace('/.*\//','',$this->info['mime']));
+		}
 	}
 	function createThumb($width=64,$height=64){
 		global $db;
@@ -88,9 +91,9 @@ class Image extends File{
 		$thumb_height=$this->height*$ratio;
 		$db->exec("INSERT INTO ".$kfm_db_prefix."files_images_thumbs (image_id,width,height) VALUES(".$this->id.",".$thumb_width.",".$thumb_height.")");
 		$id=$db->lastInsertId($kfm_db_prefix.'files_images_thumbs','id');
-		$file=WORKPATH.'thumbs/'.$id.'.'.preg_replace('/.*\//','',$this->info['mime']);
-		if(!$this->useImageMagick($this->path,'resize '.$thumb_width.'x'.$thumb_height,$file))return;
-		$this->createResizedCopy($file,$thumb_width,$thumb_height);
+		$file=WORKPATH.'thumbs/'.$id;
+		if($this->useImageMagick($this->path,'resize '.$thumb_width.'x'.$thumb_height,$file))$this->createResizedCopy($file,$thumb_width,$thumb_height);
+		copy($file,$file.'.'.preg_replace('/.*\//','',$this->info['mime']));
 		return $id;
 	}
 	function resize($new_width, $new_height=-1){
