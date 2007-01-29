@@ -38,7 +38,7 @@ function kfm_showIcon(res,el2){
 		el.title+=image_data.caption.replace(/\n/g,' ');
 	}
 	if(image_data.icon){
-		if(!kfm_filesCache[file])image_data.icon=image_data.icon+'?'+Math.random();
+		if(!kfm_filesCache[file])image_data.icon=image_data.icon;
 		var img=newImg(image_data.icon).setCss('width:1px;height:1px');
 		img.onload=function(){
 			var p=this.parentNode;
