@@ -17,6 +17,4 @@ switch($kfm_db_type){
 		exit;
 	}
 }
-echo '<em>Your database has been updated. Please reload this window.</em>'; # TODO: new string
-exit;
 ?>
