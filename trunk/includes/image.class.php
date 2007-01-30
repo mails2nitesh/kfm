@@ -21,15 +21,14 @@ class Image extends File{
 	}
 
 	function delete(){
-		global $db, $kfm_db_prefix;
+		global $db,$kfm_db_prefix;
 		parent::delete();
 		$this->deleteThumbs();
-		$sql = 'DELETE FROM '.$kfm_db_prefix.'files_images WHERE file_id='.$this->id;
-		$db->exec($sql);
+		$db->exec('DELETE FROM '.$kfm_db_prefix.'files_images WHERE file_id='.$this->id);
 		return !$this->hasErrors();
 	}
 	function deleteThumbs(){
-		global $db;
+		global $db,$kfm_db_prefix;
 		$q=$db->query("SELECT id FROM ".$kfm_db_prefix."files_images_thumbs WHERE image_id=".$this->id);
 		$rs=$q->fetchAll();
 		foreach($rs as $r){
@@ -42,7 +41,7 @@ class Image extends File{
 		foreach($icons as $f)unlink($f);
 	}
 	function getImageId(){
-		global $db, $kfm_db_prefix;
+		global $db,$kfm_db_prefix;
 		$sql="SELECT id,caption FROM ".$kfm_db_prefix."files_images WHERE file_id='".$this->id."'";
 		$res=$db->query($sql);
 		if(!$res->numRows()){ // Create an image entry
@@ -57,13 +56,12 @@ class Image extends File{
 		}
 	}
 	function setCaption($caption){
-		global $db, $kfm_db_prefix;
-		$sql = 'UPDATE '.$kfm_db_prefix.'files_images SET caption="'.$caption.'" WHERE file_id="'.$this->id.'"';
-		$db->exec($sql);
-		$this->caption = $caption;
+		global $db,$kfm_db_prefix;
+		$db->exec("UPDATE ".$kfm_db_prefix."files_images SET caption='".$caption."' WHERE file_id=".$this->id);
+		$this->caption=$caption;
 	}
 	function setThumbnail($width=64,$height=64){
-		global $db;
+		global $db,$kfm_db_prefix;
 		$thumbname=$this->id.' '.$width.'x'.$height.' '.$this->name;
 		if(!isset($this->info['mime'])||!in_array($this->info['mime'],array('image/jpeg','image/gif','image/png')))return false;
 		$q=$db->query("SELECT id FROM ".$kfm_db_prefix."files_images_thumbs WHERE image_id=".$this->id." and width<=".$width." and height<=".$height." and (width=".$width." or height=".$height.")");
@@ -83,7 +81,7 @@ class Image extends File{
 		}
 	}
 	function createThumb($width=64,$height=64){
-		global $db;
+		global $db,$kfm_db_prefix;
 		if(!is_dir(WORKPATH.'thumbs'))mkdir(WORKPATH.'thumbs');
 		$this->deleteThumbs();
 		$ratio=min($width/$this->width,$height/$this->height);

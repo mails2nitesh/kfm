@@ -120,8 +120,8 @@ function _moveDirectory($from,$to){
 	return _loadDirectories(1);
 }
 function _rmdir2($dir){ # adapted from http://php.net/rmdir
+	global $db,$kfm_db_prefix;
 	if(is_numeric($dir)&&$dir!=0){
-		global $db,$kfm_db_prefix;
 		$dirdata=_getDirectoryDbInfo($dir);
 		$dir=$dirdata['physical_address'];
 	}
