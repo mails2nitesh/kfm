@@ -43,7 +43,6 @@ set_error_handler('kfm_error_log');
 { # variables
 	define('KFM_VERSION',rtrim(file_get_contents('version.txt')));
 	$rootdir=str_replace('//','/',$_SERVER['DOCUMENT_ROOT'].$kfm_userfiles.'/');
-	if(!file_exists($rootdir.$kfm_workdirectory))mkdir($rootdir.$kfm_workdirectory);
 	if(!isset($_SESSION['kfm']))$_SESSION['kfm']=array(
 		'currentdir'=>rtrim($rootdir,' /'),
 		'cwd_id'=>1,
