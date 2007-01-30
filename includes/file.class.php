@@ -13,8 +13,8 @@ class File extends Object{
 	var $type;
 
 	function File(){
+		global $db,$kfm_db_prefix;
 		if(func_num_args()==1){
-			global $db,$kfm_db_prefix;
 			$this->id=func_get_arg(0);
 			$qf=$db->query("SELECT ".$kfm_db_prefix."files.id AS id,".$kfm_db_prefix."files.name AS name,".$kfm_db_prefix."directories.physical_address AS directory
 				FROM ".$kfm_db_prefix."files,".$kfm_db_prefix."directories
@@ -55,10 +55,9 @@ class File extends Object{
 		return strtolower(substr($dotext,1));
 	}
 	function delete(){
-		global $db, $kfm_db_prefix;
+		global $db,$kfm_db_prefix;
 		if(unlink($this->path)){
-			$sql = 'DELETE FROM '.$kfm_db_prefix.'files WHERE id='.$this->id;
-			$db->exec($sql);
+			$db->exec("DELETE FROM ".$kfm_db_prefix."files WHERE id=".$this->id);
 		}else{
 			$this->error("unable to delete file ".$this->name);
 		}
