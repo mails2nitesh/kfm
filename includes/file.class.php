@@ -11,7 +11,6 @@ class File extends Object{
 	var $mimetype = '';
 	var $size = 0;
 	var $type;
-
 	function File(){
 		global $db,$kfm_db_prefix;
 		if(func_num_args()==1){
@@ -33,9 +32,6 @@ class File extends Object{
 			$this->type = trim(substr(strstr($this->mimetype,'/'),1));
 		}
 	}
-	function isWritable(){
-		return (($this->id==-1)||!is_writable($this->path))?false:true;
-	}
 	function getContent(){
 		return ($this->id==-1)?false:file_get_contents($this->path);
 	}
@@ -53,6 +49,16 @@ class File extends Object{
 		$dotext = strrchr($filename,'.');
 		if($dotext === false) return false;
 		return strtolower(substr($dotext,1));
+	}
+	function getUrl(){
+		global $rootdir, $kfm_userfiles_output;
+		$cwd=str_replace($rootdir,'',$_SESSION['kfm']['currentdir']);
+		if(!file_exists($this->path))return 'javascript:alert("missing file")';
+		if($kfm_userfiles_output=='get.php')
+			$url=preg_replace('/\/[^\/]*$/','/get.php?id='.$this->id,$_SERVER['REQUEST_URI']);
+		else 
+			$url=str_replace('//','/',$kfm_userfiles_output.'/'.$cwd.'/'.$this->name);
+		return $url;
 	}
 	function delete(){
 		global $db,$kfm_db_prefix;
@@ -77,31 +83,21 @@ class File extends Object{
 	function isImage(){
 		return in_array($this->getExtension(),array('jpg', 'jpeg', 'gif', 'png', 'bmp'));
 	}
+	function isWritable(){
+		return (($this->id==-1)||!is_writable($this->path))?false:true;
+	}
 	function setContent($content){
 		$result = file_put_contents($this->path, $content);
 		if(!$result) $this->error('error setting file content');
 	}
-
-	/* Function that returns the size in a readable way
-	 * expects input size in bytes
-	 * if no input parameter is given, the size of the file object is taken
-	 */
 	function size2str(){
+		# returns the size in a human-readable way
+		# expects input size in bytes
+	 	# if no input parameter is given, the size of the file object is returned 
 		$size = func_num_args()?func_get_arg(0):$this->getSize();
 		$format = array("B","KB","MB","GB","TB","PB","EB","ZB","YB");
 		$n = floor(log($size)/log(1024));
 		return round($size/pow(1024,$n),1).' '.$format[$n];
-	}
-
-	function getUrl(){
-		global $rootdir, $kfm_userfiles_output;
-		$cwd=str_replace($rootdir,'',$_SESSION['kfm']['currentdir']);
-		if(!file_exists($this->path))return 'javascript:alert("missing file")';
-		if($kfm_userfiles_output=='get.php')
-			$url=preg_replace('/browser\.php.*/','get.php?id='.$this->id,$_SERVER['REQUEST_URI']);
-		else 
-			$url=str_replace('//','/',$kfm_userfiles_output.'/'.$cwd.'/'.$this->name);
-		return $url;
 	}
 }
 ?>
