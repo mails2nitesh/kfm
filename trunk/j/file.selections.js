@@ -8,7 +8,7 @@ function kfm_addToSelection(id){
 function kfm_chooseFile(e,o){
 	var el=(o?e:getEventTarget(e)).kfm_attributes,url=fckrootOutput;
 	x_kfm_getFileUrl(el.id,function(url){
-		if(kfm_file_handler=='fckeditor'){
+		if(kfm_file_handler=='return'||kfm_file_handler=='fckeditor'){
 			if(!el.image_data)window.opener.SetUrl(url);
 			else window.opener.SetUrl(url,0,0,el.image_data.caption);
 			window.close();
