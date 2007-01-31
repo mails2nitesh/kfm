@@ -100,7 +100,7 @@ function _loadFiles($rootid=1){
 		$fileshash=array();
 		if(is_array($filesdb))foreach($filesdb as $r)$fileshash[$r['name']]=$r['id'];
 		$files=array();
-		while(false!==($filename=readdir($handle)))if(is_file($reqdir.'/'.$filename)){
+		while(false!==($filename=readdir($handle)))if(strpos($filename,'.')!==0&&is_file($reqdir.'/'.$filename)){
 			if(in_array(strtolower($filename), $GLOBALS['kfm_banned_files'])) continue;
 			if(!isset($fileshash[$filename])){
 				kfm_add_file_to_db($filename,$rootid);
