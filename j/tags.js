@@ -27,3 +27,10 @@ function kfm_tagDraw(id){
 		}
 	}
 }
+function kfm_tagRemove(id){
+	var tagsToRemove=kfm_prompt('Which tags do you want to remove?\nFor multiple tags, separate by commas.'); // TODO: new string
+	if(tagsToRemove){
+		files=selectedFiles.length?selectedFiles:id;
+		x_kfm_tagRemove(files,tagsToRemove,kfm_showFileDetails);
+	}
+}

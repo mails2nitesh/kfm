@@ -248,6 +248,22 @@ function _tagAdd($recipients,$tagList){
 	}
 	return _getFileDetails($recipients[0]);
 }
+function _tagRemove($recipients,$tagList){
+	global $db,$kfm_db_prefix;
+	if(!is_array($recipients))$recipients=array($recipients);
+	$arr=explode(',',$tagList);
+	$tagList=array();
+	foreach($arr as $tag){
+		$tag=ltrim(rtrim($tag));
+		if($tag){
+			$q=$db->query("select id from ".$kfm_db_prefix."tags where name='".addslashes($tag)."'");
+			$r=$q->fetchRow();
+			if(count($r))$tagList[]=$r['id'];
+		}
+	}
+	if(count($tagList))$db->exec("delete from ".$kfm_db_prefix."tagged_files where (file_id=".join(' or file_id=',$recipients).") and (tag_id=".join(' or tag_id="',$tagList).")");
+	return _getFileDetails($recipients[0]);
+}
 function _viewTextFile($fileid){
 	global $kfm_viewable_extensions, $kfm_highlight_extensions, $kfm_editable_extensions;
 	$file = new File($fileid);

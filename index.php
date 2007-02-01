@@ -107,6 +107,10 @@ require_once('includes/kaejax.php');
 		require_once('includes/files.php');
 		return _tagAdd($recipients,$tagList);
 	}
+	function kfm_tagRemove($recipients,$tagList){
+		require_once('includes/files.php');
+		return _tagRemove($recipients,$tagList);
+	}
 	function kfm_viewTextFile($fileid){
 		require_once('includes/files.php');
 		return _viewTextFile($fileid);
@@ -135,7 +139,7 @@ require_once('includes/kaejax.php');
 		'kfm_changeCaption','kfm_createDirectory','kfm_createEmptyFile','kfm_deleteDirectory','kfm_downloadFileFromUrl',
 		'kfm_extractZippedFile','kfm_getFileDetails','kfm_getFileUrl','kfm_getTagName','kfm_getTextFile','kfm_getThumbnail','kfm_loadDirectories',
 		'kfm_loadFiles','kfm_moveDirectory','kfm_moveFiles','kfm_renameFile','kfm_renameFiles','kfm_resizeImage','kfm_rm','kfm_rotateImage',
-		'kfm_saveTextFile','kfm_search','kfm_tagAdd','kfm_viewTextFile'
+		'kfm_saveTextFile','kfm_search','kfm_tagAdd','kfm_tagRemove','kfm_viewTextFile'
 	);
 	if(!empty($_POST['kaejax']))kaejax_handle_client_request();
 }
