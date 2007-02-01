@@ -78,13 +78,21 @@ function kfm_createPanelWrapper(name){
 	return el;
 }
 function kfm_createSearchPanel(){
-	{ // create upload form
-		var t=newEl('table','kfm_search_table');
-		var r=t.insertRow(0);
-		r.insertCell(0).appendChild(newText(kfm_lang.Search));
-		var input=newInput('kfm_search');
-		input.onkeyup=kfm_runSearch;
-		r.insertCell(1).appendChild(input);
+	var t=newEl('table','kfm_search_table'),r,inp,rows=0;
+	{ // filename
+		r=t.insertRow(rows++);
+		r.insertCell(0).appendChild(newText('Filename')); // TODO: new string
+		inp=newInput('kfm_search_keywords');
+		inp.onkeyup=kfm_runSearch;
+		r.insertCell(1).appendChild(inp);
+	}
+	{ // tags
+		r=t.insertRow(rows++);
+		r.insertCell(0).appendChild(newText('Tags')); // TODO: new string
+		inp=newInput('kfm_search_tags');
+		inp.title='comma separated'; // TODO: new string
+		inp.onkeyup=kfm_runSearch;
+		r.insertCell(1).appendChild(inp);
 	}
 	return kfm_createPanel(kfm_lang.Search,'kfm_search_panel',t,{maxedState:3,state:3,order:3});
 }
