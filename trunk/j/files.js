@@ -81,7 +81,8 @@ function kfm_refreshFiles(res){
 						if(kfm_inArray(viewable_extensions,extension))links.push(['javascript:x_kfm_viewTextFile('+id+',kfm_viewTextFile)','view','edit']);
 						if(writable && kfm_inArray(editable_extensions,extension))links.push(['javascript:kfm_editTextFile("'+id+'")',kfm_lang.EditTextFile,'edit']);
 					}
-					links.push(['javascript:kfm_tagAdd('+id+')','add tag to file(s)','add_tags']);
+					links.push(['javascript:kfm_tagAdd('+id+')','add tags to file(s)','add_tags']); // TODO: new string
+					links.push(['javascript:kfm_tagRemove('+id+')','remove tags from file(s)','remove_tags']); // TODO: new string
 					kfm_createContextMenu(getMouseAt(getEvent(e)),links);
 				}
 			}
