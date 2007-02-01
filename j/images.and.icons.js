@@ -4,11 +4,11 @@ function kfm_changeCaption(id){
 	table.kfm_caption_for=id;
 	var row=table.insertRow(0),textarea=newInput('kfm_new_caption','textarea',kfm_filesCache[id].image_data.caption);
 	textarea.setCss('height:50px;width:200px');
-	row.insertCell(0).appendChild(newText('New Caption')); // TODO: new string
-	row.insertCell(1).appendChild(textarea); // TODO: new string
-	kfm_modal_open(table,'Change Caption',[
-		['Change Caption','kfm_changeCaption_set']
-	]); // TODO: new string
+	row.insertCell(0).appendChild(newText(kfm_lang.NewCaption));
+	row.insertCell(1).appendChild(textarea);
+	kfm_modal_open(table,kfm_lang.ChangeCaption,[
+		[kfm_lang.ChangeCaption,'kfm_changeCaption_set']
+	]);
 }
 function kfm_changeCaption_set(){
 	var id=$('kfm_newCaptionDetails').kfm_caption_for,newCaption=$('kfm_new_caption').value;
@@ -37,7 +37,7 @@ function kfm_returnThumbnail(id){
 	var el=kfm_filesCache[id],size;
 	do{
 		valid=1;
-		size=kfm_prompt('What maximum size should be returned?','64x64'); // TODO: new string
+		size=kfm_prompt(kfm_lang.WhatMaximumSize,'64x64');
 		if(!size)return;
 		if(!/^[0-9]+x[0-9]+$/.test(size)){
 			alert('The size must be in the format XXxYY, where X is the width and Y is the height');

@@ -74,16 +74,16 @@ function kfm_refreshFiles(res){
 								links.push(['javascript:kfm_rotateImage('+id+',90)',kfm_lang.RotateAntiClockwise,'rotate_ccw']);
 								links.push(['javascript:kfm_resizeImage('+id+')',kfm_lang.ResizeImage,'resize_image']);
 							}
-							links.push(['javascript:x_kfm_getFileUrl('+id+',kfm_showImage)','view image']); // TODO: new string
-							links.push(['javascript:kfm_returnThumbnail('+id+',kfm_showImage)','return thumbnail to opener']); // TODO: new string
+							links.push(['javascript:x_kfm_getFileUrl('+id+',kfm_showImage)',kfm_lang.ViewImage]);
+							links.push(['javascript:kfm_returnThumbnail('+id+',kfm_showImage)',kfm_lang.ReturnThumbnailToOpener]);
 							links.push(['javascript:kfm_changeCaption('+id+')',kfm_lang.ChangeCaption,'edit']);
 						}
 						if(kfm_inArray(['zip'],extension))links.push(['javascript:kfm_extractZippedFile("'+id+'")',kfm_lang.ExtractZippedFile,'extract_zip']);
 						if(kfm_inArray(viewable_extensions,extension))links.push(['javascript:x_kfm_viewTextFile('+id+',kfm_viewTextFile)','view','edit']);
 						if(writable && kfm_inArray(editable_extensions,extension))links.push(['javascript:kfm_editTextFile("'+id+'")',kfm_lang.EditTextFile,'edit']);
 					}
-					links.push(['javascript:kfm_tagAdd('+id+')','add tags to file(s)','add_tags']); // TODO: new string
-					links.push(['javascript:kfm_tagRemove('+id+')','remove tags from file(s)']); // TODO: new string
+					links.push(['javascript:kfm_tagAdd('+id+')',kfm_lang.AddTagsToFiles,'add_tags']);
+					links.push(['javascript:kfm_tagRemove('+id+')',kfm_lang.RemoveTagsFromFiles]);
 					kfm_createContextMenu(getMouseAt(getEvent(e)),links);
 				}
 			}
@@ -148,12 +148,12 @@ function kfm_renameFile(id){
 function kfm_renameFiles(){
 	var nameTemplate='',ok=false;
 	do{
-		nameTemplate=kfm_prompt('How would you like to rename these files?\n\nexample: "images-***.jpg" will rename files to "images-001.jpg", "images-002.jpg", ...',nameTemplate); // TODO: new string
+		nameTemplate=kfm_prompt(kfm_lang.HowWouldYouLikeToRenameTheseFiles,nameTemplate);
 		var asterisks=nameTemplate.replace(/[^*]/g,'').length;
 		if(!nameTemplate)return;
-		if(!/\*/.test(nameTemplate))alert('You must place the wildcard character * somewhere in the filename template'); // TODO: new string
-		else if(/\*[^*]+\*/.test(nameTemplate))alert('If you use multiple wildcards in the filename template, they must be grouped together'); // TODO: new string
-		else if(asterisks<(''+selectedFiles.length).length)alert('You need more than '+asterisks+' * characters to create '+selectedFiles.length+' filenames'); // TODO: new string
+		if(!/\*/.test(nameTemplate))alert(kfm_lang.YouMustPlaceTheWildcard);
+		else if(/\*[^*]+\*/.test(nameTemplate))alert(kfm_lang.IfYouUseMultipleWildcards);
+		else if(asterisks<(''+selectedFiles.length).length)alert(kfm_lang.YouNeedMoreThan(asterisks,selectedFiles.length));
 		else ok=true;
 	}while(!ok);
 	for(var i=0;i<selectedFiles.length;++i)kfm_filesCache[selectedFiles[i]]=null;
@@ -170,7 +170,7 @@ function kfm_showFileDetails(res){
 	}
 	var body=getElsWithClass('kfm_panel_body','DIV',$('kfm_file_details_panel'))[0].empty();
 	if(!res){
-		body.innerHTML='no files selected'; // TODO: new string
+		body.innerHTML=kfm_lang.NoFilesSelected;
 		return;
 	}
 	var table=newEl('table'),r;
@@ -191,7 +191,7 @@ function kfm_showFileDetails(res){
 	}
 	if(res.tags.length){ // tags
 		r=table.addRow();
-		r.addCell(0).addEl(newEl('strong',0,0,'tags')); // TODO: new string
+		r.addCell(0).addEl(newEl('strong',0,0,kfm_lang.Tags));
 		var arr=[],c=r.addCell(1);
 		for(var i=0;i<res.tags.length;++i){
 			c.addEl(kfm_tagDraw(res.tags[i]));

@@ -227,4 +227,36 @@ CopyFromURL:
 	"Copy from URL",
 ExtractZippedFile:
 	"Extract zipped file"
+
+// new in 0.8
+ViewImage:
+	"view image",
+ReturnThumbnailToOpener:
+	"return thumbnail to opener",
+AddTagsToFiles:
+	"add tags to file(s)",
+RemoveTagsFromFiles:
+	"remove tags from file(s)",
+HowWouldYouLikeToRenameTheseFiles:
+	"How would you like to rename these files?\n\nexample: \"images-***.jpg\" will rename files to \"images-001.jpg\", \"images-002.jpg\", ...",
+YouMustPlaceTheWildcard:
+	"You must place the wildcard character * somewhere in the filename template",
+YouNeedMoreThan:
+	"You need more than %1 * characters to create %2 filenames",
+NoFilesSelected:
+	"no files selected",
+Tags:
+	"tags",
+IfYouUseMultipleWildcards:
+	"If you use multiple wildcards in the filename template, they must be grouped together",
+NewCaption:
+	"New Caption",
+WhatMaximumSize:
+	"What maximum size should be returned?",
+CommaSeparated:
+	"comma-separated",
+WhatIsTheNewTag:
+	"What is the new tag?\nFor multiple tags, separate by commas.",
+WhichTagsDoYouWantToRemove:
+	"Which tags do you want to remove?\nFor multiple tags, separate by commas."
 }
