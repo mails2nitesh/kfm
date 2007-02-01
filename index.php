@@ -162,6 +162,7 @@ require_once('includes/kaejax.php');
 	$js.=file_get_contents('j/variables.js');
 	$js.=file_get_contents('j/kfm.js');
 	$js.=file_get_contents('j/alerts.js');
+	$js.=file_get_contents('j/modal.dialog.js');
 	$js.=file_get_contents('j/contextmenu.js');
 	$js.=file_get_contents('j/directories.js');
 	$js.=file_get_contents('j/file.selections.js');
