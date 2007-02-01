@@ -1,6 +1,6 @@
 // see license.txt for licensing
 function kfm_tagAdd(id){
-	var newTag=kfm_prompt('What is the new tag?\nFor multiple tags, separate by commas.'); // TODO: new string
+	var newTag=kfm_prompt(kfm_lang.WhatIsTheNewTag);
 	if(newTag){
 		files=selectedFiles.length?selectedFiles:id;
 		x_kfm_tagAdd(files,newTag,kfm_showFileDetails);
@@ -28,7 +28,7 @@ function kfm_tagDraw(id){
 	}
 }
 function kfm_tagRemove(id){
-	var tagsToRemove=kfm_prompt('Which tags do you want to remove?\nFor multiple tags, separate by commas.'); // TODO: new string
+	var tagsToRemove=kfm_prompt(kfm_lang.WhichTagsDoYouWantToRemove);
 	if(tagsToRemove){
 		files=selectedFiles.length?selectedFiles:id;
 		x_kfm_tagRemove(files,tagsToRemove,kfm_showFileDetails);

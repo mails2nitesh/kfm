@@ -81,16 +81,16 @@ function kfm_createSearchPanel(){
 	var t=newEl('table','kfm_search_table'),r,inp,rows=0;
 	{ // filename
 		r=t.insertRow(rows++);
-		r.insertCell(0).appendChild(newText('Filename')); // TODO: new string
+		r.insertCell(0).appendChild(newText(kfm_lang.Filename));
 		inp=newInput('kfm_search_keywords');
 		inp.onkeyup=kfm_runSearch;
 		r.insertCell(1).appendChild(inp);
 	}
 	{ // tags
 		r=t.insertRow(rows++);
-		r.insertCell(0).appendChild(newText('Tags')); // TODO: new string
+		r.insertCell(0).appendChild(newText(kfm_lang.Tags));
 		inp=newInput('kfm_search_tags');
-		inp.title='comma separated'; // TODO: new string
+		inp.title=kfm_lang.CommaSeparated;
 		inp.onkeyup=kfm_runSearch;
 		r.insertCell(1).appendChild(inp);
 	}
