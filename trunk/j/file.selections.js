@@ -105,6 +105,11 @@ function kfm_selection_dragFinish(e){
 	if(!window.dragType||window.dragType!=2)return;
 	var p1=getMouseAt(e),p2=window.drag_wrapper.orig;
 	var x1=p1.x>p2.x?p2.x:p1.x,x2=p2.x>p1.x?p2.x:p1.x,y1=p1.y>p2.y?p2.y:p1.y,y2=p2.y>p1.y?p2.y:p1.y;
+	var offset=$('kfm_right_column').scrollTop;
+	if(offset){
+		y1+=offset;
+		y2+=offset;
+	}
 	delEl('kfm_selection_blocker');
 	setTimeout('window.dragType=0;',1); // pause needed for IE
 	delEl(window.drag_wrapper);
