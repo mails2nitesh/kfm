@@ -6,7 +6,7 @@ function kfm_addToSelection(id){
 	kfm_selectionCheck();
 }
 function kfm_chooseFile(e,o){
-	var el=(o?e:getEventTarget(e)).kfm_attributes,url=fckrootOutput;
+	var el=(o?e:getEventTarget(e)).kfm_attributes;
 	x_kfm_getFileUrl(el.id,function(url){
 		if(kfm_file_handler=='return'||kfm_file_handler=='fckeditor'){
 			if(!el.image_data)window.opener.SetUrl(url);

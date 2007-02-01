@@ -33,6 +33,29 @@ function kfm_resizeImage(id){
 		x_kfm_resizeImage(id,x,y,kfm_refreshFiles);
 	}
 }
+function kfm_returnThumbnail(id){
+	var el=kfm_filesCache[id],size;
+	do{
+		valid=1;
+		size=kfm_prompt('What maximum size should be returned?','64x64'); // TODO: new string
+		if(!size)return;
+		if(!/^[0-9]+x[0-9]+$/.test(size)){
+			alert('The size must be in the format XXxYY, where X is the width and Y is the height');
+			valid=0;
+		}
+	}while(!valid);
+	x_kfm_getFileUrl(id,function(url){
+		if(/get.php/.test(url))url+='&width='+size.replace(/x.*/,'')+'&height='+size.replace(/.*x/,'');
+		if(kfm_file_handler=='return'||kfm_file_handler=='fckeditor'){
+			window.opener.SetUrl(url,0,0,el.image_data.caption);
+			window.close();
+		}
+		else if(kfm_file_handler=='download'){
+			if(/get.php/.test(url))url+='&forcedownload=1';
+			document.location=url;
+		}
+	});
+}
 function kfm_rotateImage(filename,direction){
 	kfm_filesCache[filename]=null;
 	x_kfm_rotateImage(filename,direction,kfm_refreshFiles);
