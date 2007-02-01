@@ -3,6 +3,7 @@ function kfm_modal_close(msg){
 	if(msg)alert(msg);
 }
 function kfm_modal_open(form,title,actions){
+	window.inPrompt=1;
 	var body=document.body,shader=newEl('div','shader'),scrollAt=browser.isIE?getWindowScrollAt():{x:0,y:0},a=getWindowSize(),wx=0,wy=0,pos=browser.isIE?'absolute':'fixed',i;
 	if(browser.isIE)body.setCss('overflow:hidden');
 	{ // shader
