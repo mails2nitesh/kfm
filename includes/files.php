@@ -193,11 +193,36 @@ function _saveTextFile($fid,$text){
 	if(kfm_checkAddr($filename))file_put_contents($_SESSION['kfm']['currentdir'].'/'.$filename,$text);
 	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);*/
 }
-function _search($keywords){
+function _search($keywords,$tags){
 	global $db,$kfm_db_prefix;
-	$q=$db->query("select id,name,directory from ".$kfm_db_prefix."files where name like '%".addslashes($keywords)."%' order by name");
-	$files=$q->fetchAll();
-	return array('reqdir'=>'','files'=>$files,'uploads_allowed'=>0);
+	$valid_files=array();
+	if($tags){ # tags
+		$arr=explode(',',$tags);
+		foreach($arr as $tag){
+			$tag=ltrim(rtrim($tag));
+			if($tag){
+				$q=$db->query("select id from ".$kfm_db_prefix."tags where name='".addslashes($tag)."'");
+				$r=$q->fetchRow();
+				if(count($r)){
+					if(count($valid_files))$constraints=' and (file_id='.join(' or file_id=',$valid_files).')';
+					$q2=$db->query("select file_id from ".$kfm_db_prefix."tagged_files where tag_id=".$r['id'].$constraints);
+					$rs2=$q2->fetchAll();
+					if(count($rs2)){
+						$valid_files=array();
+						foreach($rs2 as $r2)$valid_files[]=$r2['file_id'];
+					}
+					else $valid_files=array(0);
+				}
+			}
+		}
+	}
+	{ # keywords
+		$constraints='';
+		if(count($valid_files))$constraints=' and (id='.join(' or id=',$valid_files).')';
+		$q=$db->query("select id,name,directory from ".$kfm_db_prefix."files where name like '%".addslashes($keywords)."%'".$constraints." order by name");
+		$files=$q->fetchAll();
+	}
+	return array('reqdir'=>'search results','files'=>$files,'uploads_allowed'=>0); # TODO: new string
 }
 function _tagAdd($recipients,$tagList){
 	global $db,$kfm_db_prefix;

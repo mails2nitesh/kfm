@@ -99,9 +99,9 @@ require_once('includes/kaejax.php');
 		require_once('includes/files.php');
 		return _saveTextFile($filename,$text);
 	}
-	function kfm_search($keywords){
+	function kfm_search($keywords,$tags){
 		require_once('includes/files.php');
-		return _search($keywords);
+		return _search($keywords,$tags);
 	}
 	function kfm_tagAdd($recipients,$tagList){
 		require_once('includes/files.php');
