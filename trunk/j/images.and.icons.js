@@ -1,7 +1,18 @@
 // see license.txt for licensing
 function kfm_changeCaption(id){
-	var el=kfm_filesCache[id],txt=kfm_lang.ChangeCaption+el.image_data.caption;
-	var newCaption=kfm_prompt(txt,el.image_data.caption);;
+	var table=newEl('table','kfm_newCaptionDetails');
+	table.kfm_caption_for=id;
+	var row=table.insertRow(0);
+	row.insertCell(0).appendChild(newText('New Caption')); // TODO: new string
+	row.insertCell(1).appendChild(newInput('kfm_new_caption','textarea',kfm_filesCache[id].image_data.caption)); // TODO: new string
+	kfm_modal_open(table,'Change Caption',[
+		['Change Caption','kfm_changeCaption_set']
+	]); // TODO: new string
+}
+function kfm_changeCaption_set(){
+	kfm_modal_close();
+	var id=$('kfm_newCaptionDetails').kfm_caption_for,newCaption=$('kfm_new_caption').value;
+	var el=kfm_filesCache[id];
 	if(!newCaption||newCaption==el.image_data.caption)return;
 	if(confirm(kfm_lang.NewCaptionIsThisCorrect(newCaption))){
 		kfm_filesCache[id]=null;
