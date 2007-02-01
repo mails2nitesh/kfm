@@ -17,8 +17,26 @@ else{
 		echo 'error: file id #'.$id.' not found in database'; # TODO: new string
 		exit;
 	}
-	$path=$r['physical_address'].'/'.$r['name'];
-	$name=$r['name'];
+	if(isset($_GET['width'])&&isset($_GET['height'])){
+		$width=$_GET['width'];
+		$height=$_GET['height'];
+		$q2=$db->query("select id from ".$kfm_db_prefix."files_images_thumbs where image_id=".$id." and width<=".$width." and height<=".$height." and (width=".$width." or height=".$height.")");
+		$r2=$q2->fetchRow();
+		if(count($r2)){
+			$path=WORKPATH.'thumbs/'.$r2['id'];
+			$name=$r2['id'];
+		}
+		else{
+			$image=new Image($id);
+			$thumb=$image->createThumb($width,$height);
+			$path=WORKPATH.'thumbs/'.$thumb;
+			$name=$thumb;
+		}
+	}
+	else{
+		$path=$r['physical_address'].'/'.$r['name'];
+		$name=$r['name'];
+	}
 }
 { # headers
 	if(strstr($_SERVER['HTTP_USER_AGENT'],'MSIE'))$name=preg_replace('/\./','%2e',$name,substr_count($name,'.')-1);

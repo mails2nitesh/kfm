@@ -74,7 +74,8 @@ function kfm_refreshFiles(res){
 								links.push(['javascript:kfm_rotateImage('+id+',90)',kfm_lang.RotateAntiClockwise,'rotate_ccw']);
 								links.push(['javascript:kfm_resizeImage('+id+')',kfm_lang.ResizeImage,'resize_image']);
 							}
-							links.push(['javascript:x_kfm_getFileUrl('+id+',kfm_showImage)','View image']);
+							links.push(['javascript:x_kfm_getFileUrl('+id+',kfm_showImage)','view image']); // TODO: new string
+							links.push(['javascript:kfm_returnThumbnail('+id+',kfm_showImage)','return thumbnail to opener']); // TODO: new string
 							links.push(['javascript:kfm_changeCaption('+id+')',kfm_lang.ChangeCaption,'edit']);
 						}
 						if(kfm_inArray(['zip'],extension))links.push(['javascript:kfm_extractZippedFile("'+id+'")',kfm_lang.ExtractZippedFile,'extract_zip']);
@@ -82,7 +83,7 @@ function kfm_refreshFiles(res){
 						if(writable && kfm_inArray(editable_extensions,extension))links.push(['javascript:kfm_editTextFile("'+id+'")',kfm_lang.EditTextFile,'edit']);
 					}
 					links.push(['javascript:kfm_tagAdd('+id+')','add tags to file(s)','add_tags']); // TODO: new string
-					links.push(['javascript:kfm_tagRemove('+id+')','remove tags from file(s)','remove_tags']); // TODO: new string
+					links.push(['javascript:kfm_tagRemove('+id+')','remove tags from file(s)']); // TODO: new string
 					kfm_createContextMenu(getMouseAt(getEvent(e)),links);
 				}
 			}

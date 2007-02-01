@@ -83,7 +83,6 @@ class Image extends File{
 	function createThumb($width=64,$height=64){
 		global $db,$kfm_db_prefix;
 		if(!is_dir(WORKPATH.'thumbs'))mkdir(WORKPATH.'thumbs');
-		$this->deleteThumbs();
 		$ratio=min($width/$this->width,$height/$this->height);
 		$thumb_width=$this->width*$ratio;
 		$thumb_height=$this->height*$ratio;
