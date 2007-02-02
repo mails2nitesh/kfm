@@ -261,16 +261,13 @@ function kfm_run_delayed(name,call){
 	window[name]=setTimeout(call,500);
 }
 function kfm_shrinkName(name,wrapper,text,size,maxsize,extension){
-	var filename,position=step=Math.ceil(name.length/2),direction,postfix='[...]'+extension,prefix=size=='offsetHeight'?'<span style="visibility:hidden">.</a> ':'';
+	var position=step=Math.ceil(name.length/2),postfix='[...]'+extension,prefix=size=='offsetHeight'?'. ':'';
 	do{
-		filename=name.substring(0,position);
-		text.innerHTML=prefix+filename+postfix;
-		direction=(wrapper[size]>maxsize)?-1:1;
+		text.innerHTML=prefix+name.substring(0,position)+postfix;
 		step=Math.ceil(step/2);
-		position=position+step*direction;
+		position+=(wrapper[size]>maxsize)?-step:step;
 	}while(step>1);
-	filename=name.substring(0,position+(prefix?1:-1));
-	var html='<span class="filename">'+filename+'</span><span style="color:red;text-decoration:none">[...]</span>';
+	var html='<span class="filename">'+name.substring(0,position+(prefix?0:-1))+'</span><span style="color:red;text-decoration:none">[...]</span>';
 	if(extension)html+='<span class="filename">'+extension+'</span>';
 	text.innerHTML=html;
 }
