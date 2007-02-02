@@ -269,7 +269,7 @@ function kfm_shrinkName(name,wrapper,text,size,maxsize,extension){
 		step=Math.ceil(step/2);
 		position=position+step*direction;
 	}while(step>1);
-	filename=name.substring(0,position-1);
+	filename=name.substring(0,position+(prefix?1:-1));
 	var html='<span class="filename">'+filename+'</span><span style="color:red;text-decoration:none">[...]</span>';
 	if(extension)html+='<span class="filename">'+extension+'</span>';
 	text.innerHTML=html;
