@@ -68,7 +68,7 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 	})(parent));
 	{ // fix name width
 		var reqHeight=name_text.offsetHeight;
-		name_text.innerHTML='<span style="visibility:hidden">.</span> '+name;
+		name_text.innerHTML='. '+name;
 		el=name_text;
 		el.style.position='absolute';
 		if(reqHeight&&el.offsetHeight>reqHeight){
