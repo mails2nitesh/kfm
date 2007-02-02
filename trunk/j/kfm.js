@@ -261,10 +261,10 @@ function kfm_run_delayed(name,call){
 	window[name]=setTimeout(call,500);
 }
 function kfm_shrinkName(name,wrapper,text,size,maxsize,extension){
-	var filename,position=step=Math.ceil(name.length/2),direction,postfix='[...]'+extension;
+	var filename,position=step=Math.ceil(name.length/2),direction,postfix='[...]'+extension,prefix=size=='offsetHeight'?'<span style="visibility:hidden">.</a> ':'';
 	do{
 		filename=name.substring(0,position);
-		text.innerHTML=filename+postfix;
+		text.innerHTML=prefix+filename+postfix;
 		direction=(wrapper[size]>maxsize)?-1:1;
 		step=Math.ceil(step/2);
 		position=position+step*direction;
