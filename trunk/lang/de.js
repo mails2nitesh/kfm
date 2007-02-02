@@ -223,38 +223,38 @@ Caption:
 CopyFromURL:
 	"kopieren von URL",
 ExtractZippedFile:
-	"entpacken einer gepackten Datei",
+	"entpacken einer Datei",
 
 // new in 0.8
 ViewImage:
-	"view image",
+	"Bild anzeigen",
 ReturnThumbnailToOpener:
-	"return thumbnail to opener",
+	"zurückschicken des Thumbnails an den Öffner",
 AddTagsToFiles:
-	"add tags to file(s)",
+	"Beschreibung zu den/der Datei hinzufügen",
 RemoveTagsFromFiles:
-	"remove tags from file(s)",
+	"Beschreibung(en) der Datei löschen",
 HowWouldYouLikeToRenameTheseFiles:
-	"How would you like to rename these files?\n\nexample: \"images-***.jpg\" will rename files to \"images-001.jpg\", \"images-002.jpg\", ...",
+	"Wie würdest du die Dateien umbenennen?\n\nBeispiel: \"images-***.jpg\" würde die Dateien zu \"images-001.jpg\" , \"images-002.jpg\", ... umbenennen",
 YouMustPlaceTheWildcard:
-	"You must place the wildcard character * somewhere in the filename template",
+	"Sie müssen mindestens ein '*' irgendwo in der Zeichenkette unterbringen.",
 YouNeedMoreThan:
-	"You need more than %1 * characters to create %2 filenames",
+	"Sie brauchen mehr als %1 '*' Zeichen um %2 Dateinamen zu erstellen.",
 NoFilesSelected:
-	"no files selected",
+	"keine Dateien ausgewählt",
 Tags:
-	"tags",
+	"Beschreibung",
 IfYouUseMultipleWildcards:
-	"If you use multiple wildcards in the filename template, they must be grouped together",
+	"Wenn mehrerere '*' Zeichen in der Zeichenkette sind, müssen diese aufeinander folgen.",
 NewCaption:
-	"New Caption",
+	"Neue Überschrift",
 WhatMaximumSize:
-	"What maximum size should be returned?",
+	"Welche maximale Grösse soll zurückgegeben werden?",
 CommaSeparated:
-	"comma-separated",
+	"mit Komma getrennt",
 WhatIsTheNewTag:
-	"What is the new tag?\nFor multiple tags, separate by commas.",
+	"Was ist die neue Beschreibung?\nBei mehren diese mit Kommas trennen.",
 WhichTagsDoYouWantToRemove:
-	"Which tags do you want to remove?\nFor multiple tags, separate by commas."
+	"Welche Beschreibung möchten Sie entfernen?\nFür mehrer diese mit Kommas trennen."
 
 }
