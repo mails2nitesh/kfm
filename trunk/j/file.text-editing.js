@@ -30,16 +30,29 @@ function kfm_showTextFile(res){
 	var r2=t.addRow();
 	r2.addCell(0,1,res.name);
 	r2.addCell(1,1,newLink('javascript:delEl("kfm_left_column_hider");x_kfm_viewTextFile('+res.id+',kfm_viewTextFile)','View',0,'button'));
-	r2.addCell(2,1,newLink('javascript:delEl("kfm_left_column_hider");kfm_setMessage("saving file...");$("codepress-ondemand").value=CodePress.getCode();x_kfm_saveTextFile('+res.id+',$("codepress-ondemand").value,kfm_clearMessage);','Save',0,'button'));
-	r2.addCell(3,1,newLink('javascript:if($("codepress-ondemand").value==CodePress.getCode() || confirm( kfm_lang.CloseWithoutSavingQuestion)){delEl("kfm_left_column_hider");x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);}',kfm_lang.Close,0,'button'));
+	r2.addCell(2,1,newLink('javascript:delEl("kfm_left_column_hider");kfm_setMessage("saving file...");$("edit-start").value=CodePress.getCode();x_kfm_saveTextFile('+res.id+',$("edit-start").value,kfm_clearMessage);','Save',0,'button'));
+	r2.addCell(3,1,newLink('javascript:if($("edit-start").value==CodePress.getCode() || confirm( kfm_lang.CloseWithoutSavingQuestion)){delEl("kfm_left_column_hider");x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);}',kfm_lang.Close,0,'button'));
 	r3=t.addRow().setCss('height:100%').addCell(0,4);
-	r3.innerHTML = '<iframe id="codepress" src="codepress/codepress.php" width="100%" height="100%"></iframe><textarea id="codepress-ondemand" name="codepress-ondemand" style="display:none" lang="'+res.lang+'"></textarea>';
+	codeEl = document.createElement('code');
+	codeEl.innerHTML = res.content;
+	codeEl.setAttribute('id','codepress');
+	codeEl.setAttribute('title',res.name);
+	codeEl.setAttribute('class','cp hideLanguage');
+	codeEl.setAttribute('style','width:100%; height:500px;');
+	
+	changeCheckEl = document.createElement('textarea');
+	changeCheckEl.value = res.content;
+	changeCheckEl.setAttribute('id','edit-start');
+	changeCheckEl.setAttribute('style','display:none;');
+	r3.appendChild(codeEl);
+	r3.appendChild(changeCheckEl);
+	//r3.innerHTML = '<code id="codepress" title="'+res.name+'" class="cp hideLanguage" style="width:100%; height:500px;">'+res.content+'</code>'
+	//+'<textarea id="edit-start" style="display:none">'+res.content+'</textarea>';
 	$('kfm_right_column').empty().addEl(t);
-	$('codepress-ondemand').value = res.content;
-	setTimeout("CodePressLoadCode()",1000);
+	CodePress.setContent();
 }
 function CodePressLoadCode(){
-	CodePress.setCode('codepress-ondemand');
+	CodePress.setContent();
 }
 function kfm_viewTextFile(res){
 	var t=newEl('table','kfm_viewFileTable').setCss('height:100%;width:100%');
