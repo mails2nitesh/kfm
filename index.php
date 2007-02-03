@@ -23,6 +23,7 @@ require_once('includes/kaejax.php');
 		<style type="text/css"><?php
 			echo preg_replace('/\s+/',' ',file_get_contents('pear/Text/hilight.css'));
 		?></style>
+		<script src="codepress/codepress.js" type="text/javascript" id="cp-script" lang="en-us"></script>
 		<script type="text/javascript">
 
 <?php

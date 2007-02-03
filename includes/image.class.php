@@ -79,6 +79,7 @@ class Image extends File{
 			copy(WORKPATH.'thumbs/'.$id.'.'.preg_replace('/.*\//','',$this->info['mime']),$this->thumb_path);
 			unlink(WORKPATH.'thumbs/'.$id.'.'.preg_replace('/.*\//','',$this->info['mime']));
 		}
+		if(!file_exists($this->thumb_path))$this->createThumb();
 	}
 	function createThumb($width=64,$height=64){
 		global $db,$kfm_db_prefix;

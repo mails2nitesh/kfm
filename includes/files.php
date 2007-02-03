@@ -75,13 +75,7 @@ function _getTextFile($fid){
 	if(!kfm_checkAddr($file->name))return;
 	if(in_array($file->getExtension(),$GLOBALS['kfm_editable_extensions'])){
 		if(!$file->isWritable()) return 'error: '.$file->name.' is not writable'; # TODO: new string
-		$cp_supported = array('php', 'javascript', 'java', 'perl', 'html', 'css', 'php');
-		$lang_indicator = str_replace(
-			array('php', 'js', 'java', 'pl', 'html', 'css', 'asp'),
-			$cp_supported,
-			$file->getExtension());
-		if(!in_array($lang_indicator, $cp_supported)) $lang_indicator = 'text';
-		return array('content'=>$file->getContent(),'name'=>$file->name, 'id'=>$file->id, 'lang'=>$lang_indicator);
+		return array('content'=>str_replace(array('<','>'),array('&lt;', '&gt;'),$file->getContent()),'name'=>$file->name, 'id'=>$file->id);
 	}
 	return 'error: "'.$file->name.'" cannot be edited (restricted)'; # TODO: new string
 }
@@ -187,7 +181,7 @@ function _rm($id){
 }
 function _saveTextFile($fid,$text){
 	$f = new File($fid);
-	$f->setContent($text);
+	$f->setContent(str_replace(array('&lt;','&gt;'),array('<','>'), $text));
 	return $f->hasErrors()?$f->getErrors():'file saved';
 	/*
 	if(kfm_checkAddr($filename))file_put_contents($_SESSION['kfm']['currentdir'].'/'.$filename,$text);
