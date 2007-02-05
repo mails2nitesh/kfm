@@ -226,7 +226,7 @@ Caption:
 CopyFromURL:
 	"Athscríobh ó URL",
 ExtractZippedFile:
-	"Bain as comhad Zip"
+	"Bain as comhad Zip",
 
 // new in 0.8
 ViewImage:

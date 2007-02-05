@@ -230,7 +230,7 @@ ExtractZippedFile:
 ViewImage:
 	"vizionarea imaginii",
 ReturnThumbnailToOpener:
-	"întoarcerea schiţei la o starea iniţială",
+	"utilizarea schiţei în loc de imagine încărcată",
 AddTagsToFiles:
 	"adăuga tag-uri la fişier(re)",
 RemoveTagsFromFiles:
