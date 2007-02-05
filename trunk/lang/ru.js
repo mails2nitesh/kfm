@@ -35,7 +35,7 @@ DeleteDir:
 RenameDir:
 	"переименовать",
 
-// file
+//file
 DeleteFile:
 	"удалить",
 RenameFile:
@@ -71,7 +71,7 @@ DownloadFileFromMessage:
 FileSavedAsMessage:
 	"Как будет сохранён файл?",
 
-// resize file
+//resize file
 CurrentSize:
 	"Текущий размер: \"%1\" x \"%2\"\n",
 NewWidth:
@@ -94,8 +94,8 @@ NotMoreThanOneFile:
 	"ошибка: нельзя выбрать больше одного файла за раз",
 UnknownPanelState:
 	"ошибка: неизвестное состояние панели.",
-// MissingDirWrapper:
-// 	"error: missing directory wrapper: \"kfm_directories%1\".",
+//MissingDirWrapper:
+//	"error: missing directory wrapper: \"kfm_directories%1\".",
 SetStylesError:
 	"ошибка: нельзя установить \"%1\" в \"%2\.",
 NoPanel:
@@ -165,65 +165,67 @@ LoadingKFM:
 Name:
 	"имя",
 FileDetails:
-	"File Details",
+	"Информация о файле",
 Search:
-	"Search",
+	"Поиск",
 IllegalDirectoryName:
-	"illegal directory name \"%1\"",
+	"некорректное имя папки \"%1\"",
 RecursiveDeleteWarning:
-	"\"%1\" is not empty\nAre you sure you want to delete it and all its contents?\n*WARNING* THIS IS NOT REVERSIBLE",
+	"\"%1\" не пустая\nВы уверены, что хотите стереть папку и все содержимое?\n*ВНИМАНИЕ* ПРОЦЕСС НЕОБРАТИМ!",
 RmdirFailed:
-	"failed to delete directory \"%1\"",
+	"невозможно удалить папку \"%1\"",
 DirNotInDb:
-	"directory not in database",
+	"папка отсутствует в базе данных",
 ShowPanel:
-	"show panel \"%1\"",
+	"показать панель \"%1\"",
 ChangeCaption:
-	"Change Caption",
+	"Изменить Подпись",
 NewDirectory:
-	"New Directory",
+	"Новая папка",
 Upload:
-	"Upload",
+	"Загрузить",
 NewCaptionIsThisCorrect:
-	"New Caption:\n%1\n\nIs this correct?",
+	"Новая Подпись:\n%1\n\nЭто верно?",
 Close:
-	"close",
+	"закрыть",
 Loading:
-	"loading",
+	"загружается",
 AreYouSureYouWantToCloseKFM:
-	"Are you sure you want to close the KFM window?",
+	"Вы уверены что хотие закрыть окно с KFM?",
 PleaseSelectFileBeforeRename:
-	"Please select a file before you try to rename it",
+	"Пожалуйста, выберите файл, перед тем как его переименовать",
 RenameOnlyOneFile:
-	"You can only rename one file at a time",
+	"Вы можете переименовать только один файл за одну операцию",
 RenameFileToWhat:
-	"Rename the file \"%1\" to what?",
+	"Переименовать файл \"%1\" в ...?",
 NoRestrictions:
-	"no restrictions",
+	"нет ограничений",
 Filename:
-	"filename",
+	"имя файла",
 Maximise:
-	"maximise",
+	"увеличить",
 Minimise:
-	"minimise",
+	"уменьшить",
 AllowedFileExtensions:
-	"allowed file extensions",
+	"допустимые расширения файла",
 Filesize:
-	"filesize",
+	"размер файла",
 MoveDown:
-	"move down",
+	"опустить вниз",
 Mimetype:
-	"mimetype",
+	"тип mime",
 MoveUp:
-	"move up",
+	"поднять наверх",
 Restore:
-	"restore",
+	"вернуть назад",
 Caption:
-	"caption",
+	"подпись",
 CopyFromURL:
-	"Copy from URL",
+	"Скопировать из URL",
 ExtractZippedFile:
-	"Extract zipped file"
+	"Распаковать файл ZIP",
+
+
 
 // new in 0.8
 ViewImage:
