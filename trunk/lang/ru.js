@@ -231,7 +231,7 @@ ExtractZippedFile:
 ViewImage:
 	"просмотреть изображение",
 ReturnThumbnailToOpener:
-	"вернуть эскиз в первоначальный вид",
+	"использовать для показа эскиз вместо рисунка",
 AddTagsToFiles:
 	"добавить тэги к файлу(файлам)",
 RemoveTagsFromFiles:
