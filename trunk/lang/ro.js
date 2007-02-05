@@ -16,9 +16,9 @@ ErrorPrefix:
 	"eroare: ",
 // what you see on the main page
 Directories:
-	"Directorii",
+	"Mapele",
 CurrentWorkingDir:
-	"Directorie curenta: \"%1\"",
+	"Mapă curenta: \"%1\"",
 Logs:
 	"Log-uri",
 FileUpload:
@@ -29,21 +29,21 @@ DirEmpty:
 // right click menu item directory
 // directory
 CreateSubDir:
-	"crearea subdirectoriei",
+	"crearea submapei",
 DeleteDir:
-	"ştergerea",
+	"ştergerea mapei",
 RenameDir:
-	"schimbarea numelui",
+	"schimbarea numelui mapei",
 
 //file
 DeleteFile:
-	"ştergerea",
+	"ştergerea fişierului",
 RenameFile:
-	"schimbarea numelui",
+	"schimbarea numelui fişierului",
 RotateClockwise:
-	"rotarea drept",
+	"rotaţie la dreaptă",
 RotateAntiClockwise:
-	"rotarea stâng",
+	"rotaţie la stângă",
 ResizeImage:
 	"schimbarea mărimii imaginii",
 ChangeCaption:
@@ -59,9 +59,9 @@ NoForwardslash:
 
 // messages management
 CreateDirMessage:
-	"Crearea subdirectoriei în \"%1\":",
+	"Crearea submapei în \"%1\":",
 DelDirMessage:
-	"De şters catalogul \"%1\"?",
+	"De şters mapă \"%1\"?",
 DelFileMessage:
 	"De şters fişierul \"%1\"",
 DelMultipleFilesMessage:
@@ -69,7 +69,7 @@ DelMultipleFilesMessage:
 DownloadFileFromMessage:
 	"De la unde de încărcat fişierul?",
 FileSavedAsMessage:
-	"Cum va fi slvat fişierul?",
+	"Cum va fi salvat fişierul?",
 
 //resize file
 CurrentSize:
@@ -87,7 +87,7 @@ NewHeightConfirmTxt:
 RenamedFile:
 	"schimbarea numelui fişierului din \"%1\" în \"%2\".",
 DirRefreshed:
-	"directoriile au fost reînnoite.",
+	"mapele au fost reînnoite.",
 FilesRefreshed:
 	"fişierele au fost reînnoite.",
 NotMoreThanOneFile:
@@ -111,23 +111,23 @@ MovingFilesTo:
 
 // error messages
 DirectoryNameExists:
-	"directorie cu această nume deja există.",
+	"mapă cu această nume deja există.",
 FileNameNotAllowd:
 	"eroare: numele fişierului este blocată",
 CouldNotWriteFile:
 	"eroare: este imposibil de salvat fişierul \"%1\".",
 CouldNotRemoveDir:
-	"este imposibil de şters directorie.\npoate conţine fişieri active",
+	"este imposibil de şters mapă.\npoate conţine fişieri active",
 UrlNotValid:
 	"eroare: URL trebuie să înceapă cu \"http:\"",
 CouldNotDownloadFile:
 	"eroare: este imposibil de încărcat fişierul \"%1\".",
 FileTooLargeForThumb:
-	"eroare: \"%1\" este prea mare pentru crearea etichetei. Schimbaţi fişierul al un alt cu o mărima mai mică",
+	"eroare: \"%1\" este prea mare pentru crearea schiţei. Schimbaţi fişierul cu un alt cu o mărime mai mică",
 CouldntReadDir:
-	"eroare: este imposibil de citit directorie",
+	"eroare: este imposibil de citit mapă",
 CannotRenameFile:
-	"eroare: este imposibil de schimbat numele directoriei \"%1\" în \"%2\"",
+	"eroare: este imposibil de schimbat numele mapei \"%1\" în \"%2\"",
 FilenameAlreadyExists:
 	"eroare: fişierul cu acelaşi nume deja există",
 
@@ -141,7 +141,7 @@ CloseWithoutSaving:
 SaveThenClose:
 	"Închide cu salvarea ",
 SaveThenCloseQuestion:
-	"Salvarea schimbărilor?",
+	"Salva schimbările?",
 
 // new in 0.6
 LockPanels:
@@ -153,7 +153,7 @@ CreateEmptyFile:
 DownloadFileFromUrl:
 	"încărca din URL",
 DirectoryProperties:
-	"Caracteristicile directoriei",
+	"Caracteristicile mapei",
 SelectAll:
 	"sublinia tot",
 SelectNone:
@@ -169,19 +169,19 @@ FileDetails:
 Search:
 	"Căutare",
 IllegalDirectoryName:
-	"numele directoriei este incorectă \"%1\"",
+	"numele mapeii este incorectă \"%1\"",
 RecursiveDeleteWarning:
-	"\"%1\" contine fişiere!\nOK pentru ştergerea directoriei şi tuturor fişierelor din ea?\n*ATENŢIE* PROCESUL ESTE INREVERSIBIL!",
+	"\"%1\" contine fişiere!\nOK pentru ştergerea mapei şi tuturor fişierelor din ea?\n*ATENŢIE* PROCESUL ESTE INREVERSIBIL!",
 RmdirFailed:
-	"imposibil de şters directorie \"%1\"",
+	"imposibil de şters mapă \"%1\"",
 DirNotInDb:
-	"directorie lipseşte în baza de date",
+	"mapă lipseşte în baza de date",
 ShowPanel:
 	"de vizualizat panelă \"%1\"",
 ChangeCaption:
 	"Schimbarea Titlului",
 NewDirectory:
-	"Directorie nouă",
+	"Mapă nouă",
 Upload:
 	"Încărcare",
 NewCaptionIsThisCorrect:
@@ -195,7 +195,7 @@ AreYouSureYouWantToCloseKFM:
 PleaseSelectFileBeforeRename:
 	"Alegeţi un fişier pentru schimbarea numelui",
 RenameOnlyOneFile:
-	"Puteţi să schimbaţi numele numai a unui fişier odată",
+	"Puteţi să schimbaţi numele a unui fişier odată",
 RenameFileToWhat:
 	"De schimba numele fişierului \"%1\" în ...?",
 NoRestrictions:
@@ -221,41 +221,41 @@ Restore:
 Caption:
 	"titlu",
 CopyFromURL:
-	"Copia din URL",
+	"A copia din URL",
 ExtractZippedFile:
 	"UNZIP",
 
 
 // new in 0.8
 ViewImage:
-	"view image",
+	"vizionarea imaginii",
 ReturnThumbnailToOpener:
-	"return thumbnail to opener",
+	"întoarcerea schiţei la o starea iniţială",
 AddTagsToFiles:
-	"add tags to file(s)",
+	"adăuga tag-uri la fişier(re)",
 RemoveTagsFromFiles:
-	"remove tags from file(s)",
+	"scoate tag-uri din fişer(re)",
 HowWouldYouLikeToRenameTheseFiles:
-	"How would you like to rename these files?\n\nexample: \"images-***.jpg\" will rename files to \"images-001.jpg\", \"images-002.jpg\", ...",
+	"Cum doriţi să schimbaţi numele acestor fişierelor?\n\nde exemplu: \"images-***.jpg\" va schimba numele în \"images-001.jpg\", \"images-002.jpg\", ...",
 YouMustPlaceTheWildcard:
-	"You must place the wildcard character * somewhere in the filename template",
+	"Dvs. trebuie să puneţi un semn de grupă (wildcard characetr) * undeva în şablonul numelui de fişier",
 YouNeedMoreThan:
-	"You need more than %1 * characters to create %2 filenames",
+	"Dvs. trebuie să puneţi mai mult decât %1 * caractere pentru a crea %2 numele de fişieri",
 NoFilesSelected:
-	"no files selected",
+	"nici un fişer a fost selectat",
 Tags:
-	"tags",
+	"tag-uri",
 IfYouUseMultipleWildcards:
-	"If you use multiple wildcards in the filename template, they must be grouped together",
+	"Dacă Dvs. utilizaţi mai multe semne de grupă (wildcards) în şablonul numelui de fişier, ele trebuie să fie grupate împreună",
 NewCaption:
-	"New Caption",
+	"Nou Titlu",
 WhatMaximumSize:
-	"What maximum size should be returned?",
+	"Care mărimea maximă trebuie să fie returnată?",
 CommaSeparated:
-	"comma-separated",
+	"împărţite de virgulă",
 WhatIsTheNewTag:
-	"What is the new tag?\nFor multiple tags, separate by commas.",
+	"Care este tag-ul nou?\nPentru nişte tag-uri, utilizaţi virgulă pentru împarţire.",
 WhichTagsDoYouWantToRemove:
-	"Which tags do you want to remove?\nFor multiple tags, separate by commas."
+	"Care tag-uri trebuie să fie scoase?\nPentru nişte tag-uri, utilizaţi virgulă pentru împarţire."
 }
 
