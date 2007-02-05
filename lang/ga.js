@@ -36,13 +36,13 @@ CreateSubDir:
 DeleteDir:
 	"scrios",
 RenameDir:
-	"athainmnigh",
+	"ath-ainmnigh",
 
 // file
 DeleteFile:
 	"scrios",
 RenameFile:
-	"athainmnigh",
+	"ath-ainmnigh",
 RotateClockwise:
 	"rothlóidh deiseal",
 RotateAntiClockwise:
@@ -168,95 +168,95 @@ LoadingKFM:
 Name:
 	"ainm",
 FileDetails:
-	"File Details",
+	"Sonraí an Comhad",
 Search:
-	"Search",
+	"Cuardaigh",
 IllegalDirectoryName:
-	"illegal directory name \"%1\"",
+	"níl cead comhadlann le ainm \"%1\"",
 RecursiveDeleteWarning:
-	"\"%1\" is not empty\nAre you sure you want to delete it and all its contents?\n*WARNING* THIS IS NOT REVERSIBLE",
+	"níl \"%1\" folamh\nAn bhfuil to cinnte gur mhaith leat é agus a abhair a scriosaigh?\n*RABHADH* NÍ FÉIDIR É SEO A FREASCHUR",
 RmdirFailed:
-	"failed to delete directory \"%1\"",
+	"theip orm an comhadlann \"%1\" a scriosaigh",
 DirNotInDb:
-	"directory not in database",
+	"níl an comhadlann sa bunachar sonraí",
 ShowPanel:
 	"show panel \"%1\"",
 ChangeCaption:
-	"Change Caption",
+	"Athraigh an Ceannteideal",
 NewDirectory:
-	"New Directory",
+	"Comhadlann Nua",
 Upload:
-	"Upload",
+	"Cur Comhad Suas",
 NewCaptionIsThisCorrect:
-	"New Caption:\n%1\n\nIs this correct?",
+	"Ceannteideal Nua:\n%1\n\nAn bhfuil seo ceart?",
 Close:
-	"close",
+	"dún",
 Loading:
-	"loading",
+	"ag oscailt",
 AreYouSureYouWantToCloseKFM:
-	"Are you sure you want to close the KFM window?",
+	"An bhfuil tú cinnte gur mhaith leat KFM a dhúnadh?",
 PleaseSelectFileBeforeRename:
-	"Please select a file before you try to rename it",
+	"Roghnaigh comhad roimh é a ath-ainmniú",
 RenameOnlyOneFile:
-	"You can only rename one file at a time",
+	"Ní féidir ach comhad amhain a ath-ainmniú ag aon am",
 RenameFileToWhat:
-	"Rename the file \"%1\" to what?",
+	"Céard is mían leat \"%1\" a ath-ainmniú?",
 NoRestrictions:
-	"no restrictions",
+	"gan srianta",
 Filename:
-	"filename",
+	"ainm an comhad",
 Maximise:
-	"maximise",
+	"uastaigh",
 Minimise:
-	"minimise",
+	"íostaigh",
 AllowedFileExtensions:
-	"allowed file extensions",
+	"aicmí comhad ceadaithe",
 Filesize:
-	"filesize",
+	"méid an comhad",
 MoveDown:
-	"move down",
+	"bog síos",
 Mimetype:
-	"mimetype",
+	"aicmí mime",
 MoveUp:
-	"move up",
+	"bog suas",
 Restore:
-	"restore",
+	"athbhunaigh",
 Caption:
-	"caption",
+	"scríobh",
 CopyFromURL:
-	"Copy from URL",
+	"Athscríobh ó URL",
 ExtractZippedFile:
-	"Extract zipped file"
+	"Bain as comhad Zip"
 
 // new in 0.8
 ViewImage:
-	"view image",
+	"breathnaigh ar pictiúr",
 ReturnThumbnailToOpener:
-	"return thumbnail to opener",
+	"tabhair ar ais pictiúr beag don oscailaitheoir",
 AddTagsToFiles:
-	"add tags to file(s)",
+	"cur teaganna le comhad(anna)",
 RemoveTagsFromFiles:
-	"remove tags from file(s)",
+	"tóg teaganna ó comhad(anna)",
 HowWouldYouLikeToRenameTheseFiles:
-	"How would you like to rename these files?\n\nexample: \"images-***.jpg\" will rename files to \"images-001.jpg\", \"images-002.jpg\", ...",
+	"Conas ar mhaith leat na comhaid a ath-ainmniú?\n\ne.g.: ó \"images-***.jpg\" bainfidh tú \"images-001.jpg\", \"images-002.jpg\", ...",
 YouMustPlaceTheWildcard:
-	"You must place the wildcard character * somewhere in the filename template",
+	"Is gá leat an litir * a chur san templaid",
 YouNeedMoreThan:
-	"You need more than %1 * characters to create %2 filenames",
+	"Is gá níos mó ná %1 * litrí a úsaid chun %2 ainm comhad a dhéanamh",
 NoFilesSelected:
-	"no files selected",
+	"níl aon comhadanna roghnaithe",
 Tags:
-	"tags",
+	"teaganna",
 IfYouUseMultipleWildcards:
-	"If you use multiple wildcards in the filename template, they must be grouped together",
+	"Má usaidíonn tú iolraí * san teamplaid, is gá na * a bheith le chéile",
 NewCaption:
-	"New Caption",
+	"Scríobh Nua",
 WhatMaximumSize:
-	"What maximum size should be returned?",
+	"Cén méid is mó is míon leat a chur ar ais?",
 CommaSeparated:
-	"comma-separated",
+	"scartha le camóg",
 WhatIsTheNewTag:
-	"What is the new tag?\nFor multiple tags, separate by commas.",
+	"Céard é an teag nua?\nLe teaganna iolraithe a úsaid, scarthaigh le camóg.",
 WhichTagsDoYouWantToRemove:
-	"Which tags do you want to remove?\nFor multiple tags, separate by commas."
+	"Cén teaganna is míon leat a scrios?\nle teaganna iolraithe a scriosa, scarthaigh le camóg."
 }
