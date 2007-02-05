@@ -123,7 +123,7 @@ UrlNotValid:
 CouldNotDownloadFile:
 	"ошибка: невозможно загрузить файл \"%1\".",
 FileTooLargeForThumb:
-	"ошибка: \"%1\" слишком большой чтобы сделать ярлык. Замените файл на меньший по размеру",
+	"ошибка: \"%1\" слишком большой чтобы сделать эскиз. Замените файл на меньший по размеру",
 CouldntReadDir:
 	"ошибка: невозможно прочитать каталог",
 CannotRenameFile:
@@ -229,33 +229,33 @@ ExtractZippedFile:
 
 // new in 0.8
 ViewImage:
-	"view image",
+	"просмотреть изображение",
 ReturnThumbnailToOpener:
-	"return thumbnail to opener",
+	"вернуть эскиз в первоначальный вид",
 AddTagsToFiles:
-	"add tags to file(s)",
+	"добавить тэги к файлу(файлам)",
 RemoveTagsFromFiles:
-	"remove tags from file(s)",
+	"убрать тэги с файла(файлов)",
 HowWouldYouLikeToRenameTheseFiles:
-	"How would you like to rename these files?\n\nexample: \"images-***.jpg\" will rename files to \"images-001.jpg\", \"images-002.jpg\", ...",
+	"Как бы вы хотели переименовать эти файлы?\n\nнапример: \"images-***.jpg\" переименует файлы в \"images-001.jpg\", \"images-002.jpg\", ...",
 YouMustPlaceTheWildcard:
-	"You must place the wildcard character * somewhere in the filename template",
+	"Вы должны поместить групповой символ * где-то в шаблоне имени файла",
 YouNeedMoreThan:
-	"You need more than %1 * characters to create %2 filenames",
+	"Вам надо более чем %1 * знаков чтобы создать %2 имен файлов",
 NoFilesSelected:
-	"no files selected",
+	"не выбрано ни одного файла",
 Tags:
-	"tags",
+	"тэги",
 IfYouUseMultipleWildcards:
-	"If you use multiple wildcards in the filename template, they must be grouped together",
+	"Если вы используете несколько групповых символов в шаблоне имени файла, они должны быть сгруппированы вместе",
 NewCaption:
-	"New Caption",
+	"Новая подпись",
 WhatMaximumSize:
-	"What maximum size should be returned?",
+	"Какой маскимальный размер должен быть возвращен?",
 CommaSeparated:
-	"comma-separated",
+	"разделенные запятой",
 WhatIsTheNewTag:
-	"What is the new tag?\nFor multiple tags, separate by commas.",
+	"Какой новый тэг?\nПри написании нескольких тэгов, разделяйте их запятой.",
 WhichTagsDoYouWantToRemove:
-	"Which tags do you want to remove?\nFor multiple tags, separate by commas."
+	"Какие тэги вы хотите убрать?\nПри написании нескольких тэгов, разделяйте их запятой."
 }
