@@ -7,8 +7,8 @@ class Image extends File{
 	var $thumb_path;
 	var $info = array();  // info from getimagesize
 	function Image($file){
-		if(is_object($file) && $file->isImage())parent::__construct($file->id);
-		else if(is_numeric($file))parent::__construct($file);
+		if(is_object($file) && $file->isImage())parent::File($file->id);
+		else if(is_numeric($file))parent::File($file);
 		else return false;
 		// TODO select image data and set the properties
 		$this->caption = 'Not yet available';
