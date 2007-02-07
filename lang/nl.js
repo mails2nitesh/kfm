@@ -222,33 +222,33 @@ ExtractZippedFile:
 
 // new in 0.8
 ViewImage:
-	"view image",
+	"bekijk afbeelding",
 ReturnThumbnailToOpener:
-	"return thumbnail to opener",
+	"breng thumbnail terug naar opener",
 AddTagsToFiles:
-	"add tags to file(s)",
+	"voeg labels toe aan bestand(en)",
 RemoveTagsFromFiles:
-	"remove tags from file(s)",
+	"verwijder labels van bestand(en)",
 HowWouldYouLikeToRenameTheseFiles:
-	"How would you like to rename these files?\n\nexample: \"images-***.jpg\" will rename files to \"images-001.jpg\", \"images-002.jpg\", ...",
+	"Hoe wilt u deze bestanden hernoemen?\n\nvoorbeeld: \"afbeelding-***.jpg\" zal bestanden hernoemen naar \"afbeelding-001.jpg\", \"afbeelding-002.jpg\", ...",
 YouMustPlaceTheWildcard:
-	"You must place the wildcard character * somewhere in the filename template",
+	"Plaats de wildcard karakter * ergens in de bestandssjabloon",
 YouNeedMoreThan:
-	"You need more than %1 * characters to create %2 filenames",
+	"U hebt meer dan %1 * karakters nodig om %2 bestanden te kunnen maken",
 NoFilesSelected:
-	"no files selected",
+	"geen bestanden geselecteerd",
 Tags:
-	"tags",
+	"labels",
 IfYouUseMultipleWildcards:
-	"If you use multiple wildcards in the filename template, they must be grouped together",
+	"Wanneer u meerdere wildcards in de bestandssjabloon gebruikt dan moeten u groeperen.",
 NewCaption:
-	"New Caption",
+	"Nieuwe titel",
 WhatMaximumSize:
-	"What maximum size should be returned?",
+	"Welke maximale grootte moet er weergegeven worden?",
 CommaSeparated:
-	"comma-separated",
+	"komma-gescheiden",
 WhatIsTheNewTag:
-	"What is the new tag?\nFor multiple tags, separate by commas.",
+	"Wat is de nieuwe label?\nMeerdere labels moeten worden gescheiden door komma's.",
 WhichTagsDoYouWantToRemove:
-	"Which tags do you want to remove?\nFor multiple tags, separate by commas."
+	"Welke labels wilt u verwijderen?\nMeerdere labels moeten worden gescheiden door komma's."
 }
