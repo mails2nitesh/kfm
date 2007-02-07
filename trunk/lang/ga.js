@@ -8,7 +8,9 @@
  * 	Irish language file.
  *
  * File Authors:
- * 	kae@verens.com
+ * 	Kae Verens:     kae@verens.com
+ *  Ed Galligan:    ed.galligan@gmail.com (many fixes)
+ *  Kevin Scannell: kscanne@gmail.com (hints and grammatical software)
  */
 
 var kfm_lang=
@@ -25,14 +27,14 @@ CurrentWorkingDir:
 Logs:
 	"Loganna",
 FileUpload:
-	"Luchtaigh Comhad",
+	"Uasluchtaigh Comhad",
 DirEmpty:
-	"níl aon comhaid in \"%1\"",
+	"níl aon chomhaid in \"%1\"",
 
 // right click menu item directory
 // directory
 CreateSubDir:
-	"cruthaigh focomhadlann",
+	"cruthaigh fochomhadlann",
 DeleteDir:
 	"scrios",
 RenameDir:
@@ -44,19 +46,19 @@ DeleteFile:
 RenameFile:
 	"athainmnigh",
 RotateClockwise:
-	"rothlóidh deiseal",
+	"rothlaigh deiseal",
 RotateAntiClockwise:
-	"rothlóidh tuathal",
+	"rothlaigh tuathal",
 ResizeImage:
-	"athraigh méid an pictiúr",
+	"athraigh tomhas an pictiúr",
 ChangeCaption:
-	"athraigh scríobh",
+	"athraigh ceannteideal",
 
 // create a file
 WhatFilenameToCreateAs:
 	"Cad is ainm den comhad?",
 AskIfOverwrite:
-	"Tá comhad le hainm \"%1\" ann cheana. Forscríobh?",
+	"Tá comhad leis an t-ainm \"%1\" ann cheana. Forscríobh?",
 NoForwardslash:
 	"\nNíl cead '/' a úsáid in ainm comhad",
 
@@ -76,7 +78,7 @@ FileSavedAsMessage:
 
 // resize file
 CurrentSize:
-	"Méid Reatha: \"%1\" x \"%2\"\n",
+	"Tomhas Reatha: \"%1\" x \"%2\"\n",
 NewWidth:
 	"Leithead Nua?",
 NewWidthConfirmTxt:
@@ -84,47 +86,47 @@ NewWidthConfirmTxt:
 NewHeight:
 	"Airde Nua?",
 NewHeightConfirmTxt:
-	"Airde Nua: \"%1\"\n\nÁn bhfuil seo ceart?",
+	"Airde Nua: \"%1\"\n\nAn bhfuil seo ceart?",
 
 // log messages
 RenamedFile:
-	"ag ainmniú ó \"%1\" go \"%2\".",
+	"ag athainmniú ó \"%1\" go \"%2\".",
 DirRefreshed:
 	"comhadlannaí úraighte.",
 FilesRefreshed:
-	"comhaid úraighte.",
+	"comhaidí úraighte.",
 NotMoreThanOneFile:
-	"earráid: ní féidir ach comhad amháin a roghnóidh ag am amháin",
+	"earráid: ní féidir ach comhad amháin a roghnú ag am amháin",
 UnknownPanelState:
 	"earráid: stáit painéil nach bhfuil fios faoi.",
 SetStylesError:
-	"earráid: ní féidir \"%1\" a cur mar \"%2\.",
+	"earráid: ní féidir \"%1\" a chuir mar \"%2\.",
 NoPanel:
 	"earráid: níl painéil \"%1\" ann.",
 FileSelected:
-	"comhad roghnóidhte: \"%1\"",
+	"comhad roghnaithe: \"%1\"",
 log_ChangeCaption:
-	"ag aithrú scríobh ó \"%1\" go \"%2\"",
+	"ag aithrú ceannteideal ó \"%1\" go \"%2\"",
 UrlNotValidLog:
-	"earráid: is ga an URL a tosaigh le \"http:\"",
+	"earráid: caithfidh an URL tosú le \"http:\"",
 MovingFilesTo:
-	"ag bog comhaid [\"%1\"] go \"%2\"",
+	"ag aistriú chomhaid [\"%1\"] go \"%2\"",
 
 // error messages
 DirectoryNameExists:
-	"tá comhadlann leis an ainm sin ann cheana.",
+	"tá comhadlann leis an t-ainm sin ann cheana.",
 FileNameNotAllowd:
-	"earráid: níl cead an ainm comhad sin",
+	"earráid: níl cead an comhad-ainm sin",
 CouldNotWriteFile:
-	"earráid: ní bhféidir an comhad \"%1\" a cruthaigh.",
+	"earráid: ní bhféidir an comhad \"%1\" a cruthú.",
 CouldNotRemoveDir:
-	"ní bhféidir an comhadlann a chealaidh.\ncáthfaidh sé a bheith folamh",
+	"ní bhféidir an comhadlann a chealú.\ncaithfidh sé a bheith folamh",
 UrlNotValid:
-	"earráid: cáthfaidh an URL tosaidh le \"http:\"",
+	"earráid: caithfidh an URL tosaidh le \"http:\"",
 CouldNotDownloadFile:
 	"earráid: ní féidir an comhad \"%1\" a íosluchtaigh.",
 FileTooLargeForThumb:
-	"earráid: tá \"%1\" rómhór chun thumbnail a cruthaigh. Is ga comhad níos beag a úsáid.",
+	"earráid: tá \"%1\" rómhór chun thumbnail a cruthaigh. Caithfidh comhad níos beag a úsáid.",
 CouldntReadDir:
 	"earráid: ní féidir an chomhadlann a léamh",
 CannotRenameFile:
@@ -134,21 +136,21 @@ FilenameAlreadyExists:
 
 // new in 0.5
 EditTextFile:
-	"scríobh an comhad teacs",
+	"scríobh an téacs-chomhad",
 CloseWithoutSavingQuestion:
-	"An bhfuil tú cinnte gur mian leat an comhad a ndúnfaidh gan é a shábhail?",
+	"An bhfuil tú cinnte gur mian leat an comhad a dhúnadh gan é a shábháil?",
 CloseWithoutSaving:
-	"Dún Gan Sábhail",
+	"Dún Gan Sábháil",
 SaveThenClose:
-	"Sábhail, agus Dún",
+	"Sábháil, agus Dún",
 SaveThenCloseQuestion:
-	"An bhfuil tú cinnte gur mian leat na hathruithe a shábhail?",
+	"An bhfuil tú cinnte gur mian leat na hathruithe a shábháil?",
 
 // new in 0.6
 LockPanels:
-	"cur an phainéil faoi ghlas",
+	"cuir glas ar na bpainéil",
 UnlockPanels:
-	"scaoilfidh na painéil",
+	"scaoil na painéil",
 CreateEmptyFile:
 	"cruthaigh comhad folamh",
 DownloadFileFromUrl:
@@ -156,13 +158,13 @@ DownloadFileFromUrl:
 DirectoryProperties:
 	"Sonraí an Chomhadlann",
 SelectAll:
-	"roghnóidh gach rud",
+	"roghnaigh gach rud",
 SelectNone:
-	"roghnóidh dada",
+	"roghnaigh dada",
 InvertSelection:
-	"freaschaidh an roghnú",
+	"iompaigh an rogha",
 LoadingKFM:
-	"ag luchtaigh KFM",
+	"ag luchtú KFM",
 Name:
 	"ainm",
 FileDetails:
@@ -170,11 +172,11 @@ FileDetails:
 Search:
 	"Cuardaigh",
 IllegalDirectoryName:
-	"níl cead comhadlann le ainm \"%1\"",
+	"níl cead comhadlann leis an t-ainm \"%1\"",
 RecursiveDeleteWarning:
-	"níl \"%1\" folamh\nAn bhfuil tú cinnte gur mhaith leat é agus a ábhair a scriosaigh?\n*RABHADH* NÍ FÉIDIR É SEO A FREASCHUR",
+	"níl \"%1\" folamh\nAn bhfuil tú cinnte gur mhaith leat é agus a hábhair a scriosadh?\n*RABHADH* NÍ FÉIDIR É SEO A FHREASCHUR",
 RmdirFailed:
-	"theip orm an chomhadlann \"%1\" a scriosaigh",
+	"theip ar scriosadh an comhadlann \"%1\"",
 DirNotInDb:
 	"níl an chomhadlann sa bhunachar sonraí",
 ShowPanel:
@@ -190,7 +192,7 @@ NewCaptionIsThisCorrect:
 Close:
 	"dún",
 Loading:
-	"ag oscailt",
+	"ag luchtú",
 AreYouSureYouWantToCloseKFM:
 	"An bhfuil tú cinnte gur mhaith leat KFM a dhúnadh?",
 PleaseSelectFileBeforeRename:
@@ -198,7 +200,7 @@ PleaseSelectFileBeforeRename:
 RenameOnlyOneFile:
 	"Ní féidir ach comhad amháin a athainmniú ag aon am",
 RenameFileToWhat:
-	"Céard is mían leat \"%1\" a athainmniú?",
+	"Céard is mian leat \"%1\" a athainmniú?",
 NoRestrictions:
 	"gan srianta",
 Filename:
@@ -210,17 +212,17 @@ Minimise:
 AllowedFileExtensions:
 	"aicmí comhad ceadaithe",
 Filesize:
-	"méid an comhad",
+	"tomhas an comhad",
 MoveDown:
 	"bog síos",
 Mimetype:
-	"aicmí mime",
+	"aicmí MIME",
 MoveUp:
 	"bog suas",
 Restore:
 	"athbhunaigh",
 Caption:
-	"scríobh",
+	"ceannteideal",
 CopyFromURL:
 	"Athscríobh ó URL",
 ExtractZippedFile:
@@ -230,7 +232,7 @@ ExtractZippedFile:
 ViewImage:
 	"breathnaigh ar pictiúr",
 ReturnThumbnailToOpener:
-	"tabhair ar ais pictiúr beag don oscailaitheoir",
+	"tabhair mionsamhail ar ais don oscailaitheoir",
 AddTagsToFiles:
 	"cur clibeanna le comhad(anna)",
 RemoveTagsFromFiles:
@@ -238,23 +240,23 @@ RemoveTagsFromFiles:
 HowWouldYouLikeToRenameTheseFiles:
 	"Conas ar mhaith leat na chomhaid a athainmniú?\n\ne.g.: ó \"images-***.jpg\" bainfidh tú \"images-001.jpg\", \"images-002.jpg\", ...",
 YouMustPlaceTheWildcard:
-	"Is ga leat an litir * a chur sa teimpléad",
+	"Caithfidh leat an litir * a chur sa teimpléad",
 YouNeedMoreThan:
-	"Is ga níos mó ná %1 * litir a úsáid chun %2 ainm comhaid a dhéanamh",
+	"Caithfidh níos mó ná %1 * litreacha a úsáid chun %2 ainm comhaid a dhéanamh",
 NoFilesSelected:
 	"níl aon chomhaid roghnaithe",
 Tags:
 	"clibeanna",
 IfYouUseMultipleWildcards:
-	"Má tá iolraí * úsáidte sa teimpléad, is ga na * a bheith le chéile",
+	"Má tá iolraí * úsáidte sa teimpléad, caithfidh na * a bheith le chéile",
 NewCaption:
-	"Scríobh Nua",
+	"Ceannteideal Nua",
 WhatMaximumSize:
-	"Cén méid is mó is mian leat a chur ar ais?",
+	"Cén tomhas is mó is mian leat a chur ar ais?",
 CommaSeparated:
-	"scartha le camóg",
+	"scartha le camóig",
 WhatIsTheNewTag:
 	"Céard é an clib nua?\nLe clibeanna iolraithe a úsáid, idirscar le camóg.",
 WhichTagsDoYouWantToRemove:
-	"Cén clibeanna is mian leat a scrios?\nLe clibeanna iolraithe a scriosa, idirscar le camóg."
+	"Cén clibeanna is mian leat a scriosadh?\nLe clibeanna iolraithe a scriosadh, idirscar le camóg."
 }
