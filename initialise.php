@@ -88,6 +88,7 @@ set_error_handler('kfm_error_log');
 }
 { # database
 	$db_defined=0;
+	$kfm_db_prefix_escaped=str_replace('_','\\\\_',$kfm_db_prefix);
 	switch($kfm_db_type){
 		case 'mysql': {
 			require_once('MDB2.php');
@@ -95,7 +96,7 @@ set_error_handler('kfm_error_log');
 			$db=&MDB2::factory($dsn);
 			if(PEAR::isError($db))die($db->getMessage());
 			$db->setFetchMode(MDB2_FETCHMODE_ASSOC);
-			$res=&$db->query("show tables like '".$kfm_db_prefix."%'");
+			$res=&$db->query("show tables like '".$kfm_db_prefix_escaped."%'");
 			if(!$res->numRows())include('scripts/db.mysql.create.php');
 			else $db_defined=1;
 			break;
@@ -106,7 +107,7 @@ set_error_handler('kfm_error_log');
 			$db=&MDB2::factory($dsn);
 			if(PEAR::isError($db))die($db->getMessage());
 			$db->setFetchMode(MDB2_FETCHMODE_ASSOC);
-			$res=&$db->query("SELECT tablename from pg_tables where tableowner=current_user AND tablename NOT LIKE 'pg_%' AND tablename NOT LIKE 'sql_%' AND tablename LIKE '".$kfm_db_prefix."%'");
+			$res=&$db->query("SELECT tablename from pg_tables where tableowner=current_user AND tablename NOT LIKE 'pg\\\\_%' AND tablename NOT LIKE 'sql\\\\_%' AND tablename LIKE '".$kfm_db_prefix_escaped."%'");
 			if($res->numRows()<1)include('scripts/db.pgsql.create.php');
 			else $db_defined=1;
 			break;
