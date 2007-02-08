@@ -223,37 +223,37 @@ Caption:
 CopyFromURL:
 	"Copier d'un URL",
 ExtractZippedFile:
-	"Décompresser le fichier"
+	"Décompresser le fichier",
 
 // new in 0.8
 ViewImage:
-	"view image",
+	"voir l'image",
 ReturnThumbnailToOpener:
-	"return thumbnail to opener",
+	"renvoyer une vignette à l'éditeur",
 AddTagsToFiles:
-	"add tags to file(s)",
+	"ajouter des mots-clés au(x) fichier(s)",
 RemoveTagsFromFiles:
 	"remove tags from file(s)",
 HowWouldYouLikeToRenameTheseFiles:
-	"How would you like to rename these files?\n\nexample: \"images-***.jpg\" will rename files to \"images-001.jpg\", \"images-002.jpg\", ...",
+	"Comment souhaitez-vous renommer ces fichiers?\n\nexample: \"images-***.jpg\" les renommera en \"images-001.jpg\", \"images-002.jpg\", ...",
 YouMustPlaceTheWildcard:
-	"You must place the wildcard character * somewhere in the filename template",
+	"Vous devez utiliser le caractère joker * dans le modèle de nom",
 YouNeedMoreThan:
-	"You need more than %1 * characters to create %2 filenames",
+	"Vous devez utiliser plus de %1 caractères * pour créer %2 noms",
 NoFilesSelected:
-	"no files selected",
+	"aucun fichier sélectionné",
 Tags:
-	"tags",
+	"mots-clés",
 IfYouUseMultipleWildcards:
-	"If you use multiple wildcards in the filename template, they must be grouped together",
+	"Si vous utilisez plusieurs jokers dans le modèle de nom, ils doivent être regroupés",
 NewCaption:
-	"New Caption",
+	"Nouveau Titre",
 WhatMaximumSize:
-	"What maximum size should be returned?",
+	"Quelle taille maximum devrait être retournée?",
 CommaSeparated:
-	"comma-separated",
+	"separé par des virgules",
 WhatIsTheNewTag:
-	"What is the new tag?\nFor multiple tags, separate by commas.",
+	"Quel est le nouveau mot-clé?\nPour plusieurs mots-clés, séparez-les avec des virgules.",
 WhichTagsDoYouWantToRemove:
-	"Which tags do you want to remove?\nFor multiple tags, separate by commas."
+	"Quel mots-clés voulez-vous enlever?\nPour plusieurs mots-clés, séparez-les avec des virgules."
 }

@@ -232,7 +232,7 @@ ExtractZippedFile:
 ViewImage:
 	"view image",
 ReturnThumbnailToOpener:
-	"return thumbnail to opener",
+	"return thumbnail to editor",
 AddTagsToFiles:
 	"add tags to file(s)",
 RemoveTagsFromFiles:
