@@ -226,7 +226,7 @@ Caption:
 CopyFromURL:
 	"Copy from URL",
 ExtractZippedFile:
-	"Extract zipped file"
+	"Extract zipped file",
 
 // new in 0.8
 ViewImage:

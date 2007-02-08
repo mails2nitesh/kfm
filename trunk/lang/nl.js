@@ -218,7 +218,7 @@ Caption:
 CopyFromURL:
 	"Kopieren van URL",
 ExtractZippedFile:
-	"Uitpakken zipbestand"
+	"Uitpakken zipbestand",
 
 // new in 0.8
 ViewImage:
