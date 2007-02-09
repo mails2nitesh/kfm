@@ -231,9 +231,9 @@ ViewImage:
 ReturnThumbnailToOpener:
 	"renvoyer une vignette à l'éditeur",
 AddTagsToFiles:
-	"ajouter des mots-clés au(x) fichier(s)",
+	"ajouter des libellés au(x) fichier(s)",
 RemoveTagsFromFiles:
-	"remove tags from file(s)",
+	"supprimer des libellés de ce(s) fichier(s)",
 HowWouldYouLikeToRenameTheseFiles:
 	"Comment souhaitez-vous renommer ces fichiers?\n\nexample: \"images-***.jpg\" les renommera en \"images-001.jpg\", \"images-002.jpg\", ...",
 YouMustPlaceTheWildcard:
@@ -243,17 +243,17 @@ YouNeedMoreThan:
 NoFilesSelected:
 	"aucun fichier sélectionné",
 Tags:
-	"mots-clés",
+	"libellés",
 IfYouUseMultipleWildcards:
 	"Si vous utilisez plusieurs jokers dans le modèle de nom, ils doivent être regroupés",
 NewCaption:
 	"Nouveau Titre",
 WhatMaximumSize:
-	"Quelle taille maximum devrait être retournée?",
+	"Quelle est la dimension maximum à renvoyer?",
 CommaSeparated:
 	"separé par des virgules",
 WhatIsTheNewTag:
-	"Quel est le nouveau mot-clé?\nPour plusieurs mots-clés, séparez-les avec des virgules.",
+	"Quel est le nouveau libellé?\nPour plusieurs libellés, séparez-les avec des virgules.",
 WhichTagsDoYouWantToRemove:
-	"Quel mots-clés voulez-vous enlever?\nPour plusieurs mots-clés, séparez-les avec des virgules."
+	"Quels libellés voulez-vous enlever?\nPour plusieurs libellés, séparez-les avec des virgules."
 }

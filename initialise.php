@@ -141,7 +141,7 @@ set_error_handler('kfm_error_log');
 	$q=$db->query("select * from ".$kfm_db_prefix."parameters");
 	$rs=$q->fetchAll();
 	foreach($rs as $r)$kfm_parameters[$r['name']]=$r['value'];
-	if($kfm_parameters['version']!=KFM_VERSION)require 'scripts/update.0.7.2.php';
+	if($kfm_parameters['version']!=KFM_VERSION)require 'scripts/update.0.8.php';
 }
 { # languages
 	$kfm_language='';
