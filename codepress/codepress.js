@@ -86,7 +86,8 @@ CodePress = {
 	},
 	
 	resizeFullScreen : function() {
-		if($('cp-fullscreen').checked) {
+		var cpfs = $('cp-fullscreen');
+		if(cpfs && cpfs.checked) {
 			cH = self.innerHeight ? self.innerHeight : document.documentElement.clientHeight;
 			cW = self.innerWidth ? self.innerWidth : document.documentElement.clientWidth;
 			cpEditor.style.height = cH-22 + 'px';
