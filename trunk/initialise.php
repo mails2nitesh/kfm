@@ -87,7 +87,7 @@ set_error_handler('kfm_error_log');
 	}
 }
 { # database
-	$db_defined=0;
+	if(!isset($_SESSION['db_defined']))$_SESSION['db_defined']=0;
 	$kfm_db_prefix_escaped=str_replace('_','\\\\_',$kfm_db_prefix);
 	switch($kfm_db_type){
 		case 'mysql': {
@@ -96,9 +96,11 @@ set_error_handler('kfm_error_log');
 			$db=&MDB2::factory($dsn);
 			if(PEAR::isError($db))die($db->getMessage());
 			$db->setFetchMode(MDB2_FETCHMODE_ASSOC);
-			$res=&$db->query("show tables like '".$kfm_db_prefix_escaped."%'");
-			if(!$res->numRows())include('scripts/db.mysql.create.php');
-			else $db_defined=1;
+			if(!$_SESSION['db_defined']){
+				$res=&$db->query("show tables like '".$kfm_db_prefix_escaped."%'");
+				if(!$res->numRows())include('scripts/db.mysql.create.php');
+				else $_SESSION['db_defined']=1;
+			}
 			break;
 		}
 		case 'pgsql': {
@@ -109,7 +111,7 @@ set_error_handler('kfm_error_log');
 			$db->setFetchMode(MDB2_FETCHMODE_ASSOC);
 			$res=&$db->query("SELECT tablename from pg_tables where tableowner=current_user AND tablename NOT LIKE 'pg\\\\_%' AND tablename NOT LIKE 'sql\\\\_%' AND tablename LIKE '".$kfm_db_prefix_escaped."%'");
 			if($res->numRows()<1)include('scripts/db.pgsql.create.php');
-			else $db_defined=1;
+			else $_SESSION['db_defined']=1;
 			break;
 		}
 		case 'sqlite': {
@@ -122,7 +124,7 @@ set_error_handler('kfm_error_log');
 			if(PEAR::isError($db))die($db->getMessage());
 			$db->setFetchMode(MDB2_FETCHMODE_ASSOC);
 			if($db_create)include('scripts/db.sqlite.create.php');
-			$db_defined=1;
+			$_SESSION['db_defined']=1;
 			break;
 		}
 		default: {
@@ -130,18 +132,19 @@ set_error_handler('kfm_error_log');
 			exit;
 		}
 	}
-	if(!$db_defined){
+	if(!$_SESSION['db_defined']){
 		echo 'failed to connect to database'; # TODO: new string
 		exit;
 	}
-	$db_defined=null;
 }
 { # get kfm parameters and check for updates
-	$kfm_parameters=array();
-	$q=$db->query("select * from ".$kfm_db_prefix."parameters");
-	$rs=$q->fetchAll();
-	foreach($rs as $r)$kfm_parameters[$r['name']]=$r['value'];
-	if($kfm_parameters['version']!=KFM_VERSION)require 'scripts/update.0.8.php';
+	if(!isset($_SESSION['kfm_parameters'])){
+		$_SESSION['kfm_parameters']=array();
+		$q=$db->query("select * from ".$kfm_db_prefix."parameters");
+		$rs=$q->fetchAll();
+		foreach($rs as $r)$_SESSION['kfm_parameters'][$r['name']]=$r['value'];
+		if($_SESSION['kfm_parameters']['version']!=KFM_VERSION)require 'scripts/update.0.8.php';
+	}
 }
 { # languages
 	$kfm_language='';
@@ -338,6 +341,18 @@ require_once('framework.php');
 	function kfm_rotateImage($filename,$direction){
 		require_once('includes/images.php');
 		return _rotateImage($filename,$direction);
+	}
+}
+{ # JSON
+	if(!function_exists('json_encode')){ # php-json is not installed
+		require_once('includes/JSON.php');
+		$json=new Services_JSON();
+		function json_encode($obj){
+			return $_GLOBALS['json']->encode($obj);
+		}
+		function json_decode($js){
+			return $_GLOBAL['json']->decode($js);
+		}
 	}
 }
 ?>
