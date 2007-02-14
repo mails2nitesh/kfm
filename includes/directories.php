@@ -35,8 +35,11 @@ function _deleteDirectory($id,$recursive=0){
 }
 function _getDirectoryDbInfo($id){
 	global $db,$kfm_db_prefix;
-	$q=$db->query("select * from ".$kfm_db_prefix."directories where id=".$id);
-	return $q->fetchRow();
+	if(!isset($_GLOBALS['cache_directories'][$id])){
+		$q=$db->query("select * from ".$kfm_db_prefix."directories where id=".$id);
+		$_GLOBALS['cache_directories'][$id]=$q->fetchRow();
+	}
+	return $_GLOBALS['cache_directories'][$id];
 }
 function _getDirectoryProperties($dir){
 	if(strlen($dir))$properties=kfm_getDirectoryProperties(preg_replace('/[^\/]*\/$/','',$dir));
@@ -97,6 +100,7 @@ function _moveDirectory($from,$to){
 	global $db,$kfm_db_prefix;
 	$f_r=_getDirectoryDbInfo($from);
 	$t_r=_getDirectoryDbInfo($to);
+	unset($_GLOBALS['cache_directories'][$from]);
 	$f_add=$f_r['physical_address'];
 	$f_name=$f_r['name'];
 	$t_add=$t_r['physical_address'];
