@@ -16,16 +16,14 @@ require_once('includes/kaejax.php');
 ?>
 <html>
 	<head>
-		<style type="text/css">@import "<?php
-		echo 'themes/'.$kfm_theme.'/kfm.css';
-		?>";</style>
-		<title>KFM - Kae's File Manager</title>
-		<style type="text/css"><?php
-			echo preg_replace('/\s+/',' ',file_get_contents('pear/Text/hilight.css'));
+		<style type="text/css"><?
+			$css=file_get_contents('themes/'.$kfm_theme.'/kfm.css');
+			$css.=file_get_contents('pear/Text/hilight.css');
+			echo preg_replace('/\s+/',' ',$css);
 		?></style>
+		<title>KFM - Kae's File Manager</title>
 		<script src="codepress/codepress.js" type="text/javascript" id="cp-script" lang="en-us"></script>
 		<script type="text/javascript">
-
 <?php
 	$js='';
 	$js.=file_get_contents('lang/'.$kfm_language.'.js');
@@ -98,7 +96,7 @@ require_once('includes/kaejax.php');
 		<?php
 			if(!$kfm_dont_send_metrics){
 				$today=date('Y-m-d');
-				if(!isset($kfm_parameters['last_registration'])||$kfm_parameters['last_registration']!=$today){
+				if(!isset($_SESSION['kfm_parameters']['last_registration'])||$_SESSION['kfm_parameters']['last_registration']!=$today){
 					echo '<img src="http://kfm.verens.com/extras/register.php?version='.urlencode(KFM_VERSION).'&amp;domain_name='.urlencode($_SERVER['SERVER_NAME']).'" />';
 					$db->query("delete from ".$kfm_db_prefix."parameters where name='last_registration'");
 					$db->query("insert into ".$kfm_db_prefix."parameters (name,value) values ('last_registration','".$today."')");
