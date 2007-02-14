@@ -81,8 +81,7 @@ function _getTextFile($fid){
 }
 function _loadFiles($rootid=1){
 	global $db,$kfm_db_prefix;
-	$q=$db->query("select * from ".$kfm_db_prefix."directories where id=".$rootid);
-	$dirdata=$q->fetchRow();
+	$dirdata=kfm_getDirectoryDbInfo($rootid);
 	$reqdir=count($dirdata)?$dirdata['physical_address'].'/':$GLOBALS['rootdir'];
 	$root=str_replace($GLOBALS['rootdir'],'',$reqdir);
 	if(!kfm_checkAddr($root))return;
@@ -114,8 +113,8 @@ function _loadFiles($rootid=1){
 }
 function _moveFiles($files,$dir_id){
 	global $db,$kfm_db_prefix;
-	$q=$db->query("select id,physical_address,name from ".$kfm_db_prefix."directories where id=".$dir_id);
-	if(!($dirdata=$q->fetchRow()))return 'error: no data for directory id "'.$dir_id.'"'; # TODO: new string
+	$dirdata=kfm_getDirectoryDbInfo($dir_id);
+	if(!$dirdata)return 'error: no data for directory id "'.$dir_id.'"'; # TODO: new string
 	$to=$dirdata['physical_address'].'/';
 	if(!kfm_checkAddr($to))return 'error: illegal directory "'.$to.'"'; # TODO: new string
 	foreach($files as $fid){

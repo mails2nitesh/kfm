@@ -58,6 +58,7 @@ set_error_handler('kfm_error_log');
 	array_push($kfm_banned_files, 'thumbs.db', '.ds_store'); # lowercase array
 	if(!is_array($kfm_banned_folders)) $kfm_banned_folders = array();
 	define('IMAGEMAGICK_PATH',isset($kfm_imagemagick_path)?$kfm_imagemagick_path:'/usr/bin/convert');
+	$cache_directories=array();
 }
 { # work directory
 	$workpath = $rootdir.$kfm_workdirectory; // should be more at the top of this document
@@ -225,6 +226,10 @@ require_once('framework.php');
 	function kfm_deleteDirectory($id,$recursive=0){
 		require_once('includes/directories.php');
 		return _deleteDirectory($id,$recursive);
+	}
+	function kfm_getDirectoryDbInfo($id){
+		require_once('includes/directories.php');
+		return _getDirectoryDbInfo($id);
 	}
 	function kfm_getDirectoryProperties($dir){
 		require_once('includes/directories.php');
