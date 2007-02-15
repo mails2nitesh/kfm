@@ -24,8 +24,8 @@ function getEls(i,p){
 	return p?p.getElementsByTagName(i):document.getElementsByTagName(i);
 }
 function getElsWithClass(c,t,p){
-	var r=[],els=getEls(t,p),i;
-	for(i in els)if(els[i].hasClass&&els[i].hasClass(c))r.push(els[i]);
+	var r=[],els=getEls(t,p),i=0;
+	for(;i<els.length;++i)if(els[i].hasClass&&els[i].hasClass(c))r.push(els[i]);
 	return r;
 }
 function getEvent(e){
@@ -54,7 +54,7 @@ function isArray(o){
 }
 function kaejax_create_functions(url,f){
 	kaejax_is_loaded=1;
-	for(i in f){
+	for(var i=0;i<f.length;++i){
 		eval('window.x_'+f[i]+'=function(){kaejax_do_call("'+f[i]+'",arguments)}');
 		function_urls[f[i]]=url;
 	}
@@ -91,8 +91,8 @@ function kaejax_sendRequests(uri){
 	x.send(post_data);
 }
 function loadJS(url){
-	var i;
-	for(i in loadedScripts)if(loadedScripts[i]==url)return 0;
+	var i=0;
+	for(;i<loadedScripts.length;++i)if(loadedScripts[i]==url)return 0;
 	loadedScripts.push(url);
 	var el=newEl('script');
 	el.type="text/javascript";
@@ -162,10 +162,10 @@ function newLink(h,t,id,c,title){
 	return a;
 }
 function newSelectbox(name,keys,vals,s,f){
-	var el2=newEl('select',name),el3,s2=0,i;
+	var el2=newEl('select',name),el3,s2=0,i=0;
 	if(!s)s=0;
 	if(!vals)vals=keys;
-	for(i in vals){
+	for(;i<vals.length;++i){
 		var v1=vals[i].toString();
 		var v2=v1.length>20?v1.substr(0,27)+'...':v1;
 		el3=X(newEl('option',0,0,v2),{value:keys[i],title:v1});
