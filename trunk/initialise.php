@@ -110,9 +110,11 @@ set_error_handler('kfm_error_log');
 			$db=&MDB2::factory($dsn);
 			if(PEAR::isError($db))die($db->getMessage());
 			$db->setFetchMode(MDB2_FETCHMODE_ASSOC);
-			$res=&$db->query("SELECT tablename from pg_tables where tableowner=current_user AND tablename NOT LIKE 'pg\\\\_%' AND tablename NOT LIKE 'sql\\\\_%' AND tablename LIKE '".$kfm_db_prefix_escaped."%'");
-			if($res->numRows()<1)include('scripts/db.pgsql.create.php');
-			else $_SESSION['db_defined']=1;
+			if(!$_SESSION['db_defined']){
+				$res=&$db->query("SELECT tablename from pg_tables where tableowner=current_user AND tablename NOT LIKE E'pg\\\\_%' AND tablename NOT LIKE E'sql\\\\_%' AND tablename LIKE E'".$kfm_db_prefix_escaped."%'");
+				if($res->numRows()<1)include('scripts/db.pgsql.create.php');
+				else $_SESSION['db_defined']=1;
+			}
 			break;
 		}
 		case 'sqlite': {
@@ -350,14 +352,8 @@ require_once('framework.php');
 }
 { # JSON
 	if(!function_exists('json_encode')){ # php-json is not installed
-		require_once('includes/JSON.php');
-		$json=new Services_JSON();
-		function json_encode($obj){
-			return $_GLOBALS['json']->encode($obj);
-		}
-		function json_decode($js){
-			return $_GLOBAL['json']->decode($js);
-		}
+		require_once('pear/JSON.php');
+		require_once('includes/json.php');
 	}
 }
 ?>
