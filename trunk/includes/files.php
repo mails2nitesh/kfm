@@ -102,6 +102,7 @@ function _loadFiles($rootid=1){
 			$writable = is_writable(str_replace('//','/',$reqdir.'/'.$filename))?true:false;
 			$files[]=array('name'=>$filename,'parent'=>$rootid,'id'=>$fileshash[$filename], 'writable'=>$writable);
 		}
+		sort($files);
 		closedir($handle);
 		{ # update session data
 			$_SESSION['kfm']['currentdir']=$reqdir;
