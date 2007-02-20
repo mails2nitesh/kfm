@@ -26,7 +26,7 @@ class File extends Object{
 				$this->error('File cannot be found');
 				return false;
 			}
-			$mimetype = mime_content_type($this->path);
+			$mimetype = get_mimetype($this->path);
 			$pos = strpos($mimetype,';');
 			$this->mimetype = ($pos===false)?$mimetype:substr($mimetype,0,$pos);
 			$this->type = trim(substr(strstr($this->mimetype,'/'),1));

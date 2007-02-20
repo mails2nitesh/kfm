@@ -208,11 +208,9 @@ set_error_handler('kfm_error_log');
 			!in_array(preg_replace('/.*\./','',$addr),$GLOBALS['kfm_banned_extensions'])
 		);
 	}
-	if(!function_exists('mime_content_type')){
-		function mime_content_type($f){
-			# windows users, please install this first: http://gnuwin32.sourceforge.net/packages/file.htm
-			return shell_exec(trim('file -bi '.escapeshellarg($f)));
-		}
+	function get_mimetype($f){
+		# windows users, please install this first: http://gnuwin32.sourceforge.net/packages/file.htm
+		return shell_exec(trim('file -bi '.escapeshellarg($f)));
 	}
 }
 require_once('framework.php');

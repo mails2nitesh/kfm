@@ -48,7 +48,7 @@ else{
 		header('Content-Type: force/download');
 		header('Content-Disposition: attachment; filename="'.$name.'"');
 	}
-	else header('Content-Type: '.mime_content_type($path));
+	else header('Content-Type: '.get_mimetype($path));
 	header('Content-Transfer-Encoding: binary');
 }
 if($file=fopen($path,'rb')){ # send file
