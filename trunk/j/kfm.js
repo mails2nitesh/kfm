@@ -28,7 +28,7 @@ function kfm(){
 		var els=document.getElementsByTagName('*');
 		for(var i in els){if(els[i].tagName)kfm_addMethods(els[i])};
 	}
-	var form_panel,form,iframe,right_column,message, directories,logs,logHeight=64,w=getWindowSize();
+	var form_panel,form,right_column,message,directories,logs,logHeight=64,w=getWindowSize();
 	kfm_cwd_name=starttype;
 	{ // create left column
 		var left_column=kfm_createPanelWrapper('kfm_left_column');
@@ -80,7 +80,7 @@ function kfm(){
 	}
 	{ // draw areas to screen and load files and directory info
 		document.body.addClass(browser.isIE?'ie':(browser.isFirefox?'firefox':''));
-		document.body.empty().addEl([left_column,right_column, message]);
+		document.body.empty().addEl([left_column,right_column,message]);
 		x_kfm_loadFiles(1,kfm_refreshFiles);
 		x_kfm_loadDirectories(1,kfm_refreshDirectories);
 	}

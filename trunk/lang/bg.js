@@ -224,40 +224,40 @@ Restore:
 Caption:
 	"Заглавие",
 CopyFromURL:
-	"Copy from URL",
+	"Копирай от URL",
 ExtractZippedFile:
-	"Extract zipped file",
+	"Разархивирай",
 
 // new in 0.8
 ViewImage:
-	"view image",
+	"Покажи картинката",
 ReturnThumbnailToOpener:
-	"return thumbnail to opener",
+	"Подай миниатюра",
 AddTagsToFiles:
-	"add tags to file(s)",
+	"Добави таг на файла",
 RemoveTagsFromFiles:
-	"remove tags from file(s)",
+	"Изтрий  таг на файла",
 HowWouldYouLikeToRenameTheseFiles:
-	"How would you like to rename these files?\n\nexample: \"images-***.jpg\" will rename files to \"images-001.jpg\", \"images-002.jpg\", ...",
+	"Как искате да преименувате тези файлове?\n\nПример: \"images-***.jpg\" ще преименува файловете на \"images-001.jpg\", \"images-002.jpg\", ...",
 YouMustPlaceTheWildcard:
-	"You must place the wildcard character * somewhere in the filename template",
+	"Вие трябва да поставите някъде в шаблона на файловите имена заместващия символ *",
 YouNeedMoreThan:
-	"You need more than %1 * characters to create %2 filenames",
+	"Трябвят повече от %1 * символа за да се създадат %2 файлови имена",
 NoFilesSelected:
-	"no files selected",
+	"Няма избрани файлове",
 Tags:
-	"tags",
+	"Тагове",
 IfYouUseMultipleWildcards:
-	"If you use multiple wildcards in the filename template, they must be grouped together",
+	"Ако използвате множество заместващи символи в шаблона на файловите имена, те трябва да бъдат групирани заедно!",
 NewCaption:
-	"New Caption",
+	"Ново Заглавие",
 WhatMaximumSize:
-	"What maximum size should be returned?",
+	"Колко да бъде максималния размер?",
 CommaSeparated:
-	"comma-separated",
+	"разделени със запетая",
 WhatIsTheNewTag:
-	"What is the new tag?\nFor multiple tags, separate by commas.",
+	"Какъв да бъде новият таг? За множество тагове, разделете със запетаи.",
 WhichTagsDoYouWantToRemove:
-	"Which tags do you want to remove?\nFor multiple tags, separate by commas."
+	"Кой таг искате да изтриете? Ако са няколко, разделете със запетаи."
 
 }
