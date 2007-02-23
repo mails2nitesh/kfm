@@ -54,9 +54,9 @@ set_error_handler('kfm_error_log');
 	define('KFM_DIR', dirname(__FILE__));
 	$kfm_highlight_extensions=array('php'=>'PHP', 'html'=>'HTML', 'xhtml'=>'HTML',
 				 'sql'=>'MYSQL', 'js'=>'JAVASCRIPT', 'css'=>'CSS', 'xml'=>'XML');
-	if(!is_array($kfm_banned_files))$kfm_banned_files = array();
+	if(!isset($kfm_banned_files)||!is_array($kfm_banned_files))$kfm_banned_files = array();
 	array_push($kfm_banned_files, 'thumbs.db', '.ds_store'); # lowercase array
-	if(!is_array($kfm_banned_folders)) $kfm_banned_folders = array();
+	if(!isset($kfm_banned_folders)||!is_array($kfm_banned_folders)) $kfm_banned_folders = array();
 	define('IMAGEMAGICK_PATH',isset($kfm_imagemagick_path)?$kfm_imagemagick_path:'/usr/bin/convert');
 	$cache_directories=array();
 }
