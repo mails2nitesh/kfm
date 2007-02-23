@@ -134,7 +134,7 @@ class Image extends File{
 		$imresized=imagecreatetruecolor($width,$height);
 		imagealphablending($imresized,false);
 		imagecopyresampled($imresized,$im,0,0,0,0,$width,$height,$this->width,$this->height);
-		imagesavealpha($imresizes,true);
+		imagesavealpha($imresized,true);
 		$save($imresized,$to,($this->type=='jpeg'?100:9));
 		imagedestroy($imresized);
 		imagedestroy($im);
