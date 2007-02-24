@@ -10,7 +10,7 @@ function kfm_chooseFile(e,o){
 	x_kfm_getFileUrl(el.id,function(url){
 		if(kfm_file_handler=='return'||kfm_file_handler=='fckeditor'){
 			if(!el.image_data)window.opener.SetUrl(url);
-			else window.opener.SetUrl(url.replace(/\/\//g,'/'),0,0,el.image_data.caption);
+			else window.opener.SetUrl(url.replace(/([^:]\/)\//g,'$1'),0,0,el.image_data.caption);
 			window.close();
 		}
 		else if(kfm_file_handler=='download'){
