@@ -46,6 +46,7 @@ function kfm_isFileInCWD(filename){
 	return false;
 }
 function kfm_refreshFiles(res){
+	if(!res)return;
 	if(res.toString()===res)return kfm_log(res);
 	var files=[],a,b,fileids=[],wrapper=$('kfm_right_column').empty();
 	wrapper.addEl(newEl('div',0,'kfm_panel_header',kfm_lang.CurrentWorkingDir(res.reqdir)));
