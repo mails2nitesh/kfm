@@ -54,10 +54,8 @@ class File extends Object{
 		global $rootdir, $kfm_userfiles_output;
 		$cwd=str_replace($rootdir,'',$_SESSION['kfm']['currentdir']);
 		if(!file_exists($this->path))return 'javascript:alert("missing file")';
-		if($kfm_userfiles_output=='get.php')
-			$url=preg_replace('/\/[^\/]*$/','/get.php?id='.$this->id,$_SERVER['REQUEST_URI']);
-		else 
-			$url=str_replace('//','/',$kfm_userfiles_output.'/'.$cwd.'/'.$this->name);
+		if($kfm_userfiles_output=='get.php')$url=preg_replace('/\/[^\/]*$/','/get.php?id='.$this->id,$_SERVER['REQUEST_URI']);
+		else $url=preg_replace('/([^:])\/\//','$1/',$kfm_userfiles_output.'/'.$cwd.'/'.$this->name);
 		return $url;
 	}
 	function delete(){
