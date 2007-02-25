@@ -21,7 +21,14 @@ function _extractZippedFile($id){
 	{ # try native system unzip command
 		$res=-1;
 		$arr=array();
-		exec('unzip -o "'.$dir.$file->name.'" -x -d "'.$dir.'"',$arr,$res);
+		exec('unzip -l "'.$dir.$file->name.'"',$arr,$res);
+		if(!$res){
+			for($i=3;$i<count($arr)-2;++$i){
+				$filename=preg_replace('/.* /','',$arr[$i]);
+				if(!kfm_checkAddr($filename))return 'error: zip contains a banned filename';
+			}
+			exec('unzip -o "'.$dir.$file->name.'" -x -d "'.$dir.'"',$arr,$res);
+		}
 	}
 	if($res){ # try PHP unzip command
 		return 'error: unzip failed';
@@ -54,13 +61,13 @@ function _getFileDetails($fid){
 		'tags'=>$file->getTags()
 	);
 	if($file->isImage()){
-		$im = new Image($file);
-		$details['caption'] = $im->caption;
+		$im=new Image($file);
+		$details['caption']=$im->caption;
 	}
 	return $details;
 }
 function _getFileUrl($fid){
-	$file= new File($fid);
+	$file=new File($fid);
 	return $file->getUrl();
 }
 function _getTagName($id){
@@ -74,8 +81,8 @@ function _getTextFile($fid){
 	$file=new File($fid);
 	if(!kfm_checkAddr($file->name))return;
 	if(in_array($file->getExtension(),$GLOBALS['kfm_editable_extensions'])){
-		if(!$file->isWritable()) return 'error: '.$file->name.' is not writable'; # TODO: new string
-		return array('content'=>str_replace(array('<','>'),array('&lt;', '&gt;'),$file->getContent()),'name'=>$file->name, 'id'=>$file->id);
+		if(!$file->isWritable())return 'error: '.$file->name.' is not writable'; # TODO: new string
+		return array('content'=>str_replace(array('<','>'),array('&lt;','&gt;'),$file->getContent()),'name'=>$file->name,'id'=>$file->id);
 	}
 	return 'error: "'.$file->name.'" cannot be edited (restricted)'; # TODO: new string
 }
@@ -94,13 +101,13 @@ function _loadFiles($rootid=1){
 		if(is_array($filesdb))foreach($filesdb as $r)$fileshash[$r['name']]=$r['id'];
 		$files=array();
 		while(false!==($filename=readdir($handle)))if(strpos($filename,'.')!==0&&is_file($reqdir.'/'.$filename)){
-			if(in_array(strtolower($filename), $GLOBALS['kfm_banned_files'])) continue;
+			if(in_array(strtolower($filename),$GLOBALS['kfm_banned_files']))continue;
 			if(!isset($fileshash[$filename])){
 				kfm_add_file_to_db($filename,$rootid);
 				$fileshash[$filename]=$db->lastInsertId();
 			}
-			$writable = is_writable(str_replace('//','/',$reqdir.'/'.$filename))?true:false;
-			$files[]=array('name'=>$filename,'parent'=>$rootid,'id'=>$fileshash[$filename], 'writable'=>$writable);
+			$writable=is_writable(str_replace('//','/',$reqdir.'/'.$filename))?true:false;
+			$files[]=array('name'=>$filename,'parent'=>$rootid,'id'=>$fileshash[$filename],'writable'=>$writable);
 		}
 		sort($files);
 		closedir($handle);
@@ -154,43 +161,39 @@ function _renameFiles($files,$template){
 	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
 function _resize_bytes($size){
-   $count = 0;
-   $format = array("B","KB","MB","GB","TB","PB","EB","ZB","YB");
-   while(($size/1024)>1 && $count<8)
-   {
-       $size=$size/1024;
-       $count++;
-   }
-   $return = number_format($size,0,'','.')." ".$format[$count];
-   return $return;
+	$count=0;
+	$format=array("B","KB","MB","GB","TB","PB","EB","ZB","YB");
+	while(($size/1024)>1&&$count<8){
+		$size=$size/1024;
+		++$count;
+	}
+	$return=number_format($size,0,'','.')." ".$format[$count];
+	return $return;
 }
 function _rm($id){
 	if(is_array($id)){
 		foreach($id as $f)kfm_rm($f,1);
 	}
 	else{
-		$file = new File($id);
+		$file=new File($id);
 		if($file->isImage()){
-			$im = new Image($file->id);
-			if(!$im->delete()) return $im->getErrors();
+			$im=new Image($file->id);
+			if(!$im->delete())return $im->getErrors();
 		}else{
-			if(!$file->delete()) return $file->getErrors();
+			if(!$file->delete())return $file->getErrors();
 		}
 		return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 	}
 }
 function _saveTextFile($fid,$text){
-	$f = new File($fid);
-	$f->setContent(str_replace(array('&lt;','&gt;'),array('<','>'), $text));
+	$f=new File($fid);
+	$f->setContent(str_replace(array('&lt;','&gt;'),array('<','>'),$text));
 	return $f->hasErrors()?$f->getErrors():'file saved';
-	/*
-	if(kfm_checkAddr($filename))file_put_contents($_SESSION['kfm']['currentdir'].'/'.$filename,$text);
-	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);*/
 }
 function _search($keywords,$tags){
 	global $db,$kfm_db_prefix;
 	$valid_files=array();
-	if($tags){ # tags
+	if($tags){
 		$arr=explode(',',$tags);
 		foreach($arr as $tag){
 			$tag=ltrim(rtrim($tag));
@@ -260,11 +263,11 @@ function _tagRemove($recipients,$tagList){
 }
 function _viewTextFile($fileid){
 	global $kfm_viewable_extensions, $kfm_highlight_extensions, $kfm_editable_extensions;
-	$file = new File($fileid);
-	$ext = $file->getExtension();
-	$buttons_to_show=1; # boolean values - 1=Close, 2=Edit
-	if(in_array($ext, $kfm_editable_extensions) && $file->isWritable())$buttons_to_show+=2;
-	if(in_array($ext, $kfm_viewable_extensions)){
+	$file=new File($fileid);
+	$ext=$file->getExtension();
+	$buttons_to_show=1; # boolean addition: 1=Close, 2=Edit
+	if(in_array($ext,$kfm_editable_extensions)&&$file->isWritable())$buttons_to_show+=2;
+	if(in_array($ext,$kfm_viewable_extensions)){
 		$code=file_get_contents($file->path);
 		if(array_key_exists($ext,$kfm_highlight_extensions)){
 			require_once('Text/Highlighter.php');
@@ -272,14 +275,13 @@ function _viewTextFile($fileid){
 			$renderer=new Text_Highlighter_Renderer_Html(array('numbers'=>HL_NUMBERS_TABLE,'tabsize'=>4));
 			$hl=&Text_Highlighter::factory($kfm_highlight_extensions[$ext]);
 			$hl->setRenderer($renderer);
-			$code = $hl->highlight($code);
-		}else if($ext == 'txt'){
-			$code = nl2br($code);
+			$code=$hl->highlight($code);
+		}else if($ext=='txt'){
+			$code=nl2br($code);
 		}
-		return array('id'=>$fileid, 'content'=>$code, 'buttons_to_show'=>$buttons_to_show,'name'=>$file->name);
-	}else{
-		return "error: viewing file is not allowed"; # TODO: new string
+		return array('id'=>$fileid,'content'=>$code,'buttons_to_show'=>$buttons_to_show,'name'=>$file->name);
 	}
+	return "error: viewing file is not allowed"; # TODO: new string
 }
 
 ?>
