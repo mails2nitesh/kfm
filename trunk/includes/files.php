@@ -104,7 +104,7 @@ function _loadFiles($rootid=1){
 			if(in_array(strtolower($filename),$GLOBALS['kfm_banned_files']))continue;
 			if(!isset($fileshash[$filename])){
 				kfm_add_file_to_db($filename,$rootid);
-				$fileshash[$filename]=$db->lastInsertId();
+				$fileshash[$filename]=$db->lastInsertId($kfm_db_prefix.'files','id');
 			}
 			$writable=is_writable(str_replace('//','/',$reqdir.'/'.$filename))?true:false;
 			$files[]=array('name'=>$filename,'parent'=>$rootid,'id'=>$fileshash[$filename],'writable'=>$writable);
@@ -213,7 +213,7 @@ function _search($keywords,$tags){
 			}
 		}
 	}
-	{ # keywords
+	if(($tags&&count($valid_files))||$keywords){ # keywords
 		$constraints='';
 		if(count($valid_files))$constraints=' and (id='.join(' or id=',$valid_files).')';
 		$q=$db->query("select id,name,directory from ".$kfm_db_prefix."files where name like '%".addslashes($keywords)."%'".$constraints." order by name");
@@ -238,8 +238,8 @@ function _tagAdd($recipients,$tagList){
 			$db->query("delete from ".$kfm_db_prefix."tagged_files where tag_id=".$tag_id." and (file_id=".join(' or file_id=',$recipients).")");
 		}
 		else{
-			$q=$db->query("insert into ".$kfm_db_prefix."tags set name='".addslashes($tag)."'");
-			$tag_id=$db->lastInsertId();
+			$q=$db->query("insert into ".$kfm_db_prefix."tags (name) values('".addslashes($tag)."')");
+			$tag_id=$db->lastInsertId($kfm_db_prefix.'tags','id');
 		}
 		foreach($recipients as $file_id)$db->query("insert into ".$kfm_db_prefix."tagged_files (tag_id,file_id) values(".$tag_id.",".$file_id.")");
 	}
