@@ -69,7 +69,7 @@ set_error_handler('kfm_error_log');
 	define('WORKPATH', $workpath);
 	define('WORKURL', $workurl);
 	if(is_dir($workpath)){
-		if(!is_writable($workpath)) $workdir = false;
+		if(!is_writable($workpath))$workdir=false;
 	}else{
 		# Support for creating the directory
 		$workpath_tmp = substr($workpath,0,-1);
