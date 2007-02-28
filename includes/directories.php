@@ -85,7 +85,7 @@ function _loadDirectories($root){
 				}
 				if(!isset($dirshash[$file])){
 					kfm_add_directory_to_db($file,$ff1,$rootid);
-					$dirshash[$file]=$db->lastInsertId();
+					$dirshash[$file]=$db->lastInsertId($kfm_db_prefix.'directories','id');
 				}
 				$directories[]=array($file,$directory[1],$dirshash[$file]);
 			}
