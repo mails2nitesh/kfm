@@ -4,6 +4,7 @@
  *  
  *  File Authors:
  *    Janich Rasmussen - krudt@krudtting.dk
+ *    Bo Kamp Dudek    - bo@familiendudek.dk
  */
 
  
@@ -50,18 +51,18 @@ ChangeCaption:
 WhatFilenameToCreateAs:
 	"Hvilken datatype skal filen være?",
 AskIfOverwrite:
-	"En fil med navnet \"%1\" eksistere allerede. Overskriv filen?",
+	"En fil med navnet \"%1\" eksisterer allerede. Overskriv filen?",
 NoForwardslash:
 	"\nDu må ikke bruge '/' i filnavne",
 
 CreateDirMessage:
 	"Opret en undermappe til \"%1\":",
 DelDirMessage:
-	"Er du sikker på, du vil slette mappen \"%1\"?",
+	"Er du sikker på, at du vil slette mappen \"%1\"?",
 DelFileMessage:
-	"Er du sikker på, du vil slette filen \"%1\"",
+	"Er du sikker på, at du vil slette filen \"%1\"",
 DelMultipleFilesMessage:
-	"Er du sikker på, du vil slette følgende filer?\n\n'",
+	"Er du sikker på, at du vil slette følgende filer?\n\n'",
 DownloadFileFromMessage:
 	"Hent fil hvorfra?",	 
 FileSavedAsMessage:
@@ -76,7 +77,7 @@ NewWidthConfirmTxt:
 NewHeight:
 	"Angiv en ny højde?",
 NewHeightConfirmTxt:
-	"Nye højde bliver: \"%1\"\n\nEr dette korrekt?",
+	"Ny højde bliver: \"%1\"\n\nEr dette korrekt?",
 
 RenamedFile:
 	"Omdøber filen \"%1\" til \"%2\".", 
@@ -121,7 +122,7 @@ CouldntReadDir:
 CannotRenameFile:
 	"Fejl: Kunne ikke omdøbe filen \"%1\" til \"%2\"",
 FilenameAlreadyExists:
-	"Fejl: En fil med samme navn eksistere allerede",
+	"Fejl: En fil med samme navn eksisterer allerede",
 
 // new in 0.5
 EditTextFile:
@@ -161,15 +162,15 @@ FileDetails:
 Search:
 	"Søg",
 IllegalDirectoryName:
-	"ikke gyldigt mappenavn \"%1\"",
+	"Ikke gyldigt mappenavn \"%1\"",
 RecursiveDeleteWarning:
 	"\"%1\" indeholder filer\nVil du slette mappen og alt indhold?\n*ADVARSEL* DENNE HANDLING KAN IKKE FORTRYDES",
 RmdirFailed:
-	"kunne ikke slette mappen \"%1\"",
+	"Kunne ikke slette mappen \"%1\"",
 DirNotInDb:
-	"mappen kunne ikke findes i databasen",
+	"Mappen kunne ikke findes i databasen",
 ShowPanel:
-	"vis panel \"%1\"",
+	"Vis panel \"%1\"",
 ChangeCaption:
 	"Ret beskrivelse", 
 NewDirectory:
@@ -179,9 +180,9 @@ Upload:
 NewCaptionIsThisCorrect:
 	"Ny beskrivelse:\n%1\n\nEr dette korrekt?",
 Close:
-	"luk",
+	"Luk",
 Loading:
-	"indlæser",
+	"Indlæser",
 AreYouSureYouWantToCloseKFM:
 	"Vil du lukke KFM vinduet?",
 PleaseSelectFileBeforeRename:
@@ -191,62 +192,62 @@ RenameOnlyOneFile:
 RenameFileToWhat:
 	"Omdøb filen \"%1\" til?",
 NoRestrictions:
-	"ingen restriktioner",
+	"Ingen restriktioner",
 Filename:
-	"filnavn",
+	"Filnavn",
 Maximise:
-	"maksimer",
+	"Maksimer",
 Minimise:
-	"minimer",
+	"Minimer",
 AllowedFileExtensions:
-	"tilladte filtyper",
+	"Tilladte filtyper",
 Filesize:
-	"størrelse",
+	"Størrelse",
 MoveDown:
-	"ryk ned",
+	"Flyt ned",
 Mimetype:
-	"mimetype",
+	"MIME Type",
 MoveUp:
-	"ryk op",
+	"Flyt op",
 Restore:
-	"gendan",
+	"Gendan",
 Caption:
-	"beskrivelse",
+	"Beskrivelse",
 CopyFromURL:
-	"Copy from URL",
+	"Kopiér fra URL",
 ExtractZippedFile:
-	"Extract zipped file",
+	"Pak zip-fil ud",
 
 // new in 0.8
 ViewImage:
-	"view image",
+	"Vis billede",
 ReturnThumbnailToOpener:
-	"return thumbnail to opener",
+	"Returnér thumbnail til editor",
 AddTagsToFiles:
-	"add tags to file(s)",
+	"Tilføj tags til fil(er)",
 RemoveTagsFromFiles:
-	"remove tags from file(s)",
+	"Fjern tags fra fil(er)",
 HowWouldYouLikeToRenameTheseFiles:
-	"How would you like to rename these files?\n\nexample: \"images-***.jpg\" will rename files to \"images-001.jpg\", \"images-002.jpg\", ...",
+	"Ønsker du at omdøbe disse filer?\n\nEksempel: \"billede-***.jpg\" vil omdøbe filerne til \"billede-001.jpg\", \"billede-002.jpg\", ...",
 YouMustPlaceTheWildcard:
-	"You must place the wildcard character * somewhere in the filename template",
+	"Du skal erstatte joker-tegnet * et sted i filnavn-skabelonen",
 YouNeedMoreThan:
-	"You need more than %1 * characters to create %2 filenames",
+	"Du behøver mere end %1 * tegn for at oprette %2 filnavne",
 NoFilesSelected:
-	"no files selected",
+	"Ingen filer markeret",
 Tags:
-	"tags",
+	"Tags",
 IfYouUseMultipleWildcards:
-	"If you use multiple wildcards in the filename template, they must be grouped together",
+	"Hvis du bruger flere joker-tegn i filnavn-skabelonen, skal de være grupperet",
 NewCaption:
-	"New Caption",
+	"Ny titel",
 WhatMaximumSize:
-	"What maximum size should be returned?",
+	"Hvilken maksimal størrelse skal returnéres?",
 CommaSeparated:
-	"comma-separated",
+	"Komma-separeret",
 WhatIsTheNewTag:
-	"What is the new tag?\nFor multiple tags, separate by commas.",
+	"Hvad er det nye tag?\nHvis du bruger flere tags, skal du separere med kommaer.",
 WhichTagsDoYouWantToRemove:
-	"Which tags do you want to remove?\nFor multiple tags, separate by commas."
+	"Hvilke tags ønsker du at fjerne?\nHvis du bruger flere tags, skal du separere med kommaer."
 
 }
