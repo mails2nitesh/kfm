@@ -49,6 +49,10 @@ function getOffset(el,s) {
 function getWindowScrollAt(){
 	return {x:window.pageXOffset,y:window.pageYOffset};
 }
+function inArray(needle,haystack){
+	for(var i=0;i<haystack.length;++i)if(haystack[i]==needle)return true;
+	return false;
+}
 function isArray(o){
 	return o instanceof Array||typeof o=='array';
 }

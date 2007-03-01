@@ -84,6 +84,8 @@ require_once('includes/kaejax.php');
 			var kfm_file_handler="<?php echo $kfm_file_handler; ?>";
 			var kfm_log_level=<?php echo $kfm_log_level; ?>;
 			var kfm_theme="<?php echo $kfm_theme; ?>";
+			var kfm_hidden_panels="<?php echo $kfm_hidden_panels; ?>".split(',');
+			for(var i=0;i<kfm_hidden_panels.length;++i)kfm_hidden_panels[i]='kfm_'+kfm_hidden_panels[i]+'_panel';
 			<?php echo kaejax_get_javascript(); ?>
 			<?php if(isset($_GET['kfm_callerType']))echo 'window.kfm_callerType="'.addslashes($_GET['kfm_callerType']).'";'; ?>
 			var editable_extensions=["<?php echo join('","',$kfm_editable_extensions);?>"];
