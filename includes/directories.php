@@ -93,7 +93,7 @@ function _loadDirectories($root){
 		}
 		closedir($handle);
 		if(count($dirshash)){ # remove stale database entries (directories removed by hand)
-			foreach($dirshash as $k=>$v)_rmdir2($v);
+		#	foreach($dirshash as $k=>$v)_rmdir2($v);
 		}
 		sort($directories);
 		return array('parent'=>$rootid,'reqdir'=>$root,'directories'=>$directories,'properties'=>kfm_getDirectoryProperties($root.'/'));
