@@ -88,9 +88,13 @@ function _loadDirectories($root){
 					$dirshash[$file]=$kfmdb->lastInsertId($kfm_db_prefix.'directories','id');
 				}
 				$directories[]=array($file,$directory[1],$dirshash[$file]);
+				unset($dirshash[$file]);
 			}
 		}
 		closedir($handle);
+		if(count($dirshash)){ # remove stale database entries (directories removed by hand)
+			foreach($dirshash as $k=>$v)_rmdir2($v);
+		}
 		sort($directories);
 		return array('parent'=>$rootid,'reqdir'=>$root,'directories'=>$directories,'properties'=>kfm_getDirectoryProperties($root.'/'));
 	}
@@ -143,11 +147,11 @@ function _rmdir2($dir){ # adapted from http://php.net/rmdir
 	}
 	if(isset($dirdata)){
 		{ # sqlite doesn't honour referential integrity, so files need to be manually removed.
-			$q=$kfmdb->query("select id from ".$kfm_db_prefix."directories where physical_address like '".$dirdata['physical_address']."%'");
+			$q=$kfmdb->query("select id from ".$kfm_db_prefix."directories where physical_address='".$dirdata['physical_address']."' or physical_address like '".$dirdata['physical_address']."/%'");
 			$dirs=$q->fetchAll();
 			foreach($dirs as $dir)$kfmdb->exec("delete from ".$kfm_db_prefix."files where parent=".$dir["id"]);
 		}
-		$kfmdb->exec("delete from ".$kfm_db_prefix."directories where physical_address like '".$dirdata['physical_address']."%'");
+		$kfmdb->exec("delete from ".$kfm_db_prefix."directories where physical_address='".$dirdata['physical_address']."' or physical_address like '".$dirdata['physical_address']."/%'");
 	}
 }
 ?>
