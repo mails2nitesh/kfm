@@ -108,9 +108,16 @@ function _loadFiles($rootid=1){
 			}
 			$writable=is_writable(str_replace('//','/',$reqdir.'/'.$filename))?true:false;
 			$files[]=array('name'=>$filename,'parent'=>$rootid,'id'=>$fileshash[$filename],'writable'=>$writable);
+			unset($fileshash[$filename]);
 		}
 		sort($files);
 		closedir($handle);
+		if(count($fileshash)){ # remove stale database entries (directories removed by hand)
+			foreach($fileshash as $k=>$v){
+				$f=new File($v);
+				$f->delete();
+			}
+		}
 		{ # update session data
 			$_SESSION['kfm']['currentdir']=$reqdir;
 			$_SESSION['kfm']['cwd_id']=$rootid;
