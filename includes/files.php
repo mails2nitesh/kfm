@@ -1,8 +1,8 @@
 <?php
 function _add_file_to_db($filename,$directory_id){
-	global $db,$kfm_db_prefix;
+	global $kfmdb,$kfm_db_prefix;
 	$sql="insert into ".$kfm_db_prefix."files (name,directory) values('".addslashes($filename)."',".$directory_id.")";
-	return $db->query($sql);
+	return $kfmdb->query($sql);
 }
 function _createEmptyFile($filename){
 	if(!kfm_checkAddr($_SESSION['kfm']['currentdir'].'/'.$filename))return 'error: filename not allowed';
@@ -71,8 +71,8 @@ function _getFileUrl($fid){
 	return $file->getUrl();
 }
 function _getTagName($id){
-	global $db,$kfm_db_prefix;
-	$q=$db->query("select name from ".$kfm_db_prefix."tags where id=".$id);
+	global $kfmdb,$kfm_db_prefix;
+	$q=$kfmdb->query("select name from ".$kfm_db_prefix."tags where id=".$id);
 	$r=$q->fetchRow();
 	if(count($r))return array($id,$r['name']);
 	return array($id,'UNKNOWN TAG '.$id);
@@ -87,7 +87,7 @@ function _getTextFile($fid){
 	return 'error: "'.$file->name.'" cannot be edited (restricted)'; # TODO: new string
 }
 function _loadFiles($rootid=1){
-	global $db,$kfm_db_prefix;
+	global $kfmdb,$kfm_db_prefix;
 	$dirdata=kfm_getDirectoryDbInfo($rootid);
 	$reqdir=count($dirdata)?$dirdata['physical_address'].'/':$GLOBALS['rootdir'];
 	$root=str_replace($GLOBALS['rootdir'],'',$reqdir);
@@ -95,7 +95,7 @@ function _loadFiles($rootid=1){
 	$reqdir=$GLOBALS['rootdir'].$root;
 	if(!is_dir($reqdir))return 'error: "'.$reqdir.'" is not a directory'; # TODO: new string
 	if($handle=opendir($reqdir)){
-		$q=$db->query("select * from ".$kfm_db_prefix."files where directory=".$rootid);
+		$q=$kfmdb->query("select * from ".$kfm_db_prefix."files where directory=".$rootid);
 		$filesdb=$q->fetchAll();
 		$fileshash=array();
 		if(is_array($filesdb))foreach($filesdb as $r)$fileshash[$r['name']]=$r['id'];
@@ -104,7 +104,7 @@ function _loadFiles($rootid=1){
 			if(in_array(strtolower($filename),$GLOBALS['kfm_banned_files']))continue;
 			if(!isset($fileshash[$filename])){
 				kfm_add_file_to_db($filename,$rootid);
-				$fileshash[$filename]=$db->lastInsertId($kfm_db_prefix.'files','id');
+				$fileshash[$filename]=$kfmdb->lastInsertId($kfm_db_prefix.'files','id');
 			}
 			$writable=is_writable(str_replace('//','/',$reqdir.'/'.$filename))?true:false;
 			$files[]=array('name'=>$filename,'parent'=>$rootid,'id'=>$fileshash[$filename],'writable'=>$writable);
@@ -120,25 +120,25 @@ function _loadFiles($rootid=1){
 	return 'couldn\'t read directory';
 }
 function _moveFiles($files,$dir_id){
-	global $db,$kfm_db_prefix;
+	global $kfmdb,$kfm_db_prefix;
 	$dirdata=kfm_getDirectoryDbInfo($dir_id);
 	if(!$dirdata)return 'error: no data for directory id "'.$dir_id.'"'; # TODO: new string
 	$to=$dirdata['physical_address'].'/';
 	if(!kfm_checkAddr($to))return 'error: illegal directory "'.$to.'"'; # TODO: new string
 	foreach($files as $fid){
-		$q=$db->query("select ".$kfm_db_prefix."directories.physical_address as da,".$kfm_db_prefix."files.name as fn
+		$q=$kfmdb->query("select ".$kfm_db_prefix."directories.physical_address as da,".$kfm_db_prefix."files.name as fn
 			from ".$kfm_db_prefix."files,".$kfm_db_prefix."directories where ".$kfm_db_prefix."directories.id=".$kfm_db_prefix."files.directory and ".$kfm_db_prefix."files.id=".$fid);
 		if(!($filedata=$q->fetchRow()))return 'error: no data for file id "'.$file.'"'; # TODO: new string
 		$dir=$filedata['da'];
 		$file=$filedata['fn'];
 		if(!kfm_checkAddr($dir.'/'.$file))return;
 		rename($dir.'/'.$file,$to.'/'.$file);
-		$q=$db->query("update ".$kfm_db_prefix."files set directory=".$dir_id." where id=".$fid);
+		$q=$kfmdb->query("update ".$kfm_db_prefix."files set directory=".$dir_id." where id=".$fid);
 	}
 	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
 function _renameFile($fid,$newfilename,$refreshFiles=true){
-	global $db,$kfm_db_prefix;
+	global $kfmdb,$kfm_db_prefix;
 	$file=new File($fid);
 	if(!file_exists($file->path))return;
 	$filename=$file->name;
@@ -146,7 +146,7 @@ function _renameFile($fid,$newfilename,$refreshFiles=true){
 	$newfile=$_SESSION['kfm']['currentdir'].'/'.$newfilename;
 	if(file_exists($newfile))return 'error: a file of that name already exists'; # TODO: new string
 	rename($_SESSION['kfm']['currentdir'].'/'.$filename,$newfile);
-	$db->query("update ".$kfm_db_prefix."files set name='".addslashes($newfilename)."' where id=".$fid);
+	$kfmdb->query("update ".$kfm_db_prefix."files set name='".addslashes($newfilename)."' where id=".$fid);
 	if($refreshFiles)return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
 function _renameFiles($files,$template){
@@ -191,18 +191,18 @@ function _saveTextFile($fid,$text){
 	return $f->hasErrors()?$f->getErrors():'file saved';
 }
 function _search($keywords,$tags){
-	global $db,$kfm_db_prefix;
+	global $kfmdb,$kfm_db_prefix;
 	$valid_files=array();
 	if($tags){
 		$arr=explode(',',$tags);
 		foreach($arr as $tag){
 			$tag=ltrim(rtrim($tag));
 			if($tag){
-				$q=$db->query("select id from ".$kfm_db_prefix."tags where name='".addslashes($tag)."'");
+				$q=$kfmdb->query("select id from ".$kfm_db_prefix."tags where name='".addslashes($tag)."'");
 				$r=$q->fetchRow();
 				if(count($r)){
 					if(count($valid_files))$constraints=' and (file_id='.join(' or file_id=',$valid_files).')';
-					$q2=$db->query("select file_id from ".$kfm_db_prefix."tagged_files where tag_id=".$r['id'].$constraints);
+					$q2=$kfmdb->query("select file_id from ".$kfm_db_prefix."tagged_files where tag_id=".$r['id'].$constraints);
 					$rs2=$q2->fetchAll();
 					if(count($rs2)){
 						$valid_files=array();
@@ -216,13 +216,13 @@ function _search($keywords,$tags){
 	if(($tags&&count($valid_files))||$keywords){ # keywords
 		$constraints='';
 		if(count($valid_files))$constraints=' and (id='.join(' or id=',$valid_files).')';
-		$q=$db->query("select id,name,directory from ".$kfm_db_prefix."files where name like '%".addslashes($keywords)."%'".$constraints." order by name");
+		$q=$kfmdb->query("select id,name,directory from ".$kfm_db_prefix."files where name like '%".addslashes($keywords)."%'".$constraints." order by name");
 		$files=$q->fetchAll();
 	}
 	return array('reqdir'=>'search results','files'=>$files,'uploads_allowed'=>0); # TODO: new string
 }
 function _tagAdd($recipients,$tagList){
-	global $db,$kfm_db_prefix;
+	global $kfmdb,$kfm_db_prefix;
 	if(!is_array($recipients))$recipients=array($recipients);
 	$arr=explode(',',$tagList);
 	$tagList=array();
@@ -231,34 +231,34 @@ function _tagAdd($recipients,$tagList){
 		if($v)$tagList[]=$v;
 	}
 	if(count($tagList))foreach($tagList as $tag){
-		$q=$db->query("select id from ".$kfm_db_prefix."tags where name='".addslashes($tag)."'");
+		$q=$kfmdb->query("select id from ".$kfm_db_prefix."tags where name='".addslashes($tag)."'");
 		$r=$q->fetchRow();
 		if(count($r)){
 			$tag_id=$r['id'];
-			$db->query("delete from ".$kfm_db_prefix."tagged_files where tag_id=".$tag_id." and (file_id=".join(' or file_id=',$recipients).")");
+			$kfmdb->query("delete from ".$kfm_db_prefix."tagged_files where tag_id=".$tag_id." and (file_id=".join(' or file_id=',$recipients).")");
 		}
 		else{
-			$q=$db->query("insert into ".$kfm_db_prefix."tags (name) values('".addslashes($tag)."')");
-			$tag_id=$db->lastInsertId($kfm_db_prefix.'tags','id');
+			$q=$kfmdb->query("insert into ".$kfm_db_prefix."tags (name) values('".addslashes($tag)."')");
+			$tag_id=$kfmdb->lastInsertId($kfm_db_prefix.'tags','id');
 		}
-		foreach($recipients as $file_id)$db->query("insert into ".$kfm_db_prefix."tagged_files (tag_id,file_id) values(".$tag_id.",".$file_id.")");
+		foreach($recipients as $file_id)$kfmdb->query("insert into ".$kfm_db_prefix."tagged_files (tag_id,file_id) values(".$tag_id.",".$file_id.")");
 	}
 	return _getFileDetails($recipients[0]);
 }
 function _tagRemove($recipients,$tagList){
-	global $db,$kfm_db_prefix;
+	global $kfmdb,$kfm_db_prefix;
 	if(!is_array($recipients))$recipients=array($recipients);
 	$arr=explode(',',$tagList);
 	$tagList=array();
 	foreach($arr as $tag){
 		$tag=ltrim(rtrim($tag));
 		if($tag){
-			$q=$db->query("select id from ".$kfm_db_prefix."tags where name='".addslashes($tag)."'");
+			$q=$kfmdb->query("select id from ".$kfm_db_prefix."tags where name='".addslashes($tag)."'");
 			$r=$q->fetchRow();
 			if(count($r))$tagList[]=$r['id'];
 		}
 	}
-	if(count($tagList))$db->exec("delete from ".$kfm_db_prefix."tagged_files where (file_id=".join(' or file_id=',$recipients).") and (tag_id=".join(' or tag_id="',$tagList).")");
+	if(count($tagList))$kfmdb->exec("delete from ".$kfm_db_prefix."tagged_files where (file_id=".join(' or file_id=',$recipients).") and (tag_id=".join(' or tag_id="',$tagList).")");
 	return _getFileDetails($recipients[0]);
 }
 function _viewTextFile($fileid){

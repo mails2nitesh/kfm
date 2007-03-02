@@ -11,7 +11,7 @@ if(isset($_GET['type'])&&$_GET['type']=='thumb'){
 	$name=$id;
 }
 else{
-	$q=$db->query("select physical_address,".$kfm_db_prefix."files.name as name from ".$kfm_db_prefix."directories,".$kfm_db_prefix."files where directory=".$kfm_db_prefix."directories.id and ".$kfm_db_prefix."files.id=".$id);
+	$q=$kfmdb->query("select physical_address,".$kfm_db_prefix."files.name as name from ".$kfm_db_prefix."directories,".$kfm_db_prefix."files where directory=".$kfm_db_prefix."directories.id and ".$kfm_db_prefix."files.id=".$id);
 	$r=$q->fetchRow();
 	if(!count($r)){
 		echo 'error: file id #'.$id.' not found in database'; # TODO: new string
@@ -20,7 +20,7 @@ else{
 	if(isset($_GET['width'])&&isset($_GET['height'])){
 		$width=$_GET['width'];
 		$height=$_GET['height'];
-		$q2=$db->query("select id from ".$kfm_db_prefix."files_images_thumbs where image_id=".$id." and width<=".$width." and height<=".$height." and (width=".$width." or height=".$height.")");
+		$q2=$kfmdb->query("select id from ".$kfm_db_prefix."files_images_thumbs where image_id=".$id." and width<=".$width." and height<=".$height." and (width=".$width." or height=".$height.")");
 		$r2=$q2->fetchRow();
 		if(count($r2)){
 			$path=WORKPATH.'thumbs/'.$r2['id'];

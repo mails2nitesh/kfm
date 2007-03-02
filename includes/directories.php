@@ -1,9 +1,9 @@
 <?php
 function _add_directory_to_db($name,$physical_address,$parent){
-	global $db,$kfm_db_prefix;
+	global $kfmdb,$kfm_db_prefix;
 	$physical_address = str_replace('//','/', $physical_address);
 	$sql="insert into ".$kfm_db_prefix."directories (name,physical_address,parent) values('".addslashes($name)."','".addslashes($physical_address)."',".$parent.")";
-	return $db->exec($sql);
+	return $kfmdb->exec($sql);
 }
 function _createDirectory($parent,$name){
 	$dirdata=_getDirectoryDbInfo($parent);
@@ -34,9 +34,9 @@ function _deleteDirectory($id,$recursive=0){
 	return kfm_loadDirectories($parent);
 }
 function _getDirectoryDbInfo($id){
-	global $db,$kfm_db_prefix;
+	global $kfmdb,$kfm_db_prefix;
 	if(!isset($_GLOBALS['cache_directories'][$id])){
-		$q=$db->query("select * from ".$kfm_db_prefix."directories where id=".$id);
+		$q=$kfmdb->query("select * from ".$kfm_db_prefix."directories where id=".$id);
 		$_GLOBALS['cache_directories'][$id]=$q->fetchRow();
 	}
 	return $_GLOBALS['cache_directories'][$id];
@@ -52,7 +52,7 @@ function _getDirectoryProperties($dir){
 	return $properties;
 }
 function _loadDirectories($root){
-	global $db,$kfm_db_prefix, $kfm_banned_folders;
+	global $kfmdb,$kfm_db_prefix, $kfm_banned_folders;
 	if(is_numeric($root)){
 		$rootid=$root;
 		$dirdata=_getDirectoryDbInfo($rootid);
@@ -61,14 +61,14 @@ function _loadDirectories($root){
 	}
 	if(!isset($rootid)){
 		$reqdir=str_replace('//','/',$GLOBALS['rootdir'].$root);
-		$q=$db->query("select id from ".$kfm_db_prefix."directories where physical_address='".addslashes($reqdir)."'");
+		$q=$kfmdb->query("select id from ".$kfm_db_prefix."directories where physical_address='".addslashes($reqdir)."'");
 		$r=$q->fetchRow();
 		$rootid=$r['id'];
 	}
 	if(!kfm_checkAddr($root))return 'error: illegal address "'.$root.'"';
 	if(!is_dir($reqdir))mkdir($reqdir,0755);
 	if($handle=opendir($reqdir)){
-		$q=$db->query("select id,name from ".$kfm_db_prefix."directories where parent=".$rootid);
+		$q=$kfmdb->query("select id,name from ".$kfm_db_prefix."directories where parent=".$rootid);
 		$dirsdb=$q->fetchAll();
 		$dirshash=array();
 		if(is_array($dirsdb))foreach($dirsdb as $r)$dirshash[$r['name']]=$r['id'];
@@ -85,7 +85,7 @@ function _loadDirectories($root){
 				}
 				if(!isset($dirshash[$file])){
 					kfm_add_directory_to_db($file,$ff1,$rootid);
-					$dirshash[$file]=$db->lastInsertId($kfm_db_prefix.'directories','id');
+					$dirshash[$file]=$kfmdb->lastInsertId($kfm_db_prefix.'directories','id');
 				}
 				$directories[]=array($file,$directory[1],$dirshash[$file]);
 			}
@@ -97,7 +97,7 @@ function _loadDirectories($root){
 	return 'couldn\'t read directory "'.$reqdir.'"';
 }
 function _moveDirectory($from,$to){
-	global $db,$kfm_db_prefix;
+	global $kfmdb,$kfm_db_prefix;
 	$f_r=_getDirectoryDbInfo($from);
 	$t_r=_getDirectoryDbInfo($to);
 	unset($_GLOBALS['cache_directories'][$from]);
@@ -119,12 +119,12 @@ function _moveDirectory($from,$to){
 			break;
 		}
 	}
-	$db->exec($fugly) or die('error: '.print_r($db->errorInfo(),true));
-	$db->exec("update ".$kfm_db_prefix."directories set parent=".$to." where id=".$from) or die('error: '.print_r($db->errorInfo(),true));
+	$kfmdb->exec($fugly) or die('error: '.print_r($kfmdb->errorInfo(),true));
+	$kfmdb->exec("update ".$kfm_db_prefix."directories set parent=".$to." where id=".$from) or die('error: '.print_r($kfmdb->errorInfo(),true));
 	return _loadDirectories(1);
 }
 function _rmdir2($dir){ # adapted from http://php.net/rmdir
-	global $db,$kfm_db_prefix;
+	global $kfmdb,$kfm_db_prefix;
 	if(is_numeric($dir)&&$dir!=0){
 		$dirdata=_getDirectoryDbInfo($dir);
 		$dir=$dirdata['physical_address'];
@@ -143,11 +143,11 @@ function _rmdir2($dir){ # adapted from http://php.net/rmdir
 	}
 	if(isset($dirdata)){
 		{ # sqlite doesn't honour referential integrity, so files need to be manually removed.
-			$q=$db->query("select id from ".$kfm_db_prefix."directories where physical_address like '".$dirdata['physical_address']."%'");
+			$q=$kfmdb->query("select id from ".$kfm_db_prefix."directories where physical_address like '".$dirdata['physical_address']."%'");
 			$dirs=$q->fetchAll();
-			foreach($dirs as $dir)$db->exec("delete from ".$kfm_db_prefix."files where parent=".$dir["id"]);
+			foreach($dirs as $dir)$kfmdb->exec("delete from ".$kfm_db_prefix."files where parent=".$dir["id"]);
 		}
-		$db->exec("delete from ".$kfm_db_prefix."directories where physical_address like '".$dirdata['physical_address']."%'");
+		$kfmdb->exec("delete from ".$kfm_db_prefix."directories where physical_address like '".$dirdata['physical_address']."%'");
 	}
 }
 ?>

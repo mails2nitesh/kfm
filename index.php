@@ -1,16 +1,16 @@
 <?php
 # see license.txt for licensing
 require_once('initialise.php');
-require_once('includes/kaejax.php');
+require_once($kfm_base_path.'includes/kaejax.php');
 
 { # export kaejax stuff
-	kaejax_export(
+	kfm_kaejax_export(
 		'kfm_changeCaption','kfm_createDirectory','kfm_createEmptyFile','kfm_deleteDirectory','kfm_downloadFileFromUrl',
 		'kfm_extractZippedFile','kfm_getFileDetails','kfm_getFileUrl','kfm_getTagName','kfm_getTextFile','kfm_getThumbnail','kfm_loadDirectories',
 		'kfm_loadFiles','kfm_moveDirectory','kfm_moveFiles','kfm_renameFile','kfm_renameFiles','kfm_resizeImage','kfm_rm','kfm_rotateImage',
 		'kfm_saveTextFile','kfm_search','kfm_tagAdd','kfm_tagRemove','kfm_viewTextFile'
 	);
-	if(!empty($_POST['kaejax']))kaejax_handle_client_request();
+	if(!empty($_POST['kaejax']))kfm_kaejax_handle_client_request();
 }
 
 ?>
@@ -86,7 +86,7 @@ require_once('includes/kaejax.php');
 			var kfm_theme="<?php echo $kfm_theme; ?>";
 			var kfm_hidden_panels="<?php echo $kfm_hidden_panels; ?>".split(',');
 			for(var i=0;i<kfm_hidden_panels.length;++i)kfm_hidden_panels[i]='kfm_'+kfm_hidden_panels[i]+'_panel';
-			<?php echo kaejax_get_javascript(); ?>
+			<?php echo kfm_kaejax_get_javascript(); ?>
 			<?php if(isset($_GET['kfm_callerType']))echo 'window.kfm_callerType="'.addslashes($_GET['kfm_callerType']).'";'; ?>
 			var editable_extensions=["<?php echo join('","',$kfm_editable_extensions);?>"];
 			var viewable_extensions=["<?php echo join('","',$kfm_viewable_extensions);?>"];
@@ -100,8 +100,8 @@ require_once('includes/kaejax.php');
 				$today=date('Y-m-d');
 				if(!isset($_SESSION['kfm_parameters']['last_registration'])||$_SESSION['kfm_parameters']['last_registration']!=$today){
 					echo '<img src="http://kfm.verens.com/extras/register.php?version='.urlencode(KFM_VERSION).'&amp;domain_name='.urlencode($_SERVER['SERVER_NAME']).'" />';
-					$db->query("delete from ".$kfm_db_prefix."parameters where name='last_registration'");
-					$db->query("insert into ".$kfm_db_prefix."parameters (name,value) values ('last_registration','".$today."')");
+					$kfmdb->query("delete from ".$kfm_db_prefix."parameters where name='last_registration'");
+					$kfmdb->query("insert into ".$kfm_db_prefix."parameters (name,value) values ('last_registration','".$today."')");
 					$_SESSION['kfm_parameters']['last_registration']=$today;
 				}
 			}

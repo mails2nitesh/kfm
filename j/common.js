@@ -56,23 +56,23 @@ function inArray(needle,haystack){
 function isArray(o){
 	return o instanceof Array||typeof o=='array';
 }
-function kaejax_create_functions(url,f){
-	kaejax_is_loaded=1;
+function kfm_kaejax_create_functions(url,f){
+	kfm_kaejax_is_loaded=1;
 	for(var i=0;i<f.length;++i){
-		eval('window.x_'+f[i]+'=function(){kaejax_do_call("'+f[i]+'",arguments)}');
+		eval('window.x_'+f[i]+'=function(){kfm_kaejax_do_call("'+f[i]+'",arguments)}');
 		function_urls[f[i]]=url;
 	}
 }
-function kaejax_do_call(func_name,args){
+function kfm_kaejax_do_call(func_name,args){
 	var uri=function_urls[func_name];
-	if(!window.kaejax_timeouts[uri])window.kaejax_timeouts[uri]={t:setTimeout('kaejax_sendRequests("'+uri+'")',1),c:[]};
-	var l=window.kaejax_timeouts[uri].c.length,v2=[];
+	if(!window.kfm_kaejax_timeouts[uri])window.kfm_kaejax_timeouts[uri]={t:setTimeout('kfm_kaejax_sendRequests("'+uri+'")',1),c:[]};
+	var l=window.kfm_kaejax_timeouts[uri].c.length,v2=[];
 	for(var i=0;i<args.length-1;++i)v2[v2.length]=args[i]
-	window.kaejax_timeouts[uri].c[l]={f:func_name,c:args[args.length-1],v:v2};
+	window.kfm_kaejax_timeouts[uri].c[l]={f:func_name,c:args[args.length-1],v:v2};
 }
-function kaejax_sendRequests(uri){
-	var t=window.kaejax_timeouts[uri];
-	window.kaejax_timeouts[uri]=null;
+function kfm_kaejax_sendRequests(uri){
+	var t=window.kfm_kaejax_timeouts[uri];
+	window.kfm_kaejax_timeouts[uri]=null;
 	var x=new XMLHttpRequest(),post_data="kaejax="+escape(json.s.object(t).replace(/\+/g,'%2B')).replace(/%([89A-F][A-Z0-9])/g,'%u00$1');
 	post_data=kfm_sanitise_ajax(post_data);
 	x.open('POST',uri,true);
@@ -100,7 +100,7 @@ function loadJS(url){
 	loadedScripts.push(url);
 	var el=newEl('script');
 	el.type="text/javascript";
-	if(kaejax_is_loaded&&/\.php/.test(url))url+=(/\?/.test(url)?'&':'?')+'kaejax_is_loaded';
+	if(kfm_kaejax_is_loaded&&/\.php/.test(url))url+=(/\?/.test(url)?'&':'?')+'kfm_kaejax_is_loaded';
 	el.src=url;
 	getEls('head')[0].appendChild(el);
 	return 1;
