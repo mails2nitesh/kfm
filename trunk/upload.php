@@ -40,11 +40,11 @@ else $js='parent.kfm_log("error: permission denied for upload to this directory"
 ?>
 <html>
 	<head>
-		<script type="text/javascript">parent.x_kfm_loadFiles('<?php
-			echo $_SESSION['kfm']['cwd_id'];
-			?>',parent.kfm_refreshFiles);<?php
-			echo $js;
-			?>
+		<script type="text/javascript">
+<?php
+if($_POST['onload'])echo $_POST['onload'];
+else echo 'parent.x_kfm_loadFiles('.$_SESSION['kfm']['cwd_id'].',parent.kfm_refreshFiles);'.$js;
+?>
 		</script>
 	</head>
 	<body>

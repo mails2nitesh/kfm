@@ -21,34 +21,34 @@ class Image extends File{
 	}
 
 	function delete(){
-		global $db,$kfm_db_prefix;
+		global $kfmdb,$kfm_db_prefix;
 		parent::delete();
 		$this->deleteThumbs();
-		$db->exec('DELETE FROM '.$kfm_db_prefix.'files_images WHERE file_id='.$this->id);
+		$kfmdb->exec('DELETE FROM '.$kfm_db_prefix.'files_images WHERE file_id='.$this->id);
 		return !$this->hasErrors();
 	}
 	function deleteThumbs(){
-		global $db,$kfm_db_prefix;
-		$q=$db->query("SELECT id FROM ".$kfm_db_prefix."files_images_thumbs WHERE image_id=".$this->id);
+		global $kfmdb,$kfm_db_prefix;
+		$q=$kfmdb->query("SELECT id FROM ".$kfm_db_prefix."files_images_thumbs WHERE image_id=".$this->id);
 		$rs=$q->fetchAll();
 		foreach($rs as $r){
 			$icons=glob(WORKPATH.'thumbnails/'.$r['id'].'.*');
 			foreach($icons as $f)unlink($f);
 		}
 		$q=null;
-		$db->exec("DELETE FROM ".$kfm_db_prefix."files_images_thumbs WHERE image_id=".$this->id);
+		$kfmdb->exec("DELETE FROM ".$kfm_db_prefix."files_images_thumbs WHERE image_id=".$this->id);
 		$icons=glob(WORKPATH.$this->id.' [0-9]*x[0-9]*.*');
 		foreach($icons as $f)unlink($f);
 	}
 	function getImageId(){
-		global $db,$kfm_db_prefix;
+		global $kfmdb,$kfm_db_prefix;
 		$sql="SELECT id,caption FROM ".$kfm_db_prefix."files_images WHERE file_id='".$this->id."'";
-		$res=$db->query($sql);
+		$res=$kfmdb->query($sql);
 		if(!$res->numRows()){ // Create an image entry
 			$sql="INSERT INTO ".$kfm_db_prefix."files_images (file_id, caption) VALUES ('".$this->id."','".$this->name."')";
 			$this->caption = $this->name;
-			$db->exec($sql);
-			return $db->lastInsertId($kfm_db_prefix.'files_images','id');
+			$kfmdb->exec($sql);
+			return $kfmdb->lastInsertId($kfm_db_prefix.'files_images','id');
 		}else{ // get information
 			$row = $res->fetchRow();
 			$this->caption = $row['caption'];
@@ -56,15 +56,15 @@ class Image extends File{
 		}
 	}
 	function setCaption($caption){
-		global $db,$kfm_db_prefix;
-		$db->exec("UPDATE ".$kfm_db_prefix."files_images SET caption='".$caption."' WHERE file_id=".$this->id);
+		global $kfmdb,$kfm_db_prefix;
+		$kfmdb->exec("UPDATE ".$kfm_db_prefix."files_images SET caption='".$caption."' WHERE file_id=".$this->id);
 		$this->caption=$caption;
 	}
 	function setThumbnail($width=64,$height=64){
-		global $db,$kfm_db_prefix;
+		global $kfmdb,$kfm_db_prefix;
 		$thumbname=$this->id.' '.$width.'x'.$height.' '.$this->name;
 		if(!isset($this->info['mime'])||!in_array($this->info['mime'],array('image/jpeg','image/gif','image/png')))return false;
-		$q=$db->query("SELECT id FROM ".$kfm_db_prefix."files_images_thumbs WHERE image_id=".$this->id." and width<=".$width." and height<=".$height." and (width=".$width." or height=".$height.")");
+		$q=$kfmdb->query("SELECT id FROM ".$kfm_db_prefix."files_images_thumbs WHERE image_id=".$this->id." and width<=".$width." and height<=".$height." and (width=".$width." or height=".$height.")");
 		if($q->numRows()){
 			$r=$q->fetchRow();
 			$id=$r['id'];
@@ -82,13 +82,13 @@ class Image extends File{
 		if(!file_exists($this->thumb_path))$this->createThumb();
 	}
 	function createThumb($width=64,$height=64){
-		global $db,$kfm_db_prefix;
+		global $kfmdb,$kfm_db_prefix;
 		if(!is_dir(WORKPATH.'thumbs'))mkdir(WORKPATH.'thumbs');
 		$ratio=min($width/$this->width,$height/$this->height);
 		$thumb_width=$this->width*$ratio;
 		$thumb_height=$this->height*$ratio;
-		$db->exec("INSERT INTO ".$kfm_db_prefix."files_images_thumbs (image_id,width,height) VALUES(".$this->id.",".$thumb_width.",".$thumb_height.")");
-		$id=$db->lastInsertId($kfm_db_prefix.'files_images_thumbs','id');
+		$kfmdb->exec("INSERT INTO ".$kfm_db_prefix."files_images_thumbs (image_id,width,height) VALUES(".$this->id.",".$thumb_width.",".$thumb_height.")");
+		$id=$kfmdb->lastInsertId($kfm_db_prefix.'files_images_thumbs','id');
 		$file=WORKPATH.'thumbs/'.$id;
 		if($this->useImageMagick($this->path,'resize '.$thumb_width.'x'.$thumb_height,$file))$this->createResizedCopy($file,$thumb_width,$thumb_height);
 		return $id;

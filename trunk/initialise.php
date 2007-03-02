@@ -1,17 +1,18 @@
 <?php
 # see license.txt for licensing
+if(!isset($kfm_base_path))$kfm_base_path='';
 error_reporting(E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE);
 session_start();
-set_include_path(get_include_path().PATH_SEPARATOR .'pear');
-if(!file_exists('configuration.php')){
+set_include_path(get_include_path().PATH_SEPARATOR .$kfm_base_path.'pear');
+if(!file_exists($kfm_base_path.'configuration.php')){
 	echo '<em>Missing <code>configuration.php</code>!</em><p>If this is a fresh installation of KFM, then please rename <code>configuration.php.dist</code> to <code>configuration.php</code>, and edit it according to your project\'s needs.</p><p>If this is an upgraded version of KFM, please remove the parts of your old <code>config.php</code> which do not exist in <code>configuration.php.dist</code>, then rename it to <code>configuration.php</code>.</p>';
 	exit;
 }
-require('configuration.php');
+require_once($kfm_base_path.'configuration.php');
 
 
 { # API - for programmers only
-	if(file_exists('api/config.php'))include('api/config.php');
+	if(file_exists($kfm_base_path.'api/config.php'))include($kfm_base_path.'api/config.php');
 }
 function kfm_error_log($errno,$errstr,$errfile,$errline){
 	if(!ERROR_LOG_LEVEL)return;
@@ -94,12 +95,12 @@ set_error_handler('kfm_error_log');
 		case 'mysql': {
 			require_once('MDB2.php');
 			$dsn='mysql://'.$kfm_db_username.':'.$kfm_db_password.'@'.$kfm_db_host.'/'.$kfm_db_name;
-			$db=&MDB2::factory($dsn);
-			if(PEAR::isError($db))die($db->getMessage());
-			$db->setFetchMode(MDB2_FETCHMODE_ASSOC);
+			$kfmdb=&MDB2::factory($dsn);
+			if(PEAR::isError($kfmdb))die($kfmdb->getMessage());
+			$kfmdb->setFetchMode(MDB2_FETCHMODE_ASSOC);
 			if(!$_SESSION['db_defined']){
-				$res=&$db->query("show tables like '".$kfm_db_prefix_escaped."%'");
-				if(!$res->numRows())include('scripts/db.mysql.create.php');
+				$res=&$kfmdb->query("show tables like '".$kfm_db_prefix_escaped."%'");
+				if(!$res->numRows())include($kfm_base_path.'scripts/db.mysql.create.php');
 				else $_SESSION['db_defined']=1;
 			}
 			break;
@@ -107,26 +108,26 @@ set_error_handler('kfm_error_log');
 		case 'pgsql': {
 			require_once('MDB2.php');
 			$dsn='pgsql://'.$kfm_db_username.':'.$kfm_db_password.'@'.$kfm_db_host.'/'.$kfm_db_name;
-			$db=&MDB2::factory($dsn);
-			if(PEAR::isError($db))die($db->getMessage());
-			$db->setFetchMode(MDB2_FETCHMODE_ASSOC);
+			$kfmdb=&MDB2::factory($dsn);
+			if(PEAR::isError($kfmdb))die($kfmdb->getMessage());
+			$kfmdb->setFetchMode(MDB2_FETCHMODE_ASSOC);
 			if(!$_SESSION['db_defined']){
-				$res=&$db->query("SELECT tablename from pg_tables where tableowner=current_user AND tablename NOT LIKE E'pg\\\\_%' AND tablename NOT LIKE E'sql\\\\_%' AND tablename LIKE E'".$kfm_db_prefix_escaped."%'");
-				if($res->numRows()<1)include('scripts/db.pgsql.create.php');
+				$res=&$kfmdb->query("SELECT tablename from pg_tables where tableowner=current_user AND tablename NOT LIKE E'pg\\\\_%' AND tablename NOT LIKE E'sql\\\\_%' AND tablename LIKE E'".$kfm_db_prefix_escaped."%'");
+				if($res->numRows()<1)include($kfm_base_path.'scripts/db.pgsql.create.php');
 				else $_SESSION['db_defined']=1;
 			}
 			break;
 		}
 		case 'sqlite': {
 			require_once('MDB2.php');
-			$db_create = false;
+			$kfmdb_create = false;
 			define('DBNAME',$kfm_db_name);
-			if(!file_exists(WORKPATH.DBNAME))$db_create=true;
+			if(!file_exists(WORKPATH.DBNAME))$kfmdb_create=true;
 			$dsn=array('phptype'=>'sqlite','database'=>WORKPATH.DBNAME,'mode'=>'0644');
-			$db=&MDB2::factory($dsn);
-			if(PEAR::isError($db))die($db->getMessage());
-			$db->setFetchMode(MDB2_FETCHMODE_ASSOC);
-			if($db_create)include('scripts/db.sqlite.create.php');
+			$kfmdb=&MDB2::factory($dsn);
+			if(PEAR::isError($kfmdb))die($kfmdb->getMessage());
+			$kfmdb->setFetchMode(MDB2_FETCHMODE_ASSOC);
+			if($kfmdb_create)include($kfm_base_path.'scripts/db.sqlite.create.php');
 			$_SESSION['db_defined']=1;
 			break;
 		}
@@ -143,16 +144,16 @@ set_error_handler('kfm_error_log');
 { # get kfm parameters and check for updates
 	if(!isset($_SESSION['kfm_parameters'])){
 		$_SESSION['kfm_parameters']=array();
-		$q=$db->query("select * from ".$kfm_db_prefix."parameters");
+		$q=$kfmdb->query("select * from ".$kfm_db_prefix."parameters");
 		$rs=$q->fetchAll();
 		foreach($rs as $r)$_SESSION['kfm_parameters'][$r['name']]=$r['value'];
-		if($_SESSION['kfm_parameters']['version']!=KFM_VERSION)require 'scripts/update.0.8.php';
+		if($_SESSION['kfm_parameters']['version']!=KFM_VERSION)require($kfm_base_path.'scripts/update.0.8.php');
 	}
 }
 { # languages
 	$kfm_language='';
 	{ # find available languages
-		if($handle=opendir('lang')){
+		if($handle=opendir($kfm_base_path.'lang')){
 			$files=array();
 			while(false!==($file=readdir($handle)))if(is_file('lang/'.$file))$files[]=$file;
 			closedir($handle);
@@ -213,145 +214,145 @@ set_error_handler('kfm_error_log');
 		return shell_exec(trim('file -bi '.escapeshellarg($f)));
 	}
 }
-require_once('framework.php');
+require_once($kfm_base_path.'framework.php');
 { # directory functions
 	function kfm_add_directory_to_db($name,$physical_address,$parent){
-		require_once('includes/directories.php');
+		require_once($kfm_base_path.'includes/directories.php');
 		return _add_directory_to_db($name,$physical_address,$parent);
 	}
 	function kfm_createDirectory($parent,$name){
-		require_once('includes/directories.php');
+		require_once($kfm_base_path.'includes/directories.php');
 		return _createDirectory($parent,$name);
 	}
 	function kfm_deleteDirectory($id,$recursive=0){
-		require_once('includes/directories.php');
+		require_once($kfm_base_path.'includes/directories.php');
 		return _deleteDirectory($id,$recursive);
 	}
 	function kfm_getDirectoryDbInfo($id){
-		require_once('includes/directories.php');
+		require_once($kfm_base_path.'includes/directories.php');
 		return _getDirectoryDbInfo($id);
 	}
 	function kfm_getDirectoryProperties($dir){
-		require_once('includes/directories.php');
+		require_once($kfm_base_path.'includes/directories.php');
 		return _getDirectoryProperties($dir);
 	}
 	function kfm_moveDirectory($from,$to){
-		require_once('includes/directories.php');
+		require_once($kfm_base_path.'includes/directories.php');
 		return _moveDirectory($from,$to);
 	}
 	function kfm_loadDirectories($root){
-		require_once('includes/directories.php');
+		require_once($kfm_base_path.'includes/directories.php');
 		return _loadDirectories($root);
 	}
 	function kfm_rmdir2($dir){
-		require_once('includes/directories.php');
+		require_once($kfm_base_path.'includes/directories.php');
 		return _rmdir2($dir);
 	}
 }
 { # file functions
 	function kfm_add_file_to_db($filename,$directory_id){
-		require_once('includes/files.php');
+		require_once($kfm_base_path.'includes/files.php');
 		return _add_file_to_db($filename,$directory_id);
 	}
 	function kfm_createEmptyFile($filename){
-		require_once('includes/files.php');
+		require_once($kfm_base_path.'includes/files.php');
 		return _createEmptyFile($filename);
 	}
 	function kfm_downloadFileFromUrl($url,$filename){
-		require_once('includes/files.php');
+		require_once($kfm_base_path.'includes/files.php');
 		return _downloadFileFromUrl($url,$filename);
 	}
 	function kfm_extractZippedFile($id){
-		require_once('includes/files.php');
+		require_once($kfm_base_path.'includes/files.php');
 		return _extractZippedFile($id);
 	}
 	function kfm_getFileAsArray($filename){
-		require_once('includes/files.php');
+		require_once($kfm_base_path.'includes/files.php');
 		return _getFileAsArray($filename);
 	}
 	function kfm_getFileDetails($filename){
-		require_once('includes/files.php');
+		require_once($kfm_base_path.'includes/files.php');
 		return _getFileDetails($filename);
 	}
 	function kfm_getTagName($id){
-		require_once('includes/files.php');
+		require_once($kfm_base_path.'includes/files.php');
 		return _getTagName($id);
 	}
 	function kfm_getTextFile($filename){
-		require_once('includes/files.php');
+		require_once($kfm_base_path.'includes/files.php');
 		return _getTextFile($filename);
 	}
 	function kfm_getFileUrl($fid){
-		require_once('includes/files.php');
+		require_once($kfm_base_path.'includes/files.php');
 		return _getFileUrl($fid);
 	}
 	function kfm_moveFiles($files,$dir_id){
-		require_once('includes/files.php');
+		require_once($kfm_base_path.'includes/files.php');
 		return _moveFiles($files,$dir_id);
 	}
 	function kfm_loadFiles($rootid=1){
-		require_once('includes/files.php');
+		require_once($kfm_base_path.'includes/files.php');
 		return _loadFiles($rootid);
 	}
 	function kfm_renameFile($filename,$newfilename){
-		require_once('includes/files.php');
+		require_once($kfm_base_path.'includes/files.php');
 		return _renameFile($filename,$newfilename);
 	}
 	function kfm_renameFiles($files,$template){
-		require_once('includes/files.php');
+		require_once($kfm_base_path.'includes/files.php');
 		return _renameFiles($files,$template);
 	}
 	function kfm_resize_bytes($size){
-		require_once('includes/files.php');
+		require_once($kfm_base_path.'includes/files.php');
 		return _resize_bytes($size);
 	}
 	function kfm_rm($files,$no_dir=0){
-		require_once('includes/files.php');
+		require_once($kfm_base_path.'includes/files.php');
 		return _rm($files,$no_dir);
 	}
 	function kfm_saveTextFile($filename,$text){
-		require_once('includes/files.php');
+		require_once($kfm_base_path.'includes/files.php');
 		return _saveTextFile($filename,$text);
 	}
 	function kfm_search($keywords,$tags){
-		require_once('includes/files.php');
+		require_once($kfm_base_path.'includes/files.php');
 		return _search($keywords,$tags);
 	}
 	function kfm_tagAdd($recipients,$tagList){
-		require_once('includes/files.php');
+		require_once($kfm_base_path.'includes/files.php');
 		return _tagAdd($recipients,$tagList);
 	}
 	function kfm_tagRemove($recipients,$tagList){
-		require_once('includes/files.php');
+		require_once($kfm_base_path.'includes/files.php');
 		return _tagRemove($recipients,$tagList);
 	}
 	function kfm_viewTextFile($fileid){
-		require_once('includes/files.php');
+		require_once($kfm_base_path.'includes/files.php');
 		return _viewTextFile($fileid);
 	}
 }
 { # image functions
 	function kfm_changeCaption($filename,$newCaption){
-		require_once('includes/images.php');
+		require_once($kfm_base_path.'includes/images.php');
 		return _changeCaption($filename,$newCaption);
 	}
 	function kfm_getThumbnail($fileid,$width,$height){
-		require_once('includes/images.php');
+		require_once($kfm_base_path.'includes/images.php');
 		return _getThumbnail($fileid,$width,$height);
 	}
 	function kfm_resizeImage($filename,$width,$height){
-		require_once('includes/images.php');
+		require_once($kfm_base_path.'includes/images.php');
 		return _resizeImage($filename,$width,$height);
 	}
 	function kfm_rotateImage($filename,$direction){
-		require_once('includes/images.php');
+		require_once($kfm_base_path.'includes/images.php');
 		return _rotateImage($filename,$direction);
 	}
 }
 { # JSON
 	if(!function_exists('json_encode')){ # php-json is not installed
-		require_once('pear/JSON.php');
-		require_once('includes/json.php');
+		require_once('JSON.php');
+		require_once($kfm_base_path.'includes/json.php');
 	}
 }
 ?>
