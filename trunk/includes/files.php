@@ -114,8 +114,8 @@ function _loadFiles($rootid=1){
 		closedir($handle);
 		if(count($fileshash)){ # remove stale database entries (directories removed by hand)
 			foreach($fileshash as $k=>$v){
-				$f=new File($v);
-				$f->delete();
+			#	$f=new File($v);
+			#	$f->delete();
 			}
 		}
 		{ # update session data
