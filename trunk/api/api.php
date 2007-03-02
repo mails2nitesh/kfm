@@ -3,7 +3,8 @@
 
 function kfm_api_createDirectory($parent,$name){
 	$r=kfm_createDirectory($parent,$name);
-	foreach($r['directories'] as $dir)if($dir[0]==$name)echo $dir[2];
+	foreach($r['directories'] as $dir)if($dir[0]==$name)return $dir[2];
+	return 0;
 }
 function kfm_api_getDirectoryId($address){
 	global $kfmdb,$kfm_db_prefix,$rootdir,$kfm_db_type;
