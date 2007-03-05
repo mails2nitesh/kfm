@@ -58,5 +58,5 @@ Language.shortcuts = [
 	{ input : '[space]', output : '&nbsp;' },
 	{ input : '[enter]', output : '<br />' } ,
 	{ input : '[j]', output : 'testing' },
-	{ input : '[7]', output : '&amp;' }
+	{ input : '[&]', output : '&amp;' }
 ]
