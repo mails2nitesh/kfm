@@ -38,7 +38,7 @@ function kfm_showTextFile(res){
 	codeEl.setAttribute('id','codepress');
 	codeEl.setAttribute('title',res.name);
 	codeEl.setAttribute('class','cp hideLanguage');
-	codeEl.setAttribute('style','width:100%; height:500px;');
+	codeEl.setAttribute('style','width:100%; height:550px;');
 	
 	changeCheckEl = document.createElement('textarea');
 	changeCheckEl.value = res.content;
