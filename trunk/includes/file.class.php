@@ -58,7 +58,7 @@ class File extends Object{
 	}
 	function getUrl(){
 		global $rootdir, $kfm_userfiles_output;
-		$cwd=str_replace($rootdir,'',$this->directory);
+		$cwd=$this->directory.'/'==$rootdir?'':str_replace($rootdir,'',$this->directory);
 		if(!file_exists($this->path))return 'javascript:alert("missing file")';
 		if($kfm_userfiles_output=='get.php')$url=preg_replace('/\/[^\/]*$/','/get.php?id='.$this->id,$_SERVER['REQUEST_URI']);
 		else $url=preg_replace('/([^:])\/\//','$1/',$kfm_userfiles_output.'/'.$cwd.'/'.$this->name);
