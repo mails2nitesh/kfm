@@ -2,7 +2,7 @@
 # see license.txt for licensing
 if(!isset($kfm_base_path))$kfm_base_path='';
 error_reporting(E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE);
-session_start();
+@session_start();
 set_include_path(get_include_path().PATH_SEPARATOR .$kfm_base_path.'pear');
 if(!file_exists($kfm_base_path.'configuration.php')){
 	echo '<em>Missing <code>configuration.php</code>!</em><p>If this is a fresh installation of KFM, then please rename <code>configuration.php.dist</code> to <code>configuration.php</code>, and edit it according to your project\'s needs.</p><p>If this is an upgraded version of KFM, please remove the parts of your old <code>config.php</code> which do not exist in <code>configuration.php.dist</code>, then rename it to <code>configuration.php</code>.</p>';
@@ -40,9 +40,9 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 		@fclose($handle);
 	}
 }
-set_error_handler('kfm_error_log');
+#set_error_handler('kfm_error_log');
 { # variables
-	define('KFM_VERSION',rtrim(file_get_contents('version.txt')));
+	define('KFM_VERSION',rtrim(file_get_contents($kfm_base_path.'version.txt')));
 	$rootdir=str_replace('//','/',$_SERVER['DOCUMENT_ROOT'].$kfm_userfiles.'/');
 	if(!is_dir($rootdir))mkdir($rootdir,0755);
 	if(!isset($_SESSION['kfm']))$_SESSION['kfm']=array(
@@ -70,22 +70,18 @@ set_error_handler('kfm_error_log');
 	define('WORKPATH', $workpath);
 	define('WORKURL', $workurl);
 	if(is_dir($workpath)){
-		if(!is_writable($workpath))$workdir=false;
+		if(!is_writable($workpath)){
+			echo 'error: "'.htmlspecialchars($workpath).'" is not writable'; # TODO: new string
+			exit;
+		}
 	}else{
 		# Support for creating the directory
 		$workpath_tmp = substr($workpath,0,-1);
-		if(is_writable(dirname($workpath_tmp))){
-			mkdir($workpath_tmp, 0755);
-		}else{
-			$workdir = false;
+		if(is_writable(dirname($workpath_tmp)))mkdir($workpath_tmp, 0755);
+		else{
+			echo 'error: could not create directory "'.htmlspecialchars($workpath_tmp).'"';
+			exit;
 		}
-	}
-	if(!$workdir){
-		# in the future kfm should be able to work without a working directory. Then less functions will be available
-		# If that is the case, an error will be generated that there is limited functionality because there is no proper workdirectory
-		# but that is for the future, now kfm will not run
-		echo 'error: no writable workpath is specified'; # TODO: new string
-		exit;
 	}
 }
 { # database
@@ -155,7 +151,7 @@ set_error_handler('kfm_error_log');
 	{ # find available languages
 		if($handle=opendir($kfm_base_path.'lang')){
 			$files=array();
-			while(false!==($file=readdir($handle)))if(is_file('lang/'.$file))$files[]=$file;
+			while(false!==($file=readdir($handle)))if(is_file($kfm_base_path.'lang/'.$file))$files[]=$file;
 			closedir($handle);
 			sort($files);
 			$kfm_available_languages=array();
@@ -217,116 +213,144 @@ set_error_handler('kfm_error_log');
 require_once($kfm_base_path.'framework.php');
 { # directory functions
 	function kfm_add_directory_to_db($name,$physical_address,$parent){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/directories.php');
 		return _add_directory_to_db($name,$physical_address,$parent);
 	}
 	function kfm_createDirectory($parent,$name){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/directories.php');
 		return _createDirectory($parent,$name);
 	}
 	function kfm_deleteDirectory($id,$recursive=0){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/directories.php');
 		return _deleteDirectory($id,$recursive);
 	}
 	function kfm_getDirectoryDbInfo($id){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/directories.php');
 		return _getDirectoryDbInfo($id);
 	}
 	function kfm_getDirectoryProperties($dir){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/directories.php');
 		return _getDirectoryProperties($dir);
 	}
 	function kfm_moveDirectory($from,$to){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/directories.php');
 		return _moveDirectory($from,$to);
 	}
 	function kfm_loadDirectories($root){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/directories.php');
 		return _loadDirectories($root);
 	}
 	function kfm_rmdir2($dir){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/directories.php');
 		return _rmdir2($dir);
 	}
 }
 { # file functions
 	function kfm_add_file_to_db($filename,$directory_id){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/files.php');
 		return _add_file_to_db($filename,$directory_id);
 	}
 	function kfm_createEmptyFile($filename){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/files.php');
 		return _createEmptyFile($filename);
 	}
 	function kfm_downloadFileFromUrl($url,$filename){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/files.php');
 		return _downloadFileFromUrl($url,$filename);
 	}
 	function kfm_extractZippedFile($id){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/files.php');
 		return _extractZippedFile($id);
 	}
 	function kfm_getFileAsArray($filename){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/files.php');
 		return _getFileAsArray($filename);
 	}
 	function kfm_getFileDetails($filename){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/files.php');
 		return _getFileDetails($filename);
 	}
 	function kfm_getTagName($id){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/files.php');
 		return _getTagName($id);
 	}
 	function kfm_getTextFile($filename){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/files.php');
 		return _getTextFile($filename);
 	}
 	function kfm_getFileUrl($fid){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/files.php');
 		return _getFileUrl($fid);
 	}
 	function kfm_moveFiles($files,$dir_id){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/files.php');
 		return _moveFiles($files,$dir_id);
 	}
 	function kfm_loadFiles($rootid=1){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/files.php');
 		return _loadFiles($rootid);
 	}
 	function kfm_renameFile($filename,$newfilename){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/files.php');
 		return _renameFile($filename,$newfilename);
 	}
 	function kfm_renameFiles($files,$template){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/files.php');
 		return _renameFiles($files,$template);
 	}
 	function kfm_resize_bytes($size){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/files.php');
 		return _resize_bytes($size);
 	}
 	function kfm_rm($files,$no_dir=0){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/files.php');
 		return _rm($files,$no_dir);
 	}
 	function kfm_saveTextFile($filename,$text){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/files.php');
 		return _saveTextFile($filename,$text);
 	}
 	function kfm_search($keywords,$tags){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/files.php');
 		return _search($keywords,$tags);
 	}
 	function kfm_tagAdd($recipients,$tagList){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/files.php');
 		return _tagAdd($recipients,$tagList);
 	}
 	function kfm_tagRemove($recipients,$tagList){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/files.php');
 		return _tagRemove($recipients,$tagList);
 	}
 	function kfm_viewTextFile($fileid){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/files.php');
 		return _viewTextFile($fileid);
 	}
