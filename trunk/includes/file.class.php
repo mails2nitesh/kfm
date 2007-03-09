@@ -56,12 +56,22 @@ class File extends Object{
 		if($dotext === false) return false;
 		return strtolower(substr($dotext,1));
 	}
-	function getUrl(){
-		global $rootdir, $kfm_userfiles_output;
+	function getUrl($x=0,$y=0){
+		global $rootdir, $kfm_userfiles_output,$kfm_workdirectory;
 		$cwd=$this->directory.'/'==$rootdir?'':str_replace($rootdir,'',$this->directory);
 		if(!file_exists($this->path))return 'javascript:alert("missing file")';
-		if($kfm_userfiles_output=='get.php')$url=preg_replace('/\/[^\/]*$/','/get.php?id='.$this->id,$_SERVER['REQUEST_URI']);
-		else $url=preg_replace('/([^:])\/\//','$1/',$kfm_userfiles_output.'/'.$cwd.'/'.$this->name);
+		if($kfm_userfiles_output=='get.php'){
+			$url=preg_replace('/\/[^\/]*$/','/get.php?id='.$this->id,$_SERVER['REQUEST_URI']);
+			if($x&&$y)$url.='&width='.$x.'&height='.$y;
+		}
+		else{
+			if($this->isImage()&&$x&&$y){
+				$img=new Image($this);
+				$img->setThumbnail($x,$y);
+				return $kfm_userfiles_output.$kfm_workdirectory.'/thumbs/'.$img->thumb_id;
+			}
+			else $url=preg_replace('/([^:])\/\//','$1/',$kfm_userfiles_output.'/'.$cwd.'/'.$this->name); # TODO: check this line - $cwd may be incorrect if the requested file is from a search
+		}
 		return $url;
 	}
 	function delete(){

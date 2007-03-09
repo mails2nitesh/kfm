@@ -294,10 +294,10 @@ require_once($kfm_base_path.'framework.php');
 		require_once($kfm_base_path.'includes/files.php');
 		return _getTextFile($filename);
 	}
-	function kfm_getFileUrl($fid){
+	function kfm_getFileUrl($fid,$x=0,$y=0){
 		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/files.php');
-		return _getFileUrl($fid);
+		return _getFileUrl($fid,$x,$y);
 	}
 	function kfm_moveFiles($files,$dir_id){
 		global $kfm_base_path;

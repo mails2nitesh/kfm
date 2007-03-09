@@ -66,9 +66,9 @@ function _getFileDetails($fid){
 	}
 	return $details;
 }
-function _getFileUrl($fid){
+function _getFileUrl($fid,$x=0,$y=0){
 	$file=new File($fid);
-	return $file->getUrl();
+	return $file->getUrl($x,$y);
 }
 function _getTagName($id){
 	global $kfmdb,$kfm_db_prefix;
