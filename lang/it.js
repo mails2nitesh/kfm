@@ -1,4 +1,4 @@
-﻿/*
+/*
  * See ../license.txt for licensing
  *
  * For further information visit:
