@@ -20,5 +20,6 @@ function kfm_api_removeFile($id){
 	$f->delete();
 	return kfm_loadFiles($p);
 }
+$kfm_api_auth_override=1;
 
 ?>

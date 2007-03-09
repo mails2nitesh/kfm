@@ -18,5 +18,6 @@ switch($kfm_db_type){
 		exit;
 	}
 }
-$kfmdb->query("update ".$kfm_db_prefix."parameters set value='0.8' where name='version'");
+$kfmdb->query("delete from ".$kfm_db_prefix."parameters where name='version'");
+$kfmdb->query("insert into ".$kfm_db_prefix."parameters set value='0.8',name='version'");
 ?>
