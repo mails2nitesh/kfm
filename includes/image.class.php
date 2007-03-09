@@ -4,6 +4,7 @@ class Image extends File{
 	var $width;
 	var $height;
 	var $thumb_url;
+	var $thumb_id;
 	var $thumb_path;
 	var $info = array();  // info from getimagesize
 	function Image($file){
@@ -74,6 +75,7 @@ class Image extends File{
 			$id=$this->createThumb($width,$height);
 		}
 		$this->thumb_url='get.php?type=thumb&id='.$id;
+		$this->thumb_id=$id;
 		$this->thumb_path=str_replace('//','/',WORKPATH.'thumbs/'.$id);
 		if(!file_exists($this->thumb_path)){
 			copy(WORKPATH.'thumbs/'.$id.'.'.preg_replace('/.*\//','',$this->info['mime']),$this->thumb_path);
