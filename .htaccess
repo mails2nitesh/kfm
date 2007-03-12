@@ -1,1 +1,2 @@
+DirectoryIndex index.php
 php_value magic_quotes_gpc off
