@@ -62,7 +62,7 @@ function kfm(){
 		addEvent(right_column,'mousedown',function(e){
 			if(e.button==2)return;
 			window.mouseAt=getMouseAt(e);
-			window.dragSelectionTrigger=setTimeout(function(){kfm_selection_dragStart()},200);
+			if(this.contentMode=='file_icons' && this.fileids.length)window.dragSelectionTrigger=setTimeout(function(){kfm_selection_dragStart()},200);
 			addEvent(right_column,'mouseup',kfm_selection_dragFinish);
 		});
 		right_column.contextmenu=function(e){
@@ -181,7 +181,7 @@ function kfm_keyup(e){
 	var key=browser.isIE?e.keyCode:e.which;
 	switch(key){
 		case 13:{ // enter
-			if(!selectedFiles.length||window.inPrompt)return;
+			if(!selectedFiles.length||window.inPrompt||$('kfm_right_column').contentMode!='file_icons')return;
 			if(selectedFiles.length>1)return kfm_log(kfm_lang.NotMoreThanOneFile);
 			kfm_chooseFile($('kfm_file_icon_'+selectedFiles[0]),1);
 			break;
@@ -191,42 +191,43 @@ function kfm_keyup(e){
 			break;
 		}
 		case 37:{ // left arrow
-			kfm_shiftFileSelectionLR(-1);
+			if($('kfm_right_column').contentMode=='file_icons')kfm_shiftFileSelectionLR(-1);
 			break;
 		}
 		case 38:{ // up arrow
-			kfm_shiftFileSelectionUD(-1);
+			if($('kfm_right_column').contentMode=='file_icons')kfm_shiftFileSelectionUD(-1);
 			break;
 		}
 		case 39:{ // right arrow
-			kfm_shiftFileSelectionLR(1);
+			if($('kfm_right_column').contentMode=='file_icons')kfm_shiftFileSelectionLR(1);
 			break;
 		}
-		case 40:{ // down right arrow
-			kfm_shiftFileSelectionUD(1);
+		case 40:{ // down arrow
+			if($('kfm_right_column').contentMode=='file_icons')kfm_shiftFileSelectionUD(1);
 			break;
 		}
 		case 46:{ // delete
-			if(!selectedFiles.length)return;
+			if(!selectedFiles.length||$('kfm_right_column').contentMode!='file_icons')return;
 			if(selectedFiles.length>1)kfm_deleteSelectedFiles();
 			else kfm_deleteFile(selectedFiles[0]);
 			break;
 		}
 		case 65:{ // a
-			if(e.ctrlKey){
+			if(e.ctrlKey&&$('kfm_right_column').contentMode=='file_icons'){
 				clearSelections(e);
 				kfm_selectAll();
 			}
 			break;
 		}
 		case 85:{ // u
-			if(e.ctrlKey){
+			if(e.ctrlKey&&$('kfm_right_column').contentMode=='file_icons'){
 				clearSelections(e);
 				kfm_selectNone();
 			}
 			break;
 		}
 		case 113:{ // f2
+			if($('kfm_right_column').contentMode!='file_icons')return;
 			if(!selectedFiles.length)return alert(kfm_lang.PleaseSelectFileBeforeRename);
 			if(selectedFiles.length==1){
 				kfm_renameFile(selectedFiles[0]);
