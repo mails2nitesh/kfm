@@ -35,7 +35,6 @@ require_once($kfm_base_path.'includes/kaejax.php');
 	$js.=file_get_contents('j/directories.js');
 	$js.=file_get_contents('j/file.selections.js');
 	$js.=file_get_contents('j/file.text-editing.js');
-	$js.=file_get_contents('j/files.js');
 	$js.=file_get_contents('j/images.and.icons.js');
 	$js.=file_get_contents('j/panels.js');
 	$js.=file_get_contents('j/tags.js');
@@ -64,6 +63,7 @@ require_once($kfm_base_path.'includes/kaejax.php');
 			else $js.=file_get_contents('j/getWindowSize.js');
 		}
 	}
+	$js.=file_get_contents('j/files.js');
 	$js=preg_replace('#// .*|[\t]#','',$js); # strip single-line comments and tabs
 	$js=preg_replace('#/\*.*?\*/#ims','',$js); # strip multi-line comments
 	$js=preg_replace('#;\n}#ims','}',$js);

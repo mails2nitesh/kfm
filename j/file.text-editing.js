@@ -27,6 +27,9 @@ function kfm_editTextFile(id){
 function kfm_showTextFile(res){
 	if(!$('kfm_left_column_hider'))kfm_disableLeftColumn();
 	var t=newEl('table','kfm_editFileTable').setCss('height:100%;width:100%');
+	var right_column=$('kfm_right_column').empty();
+	right_column.contentMode='codepress'; // in case a large directory is still loading, this will stop it from continuing to load into the editor
+	right_column.addEl(t);
 	var r2=t.addRow();
 	r2.addCell(0,1,res.name);
 	r2.addCell(1,1,newLink('javascript:delEl("kfm_left_column_hider");x_kfm_viewTextFile('+res.id+',kfm_viewTextFile)','View',0,'button'));
@@ -38,7 +41,7 @@ function kfm_showTextFile(res){
 	codeEl.setAttribute('id','codepress');
 	codeEl.setAttribute('title',res.name);
 	codeEl.setAttribute('class','cp hideLanguage');
-	codeEl.setAttribute('style','width:100%; height:550px;');
+	codeEl.setAttribute('style','width:100%;height:'+(r3.offsetHeight-2)+'px;');
 	
 	changeCheckEl = document.createElement('textarea');
 	changeCheckEl.value = res.content;
@@ -46,9 +49,6 @@ function kfm_showTextFile(res){
 	changeCheckEl.setAttribute('style','display:none;');
 	r3.appendChild(codeEl);
 	r3.appendChild(changeCheckEl);
-	//r3.innerHTML = '<code id="codepress" title="'+res.name+'" class="cp hideLanguage" style="width:100%; height:500px;">'+res.content+'</code>'
-	//+'<textarea id="edit-start" style="display:none">'+res.content+'</textarea>';
-	$('kfm_right_column').empty().addEl(t);
 	CodePress.setContent();
 }
 function CodePressLoadCode(){

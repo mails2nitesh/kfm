@@ -1,4 +1,52 @@
 // see license.txt for licensing
+var kfm_file_bits={
+	contextmenu:function(e){
+		e=getEvent(e);
+		{ // variables
+			var name=this.kfm_attributes.name,links=[],i,id=this.kfm_attributes.id;
+			var extension=name.replace(/.*\./,'').toLowerCase();
+			var writable=this.kfm_attributes.writable;
+		}
+		{ // add the links
+			if(selectedFiles.length>1)links.push(['javascript:kfm_deleteSelectedFiles()',kfm_lang.DeleteFile,'remove']);
+			else{
+				links.push(['javascript:kfm_deleteFile('+id+')',kfm_lang.DeleteFile,'remove']);
+				links.push(['javascript:kfm_renameFile('+id+')',kfm_lang.RenameFile,'edit']);
+				if(this.kfm_attributes.image_data){
+					if(writable){
+						links.push(['javascript:kfm_rotateImage('+id+',270)',kfm_lang.RotateClockwise,'rotate_cw']);
+						links.push(['javascript:kfm_rotateImage('+id+',90)',kfm_lang.RotateAntiClockwise,'rotate_ccw']);
+						links.push(['javascript:kfm_resizeImage('+id+')',kfm_lang.ResizeImage,'resize_image']);
+					}
+					links.push(['javascript:x_kfm_getFileUrl('+id+',kfm_showImage)',kfm_lang.ViewImage]);
+					links.push(['javascript:kfm_returnThumbnail('+id+',kfm_showImage)',kfm_lang.ReturnThumbnailToOpener]);
+					links.push(['javascript:kfm_changeCaption('+id+')',kfm_lang.ChangeCaption,'edit']);
+				}
+				if(kfm_inArray(['zip'],extension))links.push(['javascript:kfm_extractZippedFile("'+id+'")',kfm_lang.ExtractZippedFile,'extract_zip']);
+				if(kfm_inArray(viewable_extensions,extension))links.push(['javascript:x_kfm_viewTextFile('+id+',kfm_viewTextFile)','view','edit']);
+				if(writable && kfm_inArray(editable_extensions,extension))links.push(['javascript:kfm_editTextFile("'+id+'")',kfm_lang.EditTextFile,'edit']);
+			}
+			links.push(['javascript:kfm_tagAdd('+id+')',kfm_lang.AddTagsToFiles,'add_tags']);
+			links.push(['javascript:kfm_tagRemove('+id+')',kfm_lang.RemoveTagsFromFiles]);
+			kfm_createContextMenu(getMouseAt(getEvent(e)),links);
+		}
+	},
+	mousedown:function(e){
+		e=getEvent(e);
+		if(e.button==2)return;
+		var id=this.kfm_attributes.id;
+		addEvent(document,'mouseup',kfm_file_dragFinish);
+		clearTimeout(window.dragSelectionTrigger);
+		window.dragTrigger=setTimeout('kfm_file_dragStart('+id+')',100);
+	},
+	padding:0
+}
+var kfm_regexps={
+	all_up_to_last_dot:/.*\./,
+	all_up_to_last_slash:/.*\//,
+	get_filename_extension:/.*\.([^.]*)$/,
+	remove_filename_extension:/\.[^.]*$/
+}
 function kfm_deleteFile(id){
 	var filename=$('kfm_file_icon_'+id).kfm_attributes.name;
 	if(confirm(kfm_lang.DelFileMessage(filename))){
@@ -20,7 +68,7 @@ function kfm_downloadFileFromUrl(){
 		kfm_log(kfm_lang.UrlNotValidLog);
 		return;
 	}
-	var filename=url.replace(/.*\//,''),msg='';
+	var filename=url.replace(kfm_regexps.all_up_to_last_slash,''),msg='';
 	do{
 		var not_ok=0;
 		filename=kfm_prompt(kfm_lang.FileSavedAsMessage+msg,filename);
@@ -46,54 +94,20 @@ function kfm_isFileInCWD(filename){
 	return false;
 }
 function kfm_incrementalFileDisplay(){
-	var a=window.kfm_incrementalFileDisplay_vars.at,res=window.kfm_incrementalFileDisplay_vars.data,wrapper=$('kfm_right_column');
-	var name=res.files[a].name,ext=name.replace(/.*\./,''),b,fullfilename=kfm_cwd_name+'/'+name,id=res.files[a].id,nameEl=newEl('span',0,'filename',name);
+	var a=window.kfm_incrementalFileDisplay_vars.at,fsdata=window.kfm_incrementalFileDisplay_vars.data.files,wrapper=$('kfm_right_column');
+	var fdata=fsdata[a];
+	if(wrapper.contentMode!='file_icons'){
+		window.kfm_incrementalFileDisplay_vars=null;
+		return;
+	}
+	var name=fdata.name,ext=name.replace(kfm_regexps.all_up_to_last_dot,''),b,fullfilename=kfm_cwd_name+'/'+name,id=fdata.id,nameEl=newEl('span',0,'filename',name);
 	var el=newEl('div','kfm_file_icon_'+id,'kfm_file_icon kfm_icontype_'+ext).setCss('cursor:'+(Browser.isIE?'hand':'pointer'));
-	var writable = res.files[a].writable;
+	var writable=fdata.writable;
 	{ // add events
 		addEvent(el,'click',kfm_toggleSelectedFile);
 		addEvent(el,'dblclick',kfm_chooseFile);
-		el.contextmenu=function(e){
-			e=getEvent(e);
-			{ // variables
-				var name=this.kfm_attributes.name,links=[],i,id=this.kfm_attributes.id;
-				var extension=name.replace(/.*\./,'').toLowerCase();
-				var writable=this.kfm_attributes.writable;
-			}
-			{ // add the links
-				if(selectedFiles.length>1)links.push(['javascript:kfm_deleteSelectedFiles()',kfm_lang.DeleteFile,'remove']);
-				else{
-					links.push(['javascript:kfm_deleteFile('+id+')',kfm_lang.DeleteFile,'remove']);
-					links.push(['javascript:kfm_renameFile('+id+')',kfm_lang.RenameFile,'edit']);
-					if(this.kfm_attributes.image_data){
-						if(writable){
-							links.push(['javascript:kfm_rotateImage('+id+',270)',kfm_lang.RotateClockwise,'rotate_cw']);
-							links.push(['javascript:kfm_rotateImage('+id+',90)',kfm_lang.RotateAntiClockwise,'rotate_ccw']);
-							links.push(['javascript:kfm_resizeImage('+id+')',kfm_lang.ResizeImage,'resize_image']);
-						}
-						links.push(['javascript:x_kfm_getFileUrl('+id+',kfm_showImage)',kfm_lang.ViewImage]);
-						links.push(['javascript:kfm_returnThumbnail('+id+',kfm_showImage)',kfm_lang.ReturnThumbnailToOpener]);
-						links.push(['javascript:kfm_changeCaption('+id+')',kfm_lang.ChangeCaption,'edit']);
-					}
-					if(kfm_inArray(['zip'],extension))links.push(['javascript:kfm_extractZippedFile("'+id+'")',kfm_lang.ExtractZippedFile,'extract_zip']);
-					if(kfm_inArray(viewable_extensions,extension))links.push(['javascript:x_kfm_viewTextFile('+id+',kfm_viewTextFile)','view','edit']);
-					if(writable && kfm_inArray(editable_extensions,extension))links.push(['javascript:kfm_editTextFile("'+id+'")',kfm_lang.EditTextFile,'edit']);
-				}
-				links.push(['javascript:kfm_tagAdd('+id+')',kfm_lang.AddTagsToFiles,'add_tags']);
-				links.push(['javascript:kfm_tagRemove('+id+')',kfm_lang.RemoveTagsFromFiles]);
-				kfm_createContextMenu(getMouseAt(getEvent(e)),links);
-			}
-		}
-		addEvent(el,'mousedown',(function(id){
-			return function(e){
-				if(e.button==2)return;
-				addEvent(document,'mouseup',kfm_file_dragFinish);
-				clearTimeout(window.dragSelectionTrigger);
-				window.dragTrigger=setTimeout(function(){
-					kfm_file_dragStart(id);
-				},100);
-			};
-		})(id));
+		el.contextmenu=kfm_file_bits.contextmenu;
+		addEvent(el,'mousedown',kfm_file_bits.mousedown);
 	}
 	{ // file attributes
 		if(kfm_filesCache[id]){
@@ -101,7 +115,7 @@ function kfm_incrementalFileDisplay(){
 			if(kfm_filesCache[id].image_data)kfm_showIcon([id,kfm_filesCache[id].image_data],el);
 		}
 		else{
-			el.kfm_attributes=res.files[a];
+			el.kfm_attributes=fdata;
 			for(b in kfm_imageExts)if(kfm_imageExts[b]==ext.toLowerCase())x_kfm_getThumbnail(id,64,64,kfm_showIcon);
 		}
 		wrapper.files[a]=el;
@@ -114,17 +128,20 @@ function kfm_incrementalFileDisplay(){
 		var extension='';
 		el.title=name;
 		if(name.indexOf('.')>-1){
-			extension=name.replace(/.*\.([^.]*)$/,'$1');
-			name=name.replace(/\.[^.]*$/,'')+'.';
+			extension=name.replace(kfm_regexps.get_filename_extension,'$1');
+			name=name.replace(kfm_regexps.remove_filename_extension,'')+'.';
 		}
 		var nameEl=el.getElementsByTagName('span')[0];
 		nameEl.delClass('filename');
 		kfm_shrinkName(name,el,nameEl,'offsetWidth',reqWidth,extension);
 	}
-	el.style.width=reqWidth;
-	el.style.width=reqWidth-(el.offsetWidth-reqWidth);
+	el.style.width=reqWidth-kfm_file_bits.padding;
+	if(el.offsetWidth!=reqWidth){ // padding is causing an error in width
+		kfm_file_bits.padding=el.offsetWidth-reqWidth;
+		el.style.width=reqWidth-kfm_file_bits.padding;
+	}
 	window.kfm_incrementalFileDisplay_vars.at=a+1;
-	if(a+1<res.files.length)window.kfm_incrementalFileDisplay_loader=setTimeout('kfm_incrementalFileDisplay()',1);
+	if(a+1<fsdata.length)window.kfm_incrementalFileDisplay_loader=setTimeout('kfm_incrementalFileDisplay()',1);
 }
 function kfm_refreshFiles(res){
 	if(window.kfm_incrementalFileDisplay_loader){
@@ -135,6 +152,7 @@ function kfm_refreshFiles(res){
 	if(res.toString()===res)return kfm_log(res);
 	window.kfm_incrementalFileDisplay_vars={at:0,data:res};
 	var a,b,fileids=[],wrapper=$('kfm_right_column').empty();
+	wrapper.contentMode='file_icons';
 	wrapper.addEl(newEl('div',0,'kfm_panel_header',kfm_lang.CurrentWorkingDir(res.reqdir)));
 	for(var a=0;a<res.files.length;++a)fileids[a]=res.files[a].id;
 	wrapper.fileids=fileids;

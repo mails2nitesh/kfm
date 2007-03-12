@@ -32,6 +32,9 @@ function kfm_createFileUploadPanel(){
 			var iframe=newEl('iframe','kfm_iframe').setCss('display:none');
 			iframe.src='javascript:false';
 			var submit=newInput('upload','submit',kfm_lang.Upload);
+			submit.onclick=function(){
+				setTimeout('$("kfm_file").type="text";$("kfm_file").type="file"',1);
+			};
 			var input=newInput('kfm_file','file');
 			input.onkeyup=kfm_cancelEvent;
 			f1.addEl([input,submit]);

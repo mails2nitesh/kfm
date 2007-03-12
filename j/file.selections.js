@@ -21,8 +21,8 @@ function kfm_chooseFile(e,o){
 }
 function kfm_file_drag(e){
 	if(!window.dragType||window.dragType!=1)return;
-	var m=getMouseAt(e);
 	clearSelections();
+	var m=getMouseAt(e);
 	window.drag_wrapper.setCss('display:block;left:'+(m.x+16)+'px;top:'+m.y+'px');
 }
 function kfm_file_dragFinish(e){
@@ -50,7 +50,8 @@ function kfm_file_dragStart(filename){
 	var w=getWindowSize();
 	document.body.addEl(newEl('div','kfm_selection_blocker').setCss('position:absolute;zIndex:20;left:0;top:0;width:'+w.x+'px;height:'+w.y+'px'));
 	window.drag_wrapper=newEl('div','kfm_drag_wrapper').setCss('display:none;opacity:.7');
-	for(var i in selectedFiles)window.drag_wrapper.addEl([$('kfm_file_icon_'+selectedFiles[i]).kfm_attributes.name,newEl('br')]);
+	for(var i=0;i<10&&i<selectedFiles.length;++i)window.drag_wrapper.addEl([$('kfm_file_icon_'+selectedFiles[i]).kfm_attributes.name,newEl('br')]);
+	if(selectedFiles.length>10)window.drag_wrapper.addEl(newEl('i',0,0,'...and '+(selectedFiles.length-10)+' more')); // TODO: New String
 	document.body.addEl(window.drag_wrapper);
 	addEvent(document,'mousemove',kfm_file_drag);
 }
@@ -162,29 +163,14 @@ function kfm_shiftFileSelectionLR(dir){
 }
 function kfm_shiftFileSelectionUD(dir){
 	if(selectedFiles.length>1)return;
-	var na=$('kfm_right_column').fileids,a=0,ns=na.length;
+	var na=$('kfm_right_column').fileids,a=0,ns=na.length,icons_per_line=0,topOffset=$('kfm_file_icon_'+na[0]).offsetTop;
 	if(selectedFiles.length){
-		for(;a<ns;++a)if(na[a]==selectedFiles[0])break;
-		if(dir==-1){ // up
-			if(!a)return;
-			var t=$('kfm_file_icon_'+na[a]).offsetTop;
-			for(var i=a-1;i;--i){
-				var t2=$('kfm_file_icon_'+na[i]).offsetTop;
-				if(t2==t)continue;
-				break;
-			}
-			a=i;
-		}
-		else{
-			if(a==ns-1)return;
-			var t=$('kfm_file_icon_'+na[a]).offsetTop;
-			for(var i=a+1;i<ns-1;++i){
-				var t2=$('kfm_file_icon_'+na[i]).offsetTop;
-				if(t2==t)continue;
-				break;
-			}
-			a=i;
-		}
+		if(topOffset==$('kfm_file_icon_'+na[ns-1]).offsetTop)return; // only one line of icons
+		for(;$('kfm_file_icon_'+na[icons_per_line]).offsetTop==topOffset;++icons_per_line);
+		for(;a<ns;++a)if(na[a]==selectedFiles[0])break; // what is the selected file
+		a+=icons_per_line*dir;
+		if(a>=ns)a=ns-1;
+		if(a<0)a=0;
 	}
 	else a=dir>0?0:ns-1;
 	kfm_selectSingleFile(na[a]);
