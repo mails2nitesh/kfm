@@ -15,8 +15,12 @@ require_once($kfm_base_path.'configuration.php');
 	if(file_exists($kfm_base_path.'api/config.php'))include($kfm_base_path.'api/config.php');
 }
 function kfm_error_log($errno,$errstr,$errfile,$errline){
-	if(!ERROR_LOG_LEVEL)return;
-	$msg = false;
+	if(!defined('WORKPATH')){
+		echo '<p><em>error: WORKPATH not yet defined, and an error has occurred.</em><br />'
+			.$errno.': ('.$errfile.', '.$errline.') - '.$errstr.'</p>';
+	}
+	if(!defined('ERROR_LOG_LEVEL')||!defined('WORKPATH'))return;
+	$msg=false;
 	switch ($errno) {
 		case E_USER_ERROR:{
 			if(ERROR_LOG_LEVEL>2)$msg='error|'.$errno.'|'.$errfile.'|'.$errline.'|'.$errstr."\n";
@@ -40,7 +44,7 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 		@fclose($handle);
 	}
 }
-#set_error_handler('kfm_error_log');
+set_error_handler('kfm_error_log');
 { # variables
 	define('KFM_VERSION',rtrim(file_get_contents($kfm_base_path.'version.txt')));
 	$rootdir=str_replace('//','/',$_SERVER['DOCUMENT_ROOT'].$kfm_userfiles.'/');
