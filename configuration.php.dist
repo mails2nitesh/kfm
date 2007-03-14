@@ -22,6 +22,11 @@ $kfm_userfiles='/sandbox/UserFiles/';
 #   that the server uses mod_rewrite or personal web-sites, etc
 # Use the value 'get.php' if you want to use the KFM file handler script to manager file downloads.
 # If you are not using get.php, this value must end in '/'.
+# Examples:
+#   $kfm_userfiles_output='http://thisdomain.com/files/';
+#   $kfm_userfiles_output='/files/';
+#   $kfm_userfiles_output='http://thisdomain.com/kfm/get.php';
+#   $kfm_userfiles_output='/kfm/get.php';
 $kfm_userfiles_output='/sandbox/UserFiles/';
 
 # if you want to hide any panels, add them here as a comma-delimited string
