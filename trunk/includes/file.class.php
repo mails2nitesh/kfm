@@ -60,8 +60,9 @@ class File extends Object{
 		global $rootdir, $kfm_userfiles_output,$kfm_workdirectory;
 		$cwd=$this->directory.'/'==$rootdir?'':str_replace($rootdir,'',$this->directory);
 		if(!file_exists($this->path))return 'javascript:alert("missing file")';
-		if($kfm_userfiles_output=='get.php'){
-			$url=preg_replace('/\/[^\/]*$/','/get.php?id='.$this->id,$_SERVER['REQUEST_URI']);
+		if(preg_replace('/.*(get\.php)$/','$1',$kfm_userfiles_output)=='get.php'){
+			if($kfm_userfiles_output=='get.php')$url=preg_replace('/\/[^\/]*$/','/get.php?id='.$this->id,$_SERVER['REQUEST_URI']);
+			else $url=$kfm_userfiles_output.'?id='.$this->id;
 			if($x&&$y)$url.='&width='.$x.'&height='.$y;
 		}
 		else{
