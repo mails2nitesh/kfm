@@ -94,19 +94,20 @@ function kfm_addMethods(el){
 			var f=kfm_addMethods(this.insertCell(b));
 			if(c)f.colSpan=c;
 			if(d)f.addEl(d);
-			f.setClass(e);
+			if(e)f.setClass(e);
 			return f;
 		},
 		addClass:function(c){
 			this.setClass(this.getClass()+' '+c);
 		},
 		addEl:function(a){
-			if(!a)return;
+			if(!a)return this;
 			if(!isArray(a))a=[a];
 			for(var i in a){
 				if(isArray(a[i]))this.addEl(a[i]);
 				else this.appendChild(a[i].toString()===a[i]?newText(a[i]):a[i]);
 			}
+			return this;
 		},
 		addRow:function(p,c){
 			var o=this.insertRow(p===parseInt(p)?p:this.rows.length);
