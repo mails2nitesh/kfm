@@ -16,7 +16,7 @@ require_once($kfm_base_path.'includes/kaejax.php');
 ?>
 <html>
 	<head>
-		<style type="text/css"><?
+		<style type="text/css"><?php
 			$css=file_get_contents('themes/'.$kfm_theme.'/kfm.css');
 			$css.=file_get_contents('pear/Text/hilight.css');
 			echo preg_replace('/\s+/',' ',$css);
