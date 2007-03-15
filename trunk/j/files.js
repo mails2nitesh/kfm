@@ -135,6 +135,7 @@ function kfm_incrementalFileDisplay(){
 		nameEl.delClass('filename');
 		kfm_shrinkName(name,el,nameEl,'offsetWidth',reqWidth,extension);
 	}
+el.title=fdata.directory; // REMOVEME
 	el.style.width=reqWidth-kfm_file_bits.padding;
 	if(el.offsetWidth!=reqWidth){ // padding is causing an error in width
 		kfm_file_bits.padding=el.offsetWidth-reqWidth;

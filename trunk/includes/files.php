@@ -90,7 +90,7 @@ function _getTextFile($fid){
 function _loadFiles($rootid=1){
 	global $kfmdb,$kfm_db_prefix;
 	$dirdata=kfm_getDirectoryDbInfo($rootid);
-	$reqdir=count($dirdata)?$dirdata['physical_address'].'/':$GLOBALS['rootdir'];
+	$reqdir=kfm_getDirectoryParents($rootid);
 	$root=str_replace($GLOBALS['rootdir'],'',$reqdir);
 	if(!kfm_checkAddr($root))return;
 	$reqdir=$GLOBALS['rootdir'].$root;
@@ -130,14 +130,13 @@ function _moveFiles($files,$dir_id){
 	global $kfmdb,$kfm_db_prefix;
 	$dirdata=kfm_getDirectoryDbInfo($dir_id);
 	if(!$dirdata)return 'error: no data for directory id "'.$dir_id.'"'; # TODO: new string
-	$to=$dirdata['physical_address'].'/';
+	$to=kfm_getDirectoryParents($dir_id);
 	if(!kfm_checkAddr($to))return 'error: illegal directory "'.$to.'"'; # TODO: new string
 	foreach($files as $fid){
-		$q=$kfmdb->query("select ".$kfm_db_prefix."directories.physical_address as da,".$kfm_db_prefix."files.name as fn
-			from ".$kfm_db_prefix."files,".$kfm_db_prefix."directories where ".$kfm_db_prefix."directories.id=".$kfm_db_prefix."files.directory and ".$kfm_db_prefix."files.id=".$fid);
+		$q=$kfmdb->query("select directory,name from ".$kfm_db_prefix."files where id=".$fid);
 		if(!($filedata=$q->fetchRow()))return 'error: no data for file id "'.$file.'"'; # TODO: new string
-		$dir=$filedata['da'];
-		$file=$filedata['fn'];
+		$dir=kfm_getDirectoryParents($filedata['directory']);
+		$file=$filedata['name'];
 		if(!kfm_checkAddr($dir.'/'.$file))return;
 		rename($dir.'/'.$file,$to.'/'.$file);
 		$q=$kfmdb->query("update ".$kfm_db_prefix."files set directory=".$dir_id." where id=".$fid);

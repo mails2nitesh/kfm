@@ -7,6 +7,7 @@ function kfm_api_createDirectory($parent,$name){
 	return 0;
 }
 function kfm_api_getDirectoryId($address){
+exit; # TODO - FIX THIS TO NOT USE physical_address
 	global $kfmdb,$kfm_db_prefix,$rootdir,$kfm_db_type;
 	if($kfm_db_type=='mysql')$add="concat(physical_address,'/')";
 	else $add="physical_address||'/'";

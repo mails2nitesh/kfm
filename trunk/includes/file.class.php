@@ -16,18 +16,12 @@ class File extends Object{
 		global $kfmdb,$kfm_db_prefix;
 		if(func_num_args()==1){
 			$this->id=func_get_arg(0);
-			$qf=$kfmdb->query("SELECT
-					".$kfm_db_prefix."files.id AS id,
-					".$kfm_db_prefix."files.name AS name,
-					".$kfm_db_prefix."directories.physical_address AS directory,
-					directory AS parent
-				FROM ".$kfm_db_prefix."files,".$kfm_db_prefix."directories
-				WHERE ".$kfm_db_prefix."files.id=".$this->id." AND ".$kfm_db_prefix."directories.id=".$kfm_db_prefix."files.directory");
+			$qf=$kfmdb->query("SELECT id,name,directory FROM ".$kfm_db_prefix."files WHERE id=".$this->id);
 			$filedata=$qf->fetchRow();
 			$this->name=$filedata['name'];
-			$this->directory=$filedata['directory'];
-			$this->parent=$filedata['parent'];
-			$this->path=$filedata['directory'].'/'.$filedata['name'];
+			$this->parent=$filedata['directory'];
+			$this->directory=kfm_getDirectoryParents($this->parent,1);
+			$this->path=$this->directory.'/'.$filedata['name'];
 			if(!file_exists($this->path)){
 				$this->error('File cannot be found');
 				return false;
