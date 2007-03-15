@@ -11,7 +11,7 @@ if(isset($_GET['type'])&&$_GET['type']=='thumb'){
 	$name=$id;
 }
 else{
-	$q=$kfmdb->query("select physical_address,".$kfm_db_prefix."files.name as name from ".$kfm_db_prefix."directories,".$kfm_db_prefix."files where directory=".$kfm_db_prefix."directories.id and ".$kfm_db_prefix."files.id=".$id);
+	$q=$kfmdb->query("select directory,name from ".$kfm_db_prefix."files where ".$kfm_db_prefix."files.id=".$id);
 	$r=$q->fetchRow();
 	if(!count($r)){
 		echo 'error: file id #'.$id.' not found in database'; # TODO: new string
@@ -34,7 +34,7 @@ else{
 		}
 	}
 	else{
-		$path=$r['physical_address'].'/'.$r['name'];
+		$path=kfm_getDirectoryParents($r['directory']).$r['name'];
 		$name=$r['name'];
 	}
 }

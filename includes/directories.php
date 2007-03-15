@@ -1,27 +1,26 @@
 <?php
-function _add_directory_to_db($name,$physical_address,$parent){
+function _add_directory_to_db($name,$parent){
 	global $kfmdb,$kfm_db_prefix;
-	$physical_address = str_replace('//','/', $physical_address);
-	$sql="insert into ".$kfm_db_prefix."directories (name,physical_address,parent) values('".addslashes($name)."','".addslashes($physical_address)."',".$parent.")";
+	$sql="insert into ".$kfm_db_prefix."directories (name,parent) values('".addslashes($name)."',".$parent.")";
 	return $kfmdb->exec($sql);
 }
 function _createDirectory($parent,$name){
 	$dirdata=_getDirectoryDbInfo($parent);
 	if(!count($dirdata))return 'error: no data for directory id "'.$parent.'"'; # TODO: new string
-	$physical_address=$dirdata['physical_address'].'/'.$name;
+	$physical_address=_getDirectoryParents($parent).$name;
 	$short_version=str_replace($GLOBALS['rootdir'],'',$physical_address);
 	if(!kfm_checkAddr($physical_address))return 'error: illegal directory name "'.$short_version.'"'; # TODO: new string
 	if(file_exists($physical_address))return 'error: a directory named "'.$short_version.'" already exists'; # TODO: new string
 	mkdir($physical_address);
 	if(!file_exists($physical_address))return 'error: failed to create directory "'.$short_version.'". please check permissions'; # TODO: new string
-	kfm_add_directory_to_db($name,$physical_address,$parent);
+	kfm_add_directory_to_db($name,$parent);
 	return kfm_loadDirectories($parent);
 }
 function _deleteDirectory($id,$recursive=0){
 	$dirdata=_getDirectoryDbInfo($id);
 	$parent=$dirdata['parent'];
 	if(!count($dirdata))return array('type'=>'error','msg'=>4); # directory not in database
-	$abs_dir=$dirdata['physical_address'];
+	$abs_dir=_getDirectoryParents($id);
 	$directory=str_replace($GLOBALS['rootdir'],'',$abs_dir);
 	if(!kfm_checkAddr($directory))return array('type'=>'error','msg'=>1,'name'=>$directory); # illegal name
 	if(!$recursive){
@@ -29,7 +28,7 @@ function _deleteDirectory($id,$recursive=0){
 		if($handle=opendir($abs_dir))while(false!==($file=readdir($handle)))if(strpos($file,'.')!==0)$ok=0;
 		if(!$ok)return array('type'=>'error','msg'=>2,'name'=>$directory,'id'=>$id); # directory not empty
 	}
-	kfm_rmdir2($id);
+	kfm_rmdir($id);
 	if(file_exists($abs_dir))return array('type'=>'error','msg'=>3,'name'=>$directory); # failed to delete directory
 	return kfm_loadDirectories($parent);
 }
@@ -40,6 +39,12 @@ function _getDirectoryDbInfo($id){
 		$_GLOBALS['cache_directories'][$id]=$q->fetchRow();
 	}
 	return $_GLOBALS['cache_directories'][$id];
+}
+function _getDirectoryParents($pid,$type=1){
+	# type is 1:absolute, 2:relative to domain
+	if($pid<2)return $GLOBALS['rootdir'];
+	$db=_getDirectoryDbInfo($pid);
+	return _getDirectoryParents($db['parent'],$type).$db['name'].'/';
 }
 function _getDirectoryProperties($dir){
 	if(strlen($dir))$properties=kfm_getDirectoryProperties(preg_replace('/[^\/]*\/$/','',$dir));
@@ -54,7 +59,7 @@ function _getDirectoryProperties($dir){
 function _loadDirectories($pid){
 	global $kfmdb,$kfm_db_prefix, $kfm_banned_folders;
 	$dirdata=_getDirectoryDbInfo($pid);
-	$reqdir=count($dirdata)?$dirdata['physical_address'].'/':$GLOBALS['rootdir'];
+	$reqdir=_getDirectoryParents($pid);
 	$pdir=str_replace($GLOBALS['rootdir'],'',$reqdir);
 	if(!kfm_checkAddr($pdir))return 'error: illegal address "'.$pdir.'"';
 	if(!is_dir($reqdir))mkdir($reqdir,0755);
@@ -75,7 +80,7 @@ function _loadDirectories($pid){
 					}
 				}
 				if(!isset($dirshash[$file])){
-					kfm_add_directory_to_db($file,$ff1,$pid);
+					kfm_add_directory_to_db($file,$pid);
 					$dirshash[$file]=$kfmdb->lastInsertId($kfm_db_prefix.'directories','id');
 				}
 				$directories[]=array($file,$directory[1],$dirshash[$file]);
@@ -96,53 +101,43 @@ function _moveDirectory($from,$to){
 	$f_r=_getDirectoryDbInfo($from);
 	$t_r=_getDirectoryDbInfo($to);
 	unset($_GLOBALS['cache_directories'][$from]);
-	$f_add=$f_r['physical_address'];
+	$f_add=_getDirectoryParents($from);
 	$f_name=$f_r['name'];
-	$t_add=$t_r['physical_address'];
+	$t_add=_getDirectoryParents($to);
 	if(strpos($t_add,$f_add)===0)return 'error: cannot move a directory into its own sub-directory'; # TODO: new string
 	if(file_exists($t_add.'/'.$f_name))return 'error: "'.$t_add.'/'.$f_name.'" already exists'; # TODO: new string
 	rename($f_add,$t_add.'/'.$f_name);
 	if(!file_exists($t_add.'/'.$f_name))return 'error: could not move directory "'.$f_add.'" to "'.$t_add.'/'.$f_name.'"'; # TODO: new string
-	$len=strlen(preg_replace('#/[^/]*$#','',$f_add));
-	switch($GLOBALS['kfm_db_type']){
-		case 'sqlite': case 'pgsql': {
-			$fugly="update ".$kfm_db_prefix."directories set physical_address=('".addslashes($t_add)."'||substr(physical_address,".($len+1).",length(physical_address)-".$len.")) where physical_address like '".addslashes($f_add)."/%' or id=".$from;
-			break;
-		}
-		case 'mysql': {
-			$fugly="update ".$kfm_db_prefix."directories set physical_address=concat('".addslashes($t_add)."',substr(physical_address,".$len."-length(physical_address))) where physical_address like '".addslashes($f_add)."/%' or id=".$from;
-			break;
-		}
-	}
-	$kfmdb->exec($fugly) or die('error: '.print_r($kfmdb->errorInfo(),true));
 	$kfmdb->exec("update ".$kfm_db_prefix."directories set parent=".$to." where id=".$from) or die('error: '.print_r($kfmdb->errorInfo(),true));
 	return _loadDirectories(1);
 }
-function _rmdir2($dir){ # adapted from http://php.net/rmdir
+function _rmdir($pid){
 	global $kfmdb,$kfm_db_prefix;
-	if(is_numeric($dir)&&$dir!=0){
-		$dirdata=_getDirectoryDbInfo($dir);
-		$dir=$dirdata['physical_address'];
+	{ # remove db entries
+		$q=$kfmdb->query("select id from ".$kfm_db_prefix."files where directory=".$pid);
+		$files=$q->fetchAll();
+		foreach($files as $r){
+			$f=new File($r['id']);
+			$f->delete();
+		}
+		$q=$kfmdb->query("select id from ".$kfm_db_prefix."directories where parent=".$pid);
+		$dirs=$q->fetchAll();
+		foreach($dirs as $r)_rmdir($r['id']);
 	}
-	if(substr($dir,-1,1)=="/")$dir=substr($dir,0,strlen($dir)-1);
+	_recursivelyRemoveDirectory(_getDirectoryParents($pid));
+	$kfmdb->exec("delete from ".$kfm_db_prefix."directories where id=".$pid);
+}
+function _recursivelyRemoveDirectory($dir){
 	if($handle=opendir($dir)){
 		while(false!==($item=readdir($handle))){
 			if($item!='.'&&$item!='..'){
 				$uri=$dir.'/'.$item;
-				if(is_dir($uri))kfm_rmdir2($uri);
+				if(is_dir($uri))_recursivelyRemoveDirectory($uri);
 				else unlink($uri);
 			}
 		}
 		closedir($handle);
 		rmdir($dir);
-	}
-	if(isset($dirdata)){
-		{ # sqlite doesn't honour referential integrity, so files need to be manually removed.
-			$q=$kfmdb->query("select id from ".$kfm_db_prefix."directories where physical_address='".$dirdata['physical_address']."' or physical_address like '".$dirdata['physical_address']."/%'");
-			$dirs=$q->fetchAll();
-			foreach($dirs as $dir)$kfmdb->exec("delete from ".$kfm_db_prefix."files where parent=".$dir["id"]);
-		}
-		$kfmdb->exec("delete from ".$kfm_db_prefix."directories where physical_address='".$dirdata['physical_address']."' or physical_address like '".$dirdata['physical_address']."/%'");
 	}
 }
 ?>

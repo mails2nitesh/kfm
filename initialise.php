@@ -44,7 +44,7 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 		@fclose($handle);
 	}
 }
-set_error_handler('kfm_error_log');
+#set_error_handler('kfm_error_log');
 { # variables
 	define('KFM_VERSION',rtrim(file_get_contents($kfm_base_path.'version.txt')));
 	$rootdir=str_replace('//','/',$_SERVER['DOCUMENT_ROOT'].$kfm_userfiles.'/');
@@ -216,10 +216,10 @@ set_error_handler('kfm_error_log');
 }
 require_once($kfm_base_path.'framework.php');
 { # directory functions
-	function kfm_add_directory_to_db($name,$physical_address,$parent){
+	function kfm_add_directory_to_db($name,$parent){
 		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/directories.php');
-		return _add_directory_to_db($name,$physical_address,$parent);
+		return _add_directory_to_db($name,$parent);
 	}
 	function kfm_createDirectory($parent,$name){
 		global $kfm_base_path;
@@ -241,6 +241,11 @@ require_once($kfm_base_path.'framework.php');
 		require_once($kfm_base_path.'includes/directories.php');
 		return _getDirectoryProperties($dir);
 	}
+	function kfm_getDirectoryParents($pid,$type){
+		global $kfm_base_path;
+		require_once($kfm_base_path.'includes/directories.php');
+		return _getDirectoryParents($pid,$type);
+	}
 	function kfm_moveDirectory($from,$to){
 		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/directories.php');
@@ -251,10 +256,10 @@ require_once($kfm_base_path.'framework.php');
 		require_once($kfm_base_path.'includes/directories.php');
 		return _loadDirectories($root);
 	}
-	function kfm_rmdir2($dir){
+	function kfm_rmdir($dir){
 		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/directories.php');
-		return _rmdir2($dir);
+		return _rmdir($dir);
 	}
 }
 { # file functions
