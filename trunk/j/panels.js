@@ -20,9 +20,20 @@ function kfm_addPanel(wrapper,panel){
 	wrapper.addEl(el);
 }
 function kfm_createFileUploadPanel(){
-	{ // create upload form
+	{ // create form
+		var kfm_uploadPanel_checkForZip=function(e){
+			kfm_cancelEvent(e);
+			var v=this.value;
+			var h=(v.indexOf('.')==-1||v.replace(/.*(\.[^.]*)/,'$1')!='.zip');
+			$('kfm_unzip1').setCss('visibility:'+(h?'hidden':'visible'));
+			$('kfm_unzip2').setCss('visibility:'+(h?'hidden':'visible'));
+		}
 		var sel=newSelectbox('uploadType',[kfm_lang.Upload,kfm_lang.CopyFromURL],0,0,function(){
 			var copy=parseInt(this.selectedIndex);
+			$('kfm_unzip1').setCss('visibility:hidden');
+			$('kfm_unzip2').setCss('visibility:hidden');
+			$('kfm_file').value='';
+			$('kfm_url').value='';
 			$('kfm_uploadForm').setCss('display:'+(copy?'none':'block'));
 			$('kfm_copyForm').setCss('display:'+(copy?'block':'none'));
 		});
@@ -36,17 +47,24 @@ function kfm_createFileUploadPanel(){
 				setTimeout('$("kfm_file").type="text";$("kfm_file").type="file"',1);
 			};
 			var input=newInput('kfm_file','file');
-			input.onkeyup=kfm_cancelEvent;
-			f1.addEl([input,submit]);
+			input.onkeyup=kfm_uploadPanel_checkForZip;
+			input.onchange=kfm_uploadPanel_checkForZip;
+			var unzip1=newEl('span','kfm_unzip1','kfm_unzipWhenUploaded',[newInput('kfm_unzipWhenUploaded','checkbox'),'unzip after upload']); // TODO: new string
+			unzip1.setCss('visibility:hidden');
+			f1.addEl([input,submit,unzip1]);
 		}
 		{ // copy from URL
 			var f2=newEl('div','kfm_copyForm');
 			f2.setCss('display:none');
 			var submit2=newInput('upload','submit',kfm_lang.CopyFromURL);
 			var inp2=newInput('kfm_url');
+			inp2.onkeyup=kfm_uploadPanel_checkForZip;
+			inp2.onchange=kfm_uploadPanel_checkForZip;
 			inp2.setCss('width:100%');
 			submit2.onclick=kfm_downloadFileFromUrl;
-			f2.addEl([inp2,submit2]);
+			var unzip2=newEl('span','kfm_unzip2','kfm_unzipWhenUploaded',[newInput('kfm_unzipWhenUploaded','checkbox'),'unzip after upload']); // TODO: new string
+			unzip2.setCss('visibility:hidden');
+			f2.addEl([inp2,submit2,unzip2]);
 		}
 	}
 	return kfm_createPanel(kfm_lang.FileUpload,'kfm_file_upload_panel',[sel,f1,iframe,f2],{maxedState:3,state:3,order:2});

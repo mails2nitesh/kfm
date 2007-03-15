@@ -2,7 +2,8 @@
 function _add_file_to_db($filename,$directory_id){
 	global $kfmdb,$kfm_db_prefix;
 	$sql="insert into ".$kfm_db_prefix."files (name,directory) values('".addslashes($filename)."',".$directory_id.")";
-	return $kfmdb->query($sql);
+	$q=$kfmdb->query($sql);
+	return $kfmdb->lastInsertId($kfm_db_prefix.'files','id');
 }
 function _createEmptyFile($filename){
 	if(!kfm_checkAddr($_SESSION['kfm']['currentdir'].'/'.$filename))return 'error: filename not allowed';
@@ -103,8 +104,7 @@ function _loadFiles($rootid=1){
 		while(false!==($filename=readdir($handle)))if(strpos($filename,'.')!==0&&is_file($reqdir.'/'.$filename)){
 			if(in_array(strtolower($filename),$GLOBALS['kfm_banned_files']))continue;
 			if(!isset($fileshash[$filename])){
-				kfm_add_file_to_db($filename,$rootid);
-				$fileshash[$filename]=$kfmdb->lastInsertId($kfm_db_prefix.'files','id');
+				$fileshash[$filename]=kfm_add_file_to_db($filename,$rootid);
 			}
 			$writable=is_writable(str_replace('//','/',$reqdir.'/'.$filename))?true:false;
 			$files[]=array('name'=>$filename,'parent'=>$rootid,'id'=>$fileshash[$filename],'writable'=>$writable);
