@@ -85,7 +85,7 @@ function kfm(){
 		x_kfm_loadDirectories(1,kfm_refreshDirectories);
 	}
 	addEvent(document,'keyup',kfm_keyup);
-	addEvent(window,'resize',function(){$('kfm_left_column').setCss('height:'+getWindowSize().y+'px');kfm_refreshPanels('kfm_left_column')});
+	addEvent(window,'resize',kfm_handleWindowResizes);
 	kfm_contextmenuinit();
 }
 function kfm_addMethods(el){
@@ -166,6 +166,16 @@ function kfm_getContainer(p,c){
 function kfm_getParentEl(c,t){
 	while(c.tagName!=t&&c)c=c.parentNode;
 	return c;
+}
+function kfm_handleWindowResizes(){
+	var w=getWindowSize(),column_hider=$('kfm_left_column_hider');
+	var to_max=['kfm_left_column','kfm_left_column_hider'];
+	for(var i=0;i<to_max.length;++i)if($(to_max[i]))$(to_max[i]).setCss('height:'+w.y+'px');
+	if($('kfm_codepressTableCell')){
+		var el=$('kfm_codepressTableCell');
+		$('cp-window').style.height=el.offsetHeight+'px';
+	}
+	kfm_refreshPanels('kfm_left_column');
 }
 function kfm_hideMessage(){
 	$('message').setCss('display:none');
