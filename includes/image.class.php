@@ -1,26 +1,23 @@
 <?php
 class Image extends File{
-	var $caption = '';
+	var $caption='';
 	var $width;
 	var $height;
 	var $thumb_url;
 	var $thumb_id;
 	var $thumb_path;
-	var $info = array();  // info from getimagesize
+	var $info=array(); # info from getimagesize
 	function Image($file){
 		if(is_object($file) && $file->isImage())parent::File($file->id);
 		else if(is_numeric($file))parent::File($file);
 		else return false;
-		// TODO select image data and set the properties
-		$this->caption = 'Not yet available';
-		$this->image_id = $this->getImageId();
-		$this->info = getimagesize($this->path);
+		$this->image_id=$this->getImageId();
+		$this->info=getimagesize($this->path);
 		$this->type=str_replace('image/','',$this->info['mime']);
-		$this->width = $this->info[0];
-		$this->height = $this->info[1];
+		$this->width=$this->info[0];
+		$this->height=$this->info[1];
 		$this->setThumbnail();
 	}
-
 	function delete(){
 		global $kfmdb,$kfm_db_prefix;
 		parent::delete();
@@ -38,6 +35,7 @@ class Image extends File{
 		}
 		$q=null;
 		$kfmdb->exec("DELETE FROM ".$kfm_db_prefix."files_images_thumbs WHERE image_id=".$this->id);
+		# TODO: remove the following two lines at version 1.0
 		$icons=glob(WORKPATH.$this->id.' [0-9]*x[0-9]*.*');
 		foreach($icons as $f)unlink($f);
 	}
@@ -45,20 +43,20 @@ class Image extends File{
 		global $kfmdb,$kfm_db_prefix;
 		$sql="SELECT id,caption FROM ".$kfm_db_prefix."files_images WHERE file_id='".$this->id."'";
 		$res=$kfmdb->query($sql);
-		if(!$res->numRows()){ // Create an image entry
+		if(!$res->numRows()){ # db record not found. create it
+			# TODO: retrieve caption generation code from get.php
 			$sql="INSERT INTO ".$kfm_db_prefix."files_images (file_id, caption) VALUES ('".$this->id."','".$this->name."')";
-			$this->caption = $this->name;
+			$this->caption=$this->name;
 			$kfmdb->exec($sql);
 			return $kfmdb->lastInsertId($kfm_db_prefix.'files_images','id');
-		}else{ // get information
-			$row = $res->fetchRow();
-			$this->caption = $row['caption'];
-			return $row['id'];
 		}
+		$row=$res->fetchRow();
+		$this->caption=$row['caption'];
+		return $row['id'];
 	}
 	function setCaption($caption){
 		global $kfmdb,$kfm_db_prefix;
-		$kfmdb->exec("UPDATE ".$kfm_db_prefix."files_images SET caption='".$caption."' WHERE file_id=".$this->id);
+		$kfmdb->exec("UPDATE ".$kfm_db_prefix."files_images SET caption='".addslashes($caption)."' WHERE file_id=".$this->id);
 		$this->caption=$caption;
 	}
 	function setThumbnail($width=64,$height=64){

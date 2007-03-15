@@ -19,6 +19,7 @@ function _createDirectory($parent,$name){
 }
 function _deleteDirectory($id,$recursive=0){
 	$dirdata=_getDirectoryDbInfo($id);
+	$parent=$dirdata['parent'];
 	if(!count($dirdata))return array('type'=>'error','msg'=>4); # directory not in database
 	$abs_dir=$dirdata['physical_address'];
 	$directory=str_replace($GLOBALS['rootdir'],'',$abs_dir);
@@ -30,7 +31,6 @@ function _deleteDirectory($id,$recursive=0){
 	}
 	kfm_rmdir2($id);
 	if(file_exists($abs_dir))return array('type'=>'error','msg'=>3,'name'=>$directory); # failed to delete directory
-	$parent=strpos($directory,'/')>0?preg_replace('/\/[^\/]*$/','',$directory):'';
 	return kfm_loadDirectories($parent);
 }
 function _getDirectoryDbInfo($id){
@@ -51,24 +51,15 @@ function _getDirectoryProperties($dir){
 	}
 	return $properties;
 }
-function _loadDirectories($root){
+function _loadDirectories($pid){
 	global $kfmdb,$kfm_db_prefix, $kfm_banned_folders;
-	if(is_numeric($root)){
-		$rootid=$root;
-		$dirdata=_getDirectoryDbInfo($rootid);
-		$reqdir=count($dirdata)?$dirdata['physical_address'].'/':$GLOBALS['rootdir'];
-		$root=str_replace($GLOBALS['rootdir'],'',$reqdir);
-	}
-	if(!isset($rootid)){
-		$reqdir=str_replace('//','/',$GLOBALS['rootdir'].$root);
-		$q=$kfmdb->query("select id from ".$kfm_db_prefix."directories where physical_address='".addslashes($reqdir)."'");
-		$r=$q->fetchRow();
-		$rootid=$r['id'];
-	}
-	if(!kfm_checkAddr($root))return 'error: illegal address "'.$root.'"';
+	$dirdata=_getDirectoryDbInfo($pid);
+	$reqdir=count($dirdata)?$dirdata['physical_address'].'/':$GLOBALS['rootdir'];
+	$pdir=str_replace($GLOBALS['rootdir'],'',$reqdir);
+	if(!kfm_checkAddr($pdir))return 'error: illegal address "'.$pdir.'"';
 	if(!is_dir($reqdir))mkdir($reqdir,0755);
 	if($handle=opendir($reqdir)){
-		$q=$kfmdb->query("select id,name from ".$kfm_db_prefix."directories where parent=".$rootid);
+		$q=$kfmdb->query("select id,name from ".$kfm_db_prefix."directories where parent=".$pid);
 		$dirsdb=$q->fetchAll();
 		$dirshash=array();
 		if(is_array($dirsdb))foreach($dirsdb as $r)$dirshash[$r['name']]=$r['id'];
@@ -84,7 +75,7 @@ function _loadDirectories($root){
 					}
 				}
 				if(!isset($dirshash[$file])){
-					kfm_add_directory_to_db($file,$ff1,$rootid);
+					kfm_add_directory_to_db($file,$ff1,$pid);
 					$dirshash[$file]=$kfmdb->lastInsertId($kfm_db_prefix.'directories','id');
 				}
 				$directories[]=array($file,$directory[1],$dirshash[$file]);
@@ -96,7 +87,7 @@ function _loadDirectories($root){
 		#	foreach($dirshash as $k=>$v)_rmdir2($v);
 		}
 		sort($directories);
-		return array('parent'=>$rootid,'reqdir'=>$root,'directories'=>$directories,'properties'=>kfm_getDirectoryProperties($root.'/'));
+		return array('parent'=>$pid,'reqdir'=>$pdir,'directories'=>$directories,'properties'=>kfm_getDirectoryProperties($pdir.'/'));
 	}
 	return 'couldn\'t read directory "'.$reqdir.'"';
 }
