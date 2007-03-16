@@ -42,6 +42,7 @@ function getMouseAt(e){
 	return m;
 }
 function getOffset(el,s) {
+	if(!el)return 0;
 	var n=parseInt(el['offset'+s]),p=el.offsetParent;
 	if(p)n+=getOffset(p,s);
 	return n;
