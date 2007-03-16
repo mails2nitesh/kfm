@@ -187,7 +187,10 @@ function kfm_handleWindowResizes(){
 	for(var i=0;i<to_max.length;++i)if($(to_max[i]))$(to_max[i]).setCss('height:'+w.y+'px');
 	if($('kfm_codepressTableCell')){
 		var el=$('kfm_codepressTableCell');
-		$('cp-window').style.height=el.offsetHeight+'px';
+		var w=$('cp_codepress'),s=getEls('div',getEls('form',w)[0])[0],e=getEls('iframe',w)[0];
+		w.style.height=w.offsetHeight/2+'px';
+		e.style.height=el.offsetHeight-s.offsetHeight+'px';
+		w.style.height=el.offsetHeight+'px';
 	}
 	kfm_refreshPanels('kfm_left_column');
 }

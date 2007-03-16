@@ -45,7 +45,7 @@ function kfm_showTextFile(res){
 	changeCheckEl.setCss('display:none');
 	r3.appendChild(codeEl);
 	r3.appendChild(changeCheckEl);
-	CodePress.setContent();
+	CodePress.run();
 }
 function kfm_viewTextFile(res){
 	var right_column=$('kfm_right_column').empty();
