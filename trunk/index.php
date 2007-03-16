@@ -7,8 +7,8 @@ require_once($kfm_base_path.'includes/kaejax.php');
 	kfm_kaejax_export(
 		'kfm_changeCaption','kfm_createDirectory','kfm_createEmptyFile','kfm_deleteDirectory','kfm_downloadFileFromUrl',
 		'kfm_extractZippedFile','kfm_getFileDetails','kfm_getFileUrl','kfm_getTagName','kfm_getTextFile','kfm_getThumbnail','kfm_loadDirectories',
-		'kfm_loadFiles','kfm_moveDirectory','kfm_moveFiles','kfm_renameFile','kfm_renameFiles','kfm_resizeImage','kfm_rm','kfm_rotateImage',
-		'kfm_saveTextFile','kfm_search','kfm_tagAdd','kfm_tagRemove','kfm_viewTextFile'
+		'kfm_loadFiles','kfm_moveDirectory','kfm_moveFiles','kfm_renameDirectory','kfm_renameFile','kfm_renameFiles','kfm_resizeImage','kfm_rm',
+		'kfm_rotateImage','kfm_saveTextFile','kfm_search','kfm_tagAdd','kfm_tagRemove','kfm_viewTextFile'
 	);
 	if(!empty($_POST['kaejax']))kfm_kaejax_handle_client_request();
 }

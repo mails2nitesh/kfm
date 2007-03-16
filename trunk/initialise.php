@@ -251,6 +251,11 @@ require_once($kfm_base_path.'framework.php');
 		require_once($kfm_base_path.'includes/directories.php');
 		return _moveDirectory($from,$to);
 	}
+	function kfm_renameDirectory($dir,$newname){
+		global $kfm_base_path;
+		require_once($kfm_base_path.'includes/directories.php');
+		return _renameDirectory($dir,$newname);
+	}
 	function kfm_loadDirectories($root){
 		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/directories.php');

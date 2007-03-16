@@ -111,6 +111,31 @@ function _moveDirectory($from,$to){
 	$kfmdb->exec("update ".$kfm_db_prefix."directories set parent=".$to." where id=".$from) or die('error: '.print_r($kfmdb->errorInfo(),true));
 	return _loadDirectories(1);
 }
+function _recursivelyRemoveDirectory($dir){
+	if($handle=opendir($dir)){
+		while(false!==($item=readdir($handle))){
+			if($item!='.'&&$item!='..'){
+				$uri=$dir.'/'.$item;
+				if(is_dir($uri))_recursivelyRemoveDirectory($uri);
+				else unlink($uri);
+			}
+		}
+		closedir($handle);
+		rmdir($dir);
+	}
+}
+function _renameDirectory($fid,$newname){
+	global $kfmdb,$kfm_db_prefix;
+	$dirdata=_getDirectoryDbInfo($fid);
+	$dir=_getDirectoryParents($dirdata['parent']);
+	$name=$dirdata['name'];
+	if(!file_exists($dir.$name))return;
+	if(!kfm_checkAddr($name)||!kfm_checkAddr($newname))return 'error: cannot rename "'.$name.'" to "'.$newname.'"'; # TODO: new string
+	if(file_exists($dir.$newname))return 'error: a directory of that name already exists'; # TODO: new string
+	rename($dir.$name,$dir.$newname);
+	$kfmdb->query("update ".$kfm_db_prefix."directories set name='".addslashes($newname)."' where id=".$fid);
+	return _loadDirectories($dirdata['parent']);
+}
 function _rmdir($pid){
 	global $kfmdb,$kfm_db_prefix;
 	{ # remove db entries
@@ -126,18 +151,5 @@ function _rmdir($pid){
 	}
 	_recursivelyRemoveDirectory(_getDirectoryParents($pid));
 	$kfmdb->exec("delete from ".$kfm_db_prefix."directories where id=".$pid);
-}
-function _recursivelyRemoveDirectory($dir){
-	if($handle=opendir($dir)){
-		while(false!==($item=readdir($handle))){
-			if($item!='.'&&$item!='..'){
-				$uri=$dir.'/'.$item;
-				if(is_dir($uri))_recursivelyRemoveDirectory($uri);
-				else unlink($uri);
-			}
-		}
-		closedir($handle);
-		rmdir($dir);
-	}
 }
 ?>

@@ -41,12 +41,6 @@ var kfm_file_bits={
 	},
 	padding:0
 }
-var kfm_regexps={
-	all_up_to_last_dot:/.*\./,
-	all_up_to_last_slash:/.*\//,
-	get_filename_extension:/.*\.([^.]*)$/,
-	remove_filename_extension:/\.[^.]*$/
-}
 function kfm_deleteFile(id){
 	var filename=$('kfm_file_icon_'+id).kfm_attributes.name;
 	if(confirm(kfm_lang.DelFileMessage(filename))){
@@ -94,8 +88,7 @@ function kfm_isFileInCWD(filename){
 	return false;
 }
 function kfm_incrementalFileDisplay(){
-	var a=window.kfm_incrementalFileDisplay_vars.at,fsdata=window.kfm_incrementalFileDisplay_vars.data.files,wrapper=$('kfm_right_column');
-	var fdata=fsdata[a];
+	var b=window.kfm_incrementalFileDisplay_vars,a=b.at,fsdata=b.data.files,wrapper=$('kfm_right_column'),fdata=fsdata[a];
 	if(wrapper.contentMode!='file_icons'){
 		window.kfm_incrementalFileDisplay_vars=null;
 		return;
@@ -116,7 +109,7 @@ function kfm_incrementalFileDisplay(){
 		}
 		else{
 			el.kfm_attributes=fdata;
-			for(b in kfm_imageExts)if(kfm_imageExts[b]==ext.toLowerCase())x_kfm_getThumbnail(id,64,64,kfm_showIcon);
+			if(inArray(ext.toLowerCase(),kfm_imageExts))x_kfm_getThumbnail(id,64,64,kfm_showIcon);
 		}
 		wrapper.files[a]=el;
 	}
@@ -135,7 +128,6 @@ function kfm_incrementalFileDisplay(){
 		nameEl.delClass('filename');
 		kfm_shrinkName(name,el,nameEl,'offsetWidth',reqWidth,extension);
 	}
-el.title=fdata.directory; // REMOVEME
 	el.style.width=reqWidth-kfm_file_bits.padding;
 	if(el.offsetWidth!=reqWidth){ // padding is causing an error in width
 		kfm_file_bits.padding=el.offsetWidth-reqWidth;
