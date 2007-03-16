@@ -104,40 +104,61 @@ function kfm_selection_drag(e){
 function kfm_selection_dragFinish(e){
 	clearTimeout(window.dragSelectionTrigger);
 	if(!window.dragType||window.dragType!=2)return;
-	var p1=getMouseAt(e),p2=window.drag_wrapper.orig;
+	var right_column=$('kfm_right_column'),p1=getMouseAt(e),p2=window.drag_wrapper.orig,offset=right_column.scrollTop;
 	var x1=p1.x>p2.x?p2.x:p1.x,x2=p2.x>p1.x?p2.x:p1.x,y1=p1.y>p2.y?p2.y:p1.y,y2=p2.y>p1.y?p2.y:p1.y;
-	var offset=$('kfm_right_column').scrollTop;
 	if(offset){
 		y1+=offset;
 		y2+=offset;
 	}
-	delEl('kfm_selection_blocker');
 	setTimeout('window.dragType=0;',1); // pause needed for IE
-	delEl(window.drag_wrapper);
+	delEl(['kfm_selection_blocker',window.drag_wrapper]);
 	removeEvent(document,'mousemove',kfm_selection_drag);
 	removeEvent(document,'mouseup',kfm_selection_dragFinish);
-	var fileids=$('kfm_right_column').fileids;
+	var fileids=right_column.fileids;
 	kfm_selectNone();
-	var lastfile=$('kfm_file_icon_'+fileids[fileids.length-1]);
-	if(y1>getOffset(lastfile,'Top')+lastfile.offsetHeight)return;
-	for(var f in fileids){
-		var file=fileids[f],icon=$('kfm_file_icon_'+file);
-		var x3=getOffset(icon,'Left'),y3=getOffset(icon,'Top');
-		var x4=x3+icon.offsetWidth,y4=y3+icon.offsetHeight;
-		if(
-			kfm_isPointInBox(x3,y3,x1,y1,x2,y2)||
-			kfm_isPointInBox(x4,y3,x1,y1,x2,y2)||
-			kfm_isPointInBox(x3,y4,x1,y1,x2,y2)||
-			kfm_isPointInBox(x4,y4,x1,y1,x2,y2)||
-			kfm_isPointInBox(x1,y1,x3,y3,x4,y4)||
-			kfm_isPointInBox(x2,y1,x3,y3,x4,y4)||
-			kfm_isPointInBox(x1,y2,x3,y3,x4,y4)||
-			kfm_isPointInBox(x2,y2,x3,y3,x4,y4)||
-			(x1>=x3&&x2<=x4&&y1<=y3&&y2>=y4)||
-			(x1<=x3&&x2>=x4&&y1>=y3&&y2<=y4)
-		)kfm_addToSelection(file);
+	var numfiles=fileids.length,f;
+	var firstfile=$('kfm_file_icon_'+fileids[0]),lastfile=$('kfm_file_icon_'+fileids[numfiles-1]),firstLeft=getOffset(firstfile,'Left');
+	var firstTop=getOffset(firstfile,'Top'),lastTop=getOffset(lastfile,'Top'),lastHeight=lastfile.offsetHeight;
+	if(y1>lastTop+lastHeight)return;
+	var icons={height:lastHeight,width:lastfile.offsetWidth};
+	if(firstTop==lastTop){ // only one row of icons
+		X(icons,{
+			iconsPerLine:numfiles,
+			marginX:(getOffset(lastfile,'Left')-firstLeft-(lastfile.offsetWidth*(numfiles-1)))/((numfiles-1)*2),
+			marginY:0
+		});
+	}
+	else{
+		for(var i=1;$('kfm_file_icon_'+fileids[i]).offsetTop==firstTop;++i);
+		X(icons,{
+			iconsPerLine:i,
+			marginX:(getOffset($('kfm_file_icon_'+fileids[i-1]),'Left')-firstLeft-(lastfile.offsetWidth*(i-1)))/((i-1)*2),
+			marginY:(getOffset($('kfm_file_icon_'+fileids[i]),'Top')-firstTop-lastHeight)/2
+		});
+	}
+	var iw=icons.width+icons.marginX*2;
+	var ih=icons.height+icons.marginY*2;
+	var leftMost=Math.floor((x1-firstLeft+icons.marginX*2)/iw);
+	var topMost=Math.floor((y1-firstTop+icons.marginY*2)/ih);
+	var columns=Math.ceil((x2-firstLeft)/iw)-leftMost;
+	var rows=Math.ceil((y2-firstTop)/ih)-topMost;
+	if(!columns&&!rows)return;
+	if(leftMost<0)leftMost=0;
+	if(topMost<0)topMost=0;
+	if(!columns)columns=1;
+	if(!rows)rows=1;
+	for(var y=topMost;y<topMost+rows;++y){
+		var yi=y*icons.iconsPerLine;
+		if(yi>numfiles)break;
+		for(var x=leftMost;x<leftMost+columns;++x){
+			if(yi+x>numfiles)break;
+			kfm_addToSelection(fileids[yi+x]);
+		}
 	}
 	kfm_selectionCheck();
+}
+function kfm_isPointInBox(x1,y1,x2,y2,x3,y3){
+	return(x1>=x2&&x1<=x3&&y1>=y2&&y1<=y3);
 }
 function kfm_selection_dragStart(e){
 	if(window.dragType)return;

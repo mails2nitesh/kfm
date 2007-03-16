@@ -199,9 +199,6 @@ function kfm_inArray(haystack,needle){
 	for(i in haystack)if(haystack[i]==needle)return true;
 	return false;
 }
-function kfm_isPointInBox(x1,y1,x2,y2,x3,y3){
-	return(x1>=x2&&x1<=x3&&y1>=y2&&y1<=y3);
-}
 function kfm_keyup(e){
 	var key=browser.isIE?e.keyCode:e.which;
 	switch(key){
