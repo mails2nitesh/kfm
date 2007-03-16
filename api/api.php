@@ -7,13 +7,17 @@ function kfm_api_createDirectory($parent,$name){
 	return 0;
 }
 function kfm_api_getDirectoryId($address){
-exit; # TODO - FIX THIS TO NOT USE physical_address
-	global $kfmdb,$kfm_db_prefix,$rootdir,$kfm_db_type;
-	if($kfm_db_type=='mysql')$add="concat(physical_address,'/')";
-	else $add="physical_address||'/'";
-	$q=$kfmdb->query("select id from ".$kfm_db_prefix."directories where physical_address='".$rootdir.addslashes($address)."' or ".$add."='".$rootdir.addslashes($address)."'");
-	$r=$q->fetchRow();
-	return count($r)?$r['id']:0;
+	global $kfmdb,$kfm_db_prefix;
+	$arr=explode('/',$address);
+	$curdir=1;
+	if($arr[count($arr)-1]==''&&count($arr)>1)array_pop($arr);
+	foreach($arr as $n){
+		$q=$kfmdb->query("select id from ".$kfm_db_prefix."directories where parent=".$curdir." and name='".addslashes($n)."'");
+		$r=$q->fetchRow();
+		if(!count($r))return 0;
+		$curdir=$r['id'];
+	}
+	return $curdir;
 }
 function kfm_api_removeFile($id){
 	$f=new File($id);
