@@ -22,7 +22,7 @@ require_once($kfm_base_path.'includes/kaejax.php');
 			echo preg_replace('/\s+/',' ',$css);
 		?></style>
 		<title>KFM - Kae's File Manager</title>
-		<script src="codepress/codepress.js" type="text/javascript" id="cp-script" lang="en-us"></script>
+		<script src="codepress-0.9.1/codepress.js" type="text/javascript" id="cp-script" lang="en-us"></script>
 		<script type="text/javascript">
 <?php
 	$js='';
