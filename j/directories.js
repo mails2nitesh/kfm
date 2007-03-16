@@ -39,8 +39,9 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 		node_id:parent,
 		contextmenu:function(e){
 			var links=[],i,node_id=this.node_id;
-			if(node_id!=1)links.push(['javascript:kfm_deleteDirectory("'+node_id+'")',kfm_lang.DeleteDir,'remove']);
+			links.push(['javascript:kfm_renameDirectory("'+node_id+'")','rename']); // TODO: New String
 			links.push(['javascript:kfm_createDirectory("'+node_id+'")',kfm_lang.CreateSubDir,'folder_new']);
+			if(node_id!=1)links.push(['javascript:kfm_deleteDirectory("'+node_id+'")',kfm_lang.DeleteDir,'remove']);
 			kfm_createContextMenu(getMouseAt(getEvent(e)),links);
 		}
 	}).setCss('cursor:'+(Browser.isIE?'hand':'pointer'));
@@ -150,6 +151,14 @@ function kfm_refreshDirectories(res){
 	kfm_setDirectoryProperties(res.properties);
 	kfm_selectNone();
 	kfm_log(kfm_lang.DirRefreshed);
+}
+function kfm_renameDirectory(id){
+	var directoryName=kfm_directories[id].name;
+	var newName=kfm_prompt('Rename the directory '+directoryName+' to what?',directoryName); // TODO: new string
+	if(!newName||newName==directoryName)return;
+	kfm_directories[id]=null;
+	kfm_log('Renamed "'+directoryName+'" as "'+newName+'"'); // TODO: new string
+	x_kfm_renameDirectory(id,newName,kfm_refreshDirectories);
 }
 function kfm_setDirectoryProperties(properties){
 	if(!$('kfm_directory_properties'))return;
