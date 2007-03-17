@@ -241,7 +241,7 @@ require_once($kfm_base_path.'framework.php');
 		require_once($kfm_base_path.'includes/directories.php');
 		return _getDirectoryProperties($dir);
 	}
-	function kfm_getDirectoryParents($pid,$type){
+	function kfm_getDirectoryParents($pid,$type=1){
 		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/directories.php');
 		return _getDirectoryParents($pid,$type);
