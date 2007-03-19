@@ -55,7 +55,7 @@ class File extends Object{
 		$cwd=$this->directory.'/'==$rootdir?'':str_replace($rootdir,'',$this->directory);
 		if(!file_exists($this->path))return 'javascript:alert("missing file")';
 		if(preg_replace('/.*(get\.php)$/','$1',$kfm_userfiles_output)=='get.php'){
-			if($kfm_userfiles_output=='get.php')$url=preg_replace('/\/[^\/]*$/','/get.php?id='.$this->id,$_SERVER['REQUEST_URI']);
+			if($kfm_userfiles_output=='get.php')$url=preg_replace('/\/[^\/]*$/','/get.php?id='.$this->id.GET_PARAMS,$_SERVER['REQUEST_URI']);
 			else $url=$kfm_userfiles_output.'?id='.$this->id;
 			if($x&&$y)$url.='&width='.$x.'&height='.$y;
 		}

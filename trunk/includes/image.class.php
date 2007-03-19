@@ -72,7 +72,7 @@ class Image extends File{
 			$q=null;
 			$id=$this->createThumb($width,$height);
 		}
-		$this->thumb_url='get.php?type=thumb&id='.$id;
+		$this->thumb_url='get.php?type=thumb&id='.$id.GET_PARAMS;
 		$this->thumb_id=$id;
 		$this->thumb_path=str_replace('//','/',WORKPATH.'thumbs/'.$id);
 		if(!file_exists($this->thumb_path)){

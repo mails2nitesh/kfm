@@ -57,6 +57,7 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 	define('LSQUIGG','{');
 	define('RSQUIGG','}');
 	define('KFM_DIR', dirname(__FILE__));
+	if(!defined('GET_PARAMS')) define('GET_PARAMS', '');
 	$kfm_highlight_extensions=array('php'=>'PHP', 'html'=>'HTML', 'xhtml'=>'HTML',
 				 'sql'=>'MYSQL', 'js'=>'JAVASCRIPT', 'css'=>'CSS', 'xml'=>'XML');
 	if(!isset($kfm_banned_files)||!is_array($kfm_banned_files))$kfm_banned_files = array();
