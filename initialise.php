@@ -371,18 +371,22 @@ require_once($kfm_base_path.'framework.php');
 }
 { # image functions
 	function kfm_changeCaption($filename,$newCaption){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/images.php');
 		return _changeCaption($filename,$newCaption);
 	}
 	function kfm_getThumbnail($fileid,$width,$height){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/images.php');
 		return _getThumbnail($fileid,$width,$height);
 	}
 	function kfm_resizeImage($filename,$width,$height){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/images.php');
 		return _resizeImage($filename,$width,$height);
 	}
 	function kfm_rotateImage($filename,$direction){
+		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/images.php');
 		return _rotateImage($filename,$direction);
 	}
