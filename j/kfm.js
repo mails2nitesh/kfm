@@ -14,7 +14,7 @@ function kfm(){
 	var form_panel,form,right_column,message,directories,logs,logHeight=64,w=getWindowSize(),j,i;
 	{ // extend language objects
 		for(var j in kfm_lang){
-			if(/%[1-9]/.test(kfm_lang[j])){
+			if(kfm_regexps.percent_numbers.test(kfm_lang[j])){
 				kfm_lang[j]=(function(str){
 					return function(){
 						var tmp=str;
@@ -300,6 +300,9 @@ function kfm_shrinkName(name,wrapper,text,size,maxsize,extension){
 var kfm_regexps={
 	all_up_to_last_dot:/.*\./,
 	all_up_to_last_slash:/.*\//,
+	ascii_stuff:/%([89A-F][A-Z0-9])/g,
 	get_filename_extension:/.*\.([^.]*)$/,
+	percent_numbers:/%[1-9]/,
+	plus:/\+/g,
 	remove_filename_extension:/\.[^.]*$/
 }
