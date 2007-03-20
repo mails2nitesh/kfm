@@ -74,7 +74,7 @@ function kfm_kaejax_do_call(func_name,args){
 function kfm_kaejax_sendRequests(uri){
 	var t=window.kfm_kaejax_timeouts[uri];
 	window.kfm_kaejax_timeouts[uri]=null;
-	var x=new XMLHttpRequest(),post_data="kaejax="+escape(json.s.object(t).replace(/\+/g,'%2B')).replace(/%([89A-F][A-Z0-9])/g,'%u00$1');
+	var x=new XMLHttpRequest(),post_data="kaejax="+escape(json.s.object(t).replace(kfm_regexps.plus,'%2B')).replace(kfm_regexps.ascii_stuff,'%u00$1');
 	post_data=kfm_sanitise_ajax(post_data);
 	x.open('POST',uri,true);
 	x.setRequestHeader("Method","POST "+uri+" HTTP/1.1");
@@ -95,12 +95,14 @@ function kfm_kaejax_sendRequests(uri){
 	}
 	x.send(post_data);
 }
-function loadJS(url){
+function loadJS(url,id,lang){
 	var i=0;
 	for(;i<loadedScripts.length;++i)if(loadedScripts[i]==url)return 0;
 	loadedScripts.push(url);
 	var el=newEl('script');
 	el.type="text/javascript";
+	if(id)el.id=id;
+	if(lang)el.lang=lang;
 	if(kfm_kaejax_is_loaded&&/\.php/.test(url))url+=(/\?/.test(url)?'&':'?')+'kfm_kaejax_is_loaded';
 	el.src=url;
 	getEls('head')[0].appendChild(el);

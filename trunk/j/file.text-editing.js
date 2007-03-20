@@ -45,7 +45,10 @@ function kfm_showTextFile(res){
 	changeCheckEl.setCss('display:none');
 	r3.appendChild(codeEl);
 	r3.appendChild(changeCheckEl);
-	CodePress.run();
+	if(window.CodePress)CodePress.run();
+	else{
+		loadJS('codepress-0.9.1/codepress.js','cp-script','en-us');
+	}
 }
 function kfm_viewTextFile(res){
 	var right_column=$('kfm_right_column').empty();
