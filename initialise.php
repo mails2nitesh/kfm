@@ -52,8 +52,18 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 	if(!isset($_SESSION['kfm']))$_SESSION['kfm']=array(
 		'currentdir'=>rtrim($rootdir,' /'),
 		'cwd_id'=>1,
-		'language'=>''
+		'language'=>'',
+		'username'=>'',
+		'password'=>''
 	);
+	# TODO: remove the following block for 1.0
+	else{
+		if(!isset($_SESSION['kfm']['username'])){
+			$_SESSION['kfm']['username']='';
+			$_SESSION['kfm']['password']='';
+			$_SESSION['kfm']['loggedin']=0;
+		}
+	}
 	define('LSQUIGG','{');
 	define('RSQUIGG','}');
 	define('KFM_DIR', dirname(__FILE__));
@@ -65,6 +75,24 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 	if(!isset($kfm_banned_folders)||!is_array($kfm_banned_folders)) $kfm_banned_folders = array();
 	define('IMAGEMAGICK_PATH',isset($kfm_imagemagick_path)?$kfm_imagemagick_path:'/usr/bin/convert');
 	$cache_directories=array();
+}
+{ # check authentication
+	if(!isset($kfm_username)||!isset($kfm_password))$_SESSION['kfm']['loggedin']=1;
+	if(!$_SESSION['kfm']['loggedin'] && (!isset($kfm_api_auth_override)||!$kfm_api_auth_override)){
+		$err='';
+		if(isset($_POST['username'])&&isset($_POST['password'])){
+			if($_POST['username']==$kfm_username && $_POST['password']==$kfm_password){
+				$_SESSION['kfm']['username']=$_POST['username'];
+				$_SESSION['kfm']['password']=$_POST['password'];
+				$_SESSION['kfm']['loggedin']=1;
+			}
+			else $err='<em>Incorrect Password. Please try again, or check your <code>configuration.php</code>.</em>';
+		}
+		if(!$_SESSION['kfm']['loggedin']){
+			include($kfm_base_path.'login.php');
+			exit;
+		}
+	}
 }
 { # work directory
 	$workpath = $rootdir.$kfm_workdirectory; // should be more at the top of this document
