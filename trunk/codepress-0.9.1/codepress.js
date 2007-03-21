@@ -236,7 +236,7 @@ CodePress.loadStyle = function(href,callback) {
 
 Content={};
 
-$ = function() { return document.getElementById(arguments[0]); }
+if(!$)$ = function() { return document.getElementById(arguments[0]); }
 var cpPath = $('cp-script').src.replace('codepress.js','');
 
 // load css then load script
