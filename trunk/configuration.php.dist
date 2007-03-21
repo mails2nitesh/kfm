@@ -1,6 +1,13 @@
 <?php
 # see license.txt for licensing
 
+# user access details. all users may use get.php without logging in, but
+#   if the following details are filled in, then login will be required
+#   for the main KFM application
+# for more details, see http://kfm.verens.com/security
+$kfm_username='';
+$kfm_password='';
+
 # what type of database to use
 $kfm_db_type='mysql'; # values allowed: sqlite, mysql, pgsql
 
