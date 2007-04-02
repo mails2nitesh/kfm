@@ -68,10 +68,6 @@ function kfm_showIcon(res,el2){
 	var file=res[0],image_data=res[1];
 	var el=(el2&&!isArray(el2))?el2:$('kfm_file_icon_'+file);
 	if(!el||!image_data)return;
-	if(image_data.caption){
-		if(el.title)el.title+=', caption: ';
-		el.title+=image_data.caption.replace(/\n/g,' ');
-	}
 	if(image_data.icon){
 		if(!kfm_filesCache[file])image_data.icon=image_data.icon;
 		var img=newImg(image_data.icon).setCss('width:1px;height:1px');

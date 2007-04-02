@@ -2,8 +2,9 @@
 # see license.txt for licensing
 if(!isset($kfm_base_path))$kfm_base_path='';
 error_reporting(E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE);
+if(isset($_GET['session_id']))session_id($_GET['session_id']);
 @session_start();
-set_include_path(get_include_path().PATH_SEPARATOR .$kfm_base_path.'pear');
+set_include_path(get_include_path().PATH_SEPARATOR.$kfm_base_path.'pear');
 if(!file_exists($kfm_base_path.'configuration.php')){
 	echo '<em>Missing <code>configuration.php</code>!</em><p>If this is a fresh installation of KFM, then please rename <code>configuration.php.dist</code> to <code>configuration.php</code>, and edit it according to your project\'s needs.</p><p>If this is an upgraded version of KFM, please remove the parts of your old <code>config.php</code> which do not exist in <code>configuration.php.dist</code>, then rename it to <code>configuration.php</code>.</p>';
 	exit;
@@ -240,7 +241,7 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 	}
 	function get_mimetype($f){
 		# windows users, please install this first: http://gnuwin32.sourceforge.net/packages/file.htm
-		return shell_exec(trim('file -bi '.escapeshellarg($f)));
+		return trim(shell_exec('file -bi '.escapeshellarg($f)));
 	}
 }
 require_once($kfm_base_path.'framework.php');

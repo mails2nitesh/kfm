@@ -3,8 +3,9 @@
 include('initialise.php');
 $js='';
 if($kfm_allow_file_uploads){
-	$filename=$_FILES['kfm_file']['name'];
-	$tmpname=$_FILES['kfm_file']['tmp_name'];
+	$file=isset($_FILES['kfm_file'])?$_FILES['kfm_file']:$_FILES['Filedata'];
+	$filename=$file['name'];
+	$tmpname=$file['tmp_name'];
 	$to=$_SESSION['kfm']['currentdir'].'/'.$filename;
 	if(!kfm_checkAddr($to))$js='parent.kfm_log("error: banned extension in file name")'; # TODO new string
 	else{
