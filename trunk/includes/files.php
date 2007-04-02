@@ -56,6 +56,7 @@ function _getFileDetails($fid){
 	$file=new File($fid);
 	if(!file_exists($file->path))return;
 	$details=array(
+		'id'=>$fid,
 		'filename'=>$file->name,
 		'mimetype'=>$file->mimetype,
 		'filesize'=>$file->size2str(),
@@ -178,18 +179,17 @@ function _resize_bytes($size){
 }
 function _rm($id){
 	if(is_array($id)){
-		foreach($id as $f)kfm_rm($f,1);
+		foreach($id as $f)_rm($f);
 	}
 	else{
 		$file=new File($id);
 		if($file->isImage()){
 			$im=new Image($file->id);
 			if(!$im->delete())return $im->getErrors();
-		}else{
-			if(!$file->delete())return $file->getErrors();
 		}
-		return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
+		else if(!$file->delete())return $file->getErrors();
 	}
+	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
 function _saveTextFile($fid,$text){
 	$f=new File($fid);

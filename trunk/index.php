@@ -63,6 +63,7 @@ require_once($kfm_base_path.'includes/kaejax.php');
 		}
 	}
 	$js.=file_get_contents('j/files.js');
+	$js.=file_get_contents('swfupload/SWFUpload.js');
 	$js=preg_replace('#// .*|[\t]#','',$js); # strip single-line comments and tabs
 	$js=preg_replace('#/\*.*?\*/#ims','',$js); # strip multi-line comments
 	$js=preg_replace('#;\n}#ims','}',$js);
@@ -77,6 +78,7 @@ require_once($kfm_base_path.'includes/kaejax.php');
 	}while($redo);
 	echo $js;
 ?>
+			var session_id="<?php echo session_id(); ?>";
 			var starttype="<?php echo isset($_GET['Type'])?$_GET['Type']:''; ?>";
 			var fckroot="<?php echo $kfm_userfiles; ?>";
 			var fckrootOutput="<?php echo $kfm_userfiles_output; ?>";

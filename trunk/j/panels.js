@@ -52,6 +52,54 @@ function kfm_createFileUploadPanel(){
 			var unzip1=newEl('span','kfm_unzip1','kfm_unzipWhenUploaded',[newInput('kfm_unzipWhenUploaded','checkbox'),'unzip after upload']); // TODO: new string
 			unzip1.setCss('visibility:hidden');
 			f1.addEl([input,submit,unzip1]);
+			{ // load multi-upload thing if possible
+				window.swfu=new SWFUpload({
+					upload_script:"/upload.php?session_id="+window.session_id,
+					target:"kfm_iframe",
+					flash_path:"swfupload/SWFUpload.swf",
+					allowed_filesize:30720,	// 30 MB
+					allowed_filetypes:"*.*",
+					allowed_filetypes_description:"All files...",
+					upload_file_queued_callback:"swfu.upload_file_queued",
+					upload_queue_complete_callback:'swfu.upload_queue_complete',
+					flash_loaded_callback:'swfu.flashLoaded',
+					create_ui:true
+				});
+				window.swfu.loadUI=function(){
+					var t=newEl('table'),r,c,inp1,inp2,instance=this;
+					r=t.addRow();
+					{ // browse button
+						c=r.addCell();
+						inp1=newInput('kfm_multiChooseFile','button','Browse...'); // TODO: new string
+						addEvent(inp1,'click',function(){instance.browse()});
+						c.addEl(inp1);
+					}
+					{ // file queue
+						c=r.addCell(1);
+						c.id='kfm_files_to_upload';
+					}
+					r=t.addRow();
+					{ // upload button
+						c=r.addCell();
+						inp2=newInput('kfm_uploadButton','button','Upload'); // TODO: new string
+						addEvent(inp2,'click',function(){instance.upload()});
+						c.addEl(inp2);
+					}
+					$('kfm_uploadForm').empty().addEl(t);
+					instance.set_number_of_files(0);
+				}
+				window.swfu.upload_file_queued=function(file,qlen){
+					window.swfu.set_number_of_files(qlen);
+				}
+				window.swfu.upload_queue_complete=function(){
+					x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);
+					window.swfu.set_number_of_files(0);
+				}
+				window.swfu.set_number_of_files=function(n){
+					$('kfm_files_to_upload').empty().addEl('Files to upload: '+n);
+					window.swfu.number_of_files=n;
+				}
+			}
 		}
 		{ // copy from URL
 			var f2=newEl('div','kfm_copyForm');
