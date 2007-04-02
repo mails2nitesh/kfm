@@ -54,7 +54,7 @@ function kfm_createFileUploadPanel(){
 			f1.addEl([input,submit,unzip1]);
 			{ // load multi-upload thing if possible
 				window.swfu=new SWFUpload({
-					upload_script:"/upload.php?session_id="+window.session_id,
+					upload_script:"../upload.php?session_id="+window.session_id,
 					target:"kfm_iframe",
 					flash_path:"swfupload/SWFUpload.swf",
 					allowed_filesize:30720,	// 30 MB
