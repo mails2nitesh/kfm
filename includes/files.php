@@ -183,11 +183,10 @@ function _rm($id){
 	}
 	else{
 		$file=new File($id);
-		if($file->isImage()){
-			$im=new Image($file->id);
-			if(!$im->delete())return $im->getErrors();
-		}
-		else if(!$file->delete())return $file->getErrors();
+		if($file->isImage())$file=new Image($file->id);
+		$ret=$file->delete();
+		if(!$ret)return $file->getErrors();
+		if(strstr($ret,'error:')===0)return $ret;
 	}
 	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }

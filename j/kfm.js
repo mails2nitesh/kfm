@@ -265,6 +265,7 @@ function kfm_log(msg){
 	var wrapper=$('kfm_logs_panel');
 	if(!wrapper){
 		if(msg.indexOf(kfm_lang.ErrorPrefix)!=0)return;
+		if(inArray('kfm_logs_panel',kfm_hidden_panels))return alert(msg);
 		kfm_addPanel('kfm_left_column','kfm_logs_panel');
 		kfm_refreshPanels('kfm_left_column');
 		wrapper=$('kfm_logs_panel');

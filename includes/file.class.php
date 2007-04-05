@@ -71,6 +71,7 @@ class File extends Object{
 	}
 	function delete(){
 		global $kfmdb,$kfm_db_prefix;
+		if(!kfm_cmsHooks_allowedToDeleteFile($this->id))return 'error: CMS does not allow file to be removed'; # TODO: new string
 		if(unlink($this->path)||!file_exists($this->path)){
 			$kfmdb->exec("DELETE FROM ".$kfm_db_prefix."files WHERE id=".$this->id);
 		}else{

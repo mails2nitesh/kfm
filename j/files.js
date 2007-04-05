@@ -153,6 +153,7 @@ function kfm_refreshFiles(res){
 		window.kfm_incrementalFileDisplay_vars=null;
 	}
 	if(!res)return;
+	if(res.toString()===res)alert('test'+res);
 	if(res.toString()===res)return kfm_log(res);
 	window.kfm_incrementalFileDisplay_vars={at:0,data:res};
 	var a,b,fileids=[],wrapper=$('kfm_right_column').empty();
@@ -211,7 +212,7 @@ function kfm_showFileDetails(res){
 }
 function kfm_showToolTip(res){
 	var table=kfm_buildFileDetailsTable(res),icon=$('kfm_file_icon_'+res.id);
-	if(!icon)return;
+	if(!icon||contextmenu)return;
 	table.id='kfm_tooltip';
 	table.setCss('position:absolute;left:0;top:0;visibility:hidden');
 	document.body.addEl(table);

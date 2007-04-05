@@ -14,6 +14,8 @@ require_once($kfm_base_path.'configuration.php');
 
 { # API - for programmers only
 	if(file_exists($kfm_base_path.'api/config.php'))include($kfm_base_path.'api/config.php');
+	if(file_exists($kfm_base_path.'api/cms_hooks.php'))include_once($kfm_base_path.'api/cms_hooks.php');
+	else include_once($kfm_base_path.'api/cms_hooks.php.dist');
 }
 function kfm_error_log($errno,$errstr,$errfile,$errline){
 	if(!defined('WORKPATH')){
