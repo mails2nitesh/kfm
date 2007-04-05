@@ -37,7 +37,7 @@ function kfm_showTextFile(res){
 	r2.addCell(3,1,newLink('javascript:if($("edit-start").value==CodePress.getCode() || confirm( kfm_lang.CloseWithoutSavingQuestion)){delEl("kfm_left_column_hider");x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);}',kfm_lang.Close,0,'button'));
 	r3=t.addRow().setCss('height:100%').addCell(0,4);
 	r3.id='kfm_codepressTableCell';
-	var codeEl=newEl('code','codepress','cp hideLanguage');
+	var codeEl=newEl('textarea','codepress','codepress');
 	codeEl.innerHTML=res.content;
 	codeEl.title=res.name;
 	codeEl.setCss('width:100%;height:'+(r3.offsetHeight-2)+'px');
@@ -46,9 +46,7 @@ function kfm_showTextFile(res){
 	r3.appendChild(codeEl);
 	r3.appendChild(changeCheckEl);
 	if(window.CodePress)CodePress.run();
-	else{
-		loadJS('codepress-0.9.1/codepress.js','cp-script','en-us');
-	}
+	else loadJS('codepress-0.9.3/codepress.js','cp-script','en-us','CodePress.run();delEl("kfm_tooltip");');
 }
 function kfm_viewTextFile(res){
 	var right_column=$('kfm_right_column').empty();

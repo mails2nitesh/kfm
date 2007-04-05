@@ -95,7 +95,7 @@ function kfm_kaejax_sendRequests(uri){
 	}
 	x.send(post_data);
 }
-function loadJS(url,id,lang){
+function loadJS(url,id,lang,onload){
 	var i=0;
 	for(;i<loadedScripts.length;++i)if(loadedScripts[i]==url)return 0;
 	loadedScripts.push(url);
@@ -104,6 +104,9 @@ function loadJS(url,id,lang){
 	if(id)el.id=id;
 	if(lang)el.lang=lang;
 	if(kfm_kaejax_is_loaded&&/\.php/.test(url))url+=(/\?/.test(url)?'&':'?')+'kfm_kaejax_is_loaded';
+	if(onload)addEvent(el,'load',function(){
+		eval(onload);
+	});
 	el.src=url;
 	getEls('head')[0].appendChild(el);
 	return 1;

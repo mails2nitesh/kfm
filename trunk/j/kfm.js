@@ -186,11 +186,11 @@ function kfm_handleWindowResizes(){
 	var to_max=['kfm_left_column','kfm_left_column_hider'];
 	for(var i=0;i<to_max.length;++i)if($(to_max[i]))$(to_max[i]).setCss('height:'+w.y+'px');
 	if($('kfm_codepressTableCell')){
-		var el=$('kfm_codepressTableCell');
-		var w=$('cp_codepress'),s=getEls('div',getEls('form',w)[0])[0],e=getEls('iframe',w)[0];
-		w.style.height=w.offsetHeight/2+'px';
-		e.style.height=el.offsetHeight-s.offsetHeight+'px';
-		w.style.height=el.offsetHeight+'px';
+		var el=$('kfm_codepressTableCell'),iframe=getEls('iframe',el)[0];
+		iframe.style.height=0;
+		iframe.style.width=0;
+		iframe.style.height=(el.offsetHeight-10)+'px';
+		iframe.style.width=(el.offsetWidth-10)+'px';
 	}
 	kfm_refreshPanels('kfm_left_column');
 }
