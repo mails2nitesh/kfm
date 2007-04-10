@@ -37,7 +37,7 @@ function kfm_showTextFile(res){
 	r2.addCell(3,1,newLink('javascript:if($("edit-start").value==codepress.getCode() || kfm_confirm( kfm_lang.CloseWithoutSavingQuestion)){delEl("kfm_left_column_hider");x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);}',kfm_lang.Close,0,'button'));
 	r3=t.addRow().setCss('height:100%').addCell(0,4);
 	r3.id='kfm_codepressTableCell';
-	var codeEl=newEl('textarea','codepress','codepress');
+	var codeEl=newEl('textarea','codepress','codepress '+res.language);
 	codeEl.innerHTML=res.content;
 	codeEl.title=res.name;
 	codeEl.setCss('width:100%;height:'+(r3.offsetHeight-2)+'px');

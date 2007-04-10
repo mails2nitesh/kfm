@@ -105,9 +105,46 @@ function _getTagName($id){
 function _getTextFile($fid){
 	$file=new File($fid);
 	if(!kfm_checkAddr($file->name))return;
-	if(in_array($file->getExtension(),$GLOBALS['kfm_editable_extensions'])){
+	$ext=$file->getExtension();
+	if(in_array($ext,$GLOBALS['kfm_editable_extensions'])){
 		if(!$file->isWritable())return 'error: '.$file->name.' is not writable'; # TODO: new string
-		return array('content'=>str_replace(array('<','>'),array('&lt;','&gt;'),$file->getContent()),'name'=>$file->name,'id'=>$file->id);
+		/**
+		 * determine language for Codepress
+		 */
+		switch($ext){
+			case 'html':
+			case 'tpl':
+				$language='html';
+				break;
+			case 'php':
+				$language = 'php';
+				break;
+			case 'css':
+				$language = 'css';
+				break;
+			case 'js':
+				$language = 'javascript';
+				break;
+			case 'j':
+				$language = 'java';
+				break;
+			case 'pl':
+				$language = 'perl';
+				break;
+			case 'ruby':
+				$language = 'ruby';
+				break;
+			case 'sql':
+				$language = 'sql';
+				break;
+			case 'txt':
+				$language = 'text';
+				break;
+			default:
+				$language = 'generic';
+				break;
+		}
+		return array('content'=>str_replace(array('<','>'),array('&lt;','&gt;'),$file->getContent()),'name'=>$file->name,'id'=>$file->id, 'language'=>$language);
 	}
 	return 'error: "'.$file->name.'" cannot be edited (restricted)'; # TODO: new string
 }
