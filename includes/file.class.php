@@ -1,8 +1,4 @@
 <?php
-/* Class File handles 
- *
- */
- 
 class File extends Object{
 	var $id=-1;
 	var $name='';
@@ -21,7 +17,7 @@ class File extends Object{
 			$this->name=$filedata['name'];
 			$this->parent=$filedata['directory'];
 			$this->directory=kfm_getDirectoryParents($this->parent,1);
-			$this->path=$this->directory.'/'.$filedata['name'];
+			$this->path=str_replace('//','/',$this->directory.'/'.$filedata['name']);
 			if(!file_exists($this->path)){
 				$this->error('File cannot be found');
 				return false;
@@ -71,11 +67,10 @@ class File extends Object{
 	}
 	function delete(){
 		global $kfmdb,$kfm_db_prefix;
-		if(!kfm_cmsHooks_allowedToDeleteFile($this->id))return 'error: CMS does not allow file to be removed'; # TODO: new string
-		if(unlink($this->path)||!file_exists($this->path)){
-			$kfmdb->exec("DELETE FROM ".$kfm_db_prefix."files WHERE id=".$this->id);
-		}else{
-			$this->error("unable to delete file ".$this->name);
+		if(!kfm_cmsHooks_allowedToDeleteFile($this->id))$this->error('CMS does not allow "'.$this->path.'" to be deleted'); # TODO: new string
+		else{
+			if(unlink($this->path)||!file_exists($this->path))$kfmdb->exec("DELETE FROM ".$kfm_db_prefix."files WHERE id=".$this->id);
+			else $this->error('unable to delete file '.$this->name);
 		}
 		return !$this->hasErrors();
 	}
@@ -99,6 +94,12 @@ class File extends Object{
 	function setContent($content){
 		$result=file_put_contents($this->path, $content);
 		if(!$result) $this->error('error setting file content');
+	}
+	function setTags($tags){
+		global $kfmdb,$kfm_db_prefix;
+		if(!count($tags))return;
+		$kfmdb->exec("DELETE FROM ".$kfm_db_prefix."tagged_files WHERE file_id=".$this->id);
+		foreach($tags as $tag)$kfmdb->exec("INSERT INTO ".$kfm_db_prefix."tagged_files (file_id,tag_id) VALUES(".$this->id.",".$tag.")");
 	}
 	function size2str(){
 		# returns the size in a human-readable way

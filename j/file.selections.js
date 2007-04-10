@@ -1,4 +1,4 @@
-// see license.txt for licensing
+// see ../license.txt for licensing
 function kfm_addToSelection(id){
 	if(!id)return;
 	selectedFiles.push(id);
@@ -10,8 +10,8 @@ function kfm_chooseFile(e,o){
 	var el=(o?e:getEventTarget(e)).kfm_attributes;
 	x_kfm_getFileUrl(el.id,function(url){
 		if(kfm_file_handler=='return'||kfm_file_handler=='fckeditor'){
-			if(!el.image_data)window.opener.SetUrl(url);
-			else window.opener.SetUrl(url.replace(/([^:]\/)\//g,'$1'),0,0,el.image_data.caption);
+			if(!el.width)window.opener.SetUrl(url);
+			else window.opener.SetUrl(url.replace(/([^:]\/)\//g,'$1'),0,0,$('kfm_file_icon_'+el.id).kfm_attributes.caption);
 			window.close();
 		}
 		else if(kfm_file_handler=='download'){
@@ -24,25 +24,30 @@ function kfm_file_drag(e){
 	if(!window.dragType||window.dragType!=1)return;
 	clearSelections();
 	var m=getMouseAt(e);
-	window.drag_wrapper.setCss('display:block;left:'+(m.x+16)+'px;top:'+m.y+'px');
+	var w=drag_wrapper.offsetWidth,h=drag_wrapper.offsetHeight,ws=getWindowSize();
+	var x=(w+m.x>ws.x-16)?ws.x-w:m.x+16;
+	var y=(h+m.y>ws.y)?ws.y-h:m.y;
+	if(x<0)x=0;
+	if(y<0)y=0;
+	window.drag_wrapper.setCss('display:block;left:'+x+'px;top:'+y+'px');
 }
 function kfm_file_dragFinish(e){
 	clearTimeout(window.dragTrigger);
 	if(!window.dragType||window.dragType!=1)return;
 	window.dragType=0;
 	delEl(['kfm_selection_blocker',window.drag_wrapper]);
+	window.drag_wrapper=null;
 	removeEvent(document,'mousemove',kfm_file_drag);
 	removeEvent(document,'mouseup',kfm_file_dragFinish);
-	var a=kfm_getContainer(getMouseAt(e),getElsWithClass('kfm_directory_link','DIV')),f=[];
+	var a=kfm_getContainer(getMouseAt(e),getElsWithClass('kfm_directory_link','DIV'));
 	dir_over=a?a.node_id:'.';
 	if(dir_over=='.'||dir_over==kfm_cwd_id)return;
-	for(var i in selectedFiles){
-		f[i]=selectedFiles[i];
-		kfm_tracer('kfm_file_icon_'+f[i],'kfm_directory_icon_'+dir_over);
+	{ // build context menu for "copy/move"
+		var links=[];
+		links.push(['x_kfm_copyFiles(['+selectedFiles.join(',')+'],'+dir_over+',kfm_alert);kfm_selectNone()','copy files']);
+		links.push(['x_kfm_moveFiles(['+selectedFiles.join(',')+'],'+dir_over+',kfm_refreshFiles);kfm_selectNone()','move files']);
+		kfm_createContextMenu(getMouseAt(getEvent(e)),links);
 	}
-	x_kfm_moveFiles(f,dir_over,kfm_refreshFiles);
-	kfm_log(kfm_lang.MovingFilesTo(selectedFiles.join(', '),a.kfm_directoryname));
-	kfm_selectNone();
 }
 function kfm_file_dragStart(filename){
 	if(!kfm_isFileSelected(filename))kfm_addToSelection(filename);
@@ -57,7 +62,7 @@ function kfm_file_dragStart(filename){
 	addEvent(document,'mousemove',kfm_file_drag);
 }
 function kfm_isFileSelected(filename){
-	return kfm_inArray(selectedFiles,filename);
+	return kfm_inArray(filename,selectedFiles);
 }
 function kfm_removeFromSelection(id){
 	var i;
@@ -113,6 +118,7 @@ function kfm_selection_dragFinish(e){
 	}
 	setTimeout('window.dragType=0;',1); // pause needed for IE
 	delEl(['kfm_selection_blocker',window.drag_wrapper]);
+	window.drag_wrapper=null;
 	removeEvent(document,'mousemove',kfm_selection_drag);
 	removeEvent(document,'mouseup',kfm_selection_dragFinish);
 	var fileids=right_column.fileids;
@@ -157,9 +163,6 @@ function kfm_selection_dragFinish(e){
 		}
 	}
 	kfm_selectionCheck();
-}
-function kfm_isPointInBox(x1,y1,x2,y2,x3,y3){
-	return(x1>=x2&&x1<=x3&&y1>=y2&&y1<=y3);
 }
 function kfm_selection_dragStart(e){
 	if(window.dragType)return;

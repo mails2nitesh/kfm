@@ -1,4 +1,4 @@
-// see license.txt for licensing
+// see ../license.txt for licensing
 function kfm_createEmptyFile(){
 	var filename='newfile.txt',msg='';
 	do{
@@ -6,7 +6,7 @@ function kfm_createEmptyFile(){
 		filename=kfm_prompt(kfm_lang.WhatFilenameToCreateAs+msg,filename);
 		if(!filename)return;
 		if(kfm_isFileInCWD(filename)){
-			var o=confirm(kfm_lang.AskIfOverwrite(filename));
+			var o=kfm_confirm(kfm_lang.AskIfOverwrite(filename));
 			if(!o)not_ok=1;
 		}
 		if(filename.indexOf('/')>-1){
@@ -34,7 +34,7 @@ function kfm_showTextFile(res){
 	r2.addCell(0,1,res.name);
 	r2.addCell(1,1,newLink('javascript:delEl("kfm_left_column_hider");x_kfm_viewTextFile('+res.id+',kfm_viewTextFile)','View',0,'button'));
 	r2.addCell(2,1,newLink('javascript:kfm_setMessage("saving file...");$("edit-start").value=codepress.getCode();x_kfm_saveTextFile('+res.id+',$("edit-start").value,kfm_clearMessage);','Save',0,'button'));
-	r2.addCell(3,1,newLink('javascript:if($("edit-start").value==codepress.getCode() || confirm( kfm_lang.CloseWithoutSavingQuestion)){delEl("kfm_left_column_hider");x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);}',kfm_lang.Close,0,'button'));
+	r2.addCell(3,1,newLink('javascript:if($("edit-start").value==codepress.getCode() || kfm_confirm( kfm_lang.CloseWithoutSavingQuestion)){delEl("kfm_left_column_hider");x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);}',kfm_lang.Close,0,'button'));
 	r3=t.addRow().setCss('height:100%').addCell(0,4);
 	r3.id='kfm_codepressTableCell';
 	var codeEl=newEl('textarea','codepress','codepress');
