@@ -305,6 +305,11 @@ require_once($kfm_base_path.'framework.php');
 		require_once($kfm_base_path.'includes/files.php');
 		return _add_file_to_db($filename,$directory_id);
 	}
+	function kfm_copyFiles($files,$dir_id){
+		global $kfm_base_path;
+		require_once($kfm_base_path.'includes/files.php');
+		return _copyFiles($files,$dir_id);
+	}
 	function kfm_createEmptyFile($filename){
 		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/files.php');
@@ -399,6 +404,11 @@ require_once($kfm_base_path.'framework.php');
 		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/files.php');
 		return _viewTextFile($fileid);
+	}
+	function kfm_zip($name,$files){
+		global $kfm_base_path;
+		require_once($kfm_base_path.'includes/files.php');
+		return _zip($name,$files);
 	}
 }
 { # image functions

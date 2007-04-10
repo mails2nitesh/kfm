@@ -196,7 +196,7 @@ function kfm_refreshPanels(wrapper){
 	var minimised=[],maximised=[],fixed_height=[],fixed_height_maxed=[];
 	for(i in ps){
 		var el=$(ps[i]);
-		if(inArray(el.id,kfm_hidden_panels))el.visible=false;
+		if(kfm_inArray(el.id,kfm_hidden_panels))el.visible=false;
 		if(el.visible){
 			el.minheight=getElsWithClass('kfm_panel_header','DIV',el.setCss('display:block'))[0].offsetHeight;
 			minheight+=el.minheight;

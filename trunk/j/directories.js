@@ -14,14 +14,14 @@ function kfm_createDirectory(id){
 	if(newName&&newName!=''&&!/\/|^\./.test(newName))x_kfm_createDirectory(id,newName,kfm_refreshDirectories);
 }
 function kfm_deleteDirectory(id){
-	if(confirm(kfm_lang.DelDirMessage(kfm_directories[id].pathname)))x_kfm_deleteDirectory(id,kfm_deleteDirectoryCheck);
+	if(kfm_confirm(kfm_lang.DelDirMessage(kfm_directories[id].pathname)))x_kfm_deleteDirectory(id,kfm_deleteDirectoryCheck);
 }
 function kfm_deleteDirectoryCheck(res){
 	if(res.type&&res.type=='error'){
 		switch(parseInt(res.msg)){
 			case 1: kfm_log('error: '+kfm_lang.IllegalDirectoryName(res.name)); break;
 			case 2:{ // not empty
-				var ok=confirm(kfm_lang.RecursiveDeleteWarning(res.name));
+				var ok=kfm_confirm(kfm_lang.RecursiveDeleteWarning(res.name));
 				if(ok)x_kfm_deleteDirectory(res.id,1,kfm_deleteDirectoryCheck);
 				break;
 			}
@@ -39,9 +39,9 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 		node_id:parent,
 		contextmenu:function(e){
 			var links=[],i,node_id=this.node_id;
-			links.push(['javascript:kfm_renameDirectory("'+node_id+'")','rename']); // TODO: New String
-			links.push(['javascript:kfm_createDirectory("'+node_id+'")',kfm_lang.CreateSubDir,'folder_new']);
-			if(node_id!=1)links.push(['javascript:kfm_deleteDirectory("'+node_id+'")',kfm_lang.DeleteDir,'remove']);
+			links.push(['kfm_renameDirectory("'+node_id+'")','rename']); // TODO: New String
+			links.push(['kfm_createDirectory("'+node_id+'")',kfm_lang.CreateSubDir,'folder_new']);
+			if(node_id!=1)links.push(['kfm_deleteDirectory("'+node_id+'")',kfm_lang.DeleteDir,'remove']);
 			kfm_createContextMenu(getMouseAt(getEvent(e)),links);
 		}
 	}).setCss('cursor:'+(Browser.isIE?'hand':'pointer'));
@@ -100,6 +100,7 @@ function kfm_dir_dragFinish(e){
 	removeEvent(document,'mouseup',kfm_dir_dragFinish);
 	var dir_from=window.drag_wrapper.dir_id;
 	delEl(['kfm_selection_blocker',window.drag_wrapper]);
+	window.drag_wrapper=null;
 	dir_to=kfm_directory_over;
 	if(dir_to==0||dir_to==dir_from)return;
 	x_kfm_moveDirectory(dir_from,dir_to,kfm_refreshDirectories);

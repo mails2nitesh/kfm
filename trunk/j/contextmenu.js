@@ -22,7 +22,7 @@ function kfm_createContextMenu(m,links){
 		contextmenu.addLink=function(href,text,icon){
 			var row=this.addRow();
 			row.addCell(0,0,(icon?newImg('themes/'+kfm_theme+'/icons/'+icon+'.png'):''),'kfm_contextmenu_iconCell');
-			row.addCell(1,0,href!='javascript:kfm_0'?newLink(href+';kfm_closeContextMenu()',text):text);
+			row.addCell(1,0,href!='kfm_0'?newLink('javascript:kfm_closeContextMenu();'+href,text):text);
 		}
 		window.contextmenu_loading=setTimeout('window.contextmenu_loading=null',1);
 		document.body.addEl(contextmenu.setCss('left:'+m.x+'px;top:'+m.y+'px'));
@@ -32,8 +32,8 @@ function kfm_createContextMenu(m,links){
 		col.colSpan=2;
 		col.addEl(newEl('hr'));
 	}
-	var i,rows=contextmenu.rows.length;
-	for(i in links)if(links[i][1])contextmenu.addLink(links[i][0],links[i][1],links[i][2]);
+	var rows=contextmenu.rows.length;
+	for(var i=0;i<links.length;++i)if(links[i][1])contextmenu.addLink(links[i][0],links[i][1],links[i][2]);
 	var w=contextmenu.offsetWidth,h=contextmenu.offsetHeight,ws=getWindowSize();
 	if(h+m.y>ws.y)contextmenu.style.top=(ws.y-h)+'px';
 	if(w+m.x>ws.x)contextmenu.style.left=(m.x-w)+'px';

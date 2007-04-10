@@ -16,7 +16,31 @@ class Image extends File{
 		$this->type=str_replace('image/','',$this->info['mime']);
 		$this->width=$this->info[0];
 		$this->height=$this->info[1];
-		$this->setThumbnail();
+	}
+	function createResizedCopy($to,$width,$height){
+		$load='imagecreatefrom'.$this->type;
+		$save='image'.$this->type;
+		if(!function_exists($load)||!function_exists($save))return $this->error('server cannot handle image of type "'.$this->type.'"');
+		$im=$load($this->path);
+		$imresized=imagecreatetruecolor($width,$height);
+		imagealphablending($imresized,false);
+		imagecopyresampled($imresized,$im,0,0,0,0,$width,$height,$this->width,$this->height);
+		imagesavealpha($imresized,true);
+		$save($imresized,$to,($this->type=='jpeg'?100:9));
+		imagedestroy($imresized);
+		imagedestroy($im);
+	}
+	function createThumb($width=64,$height=64){
+		global $kfmdb,$kfm_db_prefix;
+		if(!is_dir(WORKPATH.'thumbs'))mkdir(WORKPATH.'thumbs');
+		$ratio=min($width/$this->width,$height/$this->height);
+		$thumb_width=$this->width*$ratio;
+		$thumb_height=$this->height*$ratio;
+		$kfmdb->exec("INSERT INTO ".$kfm_db_prefix."files_images_thumbs (image_id,width,height) VALUES(".$this->id.",".$thumb_width.",".$thumb_height.")");
+		$id=$kfmdb->lastInsertId($kfm_db_prefix.'files_images_thumbs','id');
+		$file=WORKPATH.'thumbs/'.$id;
+		if($this->useImageMagick($this->path,'resize '.$thumb_width.'x'.$thumb_height,$file))$this->createResizedCopy($file,$thumb_width,$thumb_height);
+		return $id;
 	}
 	function delete(){
 		global $kfmdb,$kfm_db_prefix;
@@ -54,6 +78,32 @@ class Image extends File{
 		$this->caption=$row['caption'];
 		return $row['id'];
 	}
+	function resize($new_width, $new_height=-1){
+		if(!$this->isWritable()){
+			$this->error('Image is not writable, so cannot be resized');
+			return false;
+		}
+		$this->deleteThumbs();
+		if($new_height==-1)$new_height=$this->height*$new_width/$this->width;
+		if(!$this->useImageMagick($this->path,'resize '.$new_width.'x'.$new_height,$this->path))return;
+		$this->createResizedCopy($this->path,$new_width,$new_height);
+	}
+	function rotate($direction){
+		if(!$this->isWritable()){
+			$this->error('Image is not writable, so cannot be rotated');
+			return false;
+		}
+		$this->deleteThumbs();
+		if(!$this->useImageMagick($this->path,'rotate -'.$direction,$this->path))return;
+		{ # else use GD
+			$load='imagecreatefrom'.$this->type;
+			$save='image'.$this->type;
+			$im=$load($this->path);
+			$im=imagerotate($im,$direction,0);
+			$save($im,$this->path,($this->type=='jpeg'?100:9));
+			imagedestroy($im);
+		}
+	}
 	function setCaption($caption){
 		global $kfmdb,$kfm_db_prefix;
 		$kfmdb->exec("UPDATE ".$kfm_db_prefix."files_images SET caption='".addslashes($caption)."' WHERE file_id=".$this->id);
@@ -81,63 +131,12 @@ class Image extends File{
 		}
 		if(!file_exists($this->thumb_path))$this->createThumb();
 	}
-	function createThumb($width=64,$height=64){
-		global $kfmdb,$kfm_db_prefix;
-		if(!is_dir(WORKPATH.'thumbs'))mkdir(WORKPATH.'thumbs');
-		$ratio=min($width/$this->width,$height/$this->height);
-		$thumb_width=$this->width*$ratio;
-		$thumb_height=$this->height*$ratio;
-		$kfmdb->exec("INSERT INTO ".$kfm_db_prefix."files_images_thumbs (image_id,width,height) VALUES(".$this->id.",".$thumb_width.",".$thumb_height.")");
-		$id=$kfmdb->lastInsertId($kfm_db_prefix.'files_images_thumbs','id');
-		$file=WORKPATH.'thumbs/'.$id;
-		if($this->useImageMagick($this->path,'resize '.$thumb_width.'x'.$thumb_height,$file))$this->createResizedCopy($file,$thumb_width,$thumb_height);
-		return $id;
-	}
-	function resize($new_width, $new_height=-1){
-		if(!$this->isWritable()){
-			$this->error('Image is not writable, so cannot be resized');
-			return false;
-		}
-		$this->deleteThumbs();
-		if($new_height==-1)$new_height=$this->height*$new_width/$this->width;
-		if(!$this->useImageMagick($this->path,'resize '.$new_width.'x'.$new_height,$this->path))return;
-		$this->createResizedCopy($this->path,$new_width,$new_height);
-	}
-	function rotate($direction){
-		if(!$this->isWritable()){
-			$this->error('Image is not writable, so cannot be rotated');
-			return false;
-		}
-		$this->deleteThumbs();
-		if(!$this->useImageMagick($this->path,'rotate -'.$direction,$this->path))return;
-		{ # else use GD
-			$load='imagecreatefrom'.$this->type;
-			$save='image'.$this->type;
-			$im=$load($this->path);
-			$im=imagerotate($im,$direction,0);
-			$save($im,$this->path,($this->type=='jpeg'?100:9));
-			imagedestroy($im);
-		}
-	}
 	function useImageMagick($from,$action,$to){
 		if(!file_exists(IMAGEMAGICK_PATH))return true;
 		$retval=true;
 		$arr=array();
 		exec(IMAGEMAGICK_PATH.' "'.$from.'" -'.$action.' "'.$to.'"',$arr,$retval);
 		return $retval;
-	}
-	function createResizedCopy($to,$width,$height){
-		$load='imagecreatefrom'.$this->type;
-		$save='image'.$this->type;
-		if(!function_exists($load)||!function_exists($save))return $this->error('server cannot handle image of type "'.$this->type.'"');
-		$im=$load($this->path);
-		$imresized=imagecreatetruecolor($width,$height);
-		imagealphablending($imresized,false);
-		imagecopyresampled($imresized,$im,0,0,0,0,$width,$height,$this->width,$this->height);
-		imagesavealpha($imresized,true);
-		$save($imresized,$to,($this->type=='jpeg'?100:9));
-		imagedestroy($imresized);
-		imagedestroy($im);
 	}
 }
 ?>

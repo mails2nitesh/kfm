@@ -5,9 +5,32 @@ function _add_file_to_db($filename,$directory_id){
 	$q=$kfmdb->query($sql);
 	return $kfmdb->lastInsertId($kfm_db_prefix.'files','id');
 }
+function _copyFiles($files,$dir_id){
+	global $kfmdb,$kfm_db_prefix;
+	$to=kfm_getDirectoryParents($dir_id);
+	$copied=0;
+	if(!kfm_checkAddr($to))return 'error: illegal directory "'.$to.'"'; # TODO: new string
+	foreach($files as $fid){
+		$oldFile=new File($fid);
+		if(!$oldFile)return 'error: no data for file id "'.$fid.'"'; # TODO: new string
+		$filename=$oldFile->name;
+		if(!kfm_checkAddr($oldFile->path))return;
+		copy($oldFile->path,$to.'/'.$filename);
+		$id=kfm_add_file_to_db($filename,$dir_id);
+		if($oldFile->isImage()){
+			$oldFile=new Image($fid);
+			$newFile=new Image($id);
+			$newFile->setCaption($oldFile->caption);
+		}
+		else $newFile=new File($id);
+		$newFile->setTags($oldFile->getTags());
+		++$copied;
+	}
+	return $copied.' files copied'; # TODO: new string
+}
 function _createEmptyFile($filename){
-	if(!kfm_checkAddr($_SESSION['kfm']['currentdir'].'/'.$filename))return 'error: filename not allowed';
-	return(touch($_SESSION['kfm']['currentdir'].'/'.$filename))?kfm_loadFiles($_SESSION['kfm']['cwd_id']):'error: could not write file "'.$filename.'"';
+	if(!kfm_checkAddr($_SESSION['kfm']['currentdir'].'/'.$filename))return 'error: filename "'.$filename.'" not allowed'; # TODO: new string
+	return(touch($_SESSION['kfm']['currentdir'].'/'.$filename))?kfm_loadFiles($_SESSION['kfm']['cwd_id']):'error: could not write file "'.$filename.'"'; # TODO: new string
 }
 function _downloadFileFromUrl($url,$filename){
 	if(!kfm_checkAddr($_SESSION['kfm']['currentdir'].'/'.$filename))return 'error: filename not allowed';
@@ -104,14 +127,29 @@ function _loadFiles($rootid=1){
 		$files=array();
 		while(false!==($filename=readdir($handle)))if(strpos($filename,'.')!==0&&is_file($reqdir.'/'.$filename)){
 			if(in_array(strtolower($filename),$GLOBALS['kfm_banned_files']))continue;
-			if(!isset($fileshash[$filename])){
-				$fileshash[$filename]=kfm_add_file_to_db($filename,$rootid);
+			if(!isset($fileshash[$filename]))$fileshash[$filename]=kfm_add_file_to_db($filename,$rootid);
+			$file=new File($fileshash[$filename]);
+			if($file->isImage())$file=new Image($fileshash[$filename]);
+			$file->writable=$file->isWritable();
+			if($file->isImage()){
+				unset($file->bits);
+				unset($file->channels);
+				unset($file->directory);
+				unset($file->image_id);
+				unset($file->info);
+				unset($file->mimetype);
+				unset($file->parent);
+				unset($file->path);
+				unset($file->size);
+				unset($file->thumb_id);
+				unset($file->thumb_path);
+				unset($file->thumb_url);
+				unset($file->type);
 			}
-			$writable=is_writable(str_replace('//','/',$reqdir.'/'.$filename))?true:false;
-			$files[]=array('name'=>$filename,'parent'=>$rootid,'id'=>$fileshash[$filename],'writable'=>$writable);
+			unset($file->error_array);
+			$files[]=$file;
 			unset($fileshash[$filename]);
 		}
-		sort($files);
 		closedir($handle);
 		if(count($fileshash)){ # remove stale database entries (directories removed by hand)
 			foreach($fileshash as $k=>$v){
@@ -177,18 +215,20 @@ function _resize_bytes($size){
 	$return=number_format($size,0,'','.')." ".$format[$count];
 	return $return;
 }
-function _rm($id){
+function _rm($id,$dontLoadFiles=false){
 	if(is_array($id)){
-		foreach($id as $f)_rm($f);
+		foreach($id as $f){
+			$ret=_rm($f,true);
+			if($ret)return $ret;
+		}
 	}
 	else{
 		$file=new File($id);
 		if($file->isImage())$file=new Image($file->id);
 		$ret=$file->delete();
 		if(!$ret)return $file->getErrors();
-		if(strstr($ret,'error:')===0)return $ret;
 	}
-	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
+	if(!$dontLoadFiles)return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
 }
 function _saveTextFile($fid,$text){
 	$f=new File($fid);
@@ -221,8 +261,13 @@ function _search($keywords,$tags){
 	if(($tags&&count($valid_files))||$keywords){ # keywords
 		$constraints='';
 		if(count($valid_files))$constraints=' and (id='.join(' or id=',$valid_files).')';
-		$q=$kfmdb->query("select id,name,directory from ".$kfm_db_prefix."files where name like '%".addslashes($keywords)."%'".$constraints." order by name");
-		$files=$q->fetchAll();
+		$q=$kfmdb->query("select id from ".$kfm_db_prefix."files where name like '%".addslashes($keywords)."%'".$constraints." order by name");
+		$files=array();
+		foreach($q->fetchAll() as $f){
+			$file=new File($f['id']);
+			if($file->isImage())$file=new Image($f['id']);
+			$files[]=$file;
+		}
 	}
 	return array('reqdir'=>'search results','files'=>$files,'uploads_allowed'=>0); # TODO: new string
 }
@@ -288,5 +333,23 @@ function _viewTextFile($fileid){
 	}
 	return "error: viewing file is not allowed"; # TODO: new string
 }
-
+function _zip($filename,$files){
+	global $rootdir;
+	if(!kfm_checkAddr($_SESSION['kfm']['currentdir'].'/'.$filename))return 'error: filename "'.$filename.'" not allowed'; # TODO: new string
+	$arr=array();
+	foreach($files as $f){
+		$file=new File($f);
+		if(!$file)return 'error: missing file in selection'; # TODO: new string
+		$arr[]=$file->path;
+	}
+	{ # try native system zip command
+		$res=-1;
+		$pdir=str_replace('//','/',$_SESSION['kfm']['currentdir'].'/');
+		$zipfile=$pdir.$filename;
+		for($i=0;$i<count($arr);++$i)$arr[$i]=str_replace($pdir,'',$arr[$i]);
+		exec('cd "'.$rootdir.'" && zip -D "'.$zipfile.'" "'.join('" "',$arr).'"',$arr,$res);
+	}
+	if($res)return 'error: no native "zip" command'; # TODO: new string
+	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
+}
 ?>
