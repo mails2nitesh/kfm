@@ -42,6 +42,7 @@ var kfm_file_bits={
 	padding:0
 }
 function kfm_buildFileDetailsTable(res){
+	if(!res)return kfm_log('error: missing file details?');
 	var table=newEl('table'),r;
 	if(res.filename){ // filename
 		r=table.addRow();
