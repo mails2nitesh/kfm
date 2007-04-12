@@ -59,7 +59,7 @@ function kfm_createFileUploadPanel(){
 					flash_path:"swfupload/SWFUpload.swf",
 					allowed_filesize:30720,	// 30 MB
 					allowed_filetypes:"*.*",
-					allowed_filetypes_description:"All files...",
+					allowed_filetypes_description:"All files...", // TODO: new string
 					upload_file_queued_callback:"swfu.upload_file_queued",
 					upload_queue_complete_callback:'swfu.upload_queue_complete',
 					flash_loaded_callback:'swfu.flashLoaded',
