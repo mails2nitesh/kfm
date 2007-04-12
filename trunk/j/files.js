@@ -254,6 +254,7 @@ function kfm_showFileDetails(res){
 	body.addEl(table);
 }
 function kfm_showToolTip(res){
+	if(!res)return;
 	var table=kfm_buildFileDetailsTable(res),icon=$('kfm_file_icon_'+res.id);
 	if(!icon||contextmenu)return;
 	table.id='kfm_tooltip';
