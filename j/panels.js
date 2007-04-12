@@ -38,26 +38,28 @@ function kfm_createFileUploadPanel(){
 			$('kfm_copyForm').setCss('display:'+(copy?'block':'none'));
 		});
 		{ // upload from computer
-			var f1=newForm('upload.php','POST','multipart/form-data','kfm_iframe');
-			f1.id='kfm_uploadForm';
-			var iframe=newEl('iframe','kfm_iframe').setCss('display:none');
-			iframe.src='javascript:false';
-			var submit=newInput('upload','submit',kfm_lang.Upload);
-			submit.onclick=function(){
-				setTimeout('$("kfm_file").type="text";$("kfm_file").type="file"',1);
-			};
-			var input=newInput('kfm_file','file');
-			input.onkeyup=kfm_uploadPanel_checkForZip;
-			input.onchange=kfm_uploadPanel_checkForZip;
-			var unzip1=newEl('span','kfm_unzip1','kfm_unzipWhenUploaded',[newInput('kfm_unzipWhenUploaded','checkbox'),'unzip after upload']); // TODO: new string
-			unzip1.setCss('visibility:hidden');
-			f1.addEl([input,submit,unzip1]);
+			{ // normal single-file upload form
+				var f1=newForm('upload.php','POST','multipart/form-data','kfm_iframe');
+				f1.id='kfm_uploadForm';
+				var iframe=newEl('iframe','kfm_iframe').setCss('display:none');
+				iframe.src='javascript:false';
+				var submit=newInput('upload','submit',kfm_lang.Upload);
+				submit.onclick=function(){
+					setTimeout('$("kfm_file").type="text";$("kfm_file").type="file"',1);
+				};
+				var input=newInput('kfm_file','file');
+				input.onkeyup=kfm_uploadPanel_checkForZip;
+				input.onchange=kfm_uploadPanel_checkForZip;
+				var unzip1=newEl('span','kfm_unzip1','kfm_unzipWhenUploaded',[newInput('kfm_unzipWhenUploaded','checkbox'),'unzip after upload']); // TODO: new string
+				unzip1.setCss('visibility:hidden');
+				f1.addEl([input,submit,unzip1]);
+			}
 			{ // load multi-upload thing if possible
 				window.swfu=new SWFUpload({
 					upload_script:"../upload.php?session_id="+window.session_id,
 					target:"kfm_iframe",
 					flash_path:"swfupload/SWFUpload.swf",
-					allowed_filesize:30720,	// 30 MB
+					allowed_filesize:99999999,	// large limit
 					allowed_filetypes:"*.*",
 					allowed_filetypes_description:"All files...", // TODO: new string
 					upload_file_queued_callback:"swfu.upload_file_queued",
