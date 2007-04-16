@@ -203,7 +203,8 @@ function _loadFiles($rootid=1){
 	return 'couldn\'t read directory';
 }
 function _moveFiles($files,$dir_id){
-	global $kfmdb,$kfm_db_prefix;
+	global $kfmdb,$kfm_db_prefix,$kfm_allow_file_move;
+	if(!$kfm_allow_file_move)return 'error: permission denied: cannot move file'; # TODO: new string
 	$dirdata=kfm_getDirectoryDbInfo($dir_id);
 	if(!$dirdata)return 'error: no data for directory id "'.$dir_id.'"'; # TODO: new string
 	$to=kfm_getDirectoryParents($dir_id);

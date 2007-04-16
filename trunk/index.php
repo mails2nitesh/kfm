@@ -91,6 +91,13 @@ require_once($kfm_base_path.'includes/kaejax.php');
 			<?php if(isset($_GET['kfm_callerType']))echo 'window.kfm_callerType="'.addslashes($_GET['kfm_callerType']).'";'; ?>
 			var editable_extensions=["<?php echo join('","',$kfm_editable_extensions);?>"];
 			var viewable_extensions=["<?php echo join('","',$kfm_viewable_extensions);?>"];
+			var kfm_vars={
+				permissions:{
+					del:<?php echo $kfm_allow_file_delete; ?>,
+					edit:<?php echo $kfm_allow_file_edit; ?>,
+					move:<?php echo $kfm_allow_file_move; ?>
+				}
+			};
 		</script>
 	</head>
 	<body>

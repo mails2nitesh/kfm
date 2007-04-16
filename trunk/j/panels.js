@@ -6,7 +6,7 @@ function kfm_addPanel(wrapper,panel){
 		kfm_refreshPanels(wrapper);
 		return;
 	}
-	if     (panel=='kfm_directories_panel')el=kfm_createPanel(kfm_lang.Directories,'kfm_directories_panel',newEl('table','kfm_directories'),{state:1,abilities:-1,order:1});
+	if(panel=='kfm_directories_panel')el=kfm_createPanel(kfm_lang.Directories,'kfm_directories_panel',newEl('table','kfm_directories'),{state:1,abilities:-1,order:1});
 	else if(panel=='kfm_directory_properties_panel')el=kfm_createPanel(kfm_lang.DirectoryProperties,'kfm_directory_properties_panel',newEl('div','kfm_directory_properties'),{state:0,abilities:1});
 	else if(panel=='kfm_file_details_panel')el=kfm_createFileDetailsPanel();
 	else if(panel=='kfm_file_upload_panel')el=kfm_createFileUploadPanel();
@@ -16,6 +16,7 @@ function kfm_addPanel(wrapper,panel){
 		kfm_log(kfm_lang.NoPanel(panel));
 		return;
 	}
+	if(!wrapper.panels)wrapper.panels=[];
 	wrapper.panels[wrapper.panels.length]=panel;
 	wrapper.addEl(el);
 }
@@ -41,17 +42,17 @@ function kfm_createFileUploadPanel(){
 			{ // normal single-file upload form
 				var f1=newForm('upload.php','POST','multipart/form-data','kfm_iframe');
 				f1.id='kfm_uploadForm';
-				var iframe=newEl('iframe','kfm_iframe').setCss('display:none');
+				var iframe=newEl('iframe','kfm_iframe');
 				iframe.src='javascript:false';
+				iframe.setCss('display:none');
 				var submit=newInput('upload','submit',kfm_lang.Upload);
-				submit.onclick=function(){
+				addEvent(submit,'click',function(){
 					setTimeout('$("kfm_file").type="text";$("kfm_file").type="file"',1);
-				};
+				});
 				var input=newInput('kfm_file','file');
-				input.onkeyup=kfm_uploadPanel_checkForZip;
-				input.onchange=kfm_uploadPanel_checkForZip;
-				var unzip1=newEl('span','kfm_unzip1','kfm_unzipWhenUploaded',[newInput('kfm_unzipWhenUploaded','checkbox'),'unzip after upload']); // TODO: new string
-				unzip1.setCss('visibility:hidden');
+				addEvent(input,'keyup',kfm_uploadPanel_checkForZip);
+				addEvent(input,'change',kfm_uploadPanel_checkForZip);
+				var unzip1=newEl('span','kfm_unzip1','kfm_unzipWhenUploaded',[newInput('kfm_unzipWhenUploaded','checkbox'),'unzip after upload'],0,'visibility:hidden'); // TODO: new string
 				f1.addEl([input,submit,unzip1]);
 			}
 			{ // load multi-upload thing if possible
@@ -104,16 +105,13 @@ function kfm_createFileUploadPanel(){
 			}
 		}
 		{ // copy from URL
-			var f2=newEl('div','kfm_copyForm');
-			f2.setCss('display:none');
+			var f2=newEl('div','kfm_copyForm',0,0,0,'display:none');
 			var submit2=newInput('upload','submit',kfm_lang.CopyFromURL);
-			var inp2=newInput('kfm_url');
+			var inp2=newInput('kfm_url',0,0,0,0,'width:100%');
 			inp2.onkeyup=kfm_uploadPanel_checkForZip;
 			inp2.onchange=kfm_uploadPanel_checkForZip;
-			inp2.setCss('width:100%');
 			submit2.onclick=kfm_downloadFileFromUrl;
-			var unzip2=newEl('span','kfm_unzip2','kfm_unzipWhenUploaded',[newInput('kfm_unzipWhenUploaded','checkbox'),'unzip after upload']); // TODO: new string
-			unzip2.setCss('visibility:hidden');
+			var unzip2=newEl('span','kfm_unzip2','kfm_unzipWhenUploaded',[newInput('kfm_unzipWhenUploaded','checkbox'),'unzip after upload'],0,'visibility:hidden'); // TODO: new string
 			f2.addEl([inp2,submit2,unzip2]);
 		}
 	}
@@ -144,9 +142,7 @@ function kfm_createPanel(title,id,subels,vars){
 	return el;
 }
 function kfm_createPanelWrapper(name){
-	var el=newEl('div',name,'kfm_panel_wrapper');
-	el.panels=[];
-	return el;
+	return newEl('div',name,'kfm_panel_wrapper',0,{panels:[]});
 }
 function kfm_createSearchPanel(){
 	var t=newEl('table','kfm_search_table'),r,inp,rows=0;

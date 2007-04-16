@@ -12,8 +12,7 @@ function kfm_modal_open(form,title,actions){
 	}
 	{ // wrapper
 		var wrapper=newEl('div','formWrapper');
-		var h2=newEl('h2',0,0,title);
-		h2.setCss('float:left');
+		var h2=newEl('h2',0,0,title,0,'float:left');
 		form.setCss('position:relative;margin:0;textAlign:left;padding:0;clear:left');
 		wrapper.addEl([h2,form]);
 		{ // link row

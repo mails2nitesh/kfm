@@ -31,7 +31,7 @@ function getElsWithClass(c,t,p){
 function getEvent(e){
 	return e?e:(window.event?window.event:"");
 }
-function getEventTarget(e){
+function getEventTarget(e,tagName){
 	return getEvent(e).currentTarget;
 }
 function getMouseAt(e){
@@ -107,7 +107,7 @@ function loadJS(url,id,lang,onload){
 	getEls('head')[0].appendChild(el);
 	return 1;
 }
-function newEl(t,id,cn,chld){
+function newEl(t,id,cn,chld,vals,css){
 	var el=document.createElement(t);
 	if(t=='iframe')el.src='/i/blank.gif';
 	if(id){
@@ -115,31 +115,24 @@ function newEl(t,id,cn,chld){
 		el.name=id;
 	}
 	kfm_addMethods(el);
-	el.addEl(chld);
-	el.setClass(cn);
+	if(chld)el.addEl(chld);
+	if(cn)el.setClass(cn);
+	if(vals)X(el,vals);
+	if(css)el.setCss(css);
 	return el;
 }
 function newForm(action,method,enctype,target){
-	var el=newEl('form');
-	el.action=action;
-	el.method=method;
-	el.enctype=enctype;
-	el.target=target;
-	return el;
+	return newEl('form',0,0,0,{action:action,method:method,enctype:enctype,target:target});
 }
 function newImg(a){
-	var b=newEl('img');
-	b.src=a;
-	return b;
+	return newEl('img',0,0,0,{src:a});
 }
 function newInput(n,t,v,cl){
 	var b;
 	if(!t)t='text';
 	switch(t){
 		case 'checkbox':{
-			b=newEl('input',n);
-			b.type='checkbox';
-			b.style.width='auto';
+			b=newEl('input',n,0,0,{type:'checkbox'},'width:auto');
 			break;
 		}
 		case 'textarea':{
@@ -152,10 +145,7 @@ function newInput(n,t,v,cl){
 		}
 	}
 	if(v){
-		if(t=='checkbox'){
-			b.checked='checked';
-			b.defaultChecked='checked';
-		}
+		if(t=='checkbox')X(b,{checked:'checked',defaultChecked:'checked'});
 		else if(t!='datetime')b.value=v;
 	}
 	b.setClass(cl);
@@ -163,9 +153,7 @@ function newInput(n,t,v,cl){
 }
 function newLink(h,t,id,c,title){
 	if(!title)title='';
-	var a=newEl('a',id,c,t);
-	X(a,{href:h,title:title});
-	return a;
+	return newEl('a',id,c,t,{href:h,title:title});
 }
 function newSelectbox(name,keys,vals,s,f){
 	var el2=newEl('select',name),el3,s2=0,i=0;
@@ -174,7 +162,7 @@ function newSelectbox(name,keys,vals,s,f){
 	for(;i<vals.length;++i){
 		var v1=vals[i].toString();
 		var v2=v1.length>20?v1.substr(0,27)+'...':v1;
-		el3=X(newEl('option',0,0,v2),{value:keys[i],title:v1});
+		el3=newEl('option',0,0,v2,{value:keys[i],title:v1});
 		if(keys[i]==s)s2=i;
 		el2.addEl(el3);
 	}
@@ -209,80 +197,65 @@ if(browser.isKonqueror){
 	loadJS('j/browser-specific.konqueror.js');
 }
 var json={
-	m:{
-		'\b': '\\b',
-		'\t': '\\t',
-		'\n': '\\n',
-		'\f': '\\f',
-		'\r': '\\r',
-		'"' : '\\"',
-		'\\': '\\\\'
-	},
+	m:{'\b':'\\b','\t':'\\t','\n':'\\n','\f':'\\f','\r':'\\r','"':'\\"','\\':'\\\\'},
 	s:{
-		array: function (x) {
-			var a = ['['], b, f, i, l = x.length, v;
-			for (i = 0; i < l; i += 1) {
-				v = x[i];
-				f = json.s[typeof v];
-				if (f) {
-					v = f(v);
-					if (typeof v == 'string') {
-						if (b) {
-							a[a.length] = ',';
-						}
-						a[a.length] = v;
-						b = true;
+		array:function(x){
+			var a=['['],b,f,i,l=x.length,v;
+			for(i=0;i<l;i+=1){
+				v=x[i];
+				f=json.s[typeof v];
+				if(f){
+					v=f(v);
+					if(typeof v=='string'){
+						if(b)a.push(',');
+						a.push(v);
+						b=true;
 					}
 				}
 			}
-			a[a.length] = ']';
+			a[a.length]=']';
 			return a.join('');
 		},
-		'boolean': function (x) {
+		'boolean':function(x){
 			return String(x);
 		},
-		'null': function (x) {
+		'null':function(x){
 			return "null";
 		},
-		number: function (x) {
-			return isFinite(x) ? String(x) : 'null';
+		number:function(x){
+			return isFinite(x)?String(x):'null';
 		},
-		object: function (x) {
-			if (x&&!x.tagName) {
-				if(x instanceof Array)return json.s.array(x);
-				var a = ['{'], b, f, i, v;
-				for (i in x) {
-					v = x[i];
-					f = json.s[typeof v];
-					if (f) {
-						v = f(v);
-						if (typeof v == 'string') {
-							if (b) {
-								a[a.length] = ',';
-							}
-							a.push(json.s.string(i), ':', v);
-							b = true;
+		object:function(x){
+			if(x&&!x.tagName){
+				if(isArray(x))return json.s.array(x);
+				var a=['{'],b,f,i,v;
+				for(i in x) {
+					v=x[i];
+					f=json.s[typeof v];
+					if(f){
+						v=f(v);
+						if(typeof v=='string'){
+							if(b)a.push(',');
+							a.push(json.s.string(i),':',v);
+							b=true;
 						}
 					}
 				}
-				a[a.length] = '}';
+				a.push('}');
 				return a.join('');
 			}
 			return 'null';
 		},
-		string: function (x) {
-			if (/["\\\x00-\x1f]/.test(x)) {
-				x = x.replace(/([\x00-\x1f\\"])/g, function(a, b) {
-					var c = json.m[b];
-					if (c) {
-						return c;
-					}
-					c = b.charCodeAt();
-					return '\\u00' +
-					Math.floor(c / 16).toString(16) + (c % 16).toString(16);
+		string:function(x){
+			if(/["\\\x00-\x1f]/.test(x)){
+				x=x.replace(/([\x00-\x1f\\"])/g,function(a,b){
+					var c=json.m[b];
+					if(c)return c;
+					c=b.charCodeAt();
+					return '\\u00'+Math.floor(c/16).toString(16)+(c%16).toString(16);
 				});
 			}
-			return '"' + x + '"';
+			return '"'+x+'"';
 		}
 	}
 };

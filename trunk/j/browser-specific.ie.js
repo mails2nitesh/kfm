@@ -7,7 +7,7 @@ function kfm_cancelEvent(e,c){
 function clearSelections(){
 	document.selection.empty();
 }
-function getEventTarget(e){
+function getEventTarget(e,tagName){
 	return window.event.srcElement;
 }
 function getWindowScrollAt(){
@@ -16,7 +16,7 @@ function getWindowScrollAt(){
 	d=document.documentElement;
 	return {x:d.scrollLeft,y:d.scrollTop};
 }
-function newEl(t,id,cn,chld){
+function newEl(t,id,cn,chld,vals,css){
 	if(t=='iframe')return newEl('<iframe name="'+id+'" src="empty"></iframe>');
 	var el=document.createElement(t);
 	if(id){
@@ -24,8 +24,10 @@ function newEl(t,id,cn,chld){
 		el.name=id;
 	}
 	kfm_addMethods(el);
-	el.setClass(cn);
-	el.addEl(chld);
+	if(cn)el.setClass(cn);
+	if(chld)el.addEl(chld);
+	if(vals)X(el,vals);
+	if(css)el.setCss(css);
 	return el;
 }
 function newForm(action,method,enctype,target){
