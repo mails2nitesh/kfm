@@ -11,6 +11,19 @@ if(!file_exists($kfm_base_path.'configuration.php')){
 }
 require_once($kfm_base_path.'configuration.php');
 
+{ # REMOVE FOR 1.0. check for missing variables in configuration.php
+	$m=array();
+	if(!isset($kfm_allow_file_delete))$m[]='missing <code>$kfm_allow_file_delete</code> variable';
+	if(!isset($kfm_allow_file_edit))$m[]='missing <code>$kfm_allow_file_edit</code> variable';
+	if(!isset($kfm_allow_file_move))$m[]='missing <code>$kfm_allow_file_move</code> variable';
+	if(count($m)){
+		echo '<html><body><p>There are missing variables in your <code>configuration.php</code>. Please check the supplied <code>configuration.php.dist</code> for notes on their usage.</p><ul>';
+		foreach($m as $a)echo '<li>'.$a.'</li>';
+		echo '</li></ul></body></html>';
+		exit;
+	}
+}
+
 
 { # API - for programmers only
 	if(file_exists($kfm_base_path.'api/config.php'))include($kfm_base_path.'api/config.php');
@@ -52,13 +65,7 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 	define('KFM_VERSION',rtrim(file_get_contents($kfm_base_path.'version.txt')));
 	$rootdir=str_replace('//','/',$_SERVER['DOCUMENT_ROOT'].$kfm_userfiles.'/');
 	if(!is_dir($rootdir))mkdir($rootdir,0755);
-	if(!isset($_SESSION['kfm']))$_SESSION['kfm']=array(
-		'currentdir'=>rtrim($rootdir,' /'),
-		'cwd_id'=>1,
-		'language'=>'',
-		'username'=>'',
-		'password'=>''
-	);
+	if(!isset($_SESSION['kfm']))$_SESSION['kfm']=array('currentdir'=>rtrim($rootdir,' /'),'cwd_id'=>1,'language'=>'','username'=>'','password'=>'');
 	# TODO: remove the following block for 1.0
 	else{
 		if(!isset($_SESSION['kfm']['username'])){

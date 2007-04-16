@@ -55,7 +55,7 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 		this.delClass('hovered');
 	});
 	addEvent(el,'mouseover',function(){
-		kfm_directory_over=this.node_id;
+		if(!kfm_directory_over)kfm_directory_over=parseInt(this.node_id);
 	});
 	if(parent!=1)addEvent(el,'mousedown',(function(id){
 		return function(e){
@@ -99,7 +99,7 @@ function kfm_dir_dragFinish(e){
 	removeEvent(document,'mousemove',kfm_dir_drag);
 	removeEvent(document,'mouseup',kfm_dir_dragFinish);
 	var dir_from=window.drag_wrapper.dir_id;
-	delEl(['kfm_selection_blocker',window.drag_wrapper]);
+	delEl(window.drag_wrapper);
 	window.drag_wrapper=null;
 	dir_to=kfm_directory_over;
 	if(dir_to==0||dir_to==dir_from)return;
@@ -109,8 +109,7 @@ function kfm_dir_dragFinish(e){
 function kfm_dir_dragStart(pid){
 	window.dragType=3;
 	var w=getWindowSize();
-	document.body.addEl(newEl('div','kfm_selection_blocker').setCss('position:absolute;zIndex:20;left:0;top:0;width:'+w.x+'px;height:'+w.y+'px'));
-	window.drag_wrapper=X(newEl('div','kfm_drag_wrapper','directory').setCss('display:none;opacity:.7'),{dir_id:pid});
+	window.drag_wrapper=X(newEl('div','kfm_drag_wrapper','directory',0,0,'display:none;opacity:.7'),{dir_id:pid});
 	window.drag_wrapper.addEl($('kfm_directory_icon_'+pid).kfm_directoryname);
 	document.body.addEl(window.drag_wrapper);
 	addEvent(document,'mousemove',kfm_dir_drag);

@@ -35,17 +35,20 @@ function kfm_file_dragFinish(e){
 	clearTimeout(window.dragTrigger);
 	if(!window.dragType||window.dragType!=1)return;
 	window.dragType=0;
-	delEl(['kfm_selection_blocker',window.drag_wrapper]);
+	delEl(window.drag_wrapper);
 	window.drag_wrapper=null;
 	removeEvent(document,'mousemove',kfm_file_drag);
 	removeEvent(document,'mouseup',kfm_file_dragFinish);
-	var a=kfm_getContainer(getMouseAt(e),getElsWithClass('kfm_directory_link','DIV'));
-	dir_over=a?a.node_id:'.';
+	if(kfm_directory_over)dir_over=kfm_directory_over;
+	else{ // workaround for Firefox which seems to have trouble with onmouseover for the directories while dragging
+		var a=kfm_getContainer(getMouseAt(e),getElsWithClass('kfm_directory_link','DIV'));
+		dir_over=a?a.node_id:'.';
+	}
 	if(dir_over=='.'||dir_over==kfm_cwd_id)return;
 	{ // build context menu for "copy/move"
 		var links=[];
 		links.push(['x_kfm_copyFiles(['+selectedFiles.join(',')+'],'+dir_over+',kfm_alert);kfm_selectNone()','copy files']);
-		links.push(['x_kfm_moveFiles(['+selectedFiles.join(',')+'],'+dir_over+',kfm_refreshFiles);kfm_selectNone()','move files']);
+		links.push(['x_kfm_moveFiles(['+selectedFiles.join(',')+'],'+dir_over+',kfm_refreshFiles);kfm_selectNone()','move files',0,!kfm_vars.permissions.move]);
 		kfm_createContextMenu(getMouseAt(getEvent(e)),links);
 	}
 }
@@ -54,8 +57,7 @@ function kfm_file_dragStart(filename){
 	if(!selectedFiles.length)return;
 	window.dragType=1;
 	var w=getWindowSize();
-	document.body.addEl(newEl('div','kfm_selection_blocker').setCss('position:absolute;zIndex:20;left:0;top:0;width:'+w.x+'px;height:'+w.y+'px'));
-	window.drag_wrapper=newEl('div','kfm_drag_wrapper').setCss('display:none;opacity:.7');
+	window.drag_wrapper=newEl('div','kfm_drag_wrapper',0,0,0,'display:none;opacity:.7');
 	for(var i=0;i<10&&i<selectedFiles.length;++i)window.drag_wrapper.addEl([$('kfm_file_icon_'+selectedFiles[i]).kfm_attributes.name,newEl('br')]);
 	if(selectedFiles.length>10)window.drag_wrapper.addEl(newEl('i',0,0,'...and '+(selectedFiles.length-10)+' more')); // TODO: New String
 	document.body.addEl(window.drag_wrapper);
@@ -117,7 +119,7 @@ function kfm_selection_dragFinish(e){
 		y2+=offset;
 	}
 	setTimeout('window.dragType=0;',1); // pause needed for IE
-	delEl(['kfm_selection_blocker',window.drag_wrapper]);
+	delEl(window.drag_wrapper);
 	window.drag_wrapper=null;
 	removeEvent(document,'mousemove',kfm_selection_drag);
 	removeEvent(document,'mouseup',kfm_selection_dragFinish);
@@ -168,9 +170,8 @@ function kfm_selection_dragStart(e){
 	if(window.dragType)return;
 	window.dragType=2;
 	var w=getWindowSize();
-	document.body.addEl(newEl('div','kfm_selection_blocker').setCss('position:absolute;zIndex:20;left:0;top:0;width:'+w.x+'px;height:'+w.y+'px'));
 	addEvent(document,'mouseup',kfm_selection_dragFinish);
-	window.drag_wrapper=newEl('div','kfm_selection_drag_wrapper').setCss('display:none;opacity:.7');
+	window.drag_wrapper=newEl('div','kfm_selection_drag_wrapper',0,0,0,'display:none;opacity:.7');
 	window.drag_wrapper.orig=window.mouseAt;
 	document.body.addEl(window.drag_wrapper);
 	addEvent(document,'mousemove',kfm_selection_drag);

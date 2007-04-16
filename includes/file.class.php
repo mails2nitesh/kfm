@@ -66,9 +66,10 @@ class File extends Object{
 		return $url;
 	}
 	function delete(){
-		global $kfmdb,$kfm_db_prefix;
+		global $kfmdb,$kfm_db_prefix,$kfm_allow_file_delete;
+		if(!$kfm_allow_file_delete)$this->error('permission denied: cannot delete file'); # TODO: new string
 		if(!kfm_cmsHooks_allowedToDeleteFile($this->id))$this->error('CMS does not allow "'.$this->path.'" to be deleted'); # TODO: new string
-		else{
+		if(!$this->hasErrors()){
 			if(unlink($this->path)||!file_exists($this->path))$kfmdb->exec("DELETE FROM ".$kfm_db_prefix."files WHERE id=".$this->id);
 			else $this->error('unable to delete file '.$this->name);
 		}
@@ -92,8 +93,10 @@ class File extends Object{
 		return (($this->id==-1)||!is_writable($this->path))?false:true;
 	}
 	function setContent($content){
+		global $kfm_allow_file_edit;
+		if(!$kfm_allow_file_edit)return $this->error('permission denied: cannot edit file'); # TODO: new string
 		$result=file_put_contents($this->path, $content);
-		if(!$result) $this->error('error setting file content');
+		if(!$result)$this->error('error setting file content'); # TODO: new string
 	}
 	function setTags($tags){
 		global $kfmdb,$kfm_db_prefix;

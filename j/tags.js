@@ -8,16 +8,11 @@ function kfm_tagAdd(id){
 }
 function kfm_tagDraw(id){
 	if(!isArray(id)){
-		if(kfm_tags[id]){
-			return newEl('span',0,0,kfm_tags[id]);
-		}
-		else{
-			x_kfm_getTagName(id,kfm_tagDraw);
-			return newEl('span',0,'kfm_unknown_tag',id);
-		}
+		if(kfm_tags[id])return newEl('span',0,0,kfm_tags[id]);
+		x_kfm_getTagName(id,kfm_tagDraw);
+		return newEl('span',0,'kfm_unknown_tag',id);
 	}
-	var name=id[1],id=id[0];
-	var els=getElsWithClass('kfm_unknown_tag','span');
+	var name=id[1],id=id[0],els=getElsWithClass('kfm_unknown_tag','span');
 	kfm_tags[id]=name;
 	for(var i=0;i<els.length;++i){
 		var el=els[i];

@@ -30,6 +30,7 @@ td{vertical-align:top}
 .contextmenu{width:auto;margin:0;padding:0;position:absolute;background:#fff;border:1px solid #000}
 .contextmenu tr:hover *{background:#efefde;font-style:italic}
 .contextmenu a{display:block;color:#000;text-decoration:none}
+.contextmenu tr.disabled *{color:#ccc;font-style:italic}
 
 div.kfm_panel{position:relative;width:240px;background:url(themes/default/bitsandpieces/panelheader-bg.png) repeat-x}
 div.kfm_panel_body{width:240px;overflow:auto}

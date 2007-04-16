@@ -46,6 +46,14 @@ $kfm_file_handler='fckeditor'; # values allowed: download, fckeditor
 # directory in which KFM keeps its database and generated files
 $kfm_workdirectory = '.files';
 
+# 1 = users are allowed to delete files
+# 0 = users are not allowed to delete files
+$kfm_allow_file_delete=1;
+
+# 1 = users are allowed to edit files
+# 0 = users are not allowed to edit files
+$kfm_allow_file_edit=1;
+
 # 1 = users are allowed to upload files
 # 0 = user are not allowed upload files
 $kfm_allow_file_uploads=1;
