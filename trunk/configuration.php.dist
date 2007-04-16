@@ -54,6 +54,10 @@ $kfm_allow_file_delete=1;
 # 0 = users are not allowed to edit files
 $kfm_allow_file_edit=1;
 
+# 1 = users are allowed to move files
+# 0 = users are not allowed to move files
+$kfm_allow_file_move=1;
+
 # 1 = users are allowed to upload files
 # 0 = user are not allowed upload files
 $kfm_allow_file_uploads=1;
