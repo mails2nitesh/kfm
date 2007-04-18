@@ -18,8 +18,8 @@ var kfm_file_bits={
 						links.push(['kfm_rotateImage('+id+',90)',kfm_lang.RotateAntiClockwise,'rotate_ccw']);
 						links.push(['kfm_resizeImage('+id+')',kfm_lang.ResizeImage,'resize_image']);
 					}
-					links.push(['x_kfm_getFileUrl('+id+',kfm_showImage)',kfm_lang.ViewImage]);
-					links.push(['kfm_returnThumbnail('+id+',kfm_showImage)',kfm_lang.ReturnThumbnailToOpener]);
+					links.push(['kfm_img_startLightbox('+id+')',kfm_lang.ViewImage]);
+					links.push(['kfm_returnThumbnail('+id+')',kfm_lang.ReturnThumbnailToOpener]);
 					links.push(['kfm_changeCaption('+id+')',kfm_lang.ChangeCaption,'edit']);
 				}
 				if(kfm_inArray(extension,['zip']))links.push(['kfm_extractZippedFile("'+id+'")',kfm_lang.ExtractZippedFile,'extract_zip']);
