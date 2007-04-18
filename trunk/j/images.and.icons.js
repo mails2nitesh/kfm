@@ -18,6 +18,39 @@ function kfm_changeCaption_set(){
 		x_kfm_changeCaption(id,newCaption,kfm_refreshFiles);
 	}
 }
+function kfm_img_startLightbox(id){
+	var el,data=$('kfm_file_icon_'+id).kfm_attributes,ws=getWindowSize();
+	if(!$('kfm_lightboxShader')){
+		el=newEl('div','kfm_lightboxShader',0,0,0,'position:absolute;left:0;zIndex:1;top:0;width:'+ws.x+'px;height:'+ws.y+'px;background:#000;opacity:.7');
+		addEvent(el,'click',kfm_img_stopLightbox);
+		document.body.addEl(el);
+	}
+	delEl('kfm_lightboxImage');
+	var w=data.width,h=data.height,url='get.php?id='+id,r=0;
+	if(!w||!h){
+		kfm_log('error: not an image, or image dimensions not reported'); // TODO: new string
+		return kfm_img_stopLightbox();
+	}
+	if(w>ws.x*.9||h>ws.y*.9){
+		if(w>ws.x*.9){
+			r=.9*ws.x/w;
+			w*=r;
+			h*=r;
+		}
+		if(h>ws.y*0.9){
+			r=.9*ws.y/h;
+			w*=r;
+			h*=r;
+		}
+		url+='&width='+parseInt(w)+'&height='+parseInt(h);
+	}
+	el=newEl('img','kfm_lightboxImage',0,0,{src:url},'position:absolute;left:'+parseInt((ws.x-w)/2)+'px;top:'+parseInt((ws.y-h)/2)+'px;zIndex:2');
+	document.body.addEl(el);
+	addEvent(el,'click',kfm_img_stopLightbox);
+}
+function kfm_img_stopLightbox(){
+	delEl(['kfm_lightboxShader','kfm_lightboxImage']);
+}
 function kfm_resizeImage(id){
 	var data=$('kfm_file_icon_'+id).kfm_attributes;
 	var el=kfm_filesCache[id],txt=kfm_lang.CurrentSize(data.width,data.height);
@@ -57,7 +90,4 @@ function kfm_returnThumbnail(id){
 function kfm_rotateImage(filename,direction){
 	kfm_filesCache[filename]=null;
 	x_kfm_rotateImage(filename,direction,kfm_refreshFiles);
-}
-function kfm_showImage(url){
-	window.open(url,'kfm_image');
 }
