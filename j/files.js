@@ -8,7 +8,12 @@ var kfm_file_bits={
 			var writable=this.kfm_attributes.writable;
 		}
 		{ // add the links
-			if(selectedFiles.length>1)links.push(['kfm_deleteSelectedFiles()',kfm_lang.DeleteFile,'remove',!kfm_vars.permissions.del]);
+			if(selectedFiles.length>1){
+				links.push(['kfm_deleteSelectedFiles()',kfm_lang.DeleteFile,'remove',!kfm_vars.permissions.del]);
+				var imgs=[];
+				for(var i=0;i<selectedFiles.length;++i)if($('kfm_file_icon_'+selectedFiles[i]).kfm_attributes.width)imgs.push(selectedFiles[i]);
+				if(imgs.length)links.push(['kfm_img_startLightbox(['+imgs.join(',')+'])','view slideshow']);
+			}
 			else{
 				links.push(['kfm_deleteFile('+id+')',kfm_lang.DeleteFile,'remove',!kfm_vars.permissions.del]);
 				links.push(['kfm_renameFile('+id+')',kfm_lang.RenameFile,'edit']);
