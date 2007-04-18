@@ -196,9 +196,11 @@ function kfm_getParentEl(c,t){
 	return c;
 }
 function kfm_handleWindowResizes(){
-	var w=getWindowSize(),column_hider=$('kfm_left_column_hider');
-	var to_max=['kfm_left_column','kfm_left_column_hider'];
-	for(var i=0;i<to_max.length;++i)if($(to_max[i]))$(to_max[i]).setCss('height:'+w.y+'px');
+	var w=getWindowSize();
+	var to_max_height=['kfm_left_column','kfm_left_column_hider','kfm_lightboxShader'];
+	var to_max_width=['kfm_lightboxShader'];
+	for(var i=0;i<to_max_height.length;++i)if($(to_max_height[i]))$(to_max_height[i]).setCss('height:'+w.y+'px');
+	for(var i=0;i<to_max_width.length;++i)if($(to_max_width[i]))$(to_max_width[i]).setCss('width:'+w.x+'px');
 	if($('kfm_codepressTableCell')){
 		var el=$('kfm_codepressTableCell'),iframe=getEls('iframe',el)[0];
 		iframe.style.height=0;
