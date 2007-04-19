@@ -245,6 +245,8 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 	function kfm_checkAddr($addr){
 		return (
 			strpos($addr,'..')===false&&
+			strpos($addr,'.')!==0&&
+			strpos($addr,'/.')===false&&
 			!in_array(preg_replace('/.*\./','',$addr),$GLOBALS['kfm_banned_extensions'])
 		);
 	}
