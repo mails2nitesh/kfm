@@ -58,9 +58,11 @@ function _getDirectoryProperties($dir){
 }
 function _loadDirectories($pid){
 	global $kfmdb,$kfm_db_prefix, $kfm_banned_folders;
-	$dirdata=_getDirectoryDbInfo($pid);
+	$dir = new kfmDirectory($pid);
+	//$dirdata=_getDirectoryDbInfo($pid);
 	$reqdir=_getDirectoryParents($pid);
-	$pdir=str_replace($GLOBALS['rootdir'],'',$reqdir);
+	$pdir=str_replace($GLOBALS['rootdir'],'',$dir->path);
+	/*$pdir=str_replace($GLOBALS['rootdir'],'',$reqdir);
 	if(!kfm_checkAddr($pdir))return 'error: illegal address "'.$pdir.'"';
 	if(!is_dir($reqdir))mkdir($reqdir,0755);
 	if($handle=opendir($reqdir)){
@@ -91,10 +93,14 @@ function _loadDirectories($pid){
 		if(count($dirshash)){ # remove stale database entries (directories removed by hand)
 		#	foreach($dirshash as $k=>$v)_rmdir2($v);
 		}
+		$directories = $dir->getSubdirs();
 		sort($directories);
 		return array('parent'=>$pid,'reqdir'=>$pdir,'directories'=>$directories,'properties'=>kfm_getDirectoryProperties($pdir.'/'));
-	}
-	return 'couldn\'t read directory "'.$reqdir.'"';
+	}*/
+		$directories = $dir->getSubdirs();
+		sort($directories);
+		return array('parent'=>$pid,'reqdir'=>$pdir,'directories'=>$directories,'properties'=>kfm_getDirectoryProperties($pdir.'/'));
+	return 'couldn\'t read directory "'.$dir->path.'"';
 }
 function _moveDirectory($from,$to){
 	global $kfmdb,$kfm_db_prefix;
