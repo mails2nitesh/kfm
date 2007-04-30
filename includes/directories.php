@@ -1,19 +1,22 @@
 <?php
-function _add_directory_to_db($name,$parent){
-	global $kfmdb,$kfm_db_prefix;
-	$sql="insert into ".$kfm_db_prefix."directories (name,parent) values('".addslashes($name)."',".$parent.")";
-	return $kfmdb->exec($sql);
-}
+//function _add_directory_to_db($name,$parent){
+//	global $kfmdb,$kfm_db_prefix;
+//	$sql="insert into ".$kfm_db_prefix."directories (name,parent) values('".addslashes($name)."',".$parent.")";
+//	return $kfmdb->exec($sql);
+//}
 function _createDirectory($parent,$name){
-	$dirdata=_getDirectoryDbInfo($parent);
-	if(!count($dirdata))return 'error: no data for directory id "'.$parent.'"'; # TODO: new string
-	$physical_address=_getDirectoryParents($parent).$name;
-	$short_version=str_replace($GLOBALS['rootdir'],'',$physical_address);
-	if(!kfm_checkAddr($physical_address))return 'error: illegal directory name "'.$short_version.'"'; # TODO: new string
-	if(file_exists($physical_address))return 'error: a directory named "'.$short_version.'" already exists'; # TODO: new string
-	mkdir($physical_address);
-	if(!file_exists($physical_address))return 'error: failed to create directory "'.$short_version.'". please check permissions'; # TODO: new string
-	kfm_add_directory_to_db($name,$parent);
+	$dir = new kfmDirectory($parent);
+	$dir->createSubdir($name);
+//	$dirdata=_getDirectoryDbInfo($parent);
+//	if(!count($dirdata))return 'error: no data for directory id "'.$parent.'"'; # TODO: new string
+//	$physical_address=_getDirectoryParents($parent).$name;
+//	$short_version=str_replace($GLOBALS['rootdir'],'',$physical_address);
+//	if(!kfm_checkAddr($physical_address))return 'error: illegal directory name "'.$short_version.'"'; # TODO: new string
+//	if(file_exists($physical_address))return 'error: a directory named "'.$short_version.'" already exists'; # TODO: new string
+//	mkdir($physical_address);
+//	if(!file_exists($physical_address))return 'error: failed to create directory "'.$short_version.'". please check permissions'; # TODO: new string
+//	kfm_add_directory_to_db($name,$parent);
+	if($dir->hasErrors()) return $dir->getErrors();
 	return kfm_loadDirectories($parent);
 }
 function _deleteDirectory($id,$recursive=0){
@@ -60,7 +63,7 @@ function _loadDirectories($pid){
 	global $kfmdb,$kfm_db_prefix, $kfm_banned_folders;
 	$dir = new kfmDirectory($pid);
 	//$dirdata=_getDirectoryDbInfo($pid);
-	$reqdir=_getDirectoryParents($pid);
+	//$reqdir=_getDirectoryParents($pid);
 	$pdir=str_replace($GLOBALS['rootdir'],'',$dir->path);
 	/*$pdir=str_replace($GLOBALS['rootdir'],'',$reqdir);
 	if(!kfm_checkAddr($pdir))return 'error: illegal address "'.$pdir.'"';
