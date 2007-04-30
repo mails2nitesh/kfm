@@ -31,6 +31,13 @@ class File extends Object{
 	function getContent(){
 		return ($this->id==-1)?false:file_get_contents($this->path);
 	}
+	function checkAddr($addr){
+		return (
+			$addr[0]!=='.' &&
+			strpos($addr, '/')===false &&
+			!in_array(preg_replace('/.*\./','',$addr),$GLOBALS['kfm_banned_extensions'])
+			);
+	}
 	function getExtension(){
 		/* Function that returns the extension of the file.
 		 * if a parameter is given, the extension of that parameters is returned

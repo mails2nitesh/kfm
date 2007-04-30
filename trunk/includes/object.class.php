@@ -20,5 +20,14 @@ class Object{
 		// short term ugly solution
 		return 'error: '.implode("_", $this->error_array);
 	}
+
+	function checkAddr($addr){
+		return (
+			strpos($addr,'..')===false&&
+			strpos($addr,'.')!==0&&
+			strpos($addr,'/.')===false&&
+			!in_array(preg_replace('/.*\./','',$addr),$GLOBALS['kfm_banned_extensions'])
+		);
+	}
 }
 ?>
