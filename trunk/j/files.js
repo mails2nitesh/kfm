@@ -210,7 +210,7 @@ function kfm_incrementalFileDisplay(){
 		el.style.width=reqWidth-kfm_file_bits.padding;
 	}
 	window.kfm_incrementalFileDisplay_vars.at=a+1;
-	if(a+1<fsdata.length)window.kfm_incrementalFileDisplay_loader=setTimeout('kfm_incrementalFileDisplay()',1);
+	if(a+1<fsdata.length)window.kfm_incrementalFileDisplay_loader=setTimeout('kfm_incrementalFileDisplay()',((a+1)%kfm_show_files_in_groups_of?0:1000));
 }
 function kfm_refreshFiles(res){
 	if(window.kfm_incrementalFileDisplay_loader){

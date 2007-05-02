@@ -86,6 +86,9 @@ $kfm_theme='default';
 # where is the 'convert' program kept, if you have it installed?
 $kfm_imagemagick_path='/usr/bin/convert';
 
+# show files in groups of 'n', where 'n' is a number (helps speed up files display - use low numbers for slow machines)
+$kfm_show_files_in_groups_of=10;
+
 # what directory is KFM in? this is very important for CMS's that use KFM's API functions,
 #   but probably not important at all to the casual user.
 $kfm_base_path='';
