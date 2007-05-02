@@ -1,21 +1,7 @@
 <?php
-//function _add_directory_to_db($name,$parent){
-//	global $kfmdb,$kfm_db_prefix;
-//	$sql="insert into ".$kfm_db_prefix."directories (name,parent) values('".addslashes($name)."',".$parent.")";
-//	return $kfmdb->exec($sql);
-//}
 function _createDirectory($parent,$name){
 	$dir = new kfmDirectory($parent);
 	$dir->createSubdir($name);
-//	$dirdata=_getDirectoryDbInfo($parent);
-//	if(!count($dirdata))return 'error: no data for directory id "'.$parent.'"'; # TODO: new string
-//	$physical_address=_getDirectoryParents($parent).$name;
-//	$short_version=str_replace($GLOBALS['rootdir'],'',$physical_address);
-//	if(!kfm_checkAddr($physical_address))return 'error: illegal directory name "'.$short_version.'"'; # TODO: new string
-//	if(file_exists($physical_address))return 'error: a directory named "'.$short_version.'" already exists'; # TODO: new string
-//	mkdir($physical_address);
-//	if(!file_exists($physical_address))return 'error: failed to create directory "'.$short_version.'". please check permissions'; # TODO: new string
-//	kfm_add_directory_to_db($name,$parent);
 	if($dir->hasErrors()) return $dir->getErrors();
 	return kfm_loadDirectories($parent);
 }
@@ -62,48 +48,10 @@ function _getDirectoryProperties($dir){
 function _loadDirectories($pid){
 	global $kfmdb,$kfm_db_prefix, $kfm_banned_folders;
 	$dir = new kfmDirectory($pid);
-	//$dirdata=_getDirectoryDbInfo($pid);
-	//$reqdir=_getDirectoryParents($pid);
 	$pdir=str_replace($GLOBALS['rootdir'],'',$dir->path);
-	/*$pdir=str_replace($GLOBALS['rootdir'],'',$reqdir);
-	if(!kfm_checkAddr($pdir))return 'error: illegal address "'.$pdir.'"';
-	if(!is_dir($reqdir))mkdir($reqdir,0755);
-	if($handle=opendir($reqdir)){
-		$q=$kfmdb->query("select id,name from ".$kfm_db_prefix."directories where parent=".$pid);
-		$dirsdb=$q->fetchAll();
-		$dirshash=array();
-		if(is_array($dirsdb))foreach($dirsdb as $r)$dirshash[$r['name']]=$r['id'];
-		$directories=array();
-		while(false!==($file=readdir($handle))){
-			if(in_array(strtolower($file), $kfm_banned_folders)) continue;
-			$ff1=$reqdir.$file;
-			if(is_dir($ff1)&&strpos($file,'.')!==0){
-				$directory=array($file,0);
-				if($h2=opendir($ff1)){ # see if the directory has any sub-directories
-					while(false!==($file3=readdir($h2))){
-						if(is_dir($ff1.'/'.$file3)&&strpos($file3,'.')!==0)$directory[1]++;
-					}
-				}
-				if(!isset($dirshash[$file])){
-					kfm_add_directory_to_db($file,$pid);
-					$dirshash[$file]=$kfmdb->lastInsertId($kfm_db_prefix.'directories','id');
-				}
-				$directories[]=array($file,$directory[1],$dirshash[$file]);
-				unset($dirshash[$file]);
-			}
-		}
-		closedir($handle);
-		if(count($dirshash)){ # remove stale database entries (directories removed by hand)
-		#	foreach($dirshash as $k=>$v)_rmdir2($v);
-		}
-		$directories = $dir->getSubdirs();
-		sort($directories);
-		return array('parent'=>$pid,'reqdir'=>$pdir,'directories'=>$directories,'properties'=>kfm_getDirectoryProperties($pdir.'/'));
-	}*/
-		$directories = $dir->getSubdirs();
-		sort($directories);
-		return array('parent'=>$pid,'reqdir'=>$pdir,'directories'=>$directories,'properties'=>kfm_getDirectoryProperties($pdir.'/'));
-	return 'couldn\'t read directory "'.$dir->path.'"';
+	$directories = $dir->getSubdirs();
+	sort($directories);
+	return array('parent'=>$pid,'reqdir'=>$pdir,'directories'=>$directories,'properties'=>kfm_getDirectoryProperties($pdir.'/'));
 }
 function _moveDirectory($from,$to){
 	global $kfmdb,$kfm_db_prefix;
