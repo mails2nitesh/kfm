@@ -1,6 +1,6 @@
 <?php
 class kfmDirectory extends Object{
-	var $subDirs = array();
+	var $subDirs=array();
 	function __construct($id=1){
 		$this->kfmDirectory($id);
 	}
@@ -8,14 +8,14 @@ class kfmDirectory extends Object{
 		parent::__construct();
 		$this->id=$id;
 		$q=$this->db->query("SELECT * FROM ".$this->db_prefix."directories WHERE id=".$this->id);
-		$res = $q->fetchRow();
-		$this->name = $res['name'];
-		$this->pid = $res['parent'];
-		$this->path = $this->getPath();
+		$res=$q->fetchRow();
+		$this->name=$res['name'];
+		$this->pid=$res['parent'];
+		$this->path=$this->getPath();
 	}
 	function getSubdirs(){
 		global $kfm_banned_folders;
-		$this->handle = opendir($this->path);
+		$this->handle=opendir($this->path);
 		$q=$this->db->query("select id,name from ".$this->db_prefix."directories where parent=".$this->id);
 		$dirsdb=$q->fetchAll();
 		$dirshash=array();
@@ -28,8 +28,7 @@ class kfmDirectory extends Object{
 					$this->addSubdirToDB($file);
 					$dirshash[$file]=$this->db->lastInsertId($this->db_prefix.'directories','id');
 				}
-				$subDir = new kfmDirectory($dirshash[$file]);
-				
+				$subDir=new kfmDirectory($dirshash[$file]);
 				$directories[]=array($subDir->name,$subDir->hasSubdirs(),$dirshash[$file]);
 				unset($dirshash[$file]);
 			}
@@ -41,7 +40,7 @@ class kfmDirectory extends Object{
 		return $this->db->exec($sql);
 	}
 	function hasSubdirs(){
-		$this->handle = opendir($this->path);
+		$this->handle=opendir($this->path);
 		if($this->handle){
 			while(false!==($file=readdir($this->handle))){
 				if($file[0]!=='.' && is_dir($this->path.$file)) return true;
@@ -51,15 +50,15 @@ class kfmDirectory extends Object{
 			$this->error('Directory could not be opened');
 		}
 	}
-   function checkAddr($addr){
-      return (
-         strpos($addr,'..')===false&&
-         strpos($addr,'.')!==0&&
-         strpos($addr,'/.')===false);
+	function checkAddr($addr){
+		return (
+			strpos($addr,'..')===false&&
+			strpos($addr,'.')!==0&&
+			strpos($addr,'/.')===false);
 	}
 	function createSubdir($name){
 			$short_version=str_replace($GLOBALS['rootdir'],'',$this->path);
-			$physical_address = $this->path.$name;
+			$physical_address=$this->path.$name;
 			if(!$this->checkAddr($physical_address)){ $this->error('illegal directory name "'.$short_version.'"'); return false;} # TODO: new string
 			if(file_exists($physical_address)){$this->error('a directory named "'.$short_version.'" already exists'); return false;}# TODO: new string
 			
@@ -68,21 +67,18 @@ class kfmDirectory extends Object{
 			return $this->addSubdirToDB($name);
 	}
 	function changeName($newname){}
-
 	function moveTo($newParentId){}
-
 	function isWritable(){
 		return is_writable($this->path);	
 	}
-
 	function getPath(){
-		$pathTmp = '';
-		$pid = $this->id;
+		$pathTmp='';
+		$pid=$this->id;
 		while($pid>1){
 			$q=$this->db->query("SELECT name, parent FROM ".$this->db_prefix."directories WHERE id=".$pid);
 			$info=$q->fetchRow();
 			$pathTmp=$info['name'].'/'.$pathTmp;
-			$pid = $info['parent'];
+			$pid=$info['parent'];
 		}
 		return $GLOBALS['rootdir'].$pathTmp;
 	}
