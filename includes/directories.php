@@ -36,13 +36,13 @@ function _getDirectoryParents($pid,$type=1){
 	return _getDirectoryParents($db['parent'],$type).$db['name'].'/';
 }
 function _getDirectoryProperties($dir){
+	# I have no idea anymore if this function is correct... TODO: look at this again and see if it is right
 	if(strlen($dir))$properties=kfm_getDirectoryProperties(preg_replace('/[^\/]*\/$/','',$dir));
 	else $properties=array('allowed_file_extensions'=>array());
 	$full_dir=$GLOBALS['rootdir'].$dir.'/.directory_properties';
 	if(!is_dir($full_dir)&&is_writable($full_dir))mkdir($full_dir);
-	else{
-		if(file_exists($full_dir.'/allowed_file_extensions'))$properties['allowed_file_extensions']=kfm_getFileAsArray($full_dir.'/allowed_file_extensions');
-	}
+	else if(file_exists($full_dir.'/allowed_file_extensions'))$properties['allowed_file_extensions']=kfm_getFileAsArray($full_dir.'/allowed_file_extensions');
+	$properties['is_writable']=is_writable($GLOBALS['rootdir'].$dir);
 	return $properties;
 }
 function _loadDirectories($pid){
