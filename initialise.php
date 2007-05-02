@@ -62,6 +62,7 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 }
 #set_error_handler('kfm_error_log');
 { # variables
+	if(!isset($show_files_in_groups_of))$kfm_show_files_in_groups_of=10;
 	define('KFM_VERSION',rtrim(file_get_contents($kfm_base_path.'version.txt')));
 	$rootdir=str_replace('//','/',$_SERVER['DOCUMENT_ROOT'].$kfm_userfiles.'/');
 	if(!is_dir($rootdir))mkdir($rootdir,0755);
