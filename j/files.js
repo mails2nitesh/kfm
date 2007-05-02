@@ -9,12 +9,14 @@ var kfm_file_bits={
 		}
 		{ // add the links
 			if(selectedFiles.length>1){
+				links.push(['kfm_downloadSelectedFiles()','download selected files']);
 				links.push(['kfm_deleteSelectedFiles()',kfm_lang.DeleteFile,'remove',!kfm_vars.permissions.del]);
 				var imgs=[];
 				for(var i=0;i<selectedFiles.length;++i)if($('kfm_file_icon_'+selectedFiles[i]).kfm_attributes.width)imgs.push(selectedFiles[i]);
 				if(imgs.length)links.push(['kfm_img_startLightbox(['+imgs.join(',')+'])','view slideshow']);
 			}
 			else{
+				links.push(['kfm_downloadSelectedFiles('+id+')','download file']);
 				links.push(['kfm_deleteFile('+id+')',kfm_lang.DeleteFile,'remove',!kfm_vars.permissions.del]);
 				links.push(['kfm_renameFile('+id+')',kfm_lang.RenameFile,'edit']);
 				if(this.kfm_attributes.width){
@@ -130,6 +132,21 @@ function kfm_downloadFileFromUrl(){
 	x_kfm_downloadFileFromUrl(url,filename,kfm_refreshFiles);
 	$('kfm_url').value='';
 }
+function kfm_downloadSelectedFiles(id){
+	var wrapper=$('kfm_download_wrapper');
+	if(!wrapper){
+		wrapper=newEl('div','kfm_download_wrapper',0,0,0,'display:none');
+		document.body.addEl(wrapper);
+	}
+	wrapper.empty();
+	if(id)kfm_downloadSelectedFiles_addIframe(wrapper,id);
+	else for(var i=0;i<selectedFiles.length;++i)kfm_downloadSelectedFiles_addIframe(wrapper,selectedFiles[i]);
+}
+function kfm_downloadSelectedFiles_addIframe(wrapper,id){
+	var iframe=newEl('iframe');
+	iframe.src='get.php?id='+id+'&forcedownload=1';
+	wrapper.addEl(iframe);
+}
 function kfm_extractZippedFile(id){
 	x_kfm_extractZippedFile(id,kfm_refreshFiles);
 }
@@ -140,10 +157,7 @@ function kfm_isFileInCWD(filename){
 }
 function kfm_incrementalFileDisplay(){
 	var b=window.kfm_incrementalFileDisplay_vars,a=b.at,fsdata=b.data.files,wrapper=$('kfm_right_column'),fdata=fsdata[a];
-	if(wrapper.contentMode!='file_icons'){
-		window.kfm_incrementalFileDisplay_vars=null;
-		return;
-	}
+	if(wrapper.contentMode!='file_icons')return (window.kfm_incrementalFileDisplay_vars=null);
 	var name=fdata.name,ext=name.replace(kfm_regexps.all_up_to_last_dot,''),b,fullfilename=kfm_cwd_name+'/'+name,id=fdata.id,nameEl=newEl('span',0,'filename',name);
 	var el=newEl('div','kfm_file_icon_'+id,'kfm_file_icon kfm_icontype_'+ext,0,0,'cursor:'+(Browser.isIE?'hand':'pointer'));
 	var writable=fdata.writable;
