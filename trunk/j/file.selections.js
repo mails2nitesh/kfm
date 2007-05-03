@@ -100,7 +100,7 @@ function kfm_selectionCheck(){
 	else kfm_run_delayed('file_details','if(!selectedFiles.length)kfm_showFileDetails();');
 }
 function kfm_selection_drag(e){
-	if(!window.dragType||window.dragType!=2)return;
+	if(!window.dragType||window.dragType!=2||!window.drag_wrapper)return;
 	clearSelections();
 	var p1=getMouseAt(e),p2=window.drag_wrapper.orig;
 	var x1=p1.x>p2.x?p2.x:p1.x;
@@ -111,7 +111,7 @@ function kfm_selection_drag(e){
 }
 function kfm_selection_dragFinish(e){
 	clearTimeout(window.dragSelectionTrigger);
-	if(!window.dragType||window.dragType!=2)return;
+	if(!window.dragType||window.dragType!=2||!window.drag_wrapper)return;
 	var right_column=$('kfm_right_column'),p1=getMouseAt(e),p2=window.drag_wrapper.orig,offset=right_column.scrollTop;
 	var x1=p1.x>p2.x?p2.x:p1.x,x2=p2.x>p1.x?p2.x:p1.x,y1=p1.y>p2.y?p2.y:p1.y,y2=p2.y>p1.y?p2.y:p1.y;
 	if(offset){
