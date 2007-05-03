@@ -33,8 +33,9 @@ class File extends Object{
 	}
 	function checkAddr($addr){
 		return (
-			$addr[0]!=='.' &&
-			strpos($addr, '/')===false &&
+			strpos($addr,'..')===false&&
+			strpos($addr,'.')!==0&&
+			strpos($addr,'/')===false &&
 			!in_array(preg_replace('/.*\./','',$addr),$GLOBALS['kfm_banned_extensions'])
 			);
 	}
