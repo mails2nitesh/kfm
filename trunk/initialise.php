@@ -4,6 +4,18 @@ if(!isset($kfm_base_path))$kfm_base_path='';
 error_reporting(E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE);
 if(isset($_GET['session_id']))session_id($_GET['session_id']);
 @session_start();
+if(get_magic_quotes_gpc()){
+	# taken from http://www.phpfreaks.com/quickcode/Get-rid-of-magic_quotes_gpc/618.php
+	function traverse (&$arr){
+		if(!is_array($arr))return;
+		foreach($arr as $key=>$val){
+			if(is_array($arr[$key]))traverse($arr[$key]);
+			else $arr[$key]=stripslashes($arr[$key]);
+		}
+	}
+	$gpc=array(&$_GET,&$_POST,&$_COOKIE);
+	traverse($gpc);
+}
 set_include_path(get_include_path().PATH_SEPARATOR.$kfm_base_path.'pear');
 if(!file_exists($kfm_base_path.'configuration.php')){
 	echo '<em>Missing <code>configuration.php</code>!</em><p>If this is a fresh installation of KFM, then please rename <code>configuration.php.dist</code> to <code>configuration.php</code>, and edit it according to your project\'s needs.</p><p>If this is an upgraded version of KFM, please remove the parts of your old <code>config.php</code> which do not exist in <code>configuration.php.dist</code>, then rename it to <code>configuration.php</code>.</p>';
@@ -80,7 +92,7 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 	define('KFM_DIR', dirname(__FILE__));
 	if(!defined('GET_PARAMS')) define('GET_PARAMS', '');
 	$kfm_highlight_extensions=array('php'=>'PHP', 'html'=>'HTML', 'xhtml'=>'HTML',
-				 'sql'=>'MYSQL', 'js'=>'JAVASCRIPT', 'css'=>'CSS', 'xml'=>'XML');
+		'sql'=>'MYSQL', 'js'=>'JAVASCRIPT', 'css'=>'CSS', 'xml'=>'XML');
 	if(!isset($kfm_banned_files)||!is_array($kfm_banned_files))$kfm_banned_files = array();
 	array_push($kfm_banned_files, 'thumbs.db', '.ds_store'); # lowercase array
 	if(!isset($kfm_banned_folders)||!is_array($kfm_banned_folders)) $kfm_banned_folders = array();
