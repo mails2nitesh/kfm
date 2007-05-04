@@ -39,7 +39,7 @@ function kfm_showTextFile(res){
 	r3.appendChild(codeEl);
 	r3.appendChild(changeCheckEl);
 	if(window.CodePress)CodePress.run();
-	else loadJS('codepress-0.9.3/codepress.js','cp-script','en-us','CodePress.run();delEl("kfm_tooltip")');
+	else loadJS('codepress-0.9.4/codepress.js','cp-script','en-us','CodePress.run();delEl("kfm_tooltip")');
 }
 function kfm_viewTextFile(res){
 	var right_column=$('kfm_right_column').empty();
