@@ -9,7 +9,7 @@ var kfm_file_bits={
 		}
 		{ // add the links
 			if(selectedFiles.length>1){
-				links.push(['kfm_downloadSelectedFiles()','download selected files']);
+				if(!Browser.isIE)links.push(['kfm_downloadSelectedFiles()','download selected files']); // IE can't handle this...
 				links.push(['kfm_deleteSelectedFiles()',kfm_lang.DeleteFile,'remove',!kfm_vars.permissions.del]);
 				var imgs=[];
 				for(var i=0;i<selectedFiles.length;++i)if($('kfm_file_icon_'+selectedFiles[i]).kfm_attributes.width)imgs.push(selectedFiles[i]);
