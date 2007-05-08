@@ -100,7 +100,7 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 	$cache_directories=array();
 }
 { # check authentication
-	if(!isset($kfm_username)||!isset($kfm_password))$_SESSION['kfm']['loggedin']=1;
+	if(!isset($kfm_username)||!isset($kfm_password)||($kfm_username==''&&$kfm_password==''))$_SESSION['kfm']['loggedin']=1;
 	if(!$_SESSION['kfm']['loggedin'] && (!isset($kfm_api_auth_override)||!$kfm_api_auth_override)){
 		$err='';
 		if(isset($_POST['username'])&&isset($_POST['password'])){
