@@ -14,7 +14,7 @@ function kfm_changeCaption_set(){
 	kfm_modal_close();
 	if(kfm_confirm(kfm_lang.NewCaptionIsThisCorrect(newCaption))){
 		kfm_filesCache[id]=null;
-		kfm_log(kfm_lang.log_ChangeCaption(id,newCaption));
+		kfm_log(kfm_lang.Log_ChangeCaption(id,newCaption));
 		x_kfm_changeCaption(id,newCaption,kfm_refreshFiles);
 	}
 }
@@ -37,7 +37,7 @@ function kfm_img_startLightbox(id){
 	delEl('kfm_lightboxImage');
 	var w=data.width,h=data.height,url='get.php?id='+id,r=0;
 	if(!w||!h){
-		kfm_log('error: not an image, or image dimensions not reported'); // TODO: new string
+		kfm_log(kfm_lang.NotAnImageOrImageDimensionsNotReported);
 		return kfm_img_stopLightbox();
 	}
 	if(w>ws.x*.9||h>ws.y*.9){

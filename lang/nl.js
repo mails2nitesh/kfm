@@ -98,7 +98,7 @@ NoPanel:
 	"Fout: Paneel \"%1\" bestaat niet.",
 FileSelected:
 	"Bestand geselecteerd: \"%1\"", 
-log_ChangeCaption:
+Log_ChangeCaption:
 	"Wijzig titel \"%1\" in \"%2\"", 
 UrlNotValidLog:
 	"Fout: URL moet beginnen met: http", 
@@ -251,4 +251,17 @@ WhatIsTheNewTag:
 	"Wat is de nieuwe label?\nMeerdere labels moeten worden gescheiden door komma's.",
 WhichTagsDoYouWantToRemove:
 	"Welke labels wilt u verwijderen?\nMeerdere labels moeten worden gescheiden door komma's."
+
+,
+// New in 0.9
+AllFiles: "all files",
+AndNMore: "...and %1 more...",
+Browse: "Browse...",
+ExtractAfterUpload: "extract after upload",
+NotAnImageOrImageDimensionsNotReported: "error: not an image, or image dimensions not reported",
+PermissionDeniedCannotDeleteFile: "permission denied: cannot delete file",
+RenameTheDirectoryToWhat: "Rename the directory '%1' to what?",
+RenamedDirectoryAs: "Renamed '%1' as '%2'",
+TheFilenameShouldEndWithN: "The filename should end with %1",
+WhatFilenameDoYouWantToUse: "What filename do you want to use?"
 }

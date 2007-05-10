@@ -101,7 +101,7 @@ NoPanel:
 	"error: el panel \"%1\" no existe.",
 FileSelected:
 	"archivo seleccionado: \"%1\"",
-log_ChangeCaption:
+Log_ChangeCaption:
 	"cambiando etiqueta de \"%1\" a \"%2\"",
 UrlNotValidLog:
 	"error: los URLs deben de comenzar con \"http:\"",
@@ -254,4 +254,17 @@ WhatIsTheNewTag:
 	"What is the new tag?\nFor multiple tags, separate by commas.",
 WhichTagsDoYouWantToRemove:
 	"Which tags do you want to remove?\nFor multiple tags, separate by commas."
+
+,
+// New in 0.9
+AllFiles: "all files",
+AndNMore: "...and %1 more...",
+Browse: "Browse...",
+ExtractAfterUpload: "extract after upload",
+NotAnImageOrImageDimensionsNotReported: "error: not an image, or image dimensions not reported",
+PermissionDeniedCannotDeleteFile: "permission denied: cannot delete file",
+RenameTheDirectoryToWhat: "Rename the directory '%1' to what?",
+RenamedDirectoryAs: "Renamed '%1' as '%2'",
+TheFilenameShouldEndWithN: "The filename should end with %1",
+WhatFilenameDoYouWantToUse: "What filename do you want to use?"
 }
