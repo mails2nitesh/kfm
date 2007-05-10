@@ -90,7 +90,7 @@ function kfm_buildFileDetailsTable(res){
 	return table;
 }
 function kfm_deleteFile(id){
-	if(!kfm_vars.permissions.del)return kfm_alert('permissions denied: cannot delete file'); // TODO: new string
+	if(!kfm_vars.permissions.del)return kfm_alert(kfm_lang.PermissionDeniedCannotDeleteFile);
 	var filename=$('kfm_file_icon_'+id).kfm_attributes.name;
 	if(kfm_confirm(kfm_lang.DelFileMessage(filename))){
 		kfm_filesCache[filename]=null;
@@ -101,7 +101,7 @@ function kfm_deleteSelectedFiles(){
 	var names=[],m='';
 	if(selectedFiles.length>10){
 		for(var i=0;i<9;++i)names.push($('kfm_file_icon_'+selectedFiles[i]).kfm_attributes.name);
-		m='\n...and '+(selectedFiles.length-9)+' others...'; // TODO: new string
+		m='\n'+kfm_lang.AndNMore(selectedFiles.length-9);
 	}
 	else for(var i=0;i<selectedFiles.length;++i)names.push($('kfm_file_icon_'+selectedFiles[i]).kfm_attributes.name);
 	if(kfm_confirm(kfm_lang.DelMultipleFilesMessage+names.join('\n')+m)){
@@ -289,10 +289,10 @@ function kfm_showToolTip(res){
 function kfm_zip(){
 	var name='zipped.zip',ok=false;
 	do{
-		name=kfm_prompt('What filename do you want to use?',name); // TODO: new string
+		name=kfm_prompt(kfm_lang.WhatFilenameDoYouWantToUse,name);
 		if(!name)return;
 		if(/\.zip$/.test(name))ok=true;
-		else alert('The filename should end with .zip'); // TODO: new string
+		else alert(kfm_lang.TheFilenameShouldEndWithN('.zip'));
 	}while(!ok);
 	x_kfm_zip(name,selectedFiles,kfm_refreshFiles);
 }

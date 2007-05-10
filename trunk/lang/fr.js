@@ -103,7 +103,7 @@ NoPanel:
 	'erreur: le panneau "%1" n\'existe pas.',
 FileSelected:
 	'fichier sélectionné: "%1"',
-log_ChangeCaption:
+Log_ChangeCaption:
 	'titre de "%1" modifié en "%2"',
 UrlNotValidLog:
 	'erreur: l\'URL doit commencer par "http:"',
@@ -256,4 +256,17 @@ WhatIsTheNewTag:
 	"Quel est le nouveau libellé?\nPour plusieurs libellés, séparez-les avec des virgules.",
 WhichTagsDoYouWantToRemove:
 	"Quels libellés voulez-vous enlever?\nPour plusieurs libellés, séparez-les avec des virgules."
+
+,
+// New in 0.9
+AllFiles: "all files",
+AndNMore: "...and %1 more...",
+Browse: "Browse...",
+ExtractAfterUpload: "extract after upload",
+NotAnImageOrImageDimensionsNotReported: "error: not an image, or image dimensions not reported",
+PermissionDeniedCannotDeleteFile: "permission denied: cannot delete file",
+RenameTheDirectoryToWhat: "Rename the directory '%1' to what?",
+RenamedDirectoryAs: "Renamed '%1' as '%2'",
+TheFilenameShouldEndWithN: "The filename should end with %1",
+WhatFilenameDoYouWantToUse: "What filename do you want to use?"
 }

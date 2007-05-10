@@ -52,7 +52,7 @@ function kfm_createFileUploadPanel(){
 				var input=newInput('kfm_file','file');
 				addEvent(input,'keyup',kfm_uploadPanel_checkForZip);
 				addEvent(input,'change',kfm_uploadPanel_checkForZip);
-				var unzip1=newEl('span','kfm_unzip1','kfm_unzipWhenUploaded',[newInput('kfm_unzipWhenUploaded','checkbox'),'unzip after upload'],0,'visibility:hidden'); // TODO: new string
+				var unzip1=newEl('span','kfm_unzip1','kfm_unzipWhenUploaded',[newInput('kfm_unzipWhenUploaded','checkbox'),kfm_lang.ExtractAfterUpload],0,'visibility:hidden');
 				f1.addEl([input,submit,unzip1]);
 			}
 			{ // load multi-upload thing if possible
@@ -62,7 +62,7 @@ function kfm_createFileUploadPanel(){
 					flash_path:"swfupload/SWFUpload.swf",
 					allowed_filesize:99999999,	// large limit
 					allowed_filetypes:"*.*",
-					allowed_filetypes_description:"All files...", // TODO: new string
+					allowed_filetypes_description:kfm_lang.AllFiles,
 					upload_file_queued_callback:"swfu.upload_file_queued",
 					upload_queue_complete_callback:'swfu.upload_queue_complete',
 					flash_loaded_callback:'swfu.flashLoaded',
@@ -73,7 +73,7 @@ function kfm_createFileUploadPanel(){
 					r=t.addRow();
 					{ // browse button
 						c=r.addCell();
-						inp1=newInput('kfm_multiChooseFile','button','Browse...'); // TODO: new string
+						inp1=newInput('kfm_multiChooseFile','button',kfm_lang.Browse);
 						addEvent(inp1,'click',function(){instance.browse()});
 						c.addEl(inp1);
 					}
@@ -84,7 +84,7 @@ function kfm_createFileUploadPanel(){
 					r=t.addRow();
 					{ // upload button
 						c=r.addCell();
-						inp2=newInput('kfm_uploadButton','button','Upload'); // TODO: new string
+						inp2=newInput('kfm_uploadButton','button',kfm_lang.Upload);
 						addEvent(inp2,'click',function(){instance.upload()});
 						c.addEl(inp2);
 					}
@@ -111,7 +111,7 @@ function kfm_createFileUploadPanel(){
 			inp2.onkeyup=kfm_uploadPanel_checkForZip;
 			inp2.onchange=kfm_uploadPanel_checkForZip;
 			submit2.onclick=kfm_downloadFileFromUrl;
-			var unzip2=newEl('span','kfm_unzip2','kfm_unzipWhenUploaded',[newInput('kfm_unzipWhenUploaded','checkbox'),'unzip after upload'],0,'visibility:hidden'); // TODO: new string
+			var unzip2=newEl('span','kfm_unzip2','kfm_unzipWhenUploaded',[newInput('kfm_unzipWhenUploaded','checkbox'),kfm_lang.ExtractAfterUpload],0,'visibility:hidden');
 			f2.addEl([inp2,submit2,unzip2]);
 		}
 	}

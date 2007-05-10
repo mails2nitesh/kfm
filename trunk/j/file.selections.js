@@ -59,7 +59,7 @@ function kfm_file_dragStart(filename){
 	var w=getWindowSize();
 	window.drag_wrapper=newEl('div','kfm_drag_wrapper',0,0,0,'display:none;opacity:.7');
 	for(var i=0;i<10&&i<selectedFiles.length;++i)window.drag_wrapper.addEl([$('kfm_file_icon_'+selectedFiles[i]).kfm_attributes.name,newEl('br')]);
-	if(selectedFiles.length>10)window.drag_wrapper.addEl(newEl('i',0,0,'...and '+(selectedFiles.length-10)+' more')); // TODO: New String
+	if(selectedFiles.length>10)window.drag_wrapper.addEl(newEl('i',0,0,kfm_lang.AndNMore(selectedFiles.length-10)));
 	document.body.addEl(window.drag_wrapper);
 	addEvent(document,'mousemove',kfm_file_drag);
 }

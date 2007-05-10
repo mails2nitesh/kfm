@@ -39,7 +39,7 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 		node_id:parent,
 		contextmenu:function(e){
 			var links=[],i,node_id=this.node_id;
-			links.push(['kfm_renameDirectory("'+node_id+'")','rename']); // TODO: New String
+			links.push(['kfm_renameDirectory("'+node_id+'")',kfm_lang.RenameDir]);
 			links.push(['kfm_createDirectory("'+node_id+'")',kfm_lang.CreateSubDir,'folder_new']);
 			if(node_id!=1)links.push(['kfm_deleteDirectory("'+node_id+'")',kfm_lang.DeleteDir,'remove']);
 			kfm_createContextMenu(getMouseAt(getEvent(e)),links);
@@ -153,10 +153,10 @@ function kfm_refreshDirectories(res){
 }
 function kfm_renameDirectory(id){
 	var directoryName=kfm_directories[id].name;
-	var newName=kfm_prompt('Rename the directory '+directoryName+' to what?',directoryName); // TODO: new string
+	var newName=kfm_prompt(kfm_lang.RenameTheDirectoryToWhat(directoryName),directoryName);
 	if(!newName||newName==directoryName)return;
 	kfm_directories[id]=null;
-	kfm_log('Renamed "'+directoryName+'" as "'+newName+'"'); // TODO: new string
+	kfm_log(kfm_lang.RenamedDirectoryAs(directoryName,newName));
 	x_kfm_renameDirectory(id,newName,kfm_refreshDirectories);
 }
 function kfm_setDirectoryProperties(properties){

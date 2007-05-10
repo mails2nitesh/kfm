@@ -105,7 +105,7 @@ NoPanel:
 	"earráid: níl painéil \"%1\" ann.",
 FileSelected:
 	"comhad roghnaithe: \"%1\"",
-log_ChangeCaption:
+Log_ChangeCaption:
 	"ag aithrú ceannteideal ó \"%1\" go \"%2\"",
 UrlNotValidLog:
 	"earráid: caithfidh an URL tosú le \"http:\"",
@@ -259,4 +259,17 @@ WhatIsTheNewTag:
 	"Céard é an clib nua?\nLe clibeanna iolraithe a úsáid, idirscar le camóg.",
 WhichTagsDoYouWantToRemove:
 	"Cén clibeanna is mian leat a scriosadh?\nLe clibeanna iolraithe a scriosadh, idirscar le camóg."
+
+,
+// New in 0.9
+AllFiles: "all files",
+AndNMore: "...and %1 more...",
+Browse: "Browse...",
+ExtractAfterUpload: "extract after upload",
+NotAnImageOrImageDimensionsNotReported: "error: not an image, or image dimensions not reported",
+PermissionDeniedCannotDeleteFile: "permission denied: cannot delete file",
+RenameTheDirectoryToWhat: "Rename the directory '%1' to what?",
+RenamedDirectoryAs: "Renamed '%1' as '%2'",
+TheFilenameShouldEndWithN: "The filename should end with %1",
+WhatFilenameDoYouWantToUse: "What filename do you want to use?"
 }

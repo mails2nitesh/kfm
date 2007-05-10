@@ -102,7 +102,7 @@ NoPanel:
 	"eroare: panela \"%1\" nu există.",
 FileSelected:
 	"fişierul ales: \"%1\"",
-log_ChangeCaption:
+Log_ChangeCaption:
 	"schimbarea titlului din \"%1\" în \"%2\"",
 UrlNotValidLog:
 	"Eroare: URL trebui să înceapă cu \"http:\"",
@@ -257,5 +257,17 @@ WhatIsTheNewTag:
 	"Care este tag-ul nou?\nPentru nişte tag-uri, utilizaţi virgulă pentru împarţire.",
 WhichTagsDoYouWantToRemove:
 	"Care tag-uri trebuie să fie scoase?\nPentru nişte tag-uri, utilizaţi virgulă pentru împarţire."
-}
 
+,
+// New in 0.9
+AllFiles: "all files",
+AndNMore: "...and %1 more...",
+Browse: "Browse...",
+ExtractAfterUpload: "extract after upload",
+NotAnImageOrImageDimensionsNotReported: "error: not an image, or image dimensions not reported",
+PermissionDeniedCannotDeleteFile: "permission denied: cannot delete file",
+RenameTheDirectoryToWhat: "Rename the directory '%1' to what?",
+RenamedDirectoryAs: "Renamed '%1' as '%2'",
+TheFilenameShouldEndWithN: "The filename should end with %1",
+WhatFilenameDoYouWantToUse: "What filename do you want to use?"
+}
