@@ -51,7 +51,7 @@ ChangeCaption:
 
 // create a file
 WhatFilenameToCreateAs:
-	"Файл будет сохранён, как?",
+	"Файл будет сохранен, как?",
 AskIfOverwrite:
 	"Файл \"%1\" существует. Перезаписать?",
 NoForwardslash:
@@ -69,7 +69,7 @@ DelMultipleFilesMessage:
 DownloadFileFromMessage:
 	"Откуда закачивать файл?",
 FileSavedAsMessage:
-	"Как будет сохранён файл?",
+	"Как будет сохранен файл?",
 
 //resize file
 CurrentSize:
@@ -155,7 +155,7 @@ DownloadFileFromUrl:
 DirectoryProperties:
 	"Свойства каталога",
 SelectAll:
-	"выделить всё",
+	"выделить все",
 SelectNone:
 	"снять выделение",
 InvertSelection:
@@ -261,14 +261,14 @@ WhichTagsDoYouWantToRemove:
 
 ,
 // New in 0.9
-AllFiles: "all files",
-AndNMore: "...and %1 more...",
-Browse: "Browse...",
-ExtractAfterUpload: "extract after upload",
-NotAnImageOrImageDimensionsNotReported: "error: not an image, or image dimensions not reported",
-PermissionDeniedCannotDeleteFile: "permission denied: cannot delete file",
-RenameTheDirectoryToWhat: "Rename the directory '%1' to what?",
-RenamedDirectoryAs: "Renamed '%1' as '%2'",
-TheFilenameShouldEndWithN: "The filename should end with %1",
-WhatFilenameDoYouWantToUse: "What filename do you want to use?"
+AllFiles: "все файлы",
+AndNMore: "...и %1 еще...",
+Browse: "Обзор...",
+ExtractAfterUpload: "распаковать после загрузки",
+NotAnImageOrImageDimensionsNotReported: "ошибка: не изображение, или размеры изображения не заданы",
+PermissionDeniedCannotDeleteFile: "доступ запрещен: невозможно удалить файл",
+RenameTheDirectoryToWhat: "Переименовать каталог '%1' в...?",
+RenamedDirectoryAs: "Переименован '%1' в '%2'",
+TheFilenameShouldEndWithN: " Имя файла должно заканчиваться на %1",
+WhatFilenameDoYouWantToUse: "Какое имя файла вы хотите использовать?"
 }
