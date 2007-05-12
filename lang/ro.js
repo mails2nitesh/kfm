@@ -67,7 +67,7 @@ DelFileMessage:
 DelMultipleFilesMessage:
 	"De şters fişierele selectate?\n\n'",
 DownloadFileFromMessage:
-	"De la unde de încărcat fişierul?",
+	"De unde se va încărca fişierul?",
 FileSavedAsMessage:
 	"Cum va fi salvat fişierul?",
 
@@ -117,7 +117,7 @@ FileNameNotAllowd:
 CouldNotWriteFile:
 	"eroare: este imposibil de salvat fişierul \"%1\".",
 CouldNotRemoveDir:
-	"este imposibil de şters mapă.\npoate conţine fişieri active",
+	"este imposibil de şters mapă.\npoate conţine fişiere activi",
 UrlNotValid:
 	"eroare: URL trebuie să înceapă cu \"http:\"",
 CouldNotDownloadFile:
@@ -137,9 +137,9 @@ EditTextFile:
 CloseWithoutSavingQuestion:
 	"OK pentru închiderea fără salvarea?",
 CloseWithoutSaving:
-	"Închidrea fără salvarea",
+	"Închiderea fără salvarea",
 SaveThenClose:
-	"Închide cu salvarea ",
+	"Închide cu salvarea",
 SaveThenCloseQuestion:
 	"Salva schimbările?",
 
@@ -169,7 +169,7 @@ FileDetails:
 Search:
 	"Căutare",
 IllegalDirectoryName:
-	"numele mapeii este incorectă \"%1\"",
+	"numele mapei este incorectă \"%1\"",
 RecursiveDeleteWarning:
 	"\"%1\" contine fişiere!\nOK pentru ştergerea mapei şi tuturor fişierelor din ea?\n*ATENŢIE* PROCESUL ESTE INREVERSIBIL!",
 RmdirFailed:
@@ -234,11 +234,11 @@ ReturnThumbnailToOpener:
 AddTagsToFiles:
 	"adăuga tag-uri la fişier(re)",
 RemoveTagsFromFiles:
-	"scoate tag-uri din fişer(re)",
+	"scoate tag-uri din fişier(re)",
 HowWouldYouLikeToRenameTheseFiles:
 	"Cum doriţi să schimbaţi numele acestor fişierelor?\n\nde exemplu: \"images-***.jpg\" va schimba numele în \"images-001.jpg\", \"images-002.jpg\", ...",
 YouMustPlaceTheWildcard:
-	"Dvs. trebuie să puneţi un semn de grupă (wildcard characetr) * undeva în şablonul numelui de fişier",
+	"Dvs. trebuie să puneţi un semn de grupă (wildcard character) * undeva în şablonul numelui de fişier",
 YouNeedMoreThan:
 	"Dvs. trebuie să puneţi mai mult decât %1 * caractere pentru a crea %2 numele de fişieri",
 NoFilesSelected:
@@ -260,14 +260,14 @@ WhichTagsDoYouWantToRemove:
 
 ,
 // New in 0.9
-AllFiles: "all files",
-AndNMore: "...and %1 more...",
+AllFiles: "toate fişieri",
+AndNMore: "...şi %1 încă...",
 Browse: "Browse...",
-ExtractAfterUpload: "extract after upload",
-NotAnImageOrImageDimensionsNotReported: "error: not an image, or image dimensions not reported",
-PermissionDeniedCannotDeleteFile: "permission denied: cannot delete file",
-RenameTheDirectoryToWhat: "Rename the directory '%1' to what?",
-RenamedDirectoryAs: "Renamed '%1' as '%2'",
-TheFilenameShouldEndWithN: "The filename should end with %1",
-WhatFilenameDoYouWantToUse: "What filename do you want to use?"
+ExtractAfterUpload: "extragerea după primirea",
+NotAnImageOrImageDimensionsNotReported: "eroare: nu este o imagine, sau dimensiunile imaginii nu au fost stabilite",
+PermissionDeniedCannotDeleteFile: "accesul înterzis: fişierul nu poate fi şters",
+RenameTheDirectoryToWhat: "Modifica numele mapei din '%1' în...?",
+RenamedDirectoryAs: "Numele mapei a fost modificată din '%1' în '%2'",
+TheFilenameShouldEndWithN: "La sfârşitul numii de fişier trebuie să puneţi %1",
+WhatFilenameDoYouWantToUse: "Care numele de fişier doriţi să utilizaţi?"
 }
