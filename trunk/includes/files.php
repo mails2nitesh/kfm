@@ -152,8 +152,8 @@ function _loadFiles($rootid=1){
 	global $kfmdb,$kfm_db_prefix;
 	$dirdata=kfm_getDirectoryDbInfo($rootid);
 	$reqdir=kfm_getDirectoryParents($rootid);
-	$root=str_replace($GLOBALS['rootdir'],'',$reqdir);
-	if(!kfm_checkAddr($root))return;
+	$root='/'.str_replace($GLOBALS['rootdir'],'',$reqdir);
+	if(!kfm_checkAddr($root))return 'error: invalid directory "'.$root.'"';
 	$reqdir=$GLOBALS['rootdir'].$root;
 	if(!is_dir($reqdir))return 'error: "'.$reqdir.'" is not a directory'; # TODO: new string
 	if($handle=opendir($reqdir)){
