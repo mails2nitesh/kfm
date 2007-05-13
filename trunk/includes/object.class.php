@@ -11,6 +11,7 @@ class Object{
 	}
 	function error($message){
 		$this->error_array[] = $message;
+		return false;
 	}
 	function hasErrors(){
 		if(count($this->error_array)) return true;
@@ -20,7 +21,9 @@ class Object{
 		// short term ugly solution
 		return 'error: '.implode("_", $this->error_array);
 	}
-
+	function addErrors($object){
+		array_merge_recursive($this->error_array, $object->error_array);
+	}
 	function checkAddr($addr){
 		return (
 			strpos($addr,'..')===false&&

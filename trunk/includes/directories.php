@@ -6,6 +6,10 @@ function _createDirectory($parent,$name){
 	return kfm_loadDirectories($parent);
 }
 function _deleteDirectory($id,$recursive=0){
+	$dir = new kfmDirectory($id);
+	$dir->delete();
+	if($dir->hasErrors()) return $dir->getErrors();
+	/*
 	$dirdata=_getDirectoryDbInfo($id);
 	$parent=$dirdata['parent'];
 	if(!count($dirdata))return array('type'=>'error','msg'=>4); # directory not in database
@@ -19,7 +23,8 @@ function _deleteDirectory($id,$recursive=0){
 	}
 	kfm_rmdir($id);
 	if(file_exists($abs_dir))return array('type'=>'error','msg'=>3,'name'=>$directory); # failed to delete directory
-	return kfm_loadDirectories($parent);
+	*/
+	return kfm_loadDirectories($dir->pid);
 }
 function _getDirectoryDbInfo($id){
 	global $kfmdb,$kfm_db_prefix;
@@ -49,23 +54,17 @@ function _loadDirectories($pid){
 	global $kfmdb,$kfm_db_prefix, $kfm_banned_folders;
 	$dir = new kfmDirectory($pid);
 	$pdir=str_replace($GLOBALS['rootdir'],'',$dir->path);
-	$directories = $dir->getSubdirs();
+	$directories=array();
+	foreach($dir->getSubdirs() as $subDir){
+		$directories[]=array($subDir->name,$subDir->hasSubdirs(),$subDir->id);
+	}
 	sort($directories);
 	return array('parent'=>$pid,'reqdir'=>$pdir,'directories'=>$directories,'properties'=>kfm_getDirectoryProperties($pdir.'/'));
 }
 function _moveDirectory($from,$to){
-	global $kfmdb,$kfm_db_prefix;
-	$f_r=_getDirectoryDbInfo($from);
-	$t_r=_getDirectoryDbInfo($to);
-	unset($_GLOBALS['cache_directories'][$from]);
-	$f_add=_getDirectoryParents($from);
-	$f_name=$f_r['name'];
-	$t_add=_getDirectoryParents($to);
-	if(strpos($t_add,$f_add)===0)return 'error: cannot move a directory into its own sub-directory'; # TODO: new string
-	if(file_exists($t_add.'/'.$f_name))return 'error: "'.$t_add.'/'.$f_name.'" already exists'; # TODO: new string
-	rename($f_add,$t_add.'/'.$f_name);
-	if(!file_exists($t_add.'/'.$f_name))return 'error: could not move directory "'.$f_add.'" to "'.$t_add.'/'.$f_name.'"'; # TODO: new string
-	$kfmdb->exec("update ".$kfm_db_prefix."directories set parent=".$to." where id=".$from) or die('error: '.print_r($kfmdb->errorInfo(),true));
+	$dir = new kfmDirectory($from);
+	$dir->moveTo($to);
+	if($dir->hasErrors()) return $dir->getErrors();
 	return _loadDirectories(1);
 }
 function _recursivelyRemoveDirectory($dir){
@@ -82,6 +81,10 @@ function _recursivelyRemoveDirectory($dir){
 	}
 }
 function _renameDirectory($fid,$newname){
+	$dir=new kfmDirectory($fid);
+	$dir->rename($newname);
+	if($dir->hasErrors())return $dir->getErrors();
+	/*
 	global $kfmdb,$kfm_db_prefix;
 	$dirdata=_getDirectoryDbInfo($fid);
 	$dir=_getDirectoryParents($dirdata['parent']);
@@ -91,7 +94,8 @@ function _renameDirectory($fid,$newname){
 	if(file_exists($dir.$newname))return 'error: a directory of that name already exists'; # TODO: new string
 	rename($dir.$name,$dir.$newname);
 	$kfmdb->query("update ".$kfm_db_prefix."directories set name='".addslashes($newname)."' where id=".$fid);
-	return _loadDirectories($dirdata['parent']);
+	*/
+	return _loadDirectories($dir->pid);
 }
 function _rmdir($pid){
 	global $kfmdb,$kfm_db_prefix;
