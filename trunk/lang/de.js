@@ -1,4 +1,4 @@
-/*
+﻿/*
  * FCKeditor-plugin - The text editor for internet
  * Copyright (C) 2003-2006 Frederico Caldeira Knabben
  *
@@ -263,10 +263,10 @@ AllFiles: "alle Dateien",
 AndNMore: "...und %1 mehr...",
 Browse: "Durchsuchen...",
 ExtractAfterUpload: "entpacken nach dem Herunterladen",
-NotAnImageOrImageDimensionsNotReported: "Fehler: Keine Bild, oder die Bildgr�sse nicht enthalten.",
+NotAnImageOrImageDimensionsNotReported: "Fehler: Keine Bild, oder die Bildgrösse nicht enthalten.",
 PermissionDeniedCannotDeleteFile: "Zugriff verweigert: Datei nicht löschbar",
 RenameTheDirectoryToWhat: "Umbenennen des Verzeichnisses '%1' zu?",
 RenamedDirectoryAs: "Umbenennen von '%1' nach '%2'",
 TheFilenameShouldEndWithN: "Der Dateiname sollte enden mit %1",
-WhatFilenameDoYouWantToUse: "Welchen Dateinamen m�chten Sie benutzen?"
+WhatFilenameDoYouWantToUse: "Welchen Dateinamen möchten Sie benutzen?"
 }
