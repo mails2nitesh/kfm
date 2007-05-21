@@ -23,13 +23,14 @@ if(!file_exists($kfm_base_path.'configuration.php')){
 }
 require_once($kfm_base_path.'configuration.php');
 
-{ # REMOVE FOR 1.0. check for missing variables in configuration.php
+{ # check for fatal errors
 	$m=array();
+	if(ini_get('safe_mode'))$m[]='KFM does not work if you have <code>safe_mode</code> enabled. This is not a bug - please see <a href="http://ie.php.net/features.safe-mode">PHP.net\'s safe_mode page</a> for details';
 	if(!isset($kfm_allow_file_delete))$m[]='missing <code>$kfm_allow_file_delete</code> variable';
 	if(!isset($kfm_allow_file_edit))$m[]='missing <code>$kfm_allow_file_edit</code> variable';
 	if(!isset($kfm_allow_file_move))$m[]='missing <code>$kfm_allow_file_move</code> variable';
 	if(count($m)){
-		echo '<html><body><p>There are missing variables in your <code>configuration.php</code>. Please check the supplied <code>configuration.php.dist</code> for notes on their usage.</p><ul>';
+		echo '<html><body><p>There are errors in your configuration or server. If the messages below describe missing variables, please check the supplied <code>configuration.php.dist</code> for notes on their usage.</p><ul>';
 		foreach($m as $a)echo '<li>'.$a.'</li>';
 		echo '</li></ul></body></html>';
 		exit;
