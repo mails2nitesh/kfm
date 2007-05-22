@@ -25,7 +25,7 @@ CodePress = {
 		cc = '\u2009'; // control char
 		editor = document.getElementsByTagName('body')[0];
 		document.designMode = 'on';
-		document.addEventListener('keypress', this.keyHandler, true);
+		document.addEventListener('keyup', this.keyHandler, true);
 		window.addEventListener('scroll', function() { if(!CodePress.scrolling) CodePress.syntaxHighlight('scroll') }, false);
 		completeChars = this.getCompleteChars();
 //		CodePress.syntaxHighlight('init');
@@ -62,8 +62,16 @@ CodePress = {
 
 	// put cursor back to its original position after every parsing
 	findString : function() {
-		if(self.find(cc))
-			window.getSelection().getRangeAt(0).deleteContents();
+		var sel = window.getSelection();
+		var range = window.document.createRange();
+		var span = window.document.getElementsByTagName('span')[0];
+			
+		range.selectNode(span);
+		sel.removeAllRanges();
+		sel.addRange(range);
+		span.parentNode.removeChild(span);
+		//if(self.find(cc))
+		//window.getSelection().getRangeAt(0).deleteContents();
 	},
 	
 	// split big files, highlighting parts of it
@@ -74,7 +82,7 @@ CodePress = {
 		}
 		else {
 			this.scrolling = false;
-			mid = code.indexOf(cc);
+			mid = code.indexOf('<SPAN>');
 			if(mid-2000<0) {ini=0;end=4000;}
 			else if(mid+2000>code.length) {ini=code.length-4000;end=code.length;}
 			else {ini=mid-2000;end=mid+2000;}
@@ -86,13 +94,23 @@ CodePress = {
 	// syntax highlighting parser
 	syntaxHighlight : function(flag) {
 		//if(document.designMode=='off') document.designMode='on'
-		if(flag!='init') window.getSelection().getRangeAt(0).insertNode(document.createTextNode(cc));
+		if(flag!='init') {
+			var span = document.createElement('span');
+			window.getSelection().getRangeAt(0).insertNode(span);
+		}
 
 		o = editor.innerHTML;
-		o = o.replace(/<br>/g,'\n');
-		o = o.replace(/<.*?>/g,'');
+//		o = o.replace(/<br>/g,'\r\n');
+//		o = o.replace(/<(b|i|s|u|a|em|tt|ins|big|cite|strong)?>/g,'');
+		//alert(o)
+		o = o.replace(/<(?!span|\/span|br).*?>/gi,'');
+//		alert(o)
+//		x = o;
 		x = z = this.split(o,flag);
-		x = x.replace(/\n/g,'<br>');
+		//alert(z)
+//		x = x.replace(/\r\n/g,'<br>');
+		x = x.replace(/\t/g, '        ');
+
 
 		if(arguments[1]&&arguments[2]) x = x.replace(arguments[1],arguments[2]);
 	
@@ -100,14 +118,16 @@ CodePress = {
 			x = x.replace(Language.syntax[i].input,Language.syntax[i].output);
 
 		editor.innerHTML = this.actions.history[this.actions.next()] = (flag=='scroll') ? x : o.split(z).join(x); 
+
 		if(flag!='init') this.findString();
 	},
 	
 	getLastWord : function() {
 		var rangeAndCaret = CodePress.getRangeAndCaret();
-		var words = rangeAndCaret[0].substring(rangeAndCaret[1]-40,rangeAndCaret[1]).split(/[\s\r\n\);]/);
-		return words[words.length-1].replace(/_/g,'');
-	},
+		words = rangeAndCaret[0].substring(rangeAndCaret[1]-40,rangeAndCaret[1]);
+		words = words.replace(/[\s\n\r\);\W]/g,'\n').split('\n');
+		return words[words.length-1].replace(/[\W]/gi,'').toLowerCase();
+	}, 
 	
 	snippets : function(evt) {
 		var snippets = Language.snippets;	
@@ -119,7 +139,7 @@ CodePress = {
 				if(content.indexOf('$0')<0) content += cc;
 				else content = content.replace(/\$0/,cc);
 				content = content.replace(/\n/g,'<br>');
-				var pattern = new RegExp(trigger+cc,'g');
+				var pattern = new RegExp(trigger+cc,'gi');
 				evt.preventDefault(); // prevent the tab key from being added
 				this.syntaxHighlight('snippets',pattern,content);
 			}
