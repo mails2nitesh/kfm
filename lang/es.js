@@ -9,92 +9,49 @@
  * 	Spanish (latin-american) language file.
  *
  * File Authors:
- *  arathael@gmail.com
+ *  Ramón Ramos (arathael@gmail.com)
  *
  * Last Updated:
- *  6/08/2006
+ *  25/05/2007
  */
 
 var kfm_lang=
 {
-Dir:
-	"ltr", 
-ErrorPrefix:
-	"error: ",
-
-Directories:
-	"Directorios",
-CurrentWorkingDir:
-	"Directorio actual: \"%1\"",
-Logs:
-	"Registros",
-FileUpload:
-	"Subir archivo",
-DirEmpty:
-	"no se encontraron archivos en \"%1\"",
-
-CreateSubDir:
-	"crear sub-directorio",
-DeleteDir:
-	"eliminar",
-RenameDir:
-	"renombrar",
-
-DeleteFile:
-	"eliminar",
-RenameFile:
-	"renombrar",
-RotateClockwise:
-	"girar en sentido a las manecillas del reloj",
-RotateAntiClockwise:
-	"girar en sentido inverso a las manecillas del reloj",
-ResizeImage:
-	"redimensionar imagen",
-ChangeCaption:
-	"cambiar etiqueta",
-
-FileName:
-	"¿Nombre del nuevo archivo?",
-AskIfOverwrite:
-	"El archivo \"%1\" ya existe. ¿Sobreescribir?",
-NoForwardslash:
-	"\nNo puedes utilizar '/' en el nombre del archivo",
-
-CreateDirMessage:
-	"Crear un sub-directorio en \"%1\":",
-DelDirMessage:
-	"¿Estás seguro de eliminar el directorio \"%1\"?",
-DelFileMessage:
-	"¿Estás seguro de eliminar el archivo \"%1\"",
-DelMultipleFilesMessage:
-	"¿Estás seguro de eliminar estos archivos?\n\n'",
-DownloadFileFromMessage:
-	"¿De donde se descargará el archivo?",
-FileSavedAsMessage:
-	"Con que nombre se deberá guardar el archivo?",
-
-CurrentSize:
-	"Dimensiones actuales: \"%1\" x \"%2\"\n",
-NewWidth:
-	"¿Nuevo ancho?",
-NewWidthConfirmTxt:
-	"Nuevo ancho establecido: \"%1\"\n",
-NewHeight:
-	"¿Nueva altura?",
-NewHeightConfirmTxt:
-	"Nueva altura establecida: \"%1\"\n\n¿Es esto correcto?",
-
-RenamedFile:
-	"Archivo \"%1\" renombrado a \"%2\".",
-DirRefreshed:
-	"directorios actualizados.",
-FilesRefreshed:
-	"archivos actualizados.",
-NotMoreThanOneFile:
-	"error: no puedes seleccionar más de un archivo a la vez.",
-UnknownPanelState:
-	"error: estado de panel desconocido.",
-
+Dir: "ltr", 
+ErrorPrefix: "error: ",
+Directories: "Directorios",
+CurrentWorkingDir: "Directorio actual: \"%1\"",
+Logs: "Registros",
+FileUpload: "Subir archivo",
+DirEmpty: "no se encontraron archivos en \"%1\"",
+CreateSubDir: "crear sub-directorio",
+DeleteDir: "eliminar",
+RenameDir: "renombrar",
+DeleteFile: "eliminar",
+RenameFile: "renombrar",
+RotateClockwise: "girar en sentido a las manecillas del reloj",
+RotateAntiClockwise: "girar en sentido inverso a las manecillas del reloj",
+ResizeImage: "redimensionar imagen",
+ChangeCaption: "cambiar etiqueta",
+FileName: "¿Nombre del nuevo archivo?",
+AskIfOverwrite: "El archivo \"%1\" ya existe. ¿Sobreescribir?",
+NoForwardslash: "\nNo puedes utilizar '/' en el nombre del archivo",
+CreateDirMessage: "Crear un sub-directorio en \"%1\":",
+DelDirMessage: "¿Estás seguro de eliminar el directorio \"%1\"?",
+DelFileMessage: "¿Estás seguro de eliminar el archivo \"%1\"",
+DelMultipleFilesMessage: "¿Estás seguro de eliminar estos archivos?\n\n'",
+DownloadFileFromMessage: "¿De donde se descargará el archivo?",
+FileSavedAsMessage: "Con que nombre se deberá guardar el archivo?",
+CurrentSize: "Dimensiones actuales: \"%1\" x \"%2\"\n",
+NewWidth: "¿Nuevo ancho?",
+NewWidthConfirmTxt: "Nuevo ancho establecido: \"%1\"\n",
+NewHeight: "¿Nueva altura?",
+NewHeightConfirmTxt: "Nueva altura establecida: \"%1\"\n\n¿Es esto correcto?",
+RenamedFile: "Archivo \"%1\" renombrado a \"%2\".",
+DirRefreshed: "directorios actualizados.",
+FilesRefreshed: "archivos actualizados.",
+NotMoreThanOneFile: "error: no puedes seleccionar más de un archivo a la vez.",
+UnknownPanelState: "error: estado de panel desconocido.",
 SetStylesError:
 	"error: no se puede renombrar \"%1\" a \"%2\.",
 NoPanel:
@@ -163,108 +120,108 @@ LoadingKFM:
 Name:
 	"nombre",
 FileDetails:
-	"File Details",
+	"Detalles de archivo",
 Search:
-	"Search",
+	"Buscar",
 IllegalDirectoryName:
-	"illegal directory name \"%1\"",
+	"nombre inválido de directorio \"%1\"",
 RecursiveDeleteWarning:
-	"\"%1\" is not empty\nAre you sure you want to delete it and all its contents?\n*WARNING* THIS IS NOT REVERSIBLE",
+	"\"%1\" no está vacio\nEstás seguro de eliminarlo junto con todos sus archivos?\n*ADVERTENCIA* Esto no es reversible",
 RmdirFailed:
-	"failed to delete directory \"%1\"",
+	"fallo al eliminar directorio \"%1\"",
 DirNotInDb:
-	"directory not in database",
+	"directorio no se encuentra en la base de datos",
 ShowPanel:
-	"show panel \"%1\"",
+	"mostrar panel \"%1\"",
 ChangeCaption:
-	"Change Caption",
+	"Cambiar etiqueta",
 NewDirectory:
-	"New Directory",
+	"Nuevo directorio",
 Upload:
-	"Upload",
+	"Subir",
 NewCaptionIsThisCorrect:
-	"New Caption:\n%1\n\nIs this correct?",
+	"Nueva Etiqueta:\n%1\n\n¿Está correcto?",
 Close:
-	"close",
+	"cerrar",
 Loading:
-	"loading",
+	"cargando",
 AreYouSureYouWantToCloseKFM:
-	"Are you sure you want to close the KFM window?",
+	"Está seguro de cerrar la ventana de KFM?",
 PleaseSelectFileBeforeRename:
-	"Please select a file before you try to rename it",
+	"Porfavor seleccione un archivo antes de renombrarlo",
 RenameOnlyOneFile:
-	"You can only rename one file at a time",
+	"Solo puede renombrar un archivo a la vez",
 RenameFileToWhat:
-	"Rename the file \"%1\" to what?",
+	"Renombrar el archivo \"%1\" a que?",
 NoRestrictions:
-	"no restrictions",
+	"sin restricciones",
 Filename:
-	"filename",
+	"nombre de archivo",
 Maximise:
-	"maximise",
+	"maximizar",
 Minimise:
-	"minimise",
+	"minimizar",
 AllowedFileExtensions:
-	"allowed file extensions",
+	"extensiones de archivo permitidas",
 Filesize:
-	"filesize",
+	"tamaño de archivo",
 MoveDown:
-	"move down",
+	"mover abajo",
 Mimetype:
-	"mimetype",
+	"tipo mime",
 MoveUp:
-	"move up",
+	"mover arriba",
 Restore:
-	"restore",
+	"restaurar",
 Caption:
-	"caption",
+	"etiqueta",
 CopyFromURL:
-	"Copy from URL",
+	"Copiar desde URL",
 ExtractZippedFile:
-	"Extract zipped file",
+	"Extraer archivo comprimido",
 
 // new in 0.8
 ViewImage:
-	"view image",
+	"ver imagen",
 ReturnThumbnailToOpener:
-	"return thumbnail to opener",
+	"regresar miniatura a lanzador",
 AddTagsToFiles:
-	"add tags to file(s)",
+	"agregar tags de archivo(s)",
 RemoveTagsFromFiles:
-	"remove tags from file(s)",
+	"quitaqr tags de archivo(s)",
 HowWouldYouLikeToRenameTheseFiles:
-	"How would you like to rename these files?\n\nexample: \"images-***.jpg\" will rename files to \"images-001.jpg\", \"images-002.jpg\", ...",
+	"Como renombrar estos archivos?\n\nejemplo: \"imagenes-***.jpg\" se renombrarán a \"imagenes-001.jpg\", \"imagenes-002.jpg\", ...",
 YouMustPlaceTheWildcard:
-	"You must place the wildcard character * somewhere in the filename template",
+	"Debes colocar el carácter comodin * en la plantilla del nombre de archivo",
 YouNeedMoreThan:
-	"You need more than %1 * characters to create %2 filenames",
+	"Nececitas más de %1 caracteres * para crear %2 nombres de archivo",
 NoFilesSelected:
-	"no files selected",
+	"ningun archivo seleccionado",
 Tags:
 	"tags",
 IfYouUseMultipleWildcards:
-	"If you use multiple wildcards in the filename template, they must be grouped together",
+	"Si utilizas multiples comodines en la plantilla de nombre de archivo, deben de estar juntos",
 NewCaption:
-	"New Caption",
+	"Nueva etiqueta",
 WhatMaximumSize:
-	"What maximum size should be returned?",
+	"¿Que tamaño máximo de archivo debe devolverse?",
 CommaSeparated:
-	"comma-separated",
+	"separados-por-coma",
 WhatIsTheNewTag:
-	"What is the new tag?\nFor multiple tags, separate by commas.",
+	"¿Cual es el nuevo tag?\nPara múltiples tags, separar con comas.",
 WhichTagsDoYouWantToRemove:
-	"Which tags do you want to remove?\nFor multiple tags, separate by commas."
+	"¿Qué tags desea quitar?\nPara múltiples tags, separar por comas."
 
 ,
 // New in 0.9
-AllFiles: "all files",
-AndNMore: "...and %1 more...",
-Browse: "Browse...",
-ExtractAfterUpload: "extract after upload",
-NotAnImageOrImageDimensionsNotReported: "error: not an image, or image dimensions not reported",
-PermissionDeniedCannotDeleteFile: "permission denied: cannot delete file",
-RenameTheDirectoryToWhat: "Rename the directory '%1' to what?",
-RenamedDirectoryAs: "Renamed '%1' as '%2'",
-TheFilenameShouldEndWithN: "The filename should end with %1",
-WhatFilenameDoYouWantToUse: "What filename do you want to use?"
+AllFiles: "todos los archivos",
+AndNMore: "...y %1 más...",
+Browse: "Examinar...",
+ExtractAfterUpload: "extraer despues de subir",
+NotAnImageOrImageDimensionsNotReported: "error: no es una imagen, o no se encuentran las dimensiones de la imagen",
+PermissionDeniedCannotDeleteFile: "permiso denegado: no se puede eliminar el archivo",
+RenameTheDirectoryToWhat: "¿Renombrar el directorio '%1' a que?",
+RenamedDirectoryAs: "'%1' renombrado como '%2'",
+TheFilenameShouldEndWithN: "El nombre de archivo debe terminar con %1",
+WhatFilenameDoYouWantToUse: "¿Qué nombre de archivo desea utilizar?"
 }
