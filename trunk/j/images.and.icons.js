@@ -2,7 +2,7 @@
 function kfm_changeCaption(id){
 	var table=newEl('table','kfm_newCaptionDetails',0,0,{kfm_caption_for:id});
 	var row=table.insertRow(0),textarea=newInput('kfm_new_caption','textarea',$('kfm_file_icon_'+id).kfm_attributes.caption);
-	textarea.setCss('height:50px;width:200px');
+	setCss(textarea,'height:50px;width:200px');
 	row.insertCell(0).appendChild(newText(kfm_lang.NewCaption));
 	row.insertCell(1).appendChild(textarea);
 	kfm_modal_open(table,kfm_lang.ChangeCaption,[[kfm_lang.ChangeCaption,'kfm_changeCaption_set']]);
@@ -19,7 +19,7 @@ function kfm_changeCaption_set(){
 	}
 }
 function kfm_img_startLightbox(id){
-	if(id&&isArray(id)){
+	if(id&&$type(id)=='array'){
 		window.kfm_slideshow={ids:id,at:0};
 		id=0;
 	}

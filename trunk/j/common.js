@@ -14,7 +14,7 @@ function clearSelections(){
 }
 function delEl(o){
 	var i;
-	if(isArray(o))for(i in o)delEl(o[i]);
+	if($type(o)=='array')for(i=0;i<o.length;++i)delEl(o[i]);
 	else{
 		o=$(o);
 		if(o&&o.parentNode)o.parentNode.removeChild(o);
@@ -50,27 +50,19 @@ function getOffset(el,s) {
 function getWindowScrollAt(){
 	return {x:window.pageXOffset,y:window.pageYOffset};
 }
-function isArray(o){
-	return o instanceof Array||typeof o=='array';
-}
-function kfm_kaejax_create_functions(url,f){
-	kfm_kaejax_is_loaded=1;
-	for(var i=0;i<f.length;++i){
-		eval('window.x_'+f[i]+'=function(){kfm_kaejax_do_call("'+f[i]+'",arguments)}');
-		function_urls[f[i]]=url;
-	}
-}
 function kfm_kaejax_do_call(func_name,args){
 	var uri=function_urls[func_name];
-	if(!window.kfm_kaejax_timeouts[uri])window.kfm_kaejax_timeouts[uri]={t:setTimeout('kfm_kaejax_sendRequests("'+uri+'")',1),c:[]};
+	if(!window.kfm_kaejax_timeouts[uri])window.kfm_kaejax_timeouts[uri]={t:setTimeout('kfm_kaejax_sendRequests("'+uri+'")',1),c:[],callbacks:[]};
 	var l=window.kfm_kaejax_timeouts[uri].c.length,v2=[];
-	for(var i=0;i<args.length-1;++i)v2[v2.length]=args[i]
-	window.kfm_kaejax_timeouts[uri].c[l]={f:func_name,c:args[args.length-1],v:v2};
+	for(var i=0;i<args.length-1;++i)v2[v2.length]=args[i];
+	window.kfm_kaejax_timeouts[uri].c[l]={f:func_name,v:v2};
+	window.kfm_kaejax_timeouts[uri].callbacks[l]=args[args.length-1];
 }
 function kfm_kaejax_sendRequests(uri){
-	var t=window.kfm_kaejax_timeouts[uri];
+	var t=window.kfm_kaejax_timeouts[uri],callbacks=window.kfm_kaejax_timeouts[uri].callbacks;
+	t.callbacks=null;
 	window.kfm_kaejax_timeouts[uri]=null;
-	var x=new XMLHttpRequest(),post_data="kaejax="+escape(json.s.object(t).replace(kfm_regexps.plus,'%2B')).replace(kfm_regexps.ascii_stuff,'%u00$1');
+	var x=new XMLHttpRequest(),post_data="kaejax="+escape(Json.toString(t)).replace(kfm_regexps.plus,'%2B').replace(kfm_regexps.ascii_stuff,'%u00$1').replace(/\n/g,' ');
 	post_data=kfm_sanitise_ajax(post_data);
 	x.open('POST',uri,true);
 	x.setRequestHeader("Method","POST "+uri+" HTTP/1.1");
@@ -81,8 +73,8 @@ function kfm_kaejax_sendRequests(uri){
 		if(r.substring(0,5)=='error')return alert(r);
 		var v=eval('('+unescape(r)+')');
 		for(var i=0;i<t.c.length;++i){
-			var f=t.c[i].c,p=[];
-			if(isArray(f)){
+			var f=callbacks[i],p=[];
+			if($type(f)=='array'){
 				p=f;
 				f=f[0];
 			}
@@ -123,8 +115,8 @@ function newEl(t,id,cn,chld,vals,css){
 	kfm_addMethods(el);
 	if(chld)el.addEl(chld);
 	if(cn)el.setClass(cn);
-	if(vals)X(el,vals);
-	if(css)el.setCss(css);
+	if(vals)$extend(el,vals);
+	if(css)setCss(el,css);
 	return el;
 }
 function newForm(action,method,enctype,target){
@@ -151,7 +143,7 @@ function newInput(n,t,v,cl){
 		}
 	}
 	if(v){
-		if(t=='checkbox')X(b,{checked:'checked',defaultChecked:'checked'});
+		if(t=='checkbox')$extend(b,{checked:'checked',defaultChecked:'checked'});
 		else if(t!='datetime')b.value=v;
 	}
 	b.setClass(cl);
@@ -182,15 +174,28 @@ function newText(a){
 function removeEvent(o,t,f){
 	if(o&&o.removeEventListener)o.removeEventListener(t,f,false);
 }
+function setCss(el,s){
+	var i;
+	s=s.split(';');
+	for(i=0;i<s.length;++i){
+		var p=s[i].split(':');
+		var r=p[0],v=p[1];
+		if(r=='opacity')setOpacity(el,v);
+		else if(r=='float')setFloat(el,v);
+//		else try{
+			else el.style[r]=v;
+/*		}
+		catch(e){
+			kfm_log(kfm_lang.SetStylesError(r,v));
+		} */
+	}
+	return el;
+}
 function setFloat(e,f){
 	e.style.cssFloat=f;
 }
 function setOpacity(e,o){
 	e.style.opacity=o;
-}
-function X(d,s){
-	for(var p in s)d[p]=s[p];
-	return d;
 }
 if(browser.isIE){
 	function XMLHttpRequest(){
@@ -202,66 +207,3 @@ if(browser.isIE){
 if(browser.isKonqueror){
 	loadJS('j/browser-specific.konqueror.js');
 }
-var json={
-	m:{'\b':'\\b','\t':'\\t','\n':'\\n','\f':'\\f','\r':'\\r','"':'\\"','\\':'\\\\'},
-	s:{
-		array:function(x){
-			var a=['['],b,f,i,l=x.length,v;
-			for(i=0;i<l;i+=1){
-				v=x[i];
-				f=json.s[typeof v];
-				if(f){
-					v=f(v);
-					if(typeof v=='string'){
-						if(b)a.push(',');
-						a.push(v);
-						b=true;
-					}
-				}
-			}
-			a[a.length]=']';
-			return a.join('');
-		},
-		'boolean':function(x){
-			return String(x);
-		},
-		'null':function(x){
-			return "null";
-		},
-		number:function(x){
-			return isFinite(x)?String(x):'null';
-		},
-		object:function(x){
-			if(x&&!x.tagName){
-				if(isArray(x))return json.s.array(x);
-				var a=['{'],b,f,i,v;
-				for(i in x) {
-					v=x[i];
-					f=json.s[typeof v];
-					if(f){
-						v=f(v);
-						if(typeof v=='string'){
-							if(b)a.push(',');
-							a.push(json.s.string(i),':',v);
-							b=true;
-						}
-					}
-				}
-				a.push('}');
-				return a.join('');
-			}
-			return 'null';
-		},
-		string:function(x){
-			if(/["\\\x00-\x1f]/.test(x)){
-				x=x.replace(/([\x00-\x1f\\"])/g,function(a,b){
-					var c=json.m[b];
-					if(c)return c;
-					c=b.charCodeAt();
-					return '\\u00'+Math.floor(c/16).toString(16)+(c%16).toString(16);
-				});
-			}
-			return '"'+x+'"';
-		}
-	}
-};

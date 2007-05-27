@@ -7,7 +7,7 @@ function kfm_tagAdd(id){
 	}
 }
 function kfm_tagDraw(id){
-	if(!isArray(id)){
+	if($type(id)!='array'){
 		if(kfm_tags[id])return newEl('span',0,0,kfm_tags[id]);
 		x_kfm_getTagName(id,kfm_tagDraw);
 		return newEl('span',0,'kfm_unknown_tag',id);

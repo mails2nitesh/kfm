@@ -29,7 +29,7 @@ function kfm_file_drag(e){
 	var y=(h+m.y>ws.y)?ws.y-h:m.y;
 	if(x<0)x=0;
 	if(y<0)y=0;
-	window.drag_wrapper.setCss('display:block;left:'+x+'px;top:'+y+'px');
+	setCss(window.drag_wrapper,'display:block;left:'+x+'px;top:'+y+'px');
 }
 function kfm_file_dragFinish(e){
 	clearTimeout(window.dragTrigger);
@@ -68,7 +68,7 @@ function kfm_isFileSelected(filename){
 }
 function kfm_removeFromSelection(id){
 	var i;
-	for(i in selectedFiles){
+	for(i=0;i<selectedFiles.length;++i){
 		if(selectedFiles[i]==id){
 			var el=$('kfm_file_icon_'+id);
 			if(el)el.delClass('selected');
@@ -80,11 +80,11 @@ function kfm_removeFromSelection(id){
 function kfm_selectAll(){
 	kfm_selectNone();
 	var a,b=$('kfm_right_column').fileids;
-	for(a in b)kfm_addToSelection(b[a]);
+	for(a=0;a<b.length;++b)kfm_addToSelection(b[a]);
 }
 function kfm_selectInvert(){
 	var a,b=$('kfm_right_column').fileids;
-	for(a in b)if(kfm_isFileSelected(b[a]))kfm_removeFromSelection(b[a]);
+	for(a=0;a<b.length;++b)if(kfm_isFileSelected(b[a]))kfm_removeFromSelection(b[a]);
 	else kfm_addToSelection(b[a]);
 }
 function kfm_selectNone(){
@@ -107,7 +107,7 @@ function kfm_selection_drag(e){
 	var x2=p2.x>p1.x?p2.x:p1.x;
 	var y1=p1.y>p2.y?p2.y:p1.y;
 	var y2=p2.y>p1.y?p2.y:p1.y;
-	window.drag_wrapper.setCss('display:block;left:'+x1+'px;top:'+y1+'px;width:'+(x2-x1)+'px;height:'+(y2-y1)+'px;zIndex:4');
+	setCss(window.drag_wrapper,'display:block;left:'+x1+'px;top:'+y1+'px;width:'+(x2-x1)+'px;height:'+(y2-y1)+'px;zIndex:4');
 }
 function kfm_selection_dragFinish(e){
 	clearTimeout(window.dragSelectionTrigger);
@@ -125,53 +125,14 @@ function kfm_selection_dragFinish(e){
 	removeEvent(document,'mouseup',kfm_selection_dragFinish);
 	var fileids=right_column.fileids;
 	kfm_selectNone();
-	for(var i = 0; i<fileids.length; i++)
-	{
+	for(var i = 0; i<fileids.length; i++){
 	 	var curIcon = $('kfm_file_icon_'+fileids[i]);
 		var curTop = getOffset(curIcon,'Top');
 		var curLeft = getOffset(curIcon,'Left');
 		var curBottom = curTop + curIcon.offsetHeight;
 		var curRight = curLeft + curIcon.offsetWidth;
-		
-		if (curRight > x1 && curLeft < x2)
-		{
-			if (curBottom > y1 && curTop < y2)
-			{
-				kfm_addToSelection(fileids[i]);
-			}
-		}
+		if (curRight > x1 && curLeft < x2 && curBottom > y1 && curTop < y2)kfm_addToSelection(fileids[i]);
 	}
-	
-	
-	/*
-	else{
-		for(var i=1;$('kfm_file_icon_'+fileids[i]).offsetTop==firstTop;++i);
-		X(icons,{
-			iconsPerLine:i,
-			marginX:(getOffset($('kfm_file_icon_'+fileids[i-1]),'Left')-firstLeft-(lastfile.offsetWidth*(i-1)))/((i-1)*2),
-			marginY:(getOffset($('kfm_file_icon_'+fileids[i]),'Top')-firstTop-lastHeight)/2
-		});
-	}
-	var iw=icons.width+icons.marginX*2;
-	var ih=icons.height+icons.marginY*2;
-	var leftMost=Math.floor((x1-firstLeft+icons.marginX*2)/iw);
-	var topMost=Math.floor((y1-firstTop+icons.marginY*2)/ih);
-	var columns=Math.ceil((x2-firstLeft)/iw)-leftMost;
-	var rows=Math.ceil((y2-firstTop)/ih)-topMost;
-	if(!columns&&!rows)return;
-	if(leftMost<0)leftMost=0;
-	if(topMost<0)topMost=0;
-	if(!columns)columns=1;
-	if(!rows)rows=1;
-	for(var y=topMost;y<topMost+rows;++y){
-		var yi=y*icons.iconsPerLine;
-		if(yi>numfiles)break;
-		for(var x=leftMost;x<leftMost+columns;++x){
-			if(yi+x>numfiles)break;
-			kfm_addToSelection(fileids[yi+x]);
-		}
-	}
-	*/
 	kfm_selectionCheck();
 }
 function kfm_selection_dragStart(e){
@@ -217,8 +178,8 @@ function kfm_toggleSelectedFile(e){
 		clearSelections(e);
 		kfm_selectNone();
 		var a=$('kfm_right_column').fileids,b,c,d;
-		for(b in a){
-			if(a[b]==kfm_lastClicked)c=parseInt(b);
+		for(b=0;b<a.length;++b){
+			if(a[b]==kfm_lastClicked)c=b;
 			if(a[b]==id)d=parseInt(b);
 		}
 		if(c>d){

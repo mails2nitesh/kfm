@@ -37,7 +37,7 @@ function kfm(){
 		kfm_addPanel(left_column,'kfm_directory_properties_panel');
 		if(!kfm_inArray('kfm_logs_panel',kfm_hidden_panels))kfm_addPanel(left_column,'kfm_logs_panel');
 		left_column.panels_unlocked=1;
-		left_column.setCss('height:'+w.y+'px');
+		setCss(left_column,'height:'+w.y+'px');
 		left_column.contextmenu=function(e){
 			e=getEvent(e);
 			{ // variables
@@ -48,7 +48,7 @@ function kfm(){
 				var l=left_column.panels_unlocked;
 				links.push(['kfm_togglePanelsUnlocked()',l?kfm_lang.LockPanels:kfm_lang.UnlockPanels,l?'lock':'unlock']);
 				var ps=left_column.panels;
-				for(var i in ps){
+				for(var i=0;i<ps.length;++i){
 					var p=$(ps[i]);
 					if(!p.visible)links.push(['kfm_addPanel("kfm_left_column","'+ps[i]+'")',kfm_lang.ShowPanel(p.panel_title),'show_panel']);
 				}
@@ -104,9 +104,9 @@ var kfm_elMethods={
 	},
 	addEl:function(a){
 		if(!a)return this;
-		if(!isArray(a))a=[a];
-		for(var i in a){
-			if(isArray(a[i]))this.addEl(a[i]);
+		if($type(a)!='array')a=[a];
+		for(var i=0;i<a.length;++i){
+			if($type(a[i])=='array')this.addEl(a[i]);
 			else this.appendChild(a[i].toString()===a[i]?newText(a[i]):a[i]);
 		}
 		return this;
@@ -121,11 +121,11 @@ var kfm_elMethods={
 	contextmenu_real:function(e){this.contextmenu(e)},
 	delClass:function(n){
 		var i,d=[],c=this.getClass().split(" ");
-		if(isArray(n)){
-			for(i in n)this.delClass(n[i]);
+		if($type(n)=='array'){
+			for(i=0;i<n.length;++i)this.delClass(n[i]);
 			return;
 		}
-		for(i in c)if(c[i]!=n)d.push(c[i]);
+		for(i=0;i<c.length;++i)if(c[i]!=n)d.push(c[i]);
 		this.setClass(d.join(" "));
 	},
 	empty:function(){
@@ -139,22 +139,10 @@ var kfm_elMethods={
 		if(!u)return;
 		if(kfm_unique_classes[c])kfm_unique_classes[c].delClass(c);
 		kfm_unique_classes[c]=this;
-	},
-	setCss:function(s){
-		var i;
-		s=s.split(';');
-		for(i in s){
-			var p=s[i].split(':');
-			var r=p[0],v=p[1];
-			if(r=='opacity')setOpacity(this,v);
-			else if(r=='float')setFloat(this,v);
-			else try{this.style[r]=v}catch(e){kfm_log(kfm_lang.SetStylesError(r,v))}
-		}
-		return this;
 	}
 };
 function kfm_addMethods(el){
-	X(el,{
+	$extend(el,{
 		addCell:kfm_elMethods.addCell,
 		addClass:kfm_elMethods.addClass,
 		addEl:kfm_elMethods.addEl,
@@ -164,8 +152,7 @@ function kfm_addMethods(el){
 		empty:kfm_elMethods.empty,
 		getClass:kfm_elMethods.getClass,
 		hasClass:kfm_elMethods.hasClass,
-		setClass:kfm_elMethods.setClass,
-		setCss:kfm_elMethods.setCss
+		setClass:kfm_elMethods.setClass
 	});
 	addEvent(el,'contextmenu',kfm_elMethods.contextmenu_real);
 	return el;
@@ -186,7 +173,7 @@ function kfm_confirm(txt){
 	return ret;
 }
 function kfm_getContainer(p,c){
-	for(var i in c){
+	for(i=0;i<c.length;++i){
 		var a=c[i],x=getOffset(a,'Left'),y=getOffset(a,'Top');
 		if(x<p.x&&y<p.y&&x+a.offsetWidth>p.x&&y+a.offsetHeight>p.y)return a;
 	}
@@ -199,8 +186,8 @@ function kfm_handleWindowResizes(){
 	var w=getWindowSize();
 	var to_max_height=['kfm_left_column','kfm_left_column_hider','kfm_lightboxShader'];
 	var to_max_width=['kfm_lightboxShader'];
-	for(var i=0;i<to_max_height.length;++i)if($(to_max_height[i]))$(to_max_height[i]).setCss('height:'+w.y+'px');
-	for(var i=0;i<to_max_width.length;++i)if($(to_max_width[i]))$(to_max_width[i]).setCss('width:'+w.x+'px');
+	for(var i=0;i<to_max_height.length;++i)if($(to_max_height[i]))setCss($(to_max_height[i]),'height:'+w.y+'px');
+	for(var i=0;i<to_max_width.length;++i)if($(to_max_width[i]))setCss($(to_max_width[i]),'width:'+w.x+'px');
 	if($('kfm_codepressTableCell')){
 		var el=$('kfm_codepressTableCell'),iframe=getEls('iframe',el)[0];
 		iframe.style.height=0;
@@ -211,7 +198,7 @@ function kfm_handleWindowResizes(){
 	kfm_refreshPanels('kfm_left_column');
 }
 function kfm_hideMessage(){
-	$('message').setCss('display:none');
+	setCss($('message'),'display:none');
 }
 function kfm_inArray(needle,haystack){
 	for(var i=0;i<haystack.length;++i)if(haystack[i]==needle)return true;
@@ -287,7 +274,7 @@ function kfm_log(msg){
 	}
 	wrapper.visible=1;
 	var el=getElsWithClass('kfm_panel_body','DIV',$('kfm_logs_panel'))[0],p=newEl('p',0,0,msg);
-	if(msg.indexOf(kfm_lang.ErrorPrefix)==0)p.setCss('background:#ff0;fontWeight:bold;color:red');
+	if(msg.indexOf(kfm_lang.ErrorPrefix)==0)setCss(p,'background:#ff0;fontWeight:bold;color:red');
 	el.addEl(p);
 	el.scrollTop=el.scrollTop+p.offsetHeight;
 }

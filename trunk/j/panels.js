@@ -26,17 +26,17 @@ function kfm_createFileUploadPanel(){
 			kfm_cancelEvent(e);
 			var v=this.value;
 			var h=(v.indexOf('.')==-1||v.replace(/.*(\.[^.]*)/,'$1')!='.zip');
-			$('kfm_unzip1').setCss('visibility:'+(h?'hidden':'visible'));
-			$('kfm_unzip2').setCss('visibility:'+(h?'hidden':'visible'));
+			setCss($('kfm_unzip1'),'visibility:'+(h?'hidden':'visible'));
+			setCss($('kfm_unzip2'),'visibility:'+(h?'hidden':'visible'));
 		}
 		var sel=newSelectbox('uploadType',[kfm_lang.Upload,kfm_lang.CopyFromURL],0,0,function(){
 			var copy=parseInt(this.selectedIndex);
-			$('kfm_unzip1').setCss('visibility:hidden');
-			$('kfm_unzip2').setCss('visibility:hidden');
+			setCss($('kfm_unzip1'),'visibility:hidden');
+			setCss($('kfm_unzip2'),'visibility:hidden');
 			$('kfm_file').value='';
 			$('kfm_url').value='';
-			$('kfm_uploadForm').setCss('display:'+(copy?'none':'block'));
-			$('kfm_copyForm').setCss('display:'+(copy?'block':'none'));
+			setCss($('kfm_uploadForm'),'display:'+(copy?'none':'block'));
+			setCss($('kfm_copyForm'),'display:'+(copy?'block':'none'));
 		});
 		{ // upload from computer
 			{ // normal single-file upload form
@@ -44,7 +44,7 @@ function kfm_createFileUploadPanel(){
 				f1.id='kfm_uploadForm';
 				var iframe=newEl('iframe','kfm_iframe');
 				iframe.src='javascript:false';
-				iframe.setCss('display:none');
+				setCss(iframe,'display:none');
 				var submit=newInput('upload','submit',kfm_lang.Upload);
 				addEvent(submit,'click',function(){
 					setTimeout('$("kfm_file").type="text";$("kfm_file").type="file"',1);
@@ -123,7 +123,7 @@ function kfm_createFileDetailsPanel(){
 function kfm_createPanel(title,id,subels,vars){
 	// states:    0=minimised,1=maximised,2=fixed-height, 3=fixed-height-maxed
 	// abilities: -1=disabled,0=not closable,1=closable
-	var el=X(newEl('div',id,'kfm_panel',[newEl('div',0,'kfm_panel_header',title),newEl('div',0,'kfm_panel_body',subels)]),{
+	var el=$extend(newEl('div',id,'kfm_panel',[newEl('div',0,'kfm_panel_header',title),newEl('div',0,'kfm_panel_body',subels)]),{
 		state:0,height:0,panel_title:title,abilities:0,visible:1,order:99,
 		addCloseButton:function(){if(this.abilities&1)this.addButton('removePanel','','x',kfm_lang.Close)},
 		addMaxButton:function(){this.addButton('maximisePanel','','M',kfm_lang.Maximise)},
@@ -138,7 +138,7 @@ function kfm_createPanel(title,id,subels,vars){
 			);
 		}
 	});
-	if(vars)el=X(el,vars);
+	if(vars)el=$extend(el,vars);
 	return el;
 }
 function kfm_createPanelWrapper(name){
@@ -164,7 +164,7 @@ function kfm_createSearchPanel(){
 	return kfm_createPanel(kfm_lang.Search,'kfm_search_panel',t,{maxedState:3,state:3,order:3});
 }
 function kfm_hasPanel(wrapper,panel){
-	for(var i in wrapper.panels)if(wrapper.panels[i]==panel)return true;
+	for(var i=0;i<wrapper.panels.length;++i)if(wrapper.panels[i]==panel)return true;
 	return false;
 }
 function kfm_minimisePanel(wrapper,panel){
@@ -192,12 +192,12 @@ function kfm_refreshPanels(wrapper){
 	wrapper=$(wrapper);
 	var ps=wrapper.panels,i,minheight=0;
 	var minimised=[],maximised=[],fixed_height=[],fixed_height_maxed=[];
-	for(i in ps){
+	for(i=0;i<ps.length;++i){
 		var el=$(ps[i]);
 		if(kfm_inArray(el.id,kfm_hidden_panels))el.visible=false;
 		if(el.id=='kfm_file_upload_panel')el.visible=kfm_directories[kfm_cwd_id].is_writable;
 		if(el.visible){
-			el.minheight=getElsWithClass('kfm_panel_header','DIV',el.setCss('display:block'))[0].offsetHeight;
+			el.minheight=getElsWithClass('kfm_panel_header','DIV',setCss(el,'display:block'))[0].offsetHeight;
 			minheight+=el.minheight;
 			switch(el.state){
 				case 0: minimised[minimised.length]=ps[i]; break;
@@ -207,13 +207,13 @@ function kfm_refreshPanels(wrapper){
 				default: kfm_log(kfm_lang.UnknownPanelState+el.state);
 			}
 		}
-		else el.setCss('display:none');
+		else setCss(el,'display:none');
 	}
 	var height=wrapper.offsetHeight;
-	for(i in minimised){
+	for(i=0;i<minimised.length;++i){
 		var n=minimised[i];
 		var el=$(n);
-		getElsWithClass('kfm_panel_body','DIV',el)[0].setCss('display:none');
+		setCss(getElsWithClass('kfm_panel_body','DIV',el)[0],'display:none');
 		var head=getElsWithClass('kfm_panel_header','DIV',el)[0].empty(),els=[];
 		if(wrapper.panels_unlocked){
 			el.addCloseButton();
@@ -224,10 +224,10 @@ function kfm_refreshPanels(wrapper){
 		els[els.length]=el.panel_title;
 		head.addEl(els);
 	}
-	for(i in fixed_height){
+	for(i=0;i<fixed_height.length;++i){
 		var n=fixed_height[i];
 		var el=$(n)
-		getElsWithClass('kfm_panel_body','DIV',el)[0].setCss('height:'+el.height+'px;display:block');
+		setCss(getElsWithClass('kfm_panel_body','DIV',el)[0],'height:'+el.height+'px;display:block');
 		minheight+=el.height;
 		var head=getElsWithClass('kfm_panel_header','DIV',el)[0].empty(),els=[];
 		if(wrapper.panels_unlocked){
@@ -240,9 +240,9 @@ function kfm_refreshPanels(wrapper){
 		els[els.length]=el.panel_title;
 		head.addEl(els);
 	}
-	for(i in fixed_height_maxed){
+	for(i=0;i<fixed_height_maxed.length;++i){
 		var n=fixed_height_maxed[i];
-		var el=$(n),body=getElsWithClass('kfm_panel_body','DIV',el)[0].setCss('height:auto;display:block');
+		var el=$(n),body=setCss(getElsWithClass('kfm_panel_body','DIV',el)[0],'height:auto;display:block');
 		minheight+=body.offsetHeight;
 		var head=getElsWithClass('kfm_panel_header','DIV',el)[0].empty(),els=[];
 		if(wrapper.panels_unlocked){
@@ -255,10 +255,10 @@ function kfm_refreshPanels(wrapper){
 		head.addEl(els);
 	}
 	if(maximised.length)var size=(height-minheight)/maximised.length;
-	for(i in maximised){
+	for(i=0;i<maximised.length;++i){
 		var n=maximised[i];
-		var el=$(n)
-		getElsWithClass('kfm_panel_body','DIV',el)[0].setCss('height:'+size+'px;display:block');
+		var el=$(n);
+		setCss(getElsWithClass('kfm_panel_body','DIV',el)[0],'height:'+size+'px;display:block');
 		var head=getElsWithClass('kfm_panel_header','DIV',el)[0].empty(),els=[];
 		if(wrapper.panels_unlocked){
 			el.addCloseButton();
@@ -282,7 +282,7 @@ function kfm_refreshPanels(wrapper){
 				prev=order;
 			}
 		}while(found);
-		for(i in els)arr.push(els[i].order);
+		for(i=0;i<els.length;++i)arr.push(els[i].order);
 	}
 }
 function kfm_removePanel(wrapper,panel){
