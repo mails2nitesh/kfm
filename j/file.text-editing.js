@@ -31,11 +31,11 @@ function kfm_showTextFile(res){
 	r2.addCell(1,1,newLink('javascript:delEl("kfm_left_column_hider");x_kfm_viewTextFile('+res.id+',kfm_viewTextFile)','View',0,'button'));
 	r2.addCell(2,1,newLink('javascript:kfm_setMessage("saving file...");$("edit-start").value=codepress.getCode();x_kfm_saveTextFile('+res.id+',$("edit-start").value,kfm_clearMessage);','Save',0,'button'));
 	r2.addCell(3,1,newLink('javascript:if($("edit-start").value==codepress.getCode() || kfm_confirm( kfm_lang.CloseWithoutSavingQuestion)){delEl("kfm_left_column_hider");x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);}',kfm_lang.Close,0,'button'));
-	r3=t.addRow().setCss('height:100%').addCell(0,4);
+	r3=setCss(t.addRow(),'height:100%').addCell(0,4);
 	r3.id='kfm_codepressTableCell';
 	var codeEl=newEl('textarea','codepress','codepress '+res.language,0,{value:res.content,title:res.name},'width:100%;height:'+(r3.offsetHeight-2)+'px');
 	changeCheckEl=newInput('edit-start','textarea',res.content);
-	changeCheckEl.setCss('display:none');
+	setCss(changeCheckEl,'display:none');
 	r3.appendChild(codeEl);
 	r3.appendChild(changeCheckEl);
 	if(window.CodePress)CodePress.run();
@@ -50,8 +50,8 @@ function kfm_viewTextFile(res){
 	if(res.buttons_to_show&2)r.addCell(c++,1,newLink('javascript:x_kfm_getTextFile('+res.id+',kfm_showTextFile)','Edit',0,'button'));
 	if(res.buttons_to_show&1)r.addCell(c++,1,newLink('javascript:x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);',kfm_lang.Close,0,'button'));
 	right_column.addEl(t);
-	var textCell=t.addRow().setCss('height:100%').addCell(0,c).addEl('please wait...');
-	var wrapper=newEl('div').setCss('overflow:auto;height:'+(textCell.offsetHeight-2)+'px;width:'+(textCell.offsetWidth)+'px');
+	var textCell=setCss(t.addRow(),'height:100%').addCell(0,c).addEl('please wait...');
+	var wrapper=setCss(newEl('div'),'overflow:auto;height:'+(textCell.offsetHeight-2)+'px;width:'+(textCell.offsetWidth)+'px');
 	textCell.empty().addEl(wrapper);
 	wrapper.innerHTML=res.content;
 }

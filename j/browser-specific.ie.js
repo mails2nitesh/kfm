@@ -26,8 +26,8 @@ function newEl(t,id,cn,chld,vals,css){
 	kfm_addMethods(el);
 	if(cn)el.setClass(cn);
 	if(chld)el.addEl(chld);
-	if(vals)X(el,vals);
-	if(css)el.setCss(css);
+	if(vals)$extend(el,vals);
+	if(css)setCss(el,css);
 	return el;
 }
 function newForm(action,method,enctype,target){

@@ -22,6 +22,7 @@ require_once($kfm_base_path.'includes/kaejax.php');
 			echo preg_replace('/\s+/',' ',$css);
 		?></style>
 		<title>KFM - Kae's File Manager</title>
+		<script type="text/javascript" src="mootools-1.1/mootools.v1.1.js"></script>
 		<script type="text/javascript">
 <?php
 	$js='';
