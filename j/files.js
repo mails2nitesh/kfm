@@ -45,7 +45,7 @@ var kfm_file_bits={
 		if(e.button==2)return;
 		var id=this.kfm_attributes.id;
 		addEvent(document,'mouseup',kfm_file_dragFinish);
-		clearTimeout(window.dragSelectionTrigger);
+		$clear(window.dragSelectionTrigger);
 		window.dragTrigger=setTimeout('kfm_file_dragStart('+id+')',100);
 	},
 	padding:0
@@ -167,12 +167,12 @@ function kfm_incrementalFileDisplay(){
 		el.contextmenu=kfm_file_bits.contextmenu;
 		addEvent(el,'mousedown',kfm_file_bits.mousedown);
 		addEvent(el,'mouseover',function(){ // initialise info tooltip
-			if(window.kfm_tooltipInit)clearTimeout(window.kfm_tooltipInit);
+			if(window.kfm_tooltipInit)$clear(window.kfm_tooltipInit);
 			if(window.drag_wrapper)return; // don't open if currently dragging files
 			window.kfm_tooltipInit=setTimeout('x_kfm_getFileDetails('+id+',kfm_showToolTip)',500);
 		});
 		addEvent(el,'mouseout',function(){ // remove info tooltip
-			if(window.kfm_tooltipInit)clearTimeout(window.kfm_tooltipInit);
+			if(window.kfm_tooltipInit)$clear(window.kfm_tooltipInit);
 			delEl('kfm_tooltip');
 		});
 	}
@@ -214,7 +214,7 @@ function kfm_incrementalFileDisplay(){
 }
 function kfm_refreshFiles(res){
 	if(window.kfm_incrementalFileDisplay_loader){
-		clearTimeout(window.kfm_incrementalFileDisplay_loader);
+		$clear(window.kfm_incrementalFileDisplay_loader);
 		window.kfm_incrementalFileDisplay_vars=null;
 	}
 	kfm_selectNone();
