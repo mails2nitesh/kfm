@@ -23,11 +23,6 @@ function delEl(o){
 function getEls(i,p){
 	return p?p.getElementsByTagName(i):document.getElementsByTagName(i);
 }
-function getElsWithClass(c,t,p){
-	var r=[],els=getEls(t,p),i=0;
-	for(;i<els.length;++i)if(els[i].hasClass&&els[i].hasClass(c))r.push(els[i]);
-	return r;
-}
 function getEvent(e){
 	return e?e:(window.event?window.event:"");
 }
