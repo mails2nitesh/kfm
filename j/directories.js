@@ -1,7 +1,7 @@
 // see license.txt for licensing
 function kfm_changeDirectory(id){
 	setTimeout('$clear(window.dragTrigger);',1);
-	var el=$(id),a,els=getElsWithClass('kfm_directory_open','td');
+	var el=$(id),a,els=$$('td.kfm_directory_open');
 	if(browser.isIE)while(el&&!el.node_id)el=el.parentNode;
 	kfm_cwd_name=el.kfm_directoryname;
 	kfm_cwd_id=el.node_id;

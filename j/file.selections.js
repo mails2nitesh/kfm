@@ -41,7 +41,7 @@ function kfm_file_dragFinish(e){
 	removeEvent(document,'mouseup',kfm_file_dragFinish);
 	if(kfm_directory_over)dir_over=kfm_directory_over;
 	else{ // workaround for Firefox which seems to have trouble with onmouseover for the directories while dragging
-		var a=kfm_getContainer(getMouseAt(e),getElsWithClass('kfm_directory_link','DIV'));
+		var a=kfm_getContainer(getMouseAt(e),$$('div.kfm_directory_link'));
 		dir_over=a?a.node_id:'.';
 	}
 	if(dir_over=='.'||dir_over==kfm_cwd_id)return;
@@ -94,7 +94,7 @@ function kfm_selectNone(){
 }
 function kfm_selectionCheck(){
 	if(selectedFiles.length==1){
-		getElsWithClass('kfm_panel_body','DIV',$('kfm_file_details_panel')).innerHTML='loading';
+		$E('#kfm_file_details_panel div.kfm_panel_body').innerHTML='loading';
 		kfm_run_delayed('file_details','if(selectedFiles.length==1)x_kfm_getFileDetails(selectedFiles[0],kfm_showFileDetails);');
 	}
 	else kfm_run_delayed('file_details','if(!selectedFiles.length)kfm_showFileDetails();');

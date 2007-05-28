@@ -273,7 +273,7 @@ function kfm_log(msg){
 		wrapper=$('kfm_logs_panel');
 	}
 	wrapper.visible=1;
-	var el=getElsWithClass('kfm_panel_body','DIV',$('kfm_logs_panel'))[0],p=newEl('p',0,0,msg);
+	var el=$E('#kfm_logs_panel div.kfm_panel_body'),p=newEl('p',0,0,msg);
 	if(msg.indexOf(kfm_lang.ErrorPrefix)==0)setCss(p,'background:#ff0;fontWeight:bold;color:red');
 	el.addEl(p);
 	el.scrollTop=el.scrollTop+p.offsetHeight;

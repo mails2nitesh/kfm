@@ -12,7 +12,7 @@ function kfm_tagDraw(id){
 		x_kfm_getTagName(id,kfm_tagDraw);
 		return newEl('span',0,'kfm_unknown_tag',id);
 	}
-	var name=id[1],id=id[0],els=getElsWithClass('kfm_unknown_tag','span');
+	var name=id[1],id=id[0],els=$ES('span.kfm_unknown_tag');
 	kfm_tags[id]=name;
 	for(var i=0;i<els.length;++i){
 		var el=els[i];

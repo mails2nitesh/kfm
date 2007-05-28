@@ -267,7 +267,7 @@ function kfm_showFileDetails(res){
 		kfm_addPanel('kfm_left_column','kfm_file_details_panel');
 		kfm_refreshPanels(el);
 	}
-	var body=getElsWithClass('kfm_panel_body','DIV',$('kfm_file_details_panel'))[0].empty();
+	var body=$E('#kfm_file_details_panel div.kfm_panel_body').empty();
 	if(!res){
 		body.innerHTML=kfm_lang.NoFilesSelected;
 		return;
