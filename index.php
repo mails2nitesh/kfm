@@ -93,6 +93,7 @@ require_once($kfm_base_path.'includes/kaejax.php');
 			var editable_extensions=["<?php echo join('","',$kfm_editable_extensions);?>"];
 			var viewable_extensions=["<?php echo join('","',$kfm_viewable_extensions);?>"];
 			var kfm_vars={
+				show_disabled_contextmenu_links:<?php echo $kfm_show_disabled_contextmenu_links; ?>,
 				permissions:{
 					del:<?php echo $kfm_allow_file_delete; ?>,
 					edit:<?php echo $kfm_allow_file_edit; ?>,

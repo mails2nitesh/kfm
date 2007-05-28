@@ -20,6 +20,7 @@ function kfm_createContextMenu(m,links){
 	if(!contextmenu){
 		window.contextmenu=newEl('table',0,'contextmenu',0,{
 			addLink:function(href,text,icon,disabled){
+				if(disabled && !kfm_vars.show_disabled_contextmenu_links)return;
 				var row=this.addRow();
 				if(disabled){
 					row.addClass('disabled');

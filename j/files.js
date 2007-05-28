@@ -98,6 +98,7 @@ function kfm_deleteFile(id){
 	}
 }
 function kfm_deleteSelectedFiles(){
+	if(!kfm_vars.permissions.del)return kfm_alert('permission denied: cannot delete files');
 	var names=[],m='';
 	if(selectedFiles.length>10){
 		for(var i=0;i<9;++i)names.push($('kfm_file_icon_'+selectedFiles[i]).kfm_attributes.name);
