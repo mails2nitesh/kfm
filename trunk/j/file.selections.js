@@ -32,7 +32,7 @@ function kfm_file_drag(e){
 	setCss(window.drag_wrapper,'display:block;left:'+x+'px;top:'+y+'px');
 }
 function kfm_file_dragFinish(e){
-	clearTimeout(window.dragTrigger);
+	$clear(window.dragTrigger);
 	if(!window.dragType||window.dragType!=1)return;
 	window.dragType=0;
 	delEl(window.drag_wrapper);
@@ -110,7 +110,7 @@ function kfm_selection_drag(e){
 	setCss(window.drag_wrapper,'display:block;left:'+x1+'px;top:'+y1+'px;width:'+(x2-x1)+'px;height:'+(y2-y1)+'px;zIndex:4');
 }
 function kfm_selection_dragFinish(e){
-	clearTimeout(window.dragSelectionTrigger);
+	$clear(window.dragSelectionTrigger);
 	if(!window.dragType||window.dragType!=2||!window.drag_wrapper)return;
 	var right_column=$('kfm_right_column'),p1=getMouseAt(e),p2=window.drag_wrapper.orig,offset=right_column.scrollTop;
 	var x1=p1.x>p2.x?p2.x:p1.x,x2=p2.x>p1.x?p2.x:p1.x,y1=p1.y>p2.y?p2.y:p1.y,y2=p2.y>p1.y?p2.y:p1.y;

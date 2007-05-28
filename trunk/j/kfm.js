@@ -286,7 +286,7 @@ function kfm_prompt(txt,val){
 }
 function kfm_run_delayed(name,call){
 	name=name+'_timeout';
-	if(window[name])clearTimeout(window[name]);
+	if(window[name])$clear(window[name]);
 	window[name]=setTimeout(call,500);
 }
 function kfm_shrinkName(name,wrapper,text,size,maxsize,extension){

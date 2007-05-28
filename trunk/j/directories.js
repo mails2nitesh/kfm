@@ -1,6 +1,6 @@
 // see license.txt for licensing
 function kfm_changeDirectory(id){
-	setTimeout('clearTimeout(window.dragTrigger);',1);
+	setTimeout('$clear(window.dragTrigger);',1);
 	var el=$(id),a,els=getElsWithClass('kfm_directory_open','td');
 	if(browser.isIE)while(el&&!el.node_id)el=el.parentNode;
 	kfm_cwd_name=el.kfm_directoryname;
@@ -61,7 +61,7 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 		return function(e){
 			if(e.button==2)return;
 			addEvent(document,'mouseup',kfm_dir_dragFinish);
-			clearTimeout(window.dragTrigger);
+			$clear(window.dragTrigger);
 			window.dragTrigger=setTimeout(function(){
 				kfm_dir_dragStart(id);
 			},100);
@@ -93,7 +93,7 @@ function kfm_dir_drag(e){
 	setCss(window.drag_wrapper,'display:block;left:'+(m.x+16)+'px;top:'+m.y+'px');
 }
 function kfm_dir_dragFinish(e){
-	clearTimeout(window.dragTrigger);
+	$clear(window.dragTrigger);
 	if(!window.dragType||window.dragType!=3)return;
 	window.dragType=0;
 	removeEvent(document,'mousemove',kfm_dir_drag);
