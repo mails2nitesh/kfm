@@ -49,6 +49,31 @@ class kfmDirectory extends Object{
 			$this->error('Directory could not be opened');
 		}
 	}
+	function getFiles(){
+
+		$this->handle=opendir($this->path);
+		if(!$this->handle)return $this->error('unable to open directory');
+		$q=$this->db->query("select * from ".$this->db_prefix."files where directory=".$this->id);
+		$filesdb=$q->fetchAll();
+		$fileshash=array();
+		if(is_array($filesdb))foreach($filesdb as $r)$fileshash[$r['name']]=$r['id'];
+		$files=array();
+		while(false!==($filename=readdir($this->handle)))if($filename[0]!='.'&&is_file($this->path.$filename)){
+			if(in_array(strtolower($filename),$GLOBALS['kfm_banned_files']))continue;
+			if(!isset($fileshash[$filename]))$fileshash[$filename]=kfm_add_file_to_db($filename,$rootid);
+			$file=new File($fileshash[$filename]);
+			if(!$file)continue;
+			if($file->isImage())$file=new Image($fileshash[$filename]);
+			$files[]=$file;
+			unset($fileshash[$filename]);
+		}
+		foreach($fileshash as $k=>$v){
+			// maybe this should happen in de constructor of the file
+			#	$f=new File($v);
+			#	$f->delete();
+		}
+		return $files;
+	}
 	function checkAddr($addr){
 		return (
 			strpos($addr,'..')===false&&

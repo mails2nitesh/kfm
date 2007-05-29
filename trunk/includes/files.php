@@ -150,6 +150,23 @@ function _getTextFile($fid){
 }
 function _loadFiles($rootid=1){
 	global $kfmdb,$kfm_db_prefix;
+	/*
+	$dir=new kfmDirectory($rootid);
+	$oFiles=$dir->getFiles();
+	if($dir->hasErrors())return $dir->getErrors();
+	$files=array();
+	foreach($oFiles as $file){
+		$aFile=array('name'=>$file->name, 'etc'=>$file->etc, 'image'=>false);
+		if($file->isImage()){
+			$aFile['image']=true;
+			$aFile['thumb_url']=$file->thumb_url;
+			$aFile['mimetype']=$file->mimetype;
+		}
+		$files[]=$aFile;
+	}
+	$root='/'.str_replace($GLOBALS['rootdir'],'',$dir->path);
+	return array('reqdir'=>$root,'files'=>$files,'uploads_allowed'=>$GLOBALS['kfm_allow_file_uploads']);
+	*/
 	$dirdata=kfm_getDirectoryDbInfo($rootid);
 	$reqdir=kfm_getDirectoryParents($rootid);
 	$root='/'.str_replace($GLOBALS['rootdir'],'',$reqdir);
