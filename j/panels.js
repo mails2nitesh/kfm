@@ -63,6 +63,7 @@ function kfm_createFileUploadPanel(){
 					allowed_filesize:99999999,	// large limit
 					allowed_filetypes:"*.*",
 					allowed_filetypes_description:kfm_lang.AllFiles,
+					upload_file_complete_callback:"swfu.upload_file_complete",
 					upload_file_queued_callback:"swfu.upload_file_queued",
 					upload_queue_complete_callback:'swfu.upload_queue_complete',
 					flash_loaded_callback:'swfu.flashLoaded',
@@ -70,6 +71,7 @@ function kfm_createFileUploadPanel(){
 				});
 				window.swfu.loadUI=function(){
 					var t=newEl('table'),r,c,inp1,inp2,instance=this;
+					t.style.width='100%';
 					r=t.addRow();
 					{ // browse button
 						c=r.addCell();
@@ -88,8 +90,17 @@ function kfm_createFileUploadPanel(){
 						addEvent(inp2,'click',function(){instance.upload()});
 						c.addEl(inp2);
 					}
+					{ // progress meter
+						c=r.addCell(1);
+						c.appendChild(new Element('div',{id:'kfm_file_upload_progress_meter',styles:{display:'block',background:'#00f',width:0,height:10}}));
+					}
 					$('kfm_uploadForm').empty().addEl(t);
 					instance.set_number_of_files(0);
+				}
+				window.swfu.upload_file_complete=function(){
+					window.swfu.number_uploaded++;
+					var meter=$('kfm_file_upload_progress_meter');
+					meter.setStyle('width',meter.parentNode.offsetWidth*(window.swfu.number_uploaded/window.swfu.number_of_files));
 				}
 				window.swfu.upload_file_queued=function(file,qlen){
 					window.swfu.set_number_of_files(qlen);
@@ -97,10 +108,12 @@ function kfm_createFileUploadPanel(){
 				window.swfu.upload_queue_complete=function(){
 					x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);
 					window.swfu.set_number_of_files(0);
+					$("kfm_file_upload_progress_meter").setStyle('width',0);
 				}
 				window.swfu.set_number_of_files=function(n){
 					$('kfm_files_to_upload').empty().addEl('Files to upload: '+n);
 					window.swfu.number_of_files=n;
+					window.swfu.number_uploaded=0;
 				}
 			}
 		}

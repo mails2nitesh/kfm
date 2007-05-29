@@ -1,16 +1,17 @@
 <?php
 # see license.txt for licensing
 include('initialise.php');
-$js='';
+$errors=array();
+	$errors[]='test';
 if($kfm_allow_file_upload){
 	$file=isset($_FILES['kfm_file'])?$_FILES['kfm_file']:$_FILES['Filedata'];
 	$filename=$file['name'];
 	$tmpname=$file['tmp_name'];
 	$to=$_SESSION['kfm']['currentdir'].'/'.$filename;
-	if(!kfm_checkAddr($to))$js='parent.kfm_log("error: banned extension in file name")'; # TODO new string
+	if(!kfm_checkAddr($to))$errors[]='banned extension in file name'; # TODO new string
 	else{
 		move_uploaded_file($tmpname,$to);
-		if(!file_exists($to))$js='parent.kfm_log("error: failure to save tmp file \"'.$tmpname.'\" to location \"'.$to.'\"")'; # TODO new string
+		if(!file_exists($to))$errors[]='failure to save tmp file "'.$tmpname.'" to location "'.$to.'"'; # TODO new string
 		else{
 			$fid=kfm_add_file_to_db($filename,$_SESSION['kfm']['cwd_id']);
 			$file=new File($fid);
@@ -35,6 +36,10 @@ if($kfm_allow_file_upload){
 				}
 				$file->setCaption($comment);
 			}
+			else if($kfm_only_allow_image_upload){
+				$errors[]='only images may be uploaded'; # TODO new string
+				$file->delete();
+			}
 			else if(isset($_POST['kfm_unzipWhenUploaded'])&&$_POST['kfm_unzipWhenUploaded']){
 				kfm_extractZippedFile($fid);
 				$file->delete();
@@ -42,13 +47,14 @@ if($kfm_allow_file_upload){
 		}
 	}
 }
-else $js='parent.kfm_log("error: permission denied for upload to this directory")'; # TODO new string
+else $errors[]='permission denied for upload to this directory'; # TODO new string
 ?>
 <html>
 	<head>
 		<script type="text/javascript">
 <?php
 if($_POST['onload'])echo $_POST['onload'];
+else if(count($errors))echo 'alert("'.addslashes(join("\n",$errors)).'")';
 else echo 'parent.x_kfm_loadFiles('.$_SESSION['kfm']['cwd_id'].',parent.kfm_refreshFiles);parent.kfm_dir_openNode('.$_SESSION['kfm']['cwd_id'].');'.$js;
 ?>
 		</script>
