@@ -1,29 +1,18 @@
 <?php
 function _createDirectory($parent,$name){
-	$dir = new kfmDirectory($parent);
+	global $kfm_allow_directory_create;
+	if(!$kfm_allow_directory_create)return 'error: permission denied: cannot create directory'; # TODO: new string
+	$dir=new kfmDirectory($parent);
 	$dir->createSubdir($name);
 	if($dir->hasErrors()) return $dir->getErrors();
 	return kfm_loadDirectories($parent);
 }
 function _deleteDirectory($id,$recursive=0){
-	$dir = new kfmDirectory($id);
+	global $kfm_allow_directory_delete;
+	if(!$kfm_allow_directory_delete)return 'error: permission denied: cannot delete directory'; # TODO: new string
+	$dir=new kfmDirectory($id);
 	$dir->delete();
 	if($dir->hasErrors()) return $dir->getErrors();
-	/*
-	$dirdata=_getDirectoryDbInfo($id);
-	$parent=$dirdata['parent'];
-	if(!count($dirdata))return array('type'=>'error','msg'=>4); # directory not in database
-	$abs_dir=_getDirectoryParents($id);
-	$directory=str_replace($GLOBALS['rootdir'],'',$abs_dir);
-	if(!kfm_checkAddr($directory))return array('type'=>'error','msg'=>1,'name'=>$directory); # illegal name
-	if(!$recursive){
-		$ok=1;
-		if($handle=opendir($abs_dir))while(false!==($file=readdir($handle)))if(strpos($file,'.')!==0)$ok=0;
-		if(!$ok)return array('type'=>'error','msg'=>2,'name'=>$directory,'id'=>$id); # directory not empty
-	}
-	kfm_rmdir($id);
-	if(file_exists($abs_dir))return array('type'=>'error','msg'=>3,'name'=>$directory); # failed to delete directory
-	*/
 	return kfm_loadDirectories($dir->pid);
 }
 function _getDirectoryDbInfo($id){
@@ -62,7 +51,9 @@ function _loadDirectories($pid){
 	return array('parent'=>$pid,'reqdir'=>$pdir,'directories'=>$directories,'properties'=>kfm_getDirectoryProperties($pdir.'/'));
 }
 function _moveDirectory($from,$to){
-	$dir = new kfmDirectory($from);
+	global $kfm_allow_directory_move;
+	if(!$kfm_allow_directory_move)return 'error: permission denied: cannot move directory'; # TODO: new string
+	$dir=new kfmDirectory($from);
 	$dir->moveTo($to);
 	if($dir->hasErrors()) return $dir->getErrors();
 	return _loadDirectories(1);
@@ -81,20 +72,11 @@ function _recursivelyRemoveDirectory($dir){
 	}
 }
 function _renameDirectory($fid,$newname){
+	global $kfm_allow_directory_edit;
+	if(!$kfm_allow_directory_edit)return 'error: permission denied: cannot edit directory'; # TODO: new string
 	$dir=new kfmDirectory($fid);
 	$dir->rename($newname);
 	if($dir->hasErrors())return $dir->getErrors();
-	/*
-	global $kfmdb,$kfm_db_prefix;
-	$dirdata=_getDirectoryDbInfo($fid);
-	$dir=_getDirectoryParents($dirdata['parent']);
-	$name=$dirdata['name'];
-	if(!file_exists($dir.$name))return;
-	if(!kfm_checkAddr($name)||!kfm_checkAddr($newname))return 'error: cannot rename "'.$name.'" to "'.$newname.'"'; # TODO: new string
-	if(file_exists($dir.$newname))return 'error: a directory of that name already exists'; # TODO: new string
-	rename($dir.$name,$dir.$newname);
-	$kfmdb->query("update ".$kfm_db_prefix."directories set name='".addslashes($newname)."' where id=".$fid);
-	*/
 	return _loadDirectories($dir->pid);
 }
 function _rmdir($pid){

@@ -26,9 +26,15 @@ require_once($kfm_base_path.'configuration.php');
 { # check for fatal errors
 	$m=array();
 	if(ini_get('safe_mode'))$m[]='KFM does not work if you have <code>safe_mode</code> enabled. This is not a bug - please see <a href="http://ie.php.net/features.safe-mode">PHP.net\'s safe_mode page</a> for details';
+	if(!isset($kfm_allow_directory_create))$m[]='missing <code>$kfm_allow_directory_create</code> variable';
+	if(!isset($kfm_allow_directory_delete))$m[]='missing <code>$kfm_allow_directory_delete</code> variable';
+	if(!isset($kfm_allow_directory_edit))$m[]='missing <code>$kfm_allow_directory_edit</code> variable';
+	if(!isset($kfm_allow_directory_move))$m[]='missing <code>$kfm_allow_directory_move</code> variable';
+	if(!isset($kfm_allow_file_create))$m[]='missing <code>$kfm_allow_file_create</code> variable';
 	if(!isset($kfm_allow_file_delete))$m[]='missing <code>$kfm_allow_file_delete</code> variable';
 	if(!isset($kfm_allow_file_edit))$m[]='missing <code>$kfm_allow_file_edit</code> variable';
 	if(!isset($kfm_allow_file_move))$m[]='missing <code>$kfm_allow_file_move</code> variable';
+	if(!isset($kfm_allow_file_upload))$m[]='missing <code>$kfm_allow_file_upload</code> variable';
 	if(!isset($kfm_show_disabled_contextmenu_links))$m[]='missing <code>$kfm_show_disabled_contextmenu_links</code> variable';
 	if(count($m)){
 		echo '<html><body><p>There are errors in your configuration or server. If the messages below describe missing variables, please check the supplied <code>configuration.php.dist</code> for notes on their usage.</p><ul>';

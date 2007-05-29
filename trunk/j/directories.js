@@ -10,10 +10,12 @@ function kfm_changeDirectory(id){
 	setTimeout('x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);x_kfm_loadDirectories(kfm_cwd_id,kfm_refreshDirectories);',20);
 }
 function kfm_createDirectory(id){
+	if(!kfm_vars.permissions.dir.mk)return kfm_alert('permission denied: cannot create directory');
 	var newName=kfm_prompt(kfm_lang.CreateDirMessage(kfm_directories[id].pathname),kfm_lang.NewDirectory);
 	if(newName&&newName!=''&&!/\/|^\./.test(newName))x_kfm_createDirectory(id,newName,kfm_refreshDirectories);
 }
 function kfm_deleteDirectory(id){
+	if(!kfm_vars.permissions.dir.rm)return kfm_alert('permission denied: cannot delete directory');
 	if(kfm_confirm(kfm_lang.DelDirMessage(kfm_directories[id].pathname)))x_kfm_deleteDirectory(id,kfm_deleteDirectoryCheck);
 }
 function kfm_deleteDirectoryCheck(res){
@@ -39,9 +41,9 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 		node_id:parent,
 		contextmenu:function(e){
 			var links=[],i,node_id=this.node_id;
-			links.push(['kfm_renameDirectory("'+node_id+'")',kfm_lang.RenameDir]);
-			links.push(['kfm_createDirectory("'+node_id+'")',kfm_lang.CreateSubDir,'folder_new']);
-			if(node_id!=1)links.push(['kfm_deleteDirectory("'+node_id+'")',kfm_lang.DeleteDir,'remove']);
+			links.push(['kfm_renameDirectory("'+node_id+'")',kfm_lang.RenameDir,'',!kfm_vars.permissions.dir.ed]);
+			links.push(['kfm_createDirectory("'+node_id+'")',kfm_lang.CreateSubDir,'folder_new',!kfm_vars.permissions.dir.mk]);
+			if(node_id!=1)links.push(['kfm_deleteDirectory("'+node_id+'")',kfm_lang.DeleteDir,'remove',!kfm_vars.permissions.dir.rm]);
 			kfm_createContextMenu(getMouseAt(getEvent(e)),links);
 		}
 	}),'cursor:'+(Browser.isIE?'hand':'pointer'));
@@ -103,6 +105,7 @@ function kfm_dir_dragFinish(e){
 	window.drag_wrapper=null;
 	dir_to=kfm_directory_over;
 	if(dir_to==0||dir_to==dir_from)return;
+	if(!kfm_vars.permissions.dir.mv)return kfm_alert('permission denied: cannot move directory');
 	x_kfm_moveDirectory(dir_from,dir_to,kfm_refreshDirectories);
 	kfm_selectNone();
 }

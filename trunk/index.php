@@ -95,9 +95,18 @@ require_once($kfm_base_path.'includes/kaejax.php');
 			var kfm_vars={
 				show_disabled_contextmenu_links:<?php echo $kfm_show_disabled_contextmenu_links; ?>,
 				permissions:{
-					del:<?php echo $kfm_allow_file_delete; ?>,
-					edit:<?php echo $kfm_allow_file_edit; ?>,
-					move:<?php echo $kfm_allow_file_move; ?>
+					dir:{
+						ed:<?php echo $kfm_allow_directory_edit; ?>,
+						mk:<?php echo $kfm_allow_directory_create; ?>,
+		   				mv:<?php echo $kfm_allow_directory_move; ?>,
+						rm:<?php echo $kfm_allow_directory_delete; ?>
+					},
+					file:{
+						rm:<?php echo $kfm_allow_file_delete; ?>,
+						ed:<?php echo $kfm_allow_file_edit; ?>,
+		   				mk:<?php echo $kfm_allow_file_create; ?>,
+		   				mv:<?php echo $kfm_allow_file_move; ?>
+					}
 				}
 			};
 		</script>
