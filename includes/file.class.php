@@ -8,6 +8,7 @@ class File extends Object{
 	var $mimetype='';
 	var $size=0;
 	var $type;
+	var $writable=false;
 	function File(){
 		global $kfmdb,$kfm_db_prefix;
 		if(func_num_args()==1){
@@ -22,6 +23,7 @@ class File extends Object{
 				$this->error('File cannot be found');
 				return false;
 			}
+			$this->writable=$this->isWritable();
 			$mimetype=get_mimetype($this->path);
 			$pos=strpos($mimetype,';');
 			$this->mimetype=($pos===false)?$mimetype:substr($mimetype,0,$pos);
@@ -120,6 +122,12 @@ class File extends Object{
 		$format=array("B","KB","MB","GB","TB","PB","EB","ZB","YB");
 		$n=floor(log($size)/log(1024));
 		return round($size/pow(1024,$n),1).' '.$format[$n];
+	}
+	function addToDB($filename, $directory_id){
+		global $kfmdb,$kfm_db_prefix;
+		$sql="insert into ".$kfm_db_prefix."files (name,directory) values('".addslashes($filename)."',".$directory_id.")";
+		$q=$kfmdb->query($sql);
+		return $kfmdb->lastInsertId($kfm_db_prefix.'files','id');
 	}
 }
 ?>
