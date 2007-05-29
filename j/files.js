@@ -10,33 +10,33 @@ var kfm_file_bits={
 		{ // add the links
 			if(selectedFiles.length>1){
 				if(!Browser.isIE)links.push(['kfm_downloadSelectedFiles()','download selected files']); // IE can't handle this...
-				links.push(['kfm_deleteSelectedFiles()',kfm_lang.DeleteFile,'remove',!kfm_vars.permissions.del]);
+				links.push(['kfm_deleteSelectedFiles()',kfm_lang.DeleteFile,'remove',!kfm_vars.permissions.file.rm]);
 				var imgs=[];
 				for(var i=0;i<selectedFiles.length;++i)if($('kfm_file_icon_'+selectedFiles[i]).kfm_attributes.width)imgs.push(selectedFiles[i]);
 				if(imgs.length)links.push(['kfm_img_startLightbox(['+imgs.join(',')+'])','view slideshow']);
 			}
 			else{
 				links.push(['kfm_downloadSelectedFiles('+id+')','download file']);
-				links.push(['kfm_deleteFile('+id+')',kfm_lang.DeleteFile,'remove',!kfm_vars.permissions.del]);
-				links.push(['kfm_renameFile('+id+')',kfm_lang.RenameFile,'edit']);
+				links.push(['kfm_deleteFile('+id+')',kfm_lang.DeleteFile,'remove',!kfm_vars.permissions.file.rm]);
+				links.push(['kfm_renameFile('+id+')',kfm_lang.RenameFile,'edit',!kfm_vars.permissions.file.ed]);
 				if(this.kfm_attributes.width){
 					if(writable){
-						links.push(['kfm_rotateImage('+id+',270)',kfm_lang.RotateClockwise,'rotate_cw']);
-						links.push(['kfm_rotateImage('+id+',90)',kfm_lang.RotateAntiClockwise,'rotate_ccw']);
-						links.push(['kfm_resizeImage('+id+')',kfm_lang.ResizeImage,'resize_image']);
+						links.push(['kfm_rotateImage('+id+',270)',kfm_lang.RotateClockwise,'rotate_cw',!kfm_vars.permissions.file.ed]);
+						links.push(['kfm_rotateImage('+id+',90)',kfm_lang.RotateAntiClockwise,'rotate_ccw',!kfm_vars.permissions.file.ed]);
+						links.push(['kfm_resizeImage('+id+')',kfm_lang.ResizeImage,'resize_image',!kfm_vars.permissions.file.ed]);
 					}
 					links.push(['kfm_img_startLightbox('+id+')',kfm_lang.ViewImage]);
 					links.push(['kfm_returnThumbnail('+id+')',kfm_lang.ReturnThumbnailToOpener]);
-					links.push(['kfm_changeCaption('+id+')',kfm_lang.ChangeCaption,'edit']);
+					links.push(['kfm_changeCaption('+id+')',kfm_lang.ChangeCaption,'edit',!kfm_vars.permissions.file.ed]);
 				}
-				if(kfm_inArray(extension,['zip']))links.push(['kfm_extractZippedFile("'+id+'")',kfm_lang.ExtractZippedFile,'extract_zip']);
+				if(kfm_inArray(extension,['zip']))links.push(['kfm_extractZippedFile("'+id+'")',kfm_lang.ExtractZippedFile,'extract_zip',!kfm_vars.permissions.file.mk]);
 				if(kfm_inArray(extension,viewable_extensions)){
 					links.push(['x_kfm_viewTextFile('+id+',kfm_viewTextFile)','view','edit']);
-					if(writable&&kfm_inArray(extension,editable_extensions))links.push(['x_kfm_getTextFile("'+id+'",kfm_showTextFile)',kfm_lang.EditTextFile,'edit',!kfm_vars.permissions.edit]);
+					if(writable&&kfm_inArray(extension,editable_extensions))links.push(['x_kfm_getTextFile("'+id+'",kfm_showTextFile)',kfm_lang.EditTextFile,'edit',!kfm_vars.permissions.file.ed]);
 				}
 			}
-			links.push(['kfm_tagAdd('+id+')',kfm_lang.AddTagsToFiles,'add_tags']);
-			links.push(['kfm_tagRemove('+id+')',kfm_lang.RemoveTagsFromFiles]);
+			links.push(['kfm_tagAdd('+id+')',kfm_lang.AddTagsToFiles,'add_tags',!kfm_vars.permissions.file.ed]);
+			links.push(['kfm_tagRemove('+id+')',kfm_lang.RemoveTagsFromFiles,'',!kfm_vars.permissions.file.ed]);
 			kfm_createContextMenu(getMouseAt(getEvent(e)),links);
 		}
 	},
@@ -90,7 +90,7 @@ function kfm_buildFileDetailsTable(res){
 	return table;
 }
 function kfm_deleteFile(id){
-	if(!kfm_vars.permissions.del)return kfm_alert(kfm_lang.PermissionDeniedCannotDeleteFile);
+	if(!kfm_vars.permissions.file.rm)return kfm_alert(kfm_lang.PermissionDeniedCannotDeleteFile);
 	var filename=$('kfm_file_icon_'+id).kfm_attributes.name;
 	if(kfm_confirm(kfm_lang.DelFileMessage(filename))){
 		kfm_filesCache[filename]=null;
@@ -98,7 +98,7 @@ function kfm_deleteFile(id){
 	}
 }
 function kfm_deleteSelectedFiles(){
-	if(!kfm_vars.permissions.del)return kfm_alert('permission denied: cannot delete files');
+	if(!kfm_vars.permissions.file.rm)return kfm_alert('permission denied: cannot delete files');
 	var names=[],m='';
 	if(selectedFiles.length>10){
 		for(var i=0;i<9;++i)names.push($('kfm_file_icon_'+selectedFiles[i]).kfm_attributes.name);

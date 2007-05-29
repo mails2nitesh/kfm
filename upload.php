@@ -2,7 +2,7 @@
 # see license.txt for licensing
 include('initialise.php');
 $js='';
-if($kfm_allow_file_uploads){
+if($kfm_allow_file_upload){
 	$file=isset($_FILES['kfm_file'])?$_FILES['kfm_file']:$_FILES['Filedata'];
 	$filename=$file['name'];
 	$tmpname=$file['tmp_name'];

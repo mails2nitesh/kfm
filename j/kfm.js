@@ -67,9 +67,9 @@ function kfm(){
 		});
 		right_column.contextmenu=function(e){
 			var links=[],i;
-			links.push(['kfm_createEmptyFile()',kfm_lang.CreateEmptyFile,'filenew']);
-			if(selectedFiles.length>1)links.push(['kfm_renameFiles()',kfm_lang.RenameFile,'edit']);
-			if(selectedFiles.length>1)links.push(['kfm_zip()','zip up files']);
+			links.push(['kfm_createEmptyFile()',kfm_lang.CreateEmptyFile,'filenew',!kfm_vars.permissions.file.mk]);
+			if(selectedFiles.length>1)links.push(['kfm_renameFiles()',kfm_lang.RenameFile,'edit',!kfm_vars.permissions.file.ed]);
+			if(selectedFiles.length>1)links.push(['kfm_zip()','zip up files','',!kfm_vars.permissions.file.mk]); // TODO: new string
 			if(selectedFiles.length!=$('kfm_right_column').fileids.length)links.push(['kfm_selectAll()',kfm_lang.SelectAll,'ark_selectall']);
 			if(selectedFiles.length){ // select none, invert selection
 				links.push(['kfm_selectNone()',kfm_lang.SelectNone,'select_none']);

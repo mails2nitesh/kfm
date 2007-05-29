@@ -38,17 +38,6 @@ class kfmDirectory extends Object{
 		$sql="INSERT INTO ".$this->db_prefix."directories (name,parent) VALUES('".addslashes($name)."',".$this->id.")";
 		return $this->db->exec($sql);
 	}
-	function hasSubdirs(){
-		$this->handle=opendir($this->path);
-		if($this->handle){
-			while(false!==($file=readdir($this->handle))){
-				if($file[0]!=='.' && is_dir($this->path.$file)) return true;
-			}
-			return false;
-		}else{
-			$this->error('Directory could not be opened');
-		}
-	}
 	function getFiles(){
 
 		$this->handle=opendir($this->path);
@@ -74,6 +63,17 @@ class kfmDirectory extends Object{
 		}
 		return $files;
 	}
+	function hasSubdirs(){
+		$this->handle=opendir($this->path);
+		if($this->handle){
+			while(false!==($file=readdir($this->handle))){
+				if($file[0]!=='.' && is_dir($this->path.$file)) return true;
+			}
+			return false;
+		}else{
+			$this->error('Directory could not be opened');
+		}
+	}
 	function checkAddr($addr){
 		return (
 			strpos($addr,'..')===false&&
@@ -81,28 +81,29 @@ class kfmDirectory extends Object{
 			strpos($addr,'/.')===false);
 	}
 	function createSubdir($name){
-			$short_version=str_replace($GLOBALS['rootdir'],'',$this->path);
-			$physical_address=$this->path.$name;
-			if(!$this->checkAddr($physical_address)){ $this->error('illegal directory name "'.$short_version.'"'); return false;} # TODO: new string
-			if(file_exists($physical_address)){$this->error('a directory named "'.$short_version.'" already exists'); return false;}# TODO: new string
-			
-			mkdir($physical_address);
-			if(!file_exists($physical_address)){$this->error('failed to create directory "'.$short_version.'". please check permissions'); return false;} # TODO: new string
-			return $this->addSubdirToDB($name);
+		if(!$GLOBALS['kfm_allow_directory_create'])return $this->error('permission denied: cannot create directory'); # TODO: new string
+		$short_version=str_replace($GLOBALS['rootdir'],'',$this->path);
+		$physical_address=$this->path.$name;
+		if(!$this->checkAddr($physical_address)){ $this->error('illegal directory name "'.$short_version.'"'); return false;} # TODO: new string
+		if(file_exists($physical_address)){$this->error('a directory named "'.$short_version.'" already exists'); return false;}# TODO: new string
+		mkdir($physical_address);
+		if(!file_exists($physical_address)){$this->error('failed to create directory "'.$short_version.'". please check permissions'); return false;} # TODO: new string
+		return $this->addSubdirToDB($name);
 	}
 	function rename($newname){
+		global $kfm_allow_directory_edit;
+		if(!$GLOBALS['kfm_allow_directory_edit'])return $this->error('permission denied: cannot edit directory'); # TODO: new string
 		if(!$this->isWritable())return $this->error('cannot rename "'.$this->name.'". No rights'); # TODO: new string
 		if(!$this->checkAddr($newname))return $this->error('cannot rename "'.$this->name.'" to "'.$newname.'"'); # TODO: new string
 		$parent=new kfmDirectory($this->pid);
 		if(file_exists($parent->path.$newname))return $this->error('a directory of that name already exists'); # TODO: new string
 		rename($this->path,$parent->path.$newname);
 		if(!file_exists($parent->path.$newname))return $this->error('failed to rename directory'); # TODO: new string
-		
 		$this->db->query("update ".$this->db_prefix."directories set name='".addslashes($newname)."' where id=".$this->id);
 	}
 	function moveTo($newParent){
+		if(!$GLOBALS['kfm_allow_directory_move'])return $this->error('permission denied: cannot move directory'); # TODO: new string
 		if(is_numeric($newParent)) $newParent = new kfmDirectory($newParent);
-		//unset($_GLOBALS['cache_directories'][$this->id]); //I don't know the use of this, but gives problems
 		if(strpos($newParent->path,$this->path)===0) return $this->error('cannot move a directory into its own sub-directory');# TODO: new string 
 		if(file_exists($newParent->path.$this->name))return $this->error($newParent->path.$this->name.' already exists'); # TODO: new string
 		if(!$newParent->isWritable()) return $this->error($newParent->path.' is not writable'); #TODO: new string
@@ -114,6 +115,7 @@ class kfmDirectory extends Object{
 		return is_writable($this->path);	
 	}
 	function delete(){
+		if(!$GLOBALS['kfm_allow_directory_delete'])return $this->error('permission denied: cannot delete directory'); # TODO: new string
 		$q=$this->db->query("select id from ".$this->db_prefix."files where directory=".$this->id);
 		$files=$q->fetchAll();
 		foreach($files as $r){

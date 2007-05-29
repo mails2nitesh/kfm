@@ -18,7 +18,7 @@
 			break;
 		}
 		case 2: { # same as ../config.php, but read-only
-			$kfm_allow_file_uploads=1;
+			$kfm_allow_file_upload=1;
 			break;
 		}
 		default:{
