@@ -80,11 +80,11 @@ function kfm_removeFromSelection(id){
 function kfm_selectAll(){
 	kfm_selectNone();
 	var a,b=$('kfm_right_column').fileids;
-	for(a=0;a<b.length;++b)kfm_addToSelection(b[a]);
+	for(a=0;a<b.length;++a)kfm_addToSelection(b[a]);
 }
 function kfm_selectInvert(){
 	var a,b=$('kfm_right_column').fileids;
-	for(a=0;a<b.length;++b)if(kfm_isFileSelected(b[a]))kfm_removeFromSelection(b[a]);
+	for(a=0;a<b.length;++a)if(kfm_isFileSelected(b[a]))kfm_removeFromSelection(b[a]);
 	else kfm_addToSelection(b[a]);
 }
 function kfm_selectNone(){
