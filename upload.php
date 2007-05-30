@@ -2,7 +2,6 @@
 # see license.txt for licensing
 include('initialise.php');
 $errors=array();
-	$errors[]='test';
 if($kfm_allow_file_upload){
 	$file=isset($_FILES['kfm_file'])?$_FILES['kfm_file']:$_FILES['Filedata'];
 	$filename=$file['name'];
@@ -12,10 +11,14 @@ if($kfm_allow_file_upload){
 	else{
 		move_uploaded_file($tmpname,$to);
 		if(!file_exists($to))$errors[]='failure to save tmp file "'.$tmpname.'" to location "'.$to.'"'; # TODO new string
+		else if($kfm_only_allow_image_upload && !getimagesize($to)){
+			$errors[]='only images may be uploaded';
+			unlink($to);
+		}
 		else{
+			$imgtype=exif_imagetype($to);
 			$fid=kfm_add_file_to_db($filename,$_SESSION['kfm']['cwd_id']);
 			$file=new File($fid);
-			$imgtype=exif_imagetype($to);
 			if($imgtype){
 				$comment='';
 				if($imgtype==1){ # gif
@@ -35,10 +38,6 @@ if($kfm_allow_file_upload){
 					if(is_array($data)&&isset($data['COMMENT'])&&is_array($data['COMMENT']))$comment=join("\n",$data['COMMENT']);
 				}
 				$file->setCaption($comment);
-			}
-			else if($kfm_only_allow_image_upload){
-				$errors[]='only images may be uploaded'; # TODO new string
-				$file->delete();
 			}
 			else if(isset($_POST['kfm_unzipWhenUploaded'])&&$_POST['kfm_unzipWhenUploaded']){
 				kfm_extractZippedFile($fid);

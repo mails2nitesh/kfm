@@ -92,6 +92,10 @@ $kfm_editable_extensions=array('css','html','js','txt','xhtml','xml');
 # the contents of $kfm_editable_extensions will be added automatically.
 $kfm_viewable_extensions=array('sql','php');
 
+# 1 = users can only upload images
+# 0 = don't restrict the types of uploadable file
+$kfm_only_allow_image_upload=0;
+
 # 0 = only errors will be logged
 # 1 = everything will be logged
 $kfm_log_level=0;
