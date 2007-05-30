@@ -71,7 +71,7 @@ function kfm_removeFromSelection(id){
 	for(i=0;i<selectedFiles.length;++i){
 		if(selectedFiles[i]==id){
 			var el=$('kfm_file_icon_'+id);
-			if(el)el.delClass('selected');
+			if(el)el.removeClass('selected');
 			kfm_selectionCheck();
 			return selectedFiles.splice(i,1);
 		}
@@ -88,8 +88,9 @@ function kfm_selectInvert(){
 	else kfm_addToSelection(b[a]);
 }
 function kfm_selectNone(){
-	if(kfm_lastClicked)$('kfm_file_icon_'+kfm_lastClicked).delClass('last_clicked');
+	if(kfm_lastClicked)$('kfm_file_icon_'+kfm_lastClicked).removeClass('last_clicked');
 	for(var i=selectedFiles.length;i>-1;--i)kfm_removeFromSelection(selectedFiles[i]);
+	kfm_lastClicked=0;
 	kfm_selectionCheck();
 }
 function kfm_selectionCheck(){
@@ -199,7 +200,7 @@ function kfm_toggleSelectedFile(e){
 			kfm_addToSelection(id);
 		}
 	}
-	if(kfm_lastClicked)$('kfm_file_icon_'+kfm_lastClicked).delClass('last_clicked');
+	if(kfm_lastClicked)$('kfm_file_icon_'+kfm_lastClicked).removeClass('last_clicked');
 	kfm_lastClicked=id;
 	$('kfm_file_icon_'+id).addClass('last_clicked');
 }

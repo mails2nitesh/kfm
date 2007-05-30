@@ -1,7 +1,7 @@
 KFM - Kae's File Manager
-version 0.7
 
-LICENSE
+LICENSE and VERSION
+see version.txt for version
 see license.txt for licensing
 
 INSTALLATION
@@ -12,3 +12,6 @@ http://kfm.verens.com/
 
 BUGS AND FEATURES
 http://mantis.verens.com/
+
+FORUM
+http://kfm.verens.com/phpBB3/

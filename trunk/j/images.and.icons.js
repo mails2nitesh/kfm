@@ -105,6 +105,7 @@ function kfm_returnThumbnail(id){
 function kfm_rotateImage(id,direction){
 	kfm_filesCache[id]=null;
 	x_kfm_rotateImage(id,direction,function(id){
+		if(id.toString()===id)return kfm_log(id);
 		$('kfm_file_icon_'+id).style.backgroundImage='url(get.php?id='+id+'&width=64&height=64&r'+Math.random()+')';
 	});
 }

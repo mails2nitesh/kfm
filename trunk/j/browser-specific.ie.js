@@ -24,7 +24,7 @@ function newEl(t,id,cn,chld,vals,css){
 		el.name=id;
 	}
 	kfm_addMethods(el);
-	if(cn)el.setClass(cn);
+	if(cn)el.className=cn;
 	if(chld)el.addEl(chld);
 	if(vals)$extend(el,vals);
 	if(css)setCss(el,css);
