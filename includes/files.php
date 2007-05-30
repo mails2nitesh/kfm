@@ -271,7 +271,7 @@ function _rm($id,$dontLoadFiles=false){
 		$ret=$file->delete();
 		if(!$ret)return $file->getErrors();
 	}
-	if(!$dontLoadFiles)return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
+	if(!$dontLoadFiles)return $id;
 }
 function _saveTextFile($fid,$text){
 	if(!$GLOBALS['kfm_allow_file_edit'])return 'error: permission denied: cannot edit file'; # TODO: new string

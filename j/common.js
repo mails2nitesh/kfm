@@ -109,7 +109,7 @@ function newEl(t,id,cn,chld,vals,css){
 	}
 	kfm_addMethods(el);
 	if(chld)el.addEl(chld);
-	if(cn)el.setClass(cn);
+	if(cn)el.className=cn;
 	if(vals)$extend(el,vals);
 	if(css)setCss(el,css);
 	return el;
@@ -141,7 +141,7 @@ function newInput(n,t,v,cl){
 		if(t=='checkbox')$extend(b,{checked:'checked',defaultChecked:'checked'});
 		else if(t!='datetime')b.value=v;
 	}
-	b.setClass(cl);
+	b.className=cl;
 	return b;
 }
 function newLink(h,t,id,c,title){

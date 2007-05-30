@@ -96,11 +96,8 @@ var kfm_elMethods={
 		var f=kfm_addMethods(this.insertCell(b));
 		if(c)f.colSpan=c;
 		if(d)f.addEl(d);
-		if(e)f.setClass(e);
+		if(e)f.className=e;
 		return f;
-	},
-	addClass:function(c){
-		this.setClass(this.getClass()+' '+c);
 	},
 	addEl:function(a){
 		if(!a)return this;
@@ -114,45 +111,27 @@ var kfm_elMethods={
 	addRow:function(p,c){
 		var o=this.insertRow(p===parseInt(p)?p:this.rows.length);
 		kfm_addMethods(o);
-		o.setClass(c);
+		o.className=c;
 		return o;
 	},
 	contextmenu:function(e){},
 	contextmenu_real:function(e){this.contextmenu(e)},
-	delClass:function(n){
-		var i,d=[],c=this.getClass().split(" ");
-		if($type(n)=='array'){
-			for(i=0;i<n.length;++i)this.delClass(n[i]);
-			return;
-		}
-		for(i=0;i<c.length;++i)if(c[i]!=n)d.push(c[i]);
-		this.setClass(d.join(" "));
-	},
 	empty:function(){
 		while(this.childNodes&&this.childNodes.length)delEl(this.childNodes[0]);
 		return this;
 	},
 	getClass:function(){return this.className?this.className:''},
-	hasClass:function(c){return new RegExp('(\\s|^)'+c+'(\\s|$)').test(this.className)},
-	setClass:function(c,u){
-		this.className=c?c:'';
-		if(!u)return;
-		if(kfm_unique_classes[c])kfm_unique_classes[c].delClass(c);
-		kfm_unique_classes[c]=this;
-	}
+	hasClass:function(c){return new RegExp('(\\s|^)'+c+'(\\s|$)').test(this.className)}
 };
 function kfm_addMethods(el){
 	$extend(el,{
 		addCell:kfm_elMethods.addCell,
-		addClass:kfm_elMethods.addClass,
 		addEl:kfm_elMethods.addEl,
 		addRow:kfm_elMethods.addRow,
 		contextmenu:kfm_elMethods.contextmenu,
-		delClass:kfm_elMethods.delClass,
 		empty:kfm_elMethods.empty,
 		getClass:kfm_elMethods.getClass,
-		hasClass:kfm_elMethods.hasClass,
-		setClass:kfm_elMethods.setClass
+		hasClass:kfm_elMethods.hasClass
 	});
 	addEvent(el,'contextmenu',kfm_elMethods.contextmenu_real);
 	return el;
