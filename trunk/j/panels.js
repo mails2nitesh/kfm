@@ -75,6 +75,7 @@ function kfm_createFileUploadPanel(){
 					r=t.addRow();
 					{ // browse button
 						c=r.addCell();
+						c.style.width='10%';
 						inp1=newInput('kfm_multiChooseFile','button',kfm_lang.Browse);
 						addEvent(inp1,'click',function(){instance.browse()});
 						c.addEl(inp1);
