@@ -180,7 +180,7 @@ function kfm_incrementalFileDisplay(){
 	{ // file attributes
 		el.kfm_attributes=fdata;
 		if(fdata.width){
-			var url='get.php?id='+id+'&width=64&height=64';
+			var url='get.php?id='+id+'&width=64&height=64&r'+Math.random();
 			var img=setCss(newImg(url),'width:1px;height:1px');
 			img.onload=function(){
 				var p=this.parentNode;
@@ -222,12 +222,10 @@ function kfm_refreshFiles(res){
 	if(!res)return;
 	if(res.toString()===res)return kfm_log(res);
 	window.kfm_incrementalFileDisplay_vars={at:0,data:res};
-	var a,b,fileids=[],wrapper=$('kfm_right_column').empty();
-	wrapper.contentMode='file_icons';
+	var a=0,wrapper=$('kfm_right_column').empty();
+	$extend(wrapper,{contentMode:'file_icons',fileids:[],files:[]});
 	wrapper.addEl(newEl('div',0,'kfm_panel_header',kfm_lang.CurrentWorkingDir(res.reqdir)));
-	for(var a=0;a<res.files.length;++a)fileids[a]=res.files[a].id;
-	wrapper.fileids=fileids;
-	wrapper.files=[];
+	for(;a<res.files.length;++a)wrapper.fileids[a]=res.files[a].id;
 	document.title=res.reqdir;
 	kfm_lastClicked=null;
 	kfm_log(kfm_lang.FilesRefreshed);
