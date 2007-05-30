@@ -17,7 +17,7 @@ function _resizeImage($fid,$width,$height){
 function _rotateImage($fid,$direction){
 	$im = new Image($fid);
 	$im->rotate($direction);
-	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
+	return $fid;
 }
 function _setCaption($fid,$caption){
 	

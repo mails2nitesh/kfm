@@ -147,7 +147,7 @@ function kfm_createPanel(title,id,subels,vars){
 		addRestoreButton:function(){this.addButton('restorePanel','','r',kfm_lang.Restore)},
 		addButton:function(f,p,b,t){
 			if(this.abilities==-1)return;
-			$E('div.kfm_panel_header',this).addEl(
+			this.childNodes[0].addEl(
 				newLink('javascript:kfm_'+f+'("'+this.parentNode.id+'","'+this.id+'"'+p+')','['+b+']',0,'kfm_panel_header_'+b,t)
 			);
 		}
@@ -211,7 +211,8 @@ function kfm_refreshPanels(wrapper){
 		if(kfm_inArray(el.id,kfm_hidden_panels))el.visible=false;
 		if(el.id=='kfm_file_upload_panel')el.visible=kfm_directories[kfm_cwd_id].is_writable;
 		if(el.visible){
-			el.minheight=$E('div.kfm_panel_header',setCss(el,'display:block')).offsetHeight;
+			setCss(el,'display:block');
+			el.minheight=el.childNodes[0].offsetHeight;
 			minheight+=el.minheight;
 			switch(el.state){
 				case 0: minimised[minimised.length]=ps[i]; break;
@@ -227,8 +228,8 @@ function kfm_refreshPanels(wrapper){
 	for(i=0;i<minimised.length;++i){
 		var n=minimised[i];
 		var el=$(n);
-		setCss($E('div.kfm_panel_body',el),'display:none');
-		var head=$E('div.kfm_panel_header',el).empty(),els=[];
+		setCss(el.childNodes[1],'display:none');
+		var head=el.childNodes[0].empty(),els=[];
 		if(wrapper.panels_unlocked){
 			el.addCloseButton();
 			el.addMaxButton();
@@ -240,10 +241,10 @@ function kfm_refreshPanels(wrapper){
 	}
 	for(i=0;i<fixed_height.length;++i){
 		var n=fixed_height[i];
-		var el=$(n)
-		setCss($E('div.kfm_panel_body',el),'height:'+el.height+'px;display:block');
+		var el=$(n);
+		setCss(el.childNodes[1],'height:'+el.height+'px;display:block');
 		minheight+=el.height;
-		var head=$E('div.kfm_panel_header',el).empty(),els=[];
+		var head=el.childNodes[0].empty(),els=[];
 		if(wrapper.panels_unlocked){
 			el.addCloseButton();
 			el.addMaxButton();
@@ -256,9 +257,9 @@ function kfm_refreshPanels(wrapper){
 	}
 	for(i=0;i<fixed_height_maxed.length;++i){
 		var n=fixed_height_maxed[i];
-		var el=$(n),body=setCss($E('div.kfm_panel_body',el),'height:auto;display:block');
+		var el=$(n),body=setCss(el.childNodes[1],'height:auto;display:block');
 		minheight+=body.offsetHeight;
-		var head=$E('div.kfm_panel_header',el).empty(),els=[];
+		var head=el.childNodes[0].empty(),els=[];
 		if(wrapper.panels_unlocked){
 			el.addCloseButton();
 			el.addMinButton();
@@ -272,8 +273,8 @@ function kfm_refreshPanels(wrapper){
 	for(i=0;i<maximised.length;++i){
 		var n=maximised[i];
 		var el=$(n);
-		setCss($E('div.kfm_panel_body',el),'height:'+size+'px;display:block');
-		var head=$E('div.kfm_panel_header',el).empty(),els=[];
+		setCss(el.childNodes[1],'height:'+size+'px;display:block');
+		var head=el.childNodes[0].empty(),els=[];
 		if(wrapper.panels_unlocked){
 			el.addCloseButton();
 			el.addRestoreButton();
@@ -286,7 +287,7 @@ function kfm_refreshPanels(wrapper){
 	}
 	{ // fix order of panels
 		do{
-			var els=$ES('div.kfm_panel',wrapper),arr=[],found=0,prev=0;
+			var els=wrapper.childNodes,arr=[],found=0,prev=0;
 			for(var i=0;i<els.length,!found,els[i];++i){
 				var order=els[i].order;
 				if(order<prev&&i){
@@ -309,7 +310,7 @@ function kfm_restorePanel(wrapper,panel){
 	wrapper=$(wrapper);
 	var p=$(panel);
 	p.state=2;
-	if(!p.height)p.height=$E('div.kfm_panel_body',p).offsetHeight;
+	if(!p.height)p.height=p.childNodes[1].offsetHeight;
 	kfm_refreshPanels(wrapper);
 }
 function kfm_togglePanelsUnlocked(){
