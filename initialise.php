@@ -301,11 +301,6 @@ require_once($kfm_base_path.'framework.php');
 		require_once($kfm_base_path.'includes/directories.php');
 		return _getDirectoryDbInfo($id);
 	}
-	function kfm_getDirectoryProperties($dir){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/directories.php');
-		return _getDirectoryProperties($dir);
-	}
 	function kfm_getDirectoryParents($pid,$type=1){
 		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/directories.php');
@@ -321,10 +316,10 @@ require_once($kfm_base_path.'framework.php');
 		require_once($kfm_base_path.'includes/directories.php');
 		return _renameDirectory($dir,$newname);
 	}
-	function kfm_loadDirectories($root){
+	function kfm_loadDirectories($root,$oldpid){
 		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/directories.php');
-		return _loadDirectories($root);
+		return _loadDirectories($root,$oldpid);
 	}
 	function kfm_rmdir($dir){
 		global $kfm_base_path;
