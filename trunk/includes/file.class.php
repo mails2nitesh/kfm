@@ -121,7 +121,7 @@ class File extends Object{
 		$size=func_num_args()?func_get_arg(0):$this->getSize();
 		$format=array("B","KB","MB","GB","TB","PB","EB","ZB","YB");
 		$n=floor(log($size)/log(1024));
-		return round($size/pow(1024,$n),1).' '.$format[$n];
+		return $n?round($size/pow(1024,$n),1).' '.$format[$n]:'0 B';
 	}
 	function addToDB($filename, $directory_id){
 		global $kfmdb,$kfm_db_prefix;
