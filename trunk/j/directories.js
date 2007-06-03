@@ -1,7 +1,8 @@
 // see license.txt for licensing
 function kfm_changeDirectory(id){
-	setTimeout('$clear(window.dragTrigger);',1);
 	var el=$(id),a,els=$$('td.kfm_directory_open');
+	if(!el)return;
+	setTimeout('$clear(window.dragTrigger);',1);
 	if(browser.isIE)while(el&&!el.node_id)el=el.parentNode;
 	kfm_cwd_name=el.kfm_directoryname;
 	kfm_cwd_id=el.node_id;
@@ -11,12 +12,12 @@ function kfm_changeDirectory(id){
 }
 function kfm_createDirectory(id){
 	if(!kfm_vars.permissions.dir.mk)return kfm_alert('permission denied: cannot create directory');
-	var newName=kfm_prompt(kfm_lang.CreateDirMessage(kfm_directories[id].pathname),kfm_lang.NewDirectory);
+	var newName=kfm_prompt(kfm_lang.CreateDirMessage(kfm_directories[id].path),kfm_lang.NewDirectory);
 	if(newName&&newName!=''&&!/\/|^\./.test(newName))x_kfm_createDirectory(id,newName,kfm_refreshDirectories);
 }
 function kfm_deleteDirectory(id){
 	if(!kfm_vars.permissions.dir.rm)return kfm_alert('permission denied: cannot delete directory');
-	if(kfm_confirm(kfm_lang.DelDirMessage(kfm_directories[id].pathname)))x_kfm_deleteDirectory(id,kfm_deleteDirectoryCheck);
+	if(kfm_confirm(kfm_lang.DelDirMessage(kfm_directories[id].path)))x_kfm_deleteDirectory(id,kfm_deleteDirectoryCheck);
 }
 function kfm_deleteDirectoryCheck(res){
 	if(res.type&&res.type=='error'){
@@ -32,7 +33,15 @@ function kfm_deleteDirectoryCheck(res){
 			default: alert(res.msg);
 		}
 	}
-	else kfm_refreshDirectories(res);
+	else{
+		var is_found=0,p=res.oldpid;
+		while(p&&!is_found){
+			if(p==kfm_cwd_id)is_found=1;
+			p=kfm_directories[p].parent;
+		}
+		if(is_found)kfm_changeDirectory('kfm_directory_icon_'+p);
+		kfm_refreshDirectories(res);
+	}
 }
 function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 	var r=t.addRow(),c,pdir=parent_addr+name,name=(name==''?'root':name),name_text=newEl('span','directory_name_'+parent,0,'0');
@@ -143,7 +152,7 @@ function kfm_refreshDirectories(res){
 	var dirs=$A(res.directories);
 	dirs.each(function(dir,a){
 		kfm_dir_addLink(t,dir[0],res.reqdir,l=(a==dirs.length-1),dir[1],dir[2]);
-		kfm_directories[dir[2]]={name:dir[0],pathname:res.reqdir+dir[0]};
+		if(!kfm_directories[dir[2]])kfm_directories[dir[2]]={parent:res.parent,name:dir[0],path:res.reqdir+dir[0]};
 	});
 	if(d!='')$(n).parentNode.empty().addEl(dirs.length?newLink('javascript:kfm_dir_closeNode("'+res.parent+'")','[-]',n,'kfm_dir_node_open'):newEl('span',n,0,' '));
 	kfm_cwd_subdirs[d]=res.directories;
