@@ -1,6 +1,13 @@
 <?php
 # see license.txt for licensing
 require_once('initialise.php');
+if($_SERVER['REDIRECT_QUERY_STRING']){
+	$arr=explode(',',$_SERVER['REDIRECT_QUERY_STRING']);
+	foreach($arr as $r){
+		$arr2=explode('=',$r);
+		$_GET[$arr2[0]]=$arr2[1];
+	}
+}
 $id=$_GET['id'];
 if(!is_numeric($id)){
 	echo 'error: invalid id'; # TODO: new string
@@ -41,8 +48,10 @@ else{
 { # headers
 	if(strstr($_SERVER['HTTP_USER_AGENT'],'MSIE'))$name=preg_replace('/\./','%2e',$name,substr_count($name,'.')-1);
 	set_time_limit(0);
-	header("Cache-Control: ");
-	header("Pragma: ");
+	header('Cache-Control: max-age=2592000');
+	header('Expires-Active: On');
+	header('Expires: Fri, 1 Jan 2500 01:01:01 GMT');
+	header('Pragma:');
 	header('Content-Length: '.(string)(filesize($path)));
 	if(isset($_GET['forcedownload'])){
 		header('Content-Type: force/download');

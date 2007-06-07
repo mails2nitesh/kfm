@@ -15,8 +15,10 @@ MooTools Credits:
 */
 
 var MooTools = {
-	'version': 1.1
+	version: '1.11'
 };
+
+/* Section: Core Functions */
 
 /*
 Function: $defined
@@ -53,7 +55,6 @@ Returns:
 	'function' - if obj is a function
 	'regexp' - if obj is a regular expression
 	'class' - if obj is a Class. (created with new Class, or the extend of another class).
-	'arguments' - if obj is the arguments object.
 	'collection' - if obj is a native htmlelements collection, such as childNodes, getElementsByTagName .. etc.
 	false - (boolean) if the object is not defined or none of the above.
 */
@@ -65,7 +66,7 @@ function $type(obj){
 	if (type == 'object' && obj.nodeName){
 		switch(obj.nodeType){
 			case 1: return 'element';
-			case 3: return /\S/.test(obj.nodeValue) ? 'textnode' : 'whitespace';
+			case 3: return (/\S/).test(obj.nodeValue) ? 'textnode' : 'whitespace';
 		}
 	}
 	if (type == 'object' || type == 'function'){
@@ -137,7 +138,7 @@ Returns:
 	The first object, extended.
 */
 
-var $extend = Object.extend = function(){
+var $extend = function(){
 	var args = arguments;
 	if (!args[1]) args = [this, args[0]];
 	for (var property in args[1]) args[0][property] = args[1][property];
@@ -148,14 +149,14 @@ var $extend = Object.extend = function(){
 Function: $native
 	Will add a .extend method to the objects passed as a parameter, but the property passed in will be copied to the object's prototype only if non previously existent.
 	Its handy if you dont want the .extend method of an object to overwrite existing methods.
-	Used automatically in mootools to implement Array/String/Function/Number methods to browser that dont support them whitout manual checking.
+	Used automatically in MooTools to implement Array/String/Function/Number methods to browser that dont support them whitout manual checking.
 
 Arguments:
 	a number of classes/native javascript objects
 
 */
 
-var $native = Object.Native = function(){
+var $native = function(){
 	for (var i = 0, l = arguments.length; i < l; i++){
 		arguments[i].extend = function(props){
 			for (var prop in props){
@@ -173,31 +174,6 @@ $native.generic = function(prop){
 };
 
 $native(Function, Array, String, Number);
-
-/*
-Class: Abstract
-	Abstract class, to be used as singleton. Will add .extend to any object
-
-Arguments:
-	an object
-
-Returns:
-	the object with an .extend property, equivalent to <$extend>.
-*/
-
-var Abstract = function(obj){
-	obj = obj || {};
-	obj.extend = $extend;
-	return obj;
-};
-
-//window, document
-
-var Window = new Abstract(window);
-var Document = new Abstract(document);
-document.head = document.getElementsByTagName('head')[0];
-
-/* Section: Utility Functions */
 
 /*
 Function: $chk
@@ -285,8 +261,34 @@ function $clear(timer){
 };
 
 /*
+Class: Abstract
+	Abstract class, to be used as singleton. Will add .extend to any object
+
+Arguments:
+	an object
+
+Returns:
+	the object with an .extend property, equivalent to <$extend>.
+*/
+
+var Abstract = function(obj){
+	obj = obj || {};
+	obj.extend = $extend;
+	return obj;
+};
+
+//window, document
+
+var Window = new Abstract(window);
+var Document = new Abstract(document);
+document.head = document.getElementsByTagName('head')[0];
+
+/*
 Class: window
 	Some properties are attached to the window object by the browser detection.
+	
+Note:
+	browser detection is entirely object-based. We dont sniff.
 
 Properties:
 	window.ie - will be set to true if the current browser is internet explorer (any).
@@ -301,8 +303,16 @@ Properties:
 
 window.xpath = !!(document.evaluate);
 if (window.ActiveXObject) window.ie = window[window.XMLHttpRequest ? 'ie7' : 'ie6'] = true;
-else if (document.childNodes && !document.all && !navigator.taintEnabled) window.khtml = window.webkit = window[window.xpath ? 'webkit420' : 'webkit419'] = true;
+else if (document.childNodes && !document.all && !navigator.taintEnabled) window.webkit = window[window.xpath ? 'webkit420' : 'webkit419'] = true;
 else if (document.getBoxObjectFor != null) window.gecko = true;
+
+/*compatibility*/
+
+window.khtml = window.webkit;
+
+Object.extend = $extend;
+
+/*end compatibility*/
 
 //htmlelement
 
@@ -311,7 +321,7 @@ if (typeof HTMLElement == 'undefined'){
 	if (window.webkit) document.createElement("iframe"); //fixes safari
 	HTMLElement.prototype = (window.webkit) ? window["[[DOMElement.prototype]]"] : {};
 }
-HTMLElement.prototype.htmlElement = true;
+HTMLElement.prototype.htmlElement = function(){};
 
 //enables background image cache for internet explorer 6
 
@@ -452,6 +462,231 @@ Class.Merge = function(previous, current){
 };
 
 /*
+Script: Class.Extras.js
+	Contains common implementations for custom classes. In Mootools is implemented in <Ajax>, <XHR> and <Fx.Base> and many more.
+
+License:
+	MIT-style license.
+*/
+
+/*
+Class: Chain
+	An "Utility" Class. Its methods can be implemented with <Class.implement> into any <Class>.
+	Currently implemented in <Fx.Base>, <XHR> and <Ajax>. In <Fx.Base> for example, is used to execute a list of function, one after another, once the effect is completed.
+	The functions will not be fired all togheter, but one every completion, to create custom complex animations.
+
+Example:
+	(start code)
+	var myFx = new Fx.Style('element', 'opacity');
+
+	myFx.start(1,0).chain(function(){
+		myFx.start(0,1);
+	}).chain(function(){
+		myFx.start(1,0);
+	}).chain(function(){
+		myFx.start(0,1);
+	});
+	//the element will appear and disappear three times
+	(end)
+*/
+
+var Chain = new Class({
+
+	/*
+	Property: chain
+		adds a function to the Chain instance stack.
+
+	Arguments:
+		fn - the function to append.
+	*/
+
+	chain: function(fn){
+		this.chains = this.chains || [];
+		this.chains.push(fn);
+		return this;
+	},
+
+	/*
+	Property: callChain
+		Executes the first function of the Chain instance stack, then removes it. The first function will then become the second.
+	*/
+
+	callChain: function(){
+		if (this.chains && this.chains.length) this.chains.shift().delay(10, this);
+	},
+
+	/*
+	Property: clearChain
+		Clears the stack of a Chain instance.
+	*/
+
+	clearChain: function(){
+		this.chains = [];
+	}
+
+});
+
+/*
+Class: Events
+	An "Utility" Class. Its methods can be implemented with <Class.implement> into any <Class>.
+	In <Fx.Base> Class, for example, is used to give the possibility add any number of functions to the Effects events, like onComplete, onStart, onCancel.
+	Events in a Class that implements <Events> can be either added as an option, or with addEvent. Never with .options.onEventName.
+
+Example:
+	(start code)
+	var myFx = new Fx.Style('element', 'opacity').addEvent('onComplete', function(){
+		alert('the effect is completed');
+	}).addEvent('onComplete', function(){
+		alert('I told you the effect is completed');
+	});
+
+	myFx.start(0,1);
+	//upon completion it will display the 2 alerts, in order.
+	(end)
+
+Implementing:
+	This class can be implemented into other classes to add the functionality to them.
+	Goes well with the <Options> class.
+
+Example:
+	(start code)
+	var Widget = new Class({
+		initialize: function(){},
+		finish: function(){
+			this.fireEvent('onComplete');
+		}
+	});
+	Widget.implement(new Events);
+	//later...
+	var myWidget = new Widget();
+	myWidget.addEvent('onComplete', myfunction);
+	(end)
+*/
+
+var Events = new Class({
+
+	/*
+	Property: addEvent
+		adds an event to the stack of events of the Class instance.
+
+	Arguments:
+		type - string; the event name (e.g. 'onComplete')
+		fn - function to execute
+	*/
+
+	addEvent: function(type, fn){
+		if (fn != Class.empty){
+			this.$events = this.$events || {};
+			this.$events[type] = this.$events[type] || [];
+			this.$events[type].include(fn);
+		}
+		return this;
+	},
+
+	/*
+	Property: fireEvent
+		fires all events of the specified type in the Class instance.
+
+	Arguments:
+		type - string; the event name (e.g. 'onComplete')
+		args - array or single object; arguments to pass to the function; if more than one argument, must be an array
+		delay - (integer) delay (in ms) to wait to execute the event
+
+	Example:
+	(start code)
+	var Widget = new Class({
+		initialize: function(arg1, arg2){
+			...
+			this.fireEvent("onInitialize", [arg1, arg2], 50);
+		}
+	});
+	Widget.implement(new Events);
+	(end)
+	*/
+
+	fireEvent: function(type, args, delay){
+		if (this.$events && this.$events[type]){
+			this.$events[type].each(function(fn){
+				fn.create({'bind': this, 'delay': delay, 'arguments': args})();
+			}, this);
+		}
+		return this;
+	},
+
+	/*
+	Property: removeEvent
+		removes an event from the stack of events of the Class instance.
+
+	Arguments:
+		type - string; the event name (e.g. 'onComplete')
+		fn - function that was added
+	*/
+
+	removeEvent: function(type, fn){
+		if (this.$events && this.$events[type]) this.$events[type].remove(fn);
+		return this;
+	}
+
+});
+
+/*
+Class: Options
+	An "Utility" Class. Its methods can be implemented with <Class.implement> into any <Class>.
+	Used to automate the options settings, also adding Class <Events> when the option begins with on.
+
+	Example:
+		(start code)
+		var Widget = new Class({
+			options: {
+				color: '#fff',
+				size: {
+					width: 100
+					height: 100
+				}
+			},
+			initialize: function(options){
+				this.setOptions(options);
+			}
+		});
+		Widget.implement(new Options);
+		//later...
+		var myWidget = new Widget({
+			color: '#f00',
+			size: {
+				width: 200
+			}
+		});
+		//myWidget.options = {color: #f00, size: {width: 200, height: 100}}
+		(end)
+*/
+
+var Options = new Class({
+
+	/*
+	Property: setOptions
+		sets this.options
+
+	Arguments:
+		defaults - object; the default set of options
+		options - object; the user entered options. can be empty too.
+
+	Note:
+		if your Class has <Events> implemented, every option beginning with on, followed by a capital letter (onComplete) becomes an Class instance event.
+	*/
+
+	setOptions: function(){
+		this.options = $merge.apply(null, [this.options].extend(arguments));
+		if (this.addEvent){
+			for (var option in this.options){
+				if ($type(this.options[option] == 'function') && (/^on[A-Z]/).test(option)) this.addEvent(option, this.options[option]);
+			}
+		}
+		return this;
+	}
+
+});
+
+/*
 Script: Array.js
 	Contains Array prototypes, <$A>, <$each>
 
@@ -480,7 +715,7 @@ Array.extend({
 		bind - the object to bind "this" to (see <Function.bind>)
 
 	Example:
-		>['apple','banana','lemon'].each(function(item, index) {
+		>['apple','banana','lemon'].each(function(item, index){
 		>	alert(index + " = " + item); //alerts "0 = apple" etc.
 		>}, bindObj); //optional second arg for binding, not used here
 	*/
@@ -501,7 +736,7 @@ Array.extend({
 		bind - the object to bind "this" to (see <Function.bind>)
 
 	Example:
-		>var biggerThanTwenty = [10,3,25,100].filter(function(item, index) {
+		>var biggerThanTwenty = [10,3,25,100].filter(function(item, index){
 		> return item > 20;
 		>});
 		>//biggerThanTwenty = [25,100]
@@ -784,7 +1019,7 @@ Array.extend({
 	*/
 
 	getRandom: function(){
-		return this[$random(0, this.length - 1)] || false;
+		return this[$random(0, this.length - 1)] || null;
 	},
 
 	/*
@@ -793,7 +1028,7 @@ Array.extend({
 	*/
 
 	getLast: function(){
-		return this[this.length - 1] || false;
+		return this[this.length - 1] || null;
 	}
 
 });
@@ -801,7 +1036,7 @@ Array.extend({
 //copies
 
 Array.prototype.each = Array.prototype.forEach;
-Array.prototype.test = Array.prototype.contains;
+Array.each = Array.forEach;
 
 /* Section: Utility Functions */
 
@@ -842,7 +1077,7 @@ Function argument:
 
 Examples:
 	(start code)
-	$each(['Sun','Mon','Tue'], function(day, index) {
+	$each(['Sun','Mon','Tue'], function(day, index){
 		alert('name:' + day + ', index: ' + index);
 	});
 	//alerts "name: Sun, index: 0", "name: Mon, index: 1", etc.
@@ -856,13 +1091,22 @@ Examples:
 */
 
 function $each(iterable, fn, bind){
-	if (iterable && typeof iterable.length == 'number' && $type(iterable) != 'object') Array.forEach(iterable, fn, bind);
-	else for (var name in iterable) fn.call(bind || iterable, iterable[name], name);
+	if (iterable && typeof iterable.length == 'number' && $type(iterable) != 'object'){
+		Array.forEach(iterable, fn, bind);
+	} else {
+		 for (var name in iterable) fn.call(bind || iterable, iterable[name], name);
+	}
 };
+
+/*compatibility*/
+
+Array.prototype.test = Array.prototype.contains;
+
+/*end compatibility*/
 
 /*
 Script: String.js
-	Contains String prototypes and Number prototypes.
+	Contains String prototypes.
 
 License:
 	MIT-style license.
@@ -1055,7 +1299,7 @@ String.extend({
 		>'a bc'.contains('bc'); //true
 		>'a bc'.contains('b', ' '); //false
 	*/
-	
+
 	contains: function(string, s){
 		return (s) ? (s + this + s).indexOf(s + string + s) > -1 : this.indexOf(string) > -1;
 	},
@@ -1303,6 +1547,14 @@ Function.extend({
 });
 
 /*
+Script: Number.js
+	Contains the Number prototypes.
+
+License:
+	MIT-style license.
+*/
+
+/*
 Class: Number
 	A collection of The Number Object prototype methods.
 */
@@ -1330,14 +1582,14 @@ Number.extend({
 	/*
 	Property: limit
 		Limits the number.
-		
+
 	Arguments:
 		min - number, minimum value
 		max - number, maximum value
-		
+
 	Returns:
 		the number in the given limits.
-		
+
 	Example:
 		>(12).limit(2, 6.5)  // returns 6.5
 		>(-4).limit(2, 6.5)  // returns 2
@@ -1359,7 +1611,7 @@ Number.extend({
 		>12.45.round() // returns 12
 		>12.45.round(1) // returns 12.5
 		>12.45.round(-1) // returns 10
-		
+
 	Returns:
 		The rounded number.
 	*/
@@ -1380,7 +1632,7 @@ Number.extend({
 		>(4).times(alert);
 	*/
 
-	times: function(fn) {
+	times: function(fn){
 		for (var i = 0; i < this; i++) fn(i);
 	}
 
@@ -1514,7 +1766,7 @@ Note:
 */
 
 function $(el){
-	if (!el) return false;
+	if (!el) return null;
 	if (el.htmlElement) return Garbage.collect(el);
 	if ([window, document].contains(el)) return el;
 	var type = $type(el);
@@ -1522,11 +1774,11 @@ function $(el){
 		el = document.getElementById(el);
 		type = (el) ? 'element' : false;
 	}
-	if (type != 'element') return false;
+	if (type != 'element') return null;
 	if (el.htmlElement) return Garbage.collect(el);
 	if (['object', 'embed'].contains(el.tagName.toLowerCase())) return el;
 	$extend(el, Element.prototype);
-	el.htmlElement = true;
+	el.htmlElement = function(){};
 	return Garbage.collect(el);
 };
 
@@ -1589,7 +1841,7 @@ $$.unique = function(array){
 			elements.push(element);
 		}
 	}
-	for (var i = 0, l = elements.length; i < l; i++) elements[i].$included = null;
+	for (var n = 0, d = elements.length; n < d; n++) elements[n].$included = null;
 	return new Elements(elements);
 };
 
@@ -1800,12 +2052,6 @@ Element.extend({
 	*/
 
 	appendText: function(text){
-		if (window.ie){
-			switch(this.getTag()){
-				case 'style': this.styleSheet.cssText = text; return this;
-				case 'script': return this.setProperty('text', text);
-			}
-		}
 		this.appendChild(document.createTextNode(text));
 		return this;
 	},
@@ -1974,7 +2220,7 @@ Element.extend({
 		var result = this.style[property];
 		if (!$chk(result)){
 			if (property == 'opacity') return this.$tmp.opacity;
-			var result = [];
+			result = [];
 			for (var style in Element.Styles){
 				if (property == style){
 					Element.Styles[style].each(function(s){
@@ -2100,7 +2346,7 @@ Element.extend({
 		returns true if the passed in element is a child of the $(element).
 	*/
 
-	hasChild: function(el) {
+	hasChild: function(el){
 		return !!$A(this.getElementsByTagName('*')).contains(el);
 	},
 
@@ -2121,7 +2367,8 @@ Element.extend({
 	getProperty: function(property){
 		var index = Element.Properties[property];
 		if (index) return this[index];
-		if (!window.ie) return this.getAttribute(property);
+		var flag = Element.PropertiesIFlag[property] || 0;
+		if (!window.ie || flag) return this.getAttribute(property, flag);
 		var node = this.attributes[property];
 		return (node) ? node.nodeValue : null;
 	},
@@ -2207,6 +2454,51 @@ Element.extend({
 	},
 
 	/*
+	Property: setText
+		Sets the inner text of the Element.
+
+	Arguments:
+		text - string; the new text content for the element.
+
+	Example:
+		>$('myElement').setText('some text') //the text of myElement is now = 'some text'
+	*/
+
+	setText: function(text){
+		var tag = this.getTag();
+		if (['style', 'script'].contains(tag)){
+			if (window.ie){
+				if (tag == 'style') this.styleSheet.cssText = text;
+				else if (tag ==  'script') this.setProperty('text', text);
+				return this;
+			} else {
+				this.removeChild(this.firstChild);
+				return this.appendText(text);
+			}
+		}
+		this[$defined(this.innerText) ? 'innerText' : 'textContent'] = text;
+		return this;
+	},
+
+	/*
+	Property: getText
+		Gets the inner text of the Element.
+	*/
+
+	getText: function(){
+		var tag = this.getTag();
+		if (['style', 'script'].contains(tag)){
+			if (window.ie){
+				if (tag == 'style') return this.styleSheet.cssText;
+				else if (tag ==  'script') return this.getProperty('text');
+			} else {
+				return this.innerHTML;
+			}
+		}
+		return ($pick(this.innerText, this.textContent));
+	},
+
+	/*
 	Property: getTag
 		Returns the tagName of the element in lower case.
 
@@ -2275,11 +2567,14 @@ Element.setMany = function(el, method, pairs){
 };
 
 Element.Properties = new Abstract({
-	'class': 'className', 'for': 'htmlFor', 'colspan': 'colSpan',
-	'rowspan': 'rowSpan', 'accesskey': 'accessKey', 'tabindex': 'tabIndex',
-	'maxlength': 'maxLength', 'readonly': 'readOnly', 'value': 'value',
-	'disabled': 'disabled', 'checked': 'checked', 'multiple': 'multiple'
+	'class': 'className', 'for': 'htmlFor', 'colspan': 'colSpan', 'rowspan': 'rowSpan',
+	'accesskey': 'accessKey', 'tabindex': 'tabIndex', 'maxlength': 'maxLength',
+	'readonly': 'readOnly', 'frameborder': 'frameBorder', 'value': 'value',
+	'disabled': 'disabled', 'checked': 'checked', 'multiple': 'multiple', 'selected': 'selected'
 });
+Element.PropertiesIFlag = {
+	'href': 2, 'src': 2
+};
 
 Element.Methods = {
 	Listeners: {
@@ -2318,10 +2613,11 @@ var Garbage = {
 			if (!(el = elements[i]) || !el.$tmp) continue;
 			if (el.$events) el.fireEvent('trash').removeEvents();
 			for (var p in el.$tmp) el.$tmp[p] = null;
-			for (var p in Element.prototype) el[p] = null;
+			for (var d in Element.prototype) el[d] = null;
+			Garbage.elements[Garbage.elements.indexOf(el)] = null;
 			el.htmlElement = el.$tmp = el = null;
-			Garbage.elements.remove(el);
 		}
+		Garbage.elements.remove(null);
 	},
 
 	empty: function(){
@@ -2332,11 +2628,393 @@ var Garbage = {
 
 };
 
-
 window.addListener('beforeunload', function(){
 	window.addListener('unload', Garbage.empty);
 	if (window.ie) window.addListener('unload', CollectGarbage);
 });
+
+/*
+Script: Element.Event.js
+	Contains the Event Class, Element methods to deal with Element events, custom Events, and the Function prototype bindWithEvent.
+
+License:
+	MIT-style license.
+*/
+
+/*
+Class: Event
+	Cross browser methods to manage events.
+
+Arguments:
+	event - the event
+
+Properties:
+	shift - true if the user pressed the shift
+	control - true if the user pressed the control
+	alt - true if the user pressed the alt
+	meta - true if the user pressed the meta key
+	wheel - the amount of third button scrolling
+	code - the keycode of the key pressed
+	page.x - the x position of the mouse, relative to the full window
+	page.y - the y position of the mouse, relative to the full window
+	client.x - the x position of the mouse, relative to the viewport
+	client.y - the y position of the mouse, relative to the viewport
+	key - the key pressed as a lowercase string. key also returns 'enter', 'up', 'down', 'left', 'right', 'space', 'backspace', 'delete', 'esc'. Handy for these special keys.
+	target - the event target
+	relatedTarget - the event related target
+
+Example:
+	(start code)
+	$('myLink').onkeydown = function(event){
+		var event = new Event(event);
+		//event is now the Event class.
+		alert(event.key); //returns the lowercase letter pressed
+		alert(event.shift); //returns true if the key pressed is shift
+		if (event.key == 's' && event.control) alert('document saved');
+	};
+	(end)
+*/
+
+var Event = new Class({
+
+	initialize: function(event){
+		if (event && event.$extended) return event;
+		this.$extended = true;
+		event = event || window.event;
+		this.event = event;
+		this.type = event.type;
+		this.target = event.target || event.srcElement;
+		if (this.target.nodeType == 3) this.target = this.target.parentNode;
+		this.shift = event.shiftKey;
+		this.control = event.ctrlKey;
+		this.alt = event.altKey;
+		this.meta = event.metaKey;
+		if (['DOMMouseScroll', 'mousewheel'].contains(this.type)){
+			this.wheel = (event.wheelDelta) ? event.wheelDelta / 120 : -(event.detail || 0) / 3;
+		} else if (this.type.contains('key')){
+			this.code = event.which || event.keyCode;
+			for (var name in Event.keys){
+				if (Event.keys[name] == this.code){
+					this.key = name;
+					break;
+				}
+			}
+			if (this.type == 'keydown'){
+				var fKey = this.code - 111;
+				if (fKey > 0 && fKey < 13) this.key = 'f' + fKey;
+			}
+			this.key = this.key || String.fromCharCode(this.code).toLowerCase();
+		} else if (this.type.test(/(click|mouse|menu)/)){
+			this.page = {
+				'x': event.pageX || event.clientX + document.documentElement.scrollLeft,
+				'y': event.pageY || event.clientY + document.documentElement.scrollTop
+			};
+			this.client = {
+				'x': event.pageX ? event.pageX - window.pageXOffset : event.clientX,
+				'y': event.pageY ? event.pageY - window.pageYOffset : event.clientY
+			};
+			this.rightClick = (event.which == 3) || (event.button == 2);
+			switch(this.type){
+				case 'mouseover': this.relatedTarget = event.relatedTarget || event.fromElement; break;
+				case 'mouseout': this.relatedTarget = event.relatedTarget || event.toElement;
+			}
+			this.fixRelatedTarget();
+		}
+		return this;
+	},
+
+	/*
+	Property: stop
+		cross browser method to stop an event
+	*/
+
+	stop: function(){
+		return this.stopPropagation().preventDefault();
+	},
+
+	/*
+	Property: stopPropagation
+		cross browser method to stop the propagation of an event
+	*/
+
+	stopPropagation: function(){
+		if (this.event.stopPropagation) this.event.stopPropagation();
+		else this.event.cancelBubble = true;
+		return this;
+	},
+
+	/*
+	Property: preventDefault
+		cross browser method to prevent the default action of the event
+	*/
+
+	preventDefault: function(){
+		if (this.event.preventDefault) this.event.preventDefault();
+		else this.event.returnValue = false;
+		return this;
+	}
+
+});
+
+Event.fix = {
+
+	relatedTarget: function(){
+		if (this.relatedTarget && this.relatedTarget.nodeType == 3) this.relatedTarget = this.relatedTarget.parentNode;
+	},
+
+	relatedTargetGecko: function(){
+		try {Event.fix.relatedTarget.call(this);} catch(e){this.relatedTarget = this.target;}
+	}
+
+};
+
+Event.prototype.fixRelatedTarget = (window.gecko) ? Event.fix.relatedTargetGecko : Event.fix.relatedTarget;
+
+/*
+Property: keys
+	you can add additional Event keys codes this way:
+
+Example:
+	(start code)
+	Event.keys.whatever = 80;
+	$(myelement).addEvent(keydown, function(event){
+		event = new Event(event);
+		if (event.key == 'whatever') console.log(whatever key clicked).
+	});
+	(end)
+*/
+
+Event.keys = new Abstract({
+	'enter': 13,
+	'up': 38,
+	'down': 40,
+	'left': 37,
+	'right': 39,
+	'esc': 27,
+	'space': 32,
+	'backspace': 8,
+	'tab': 9,
+	'delete': 46
+});
+
+/*
+Class: Element
+	Custom class to allow all of its methods to be used with any DOM element via the dollar function <$>.
+*/
+
+Element.Methods.Events = {
+
+	/*
+	Property: addEvent
+		Attaches an event listener to a DOM element.
+
+	Arguments:
+		type - the event to monitor ('click', 'load', etc) without the prefix 'on'.
+		fn - the function to execute
+
+	Example:
+		>$('myElement').addEvent('click', function(){alert('clicked!')});
+	*/
+
+	addEvent: function(type, fn){
+		this.$events = this.$events || {};
+		this.$events[type] = this.$events[type] || {'keys': [], 'values': []};
+		if (this.$events[type].keys.contains(fn)) return this;
+		this.$events[type].keys.push(fn);
+		var realType = type;
+		var custom = Element.Events[type];
+		if (custom){
+			if (custom.add) custom.add.call(this, fn);
+			if (custom.map) fn = custom.map;
+			if (custom.type) realType = custom.type;
+		}
+		if (!this.addEventListener) fn = fn.create({'bind': this, 'event': true});
+		this.$events[type].values.push(fn);
+		return (Element.NativeEvents.contains(realType)) ? this.addListener(realType, fn) : this;
+	},
+
+	/*
+	Property: removeEvent
+		Works as Element.addEvent, but instead removes the previously added event listener.
+	*/
+
+	removeEvent: function(type, fn){
+		if (!this.$events || !this.$events[type]) return this;
+		var pos = this.$events[type].keys.indexOf(fn);
+		if (pos == -1) return this;
+		var key = this.$events[type].keys.splice(pos,1)[0];
+		var value = this.$events[type].values.splice(pos,1)[0];
+		var custom = Element.Events[type];
+		if (custom){
+			if (custom.remove) custom.remove.call(this, fn);
+			if (custom.type) type = custom.type;
+		}
+		return (Element.NativeEvents.contains(type)) ? this.removeListener(type, value) : this;
+	},
+
+	/*
+	Property: addEvents
+		As <addEvent>, but accepts an object and add multiple events at once.
+	*/
+
+	addEvents: function(source){
+		return Element.setMany(this, 'addEvent', source);
+	},
+
+	/*
+	Property: removeEvents
+		removes all events of a certain type from an element. if no argument is passed in, removes all events.
+
+	Arguments:
+		type - string; the event name (e.g. 'click')
+	*/
+
+	removeEvents: function(type){
+		if (!this.$events) return this;
+		if (!type){
+			for (var evType in this.$events) this.removeEvents(evType);
+			this.$events = null;
+		} else if (this.$events[type]){
+			this.$events[type].keys.each(function(fn){
+				this.removeEvent(type, fn);
+			}, this);
+			this.$events[type] = null;
+		}
+		return this;
+	},
+
+	/*
+	Property: fireEvent
+		executes all events of the specified type present in the element.
+
+	Arguments:
+		type - string; the event name (e.g. 'click')
+		args - array or single object; arguments to pass to the function; if more than one argument, must be an array
+		delay - (integer) delay (in ms) to wait to execute the event
+	*/
+
+	fireEvent: function(type, args, delay){
+		if (this.$events && this.$events[type]){
+			this.$events[type].keys.each(function(fn){
+				fn.create({'bind': this, 'delay': delay, 'arguments': args})();
+			}, this);
+		}
+		return this;
+	},
+
+	/*
+	Property: cloneEvents
+		Clones all events from an element to this element.
+
+	Arguments:
+		from - element, copy all events from this element
+		type - optional, copies only events of this type
+	*/
+
+	cloneEvents: function(from, type){
+		if (!from.$events) return this;
+		if (!type){
+			for (var evType in from.$events) this.cloneEvents(from, evType);
+		} else if (from.$events[type]){
+			from.$events[type].keys.each(function(fn){
+				this.addEvent(type, fn);
+			}, this);
+		}
+		return this;
+	}
+
+};
+
+window.extend(Element.Methods.Events);
+document.extend(Element.Methods.Events);
+Element.extend(Element.Methods.Events);
+
+/* Section: Custom Events */
+
+Element.Events = new Abstract({
+
+	/*
+	Event: mouseenter
+		In addition to the standard javascript events (load, mouseover, mouseout, click, etc.) <Event.js> contains two custom events
+		this event fires when the mouse enters the area of the dom element; will not be fired again if the mouse crosses over children of the element (unlike mouseover)
+
+
+	Example:
+		>$(myElement).addEvent('mouseenter', myFunction);
+	*/
+
+	'mouseenter': {
+		type: 'mouseover',
+		map: function(event){
+			event = new Event(event);
+			if (event.relatedTarget != this && !this.hasChild(event.relatedTarget)) this.fireEvent('mouseenter', event);
+		}
+	},
+
+	/*
+	Event: mouseleave
+		this event fires when the mouse exits the area of the dom element; will not be fired again if the mouse crosses over children of the element (unlike mouseout)
+
+
+	Example:
+		>$(myElement).addEvent('mouseleave', myFunction);
+	*/
+
+	'mouseleave': {
+		type: 'mouseout',
+		map: function(event){
+			event = new Event(event);
+			if (event.relatedTarget != this && !this.hasChild(event.relatedTarget)) this.fireEvent('mouseleave', event);
+		}
+	},
+
+	'mousewheel': {
+		type: (window.gecko) ? 'DOMMouseScroll' : 'mousewheel'
+	}
+
+});
+
+Element.NativeEvents = [
+	'click', 'dblclick', 'mouseup', 'mousedown', //mouse buttons
+	'mousewheel', 'DOMMouseScroll', //mouse wheel
+	'mouseover', 'mouseout', 'mousemove', //mouse movement
+	'keydown', 'keypress', 'keyup', //keys
+	'load', 'unload', 'beforeunload', 'resize', 'move', //window
+	'focus', 'blur', 'change', 'submit', 'reset', 'select', //forms elements
+	'error', 'abort', 'contextmenu', 'scroll' //misc
+];
+
+/*
+Class: Function
+	A collection of The Function Object prototype methods.
+*/
+
+Function.extend({
+
+	/*
+	Property: bindWithEvent
+		automatically passes MooTools Event Class.
+
+	Arguments:
+		bind - optional, the object that the "this" of the function will refer to.
+		args - optional, an argument to pass to the function; if more than one argument, it must be an array of arguments.
+
+	Returns:
+		a function with the parameter bind as its "this" and as a pre-passed argument event or window.event, depending on the browser.
+
+	Example:
+		>function myFunction(event){
+		>	alert(event.client.x) //returns the coordinates of the mouse..
+		>};
+		>myElement.addEvent('click', myFunction.bindWithEvent(myElement));
+	*/
+
+	bindWithEvent: function(bind, args){
+		return this.create({'bind': bind, 'arguments': args, 'event': Event});
+	}
+
+});
+
 
 /*
 Script: Element.Filters.js
@@ -2623,20 +3301,6 @@ Element.Methods.Dom = {
 		selector = selector.split(',');
 		for (var i = 0, j = selector.length; i < j; i++) elements = elements.concat(this.getElements(selector[i], true));
 		return (nocash) ? elements : $$.unique(elements);
-	},
-
-	/*
-	Property: getElementsByClassName
-		Returns all the elements that match a specific class name.
-		Here for compatibility purposes. can also be written: document.getElements('.className'), or $$('.className')
-		Returns as <Elements>.
-
-	Arguments:
-		className - string; css classname
-	*/
-
-	getElementsByClassName: function(className){
-		return this.getElements('.' + className);
 	}
 
 };
@@ -2658,12 +3322,428 @@ Element.extend({
 			if (!parent) return false;
 		}
 		return el;
+	}/*compatibility*/,
+	
+	getElementsByClassName: function(className){ 
+		return this.getElements('.' + className); 
 	}
+	
+	/*end compatibility*/
 
 });
 
 document.extend(Element.Methods.Dom);
 Element.extend(Element.Methods.Dom);
+
+/*
+Script: Element.Form.js
+	Contains Element prototypes to deal with Forms and their elements.
+
+License:
+	MIT-style license.
+*/
+
+/*
+Class: Element
+	Custom class to allow all of its methods to be used with any DOM element via the dollar function <$>.
+*/
+
+Element.extend({
+
+	/*
+	Property: getValue
+		Returns the value of the Element, if its tag is textarea, select or input. getValue called on a multiple select will return an array.
+	*/
+
+	getValue: function(){
+		switch(this.getTag()){
+			case 'select':
+				var values = [];
+				$each(this.options, function(option){
+					if (option.selected) values.push($pick(option.value, option.text));
+				});
+				return (this.multiple) ? values : values[0];
+			case 'input': if (!(this.checked && ['checkbox', 'radio'].contains(this.type)) && !['hidden', 'text', 'password'].contains(this.type)) break;
+			case 'textarea': return this.value;
+		}
+		return false;
+	},
+
+	getFormElements: function(){
+		return $$(this.getElementsByTagName('input'), this.getElementsByTagName('select'), this.getElementsByTagName('textarea'));
+	},
+
+	/*
+	Property: toQueryString
+		Reads the children inputs of the Element and generates a query string, based on their values. Used internally in <Ajax>
+
+	Example:
+		(start code)
+		<form id="myForm" action="submit.php">
+		<input name="email" value="bob@bob.com">
+		<input name="zipCode" value="90210">
+		</form>
+
+		<script>
+		 $('myForm').toQueryString()
+		</script>
+		(end)
+
+		Returns:
+			email=bob@bob.com&zipCode=90210
+	*/
+
+	toQueryString: function(){
+		var queryString = [];
+		this.getFormElements().each(function(el){
+			var name = el.name;
+			var value = el.getValue();
+			if (value === false || !name || el.disabled) return;
+			var qs = function(val){
+				queryString.push(name + '=' + encodeURIComponent(val));
+			};
+			if ($type(value) == 'array') value.each(qs);
+			else qs(value);
+		});
+		return queryString.join('&');
+	}
+
+});
+
+/*
+Script: Element.Dimensions.js
+	Contains Element prototypes to deal with Element size and position in space.
+
+Note:
+	The functions in this script require n XHTML doctype.
+
+License:
+	MIT-style license.
+*/
+
+/*
+Class: Element
+	Custom class to allow all of its methods to be used with any DOM element via the dollar function <$>.
+*/
+
+Element.extend({
+
+	/*
+	Property: scrollTo
+		Scrolls the element to the specified coordinated (if the element has an overflow)
+
+	Arguments:
+		x - the x coordinate
+		y - the y coordinate
+
+	Example:
+		>$('myElement').scrollTo(0, 100)
+	*/
+
+	scrollTo: function(x, y){
+		this.scrollLeft = x;
+		this.scrollTop = y;
+	},
+
+	/*
+	Property: getSize
+		Return an Object representing the size/scroll values of the element.
+
+	Example:
+		(start code)
+		$('myElement').getSize();
+		(end)
+
+	Returns:
+		(start code)
+		{
+			'scroll': {'x': 100, 'y': 100},
+			'size': {'x': 200, 'y': 400},
+			'scrollSize': {'x': 300, 'y': 500}
+		}
+		(end)
+	*/
+
+	getSize: function(){
+		return {
+			'scroll': {'x': this.scrollLeft, 'y': this.scrollTop},
+			'size': {'x': this.offsetWidth, 'y': this.offsetHeight},
+			'scrollSize': {'x': this.scrollWidth, 'y': this.scrollHeight}
+		};
+	},
+
+	/*
+	Property: getPosition
+		Returns the real offsets of the element.
+
+	Arguments:
+		overflown - optional, an array of nested scrolling containers for scroll offset calculation, use this if your element is inside any element containing scrollbars
+
+	Example:
+		>$('element').getPosition();
+
+	Returns:
+		>{x: 100, y:500};
+	*/
+
+	getPosition: function(overflown){
+		overflown = overflown || [];
+		var el = this, left = 0, top = 0;
+		do {
+			left += el.offsetLeft || 0;
+			top += el.offsetTop || 0;
+			el = el.offsetParent;
+		} while (el);
+		overflown.each(function(element){
+			left -= element.scrollLeft || 0;
+			top -= element.scrollTop || 0;
+		});
+		return {'x': left, 'y': top};
+	},
+
+	/*
+	Property: getTop
+		Returns the distance from the top of the window to the Element.
+
+	Arguments:
+		overflown - optional, an array of nested scrolling containers, see Element::getPosition
+	*/
+
+	getTop: function(overflown){
+		return this.getPosition(overflown).y;
+	},
+
+	/*
+	Property: getLeft
+		Returns the distance from the left of the window to the Element.
+
+	Arguments:
+		overflown - optional, an array of nested scrolling containers, see Element::getPosition
+	*/
+
+	getLeft: function(overflown){
+		return this.getPosition(overflown).x;
+	},
+
+	/*
+	Property: getCoordinates
+		Returns an object with width, height, left, right, top, and bottom, representing the values of the Element
+
+	Arguments:
+		overflown - optional, an array of nested scrolling containers, see Element::getPosition
+
+	Example:
+		(start code)
+		var myValues = $('myElement').getCoordinates();
+		(end)
+
+	Returns:
+		(start code)
+		{
+			width: 200,
+			height: 300,
+			left: 100,
+			top: 50,
+			right: 300,
+			bottom: 350
+		}
+		(end)
+	*/
+
+	getCoordinates: function(overflown){
+		var position = this.getPosition(overflown);
+		var obj = {
+			'width': this.offsetWidth,
+			'height': this.offsetHeight,
+			'left': position.x,
+			'top': position.y
+		};
+		obj.right = obj.left + obj.width;
+		obj.bottom = obj.top + obj.height;
+		return obj;
+	}
+
+});
+
+/*
+Script: Window.DomReady.js
+	Contains the custom event domready, for window.
+
+License:
+	MIT-style license.
+*/
+
+/* Section: Custom Events */
+
+/*
+Event: domready
+	executes a function when the dom tree is loaded, without waiting for images. Only works when called from window.
+
+Credits:
+	(c) Dean Edwards/Matthias Miller/John Resig, remastered for MooTools.
+
+Arguments:
+	fn - the function to execute when the DOM is ready
+
+Example:
+	> window.addEvent('domready', function(){
+	>	alert('the dom is ready');
+	> });
+*/
+
+Element.Events.domready = {
+
+	add: function(fn){
+		if (window.loaded){
+			fn.call(this);
+			return;
+		}
+		var domReady = function(){
+			if (window.loaded) return;
+			window.loaded = true;
+			window.timer = $clear(window.timer);
+			this.fireEvent('domready');
+		}.bind(this);
+		if (document.readyState && window.webkit){
+			window.timer = function(){
+				if (['loaded','complete'].contains(document.readyState)) domReady();
+			}.periodical(50);
+		} else if (document.readyState && window.ie){
+			if (!$('ie_ready')){
+				var src = (window.location.protocol == 'https:') ? '://0' : 'javascript:void(0)';
+				document.write('<script id="ie_ready" defer src="' + src + '"><\/script>');
+				$('ie_ready').onreadystatechange = function(){
+					if (this.readyState == 'complete') domReady();
+				};
+			}
+		} else {
+			window.addListener("load", domReady);
+			document.addListener("DOMContentLoaded", domReady);
+		}
+	}
+
+};
+
+/*compatibility*/
+
+window.onDomReady = function(fn){ 
+	return this.addEvent('domready', fn); 
+};
+
+/*end compatibility*/
+
+/*
+Script: Window.Size.js
+	Window cross-browser dimensions methods.
+	
+Note:
+	The Functions in this script require an XHTML doctype.
+
+License:
+	MIT-style license.
+*/
+
+/*
+Class: window
+	Cross browser methods to get various window dimensions.
+	Warning: All these methods require that the browser operates in strict mode, not quirks mode.
+*/
+
+window.extend({
+
+	/*
+	Property: getWidth
+		Returns an integer representing the width of the browser window (without the scrollbar).
+	*/
+
+	getWidth: function(){
+		if (this.webkit419) return this.innerWidth;
+		if (this.opera) return document.body.clientWidth;
+		return document.documentElement.clientWidth;
+	},
+
+	/*
+	Property: getHeight
+		Returns an integer representing the height of the browser window (without the scrollbar).
+	*/
+
+	getHeight: function(){
+		if (this.webkit419) return this.innerHeight;
+		if (this.opera) return document.body.clientHeight;
+		return document.documentElement.clientHeight;
+	},
+
+	/*
+	Property: getScrollWidth
+		Returns an integer representing the scrollWidth of the window.
+		This value is equal to or bigger than <getWidth>.
+
+	See Also:
+		<http://developer.mozilla.org/en/docs/DOM:element.scrollWidth>
+	*/
+
+	getScrollWidth: function(){
+		if (this.ie) return Math.max(document.documentElement.offsetWidth, document.documentElement.scrollWidth);
+		if (this.webkit) return document.body.scrollWidth;
+		return document.documentElement.scrollWidth;
+	},
+
+	/*
+	Property: getScrollHeight
+		Returns an integer representing the scrollHeight of the window.
+		This value is equal to or bigger than <getHeight>.
+
+	See Also:
+		<http://developer.mozilla.org/en/docs/DOM:element.scrollHeight>
+	*/
+
+	getScrollHeight: function(){
+		if (this.ie) return Math.max(document.documentElement.offsetHeight, document.documentElement.scrollHeight);
+		if (this.webkit) return document.body.scrollHeight;
+		return document.documentElement.scrollHeight;
+	},
+
+	/*
+	Property: getScrollLeft
+		Returns an integer representing the scrollLeft of the window (the number of pixels the window has scrolled from the left).
+
+	See Also:
+		<http://developer.mozilla.org/en/docs/DOM:element.scrollLeft>
+	*/
+
+	getScrollLeft: function(){
+		return this.pageXOffset || document.documentElement.scrollLeft;
+	},
+
+	/*
+	Property: getScrollTop
+		Returns an integer representing the scrollTop of the window (the number of pixels the window has scrolled from the top).
+
+	See Also:
+		<http://developer.mozilla.org/en/docs/DOM:element.scrollTop>
+	*/
+
+	getScrollTop: function(){
+		return this.pageYOffset || document.documentElement.scrollTop;
+	},
+
+	/*
+	Property: getSize
+		Same as <Element.getSize>
+	*/
+
+	getSize: function(){
+		return {
+			'size': {'x': this.getWidth(), 'y': this.getHeight()},
+			'scrollSize': {'x': this.getScrollWidth(), 'y': this.getScrollHeight()},
+			'scroll': {'x': this.getScrollLeft(), 'y': this.getScrollTop()}
+		};
+	},
+
+	//ignore
+	getPosition: function(){return {'x': 0, 'y': 0};}
+
+});
 
 /*
 Script: Json.js
@@ -2706,6 +3786,10 @@ var Json = {
 				var string = [];
 				for (var property in obj) string.push(Json.toString(property) + ':' + Json.toString(obj[property]));
 				return '{' + string.join(',') + '}';
+			case 'number':
+				if (isFinite(obj)) break;
+			case false:
+				return 'null';
 		}
 		return String(obj);
 	},
@@ -2727,7 +3811,7 @@ var Json = {
 	*/
 
 	evaluate: function(str, secure){
-		return (($type(str) != 'string') || (secure && !str.test(/^("(\\.|[^"\\\n\r])*?"|[,:{}\[\]0-9.\-+Eaeflnr-u \n\r\t])+?$/))) ? false : eval('(' + str + ')');
+		return (($type(str) != 'string') || (secure && !str.test(/^("(\\.|[^"\\\n\r])*?"|[,:{}\[\]0-9.\-+Eaeflnr-u \n\r\t])+?$/))) ? null : eval('(' + str + ')');
 	}
 
 };

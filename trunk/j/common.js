@@ -166,6 +166,14 @@ function newSelectbox(name,keys,vals,s,f){
 function newText(a){
 	return document.createTextNode(a);
 }
+function removeClass(el,name){
+	var i,d=[],c=el.className.split(" ");
+	if($type(name)=='array')for(i in name)removeClass(el,name[i]);
+	else{
+		for(i=0;i<c.length;++i)if(c[i]!=name)d.push(c[i]);
+		el.className=d.join(" ");
+	}
+}
 function removeEvent(o,t,f){
 	if(o&&o.removeEventListener)o.removeEventListener(t,f,false);
 }
