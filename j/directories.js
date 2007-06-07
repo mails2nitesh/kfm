@@ -6,8 +6,8 @@ function kfm_changeDirectory(id){
 	if(browser.isIE)while(el&&!el.node_id)el=el.parentNode;
 	kfm_cwd_name=el.kfm_directoryname;
 	kfm_cwd_id=el.node_id;
-	for(var a=0;a<els.length;++a)els[a].removeClass('kfm_directory_open');
-	el.parentNode.addClass('kfm_directory_open');
+	for(var a=0;a<els.length;++a)removeClass(els[a],'kfm_directory_open');
+	el.parentNode.className+=' kfm_directory_open';
 	setTimeout('x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);x_kfm_loadDirectories(kfm_cwd_id,kfm_refreshDirectories);',20);
 }
 function kfm_createDirectory(id){
@@ -63,7 +63,7 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 	});
 	addEvent(el,'mouseout',function(){
 		kfm_directory_over=0;
-		this.removeClass('hovered');
+		removeClass(this,'hovered');
 	});
 	addEvent(el,'mouseover',function(){
 		if(!kfm_directory_over)kfm_directory_over=parseInt(this.node_id);
@@ -145,7 +145,7 @@ function kfm_refreshDirectories(res){
 	if(d==1){ // root node
 		var p=$('kfm_directories');
 		p.parentNode.replaceChild(kfm_dir_addLink(newEl('table','kfm_directories'),'','',1,0,1),p);
-		$('kfm_directory_icon_1').parentNode.addClass('kfm_directory_open');
+		$('kfm_directory_icon_1').parentNode.className+=' kfm_directory_open';
 	}
 	var t=newEl('table'),n='kfm_dir_node_'+d;
 	dirwrapper=$('kfm_directories_subdirs_'+d).empty().addEl(t);

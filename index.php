@@ -22,7 +22,7 @@ require_once($kfm_base_path.'includes/kaejax.php');
 			echo preg_replace('/\s+/',' ',$css);
 		?></style>
 		<title>KFM - Kae's File Manager</title>
-		<script type="text/javascript" src="mootools-1.1/mootools.v1.1.js"></script>
+		<script type="text/javascript" src="mootools-1.1/uncompressed.js"></script>
 		<script type="text/javascript">
 <?php
 	$js='';
@@ -64,18 +64,18 @@ require_once($kfm_base_path.'includes/kaejax.php');
 	}
 	$js.=file_get_contents('j/files.js');
 	$js.=file_get_contents('swfupload/SWFUpload.js');
-	$js=preg_replace('#// .*|[\t]#','',$js); # strip single-line comments and tabs
-	$js=preg_replace('#/\*.*?\*/#ims','',$js); # strip multi-line comments
-	$js=preg_replace('#;\n}#ims','}',$js);
-	$js=preg_replace('#:\n"#ims',':"',$js);
-	$jsnew=$js;
-	do{
-		$redo=0;
-		$jsnew=preg_replace('#\n\n#ims',"\n",$jsnew);
-		$jsnew=preg_replace('#([{}])\n([{}])#ims','\1\2',$jsnew);
-		if($js!=$jsnew)$redo=1;
-		$js=$jsnew;
-	}while($redo);
+#	$js=preg_replace('#// .*|[\t]#','',$js); # strip single-line comments and tabs
+#	$js=preg_replace('#/\*.*?\*/#ims','',$js); # strip multi-line comments
+#	$js=preg_replace('#;\n}#ims','}',$js);
+#	$js=preg_replace('#:\n"#ims',':"',$js);
+#	$jsnew=$js;
+#	do{
+#		$redo=0;
+#		$jsnew=preg_replace('#\n\n#ims',"\n",$jsnew);
+#		$jsnew=preg_replace('#([{}])\n([{}])#ims','\1\2',$jsnew);
+#		if($js!=$jsnew)$redo=1;
+#		$js=$jsnew;
+#	}while($redo);
 	echo $js;
 ?>
 			var session_id="<?php echo session_id(); ?>";

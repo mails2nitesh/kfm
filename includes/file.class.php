@@ -21,6 +21,7 @@ class File extends Object{
 			$this->path=str_replace('//','/',$this->directory.'/'.$filedata['name']);
 			if(!file_exists($this->path)){
 				$this->error('File cannot be found');
+				$this->delete();
 				return false;
 			}
 			$this->writable=$this->isWritable();

@@ -2,7 +2,7 @@
 function kfm_addToSelection(id){
 	if(!id)return;
 	selectedFiles.push(id);
-	$('kfm_file_icon_'+id).addClass('selected');
+	$('kfm_file_icon_'+id).className+=' selected';
 	if(kfm_log_level>0)kfm_log(kfm_lang.FileSelected(id));
 	kfm_selectionCheck();
 }
@@ -71,7 +71,7 @@ function kfm_removeFromSelection(id){
 	for(i=0;i<selectedFiles.length;++i){
 		if(selectedFiles[i]==id){
 			var el=$('kfm_file_icon_'+id);
-			if(el)el.removeClass('selected');
+			if(el)removeClass(el,'selected');
 			kfm_selectionCheck();
 			return selectedFiles.splice(i,1);
 		}
@@ -88,7 +88,7 @@ function kfm_selectInvert(){
 	else kfm_addToSelection(b[a]);
 }
 function kfm_selectNone(){
-	if(kfm_lastClicked)$('kfm_file_icon_'+kfm_lastClicked).removeClass('last_clicked');
+	if(kfm_lastClicked)removeClass($('kfm_file_icon_'+kfm_lastClicked),'last_clicked');
 	for(var i=selectedFiles.length;i>-1;--i)kfm_removeFromSelection(selectedFiles[i]);
 	kfm_lastClicked=0;
 	kfm_selectionCheck();
@@ -200,9 +200,9 @@ function kfm_toggleSelectedFile(e){
 			kfm_addToSelection(id);
 		}
 	}
-	if(kfm_lastClicked)$('kfm_file_icon_'+kfm_lastClicked).removeClass('last_clicked');
+	if(kfm_lastClicked)removeClass($('kfm_file_icon_'+kfm_lastClicked),'last_clicked');
 	kfm_lastClicked=id;
-	$('kfm_file_icon_'+id).addClass('last_clicked');
+	$('kfm_file_icon_'+id).className+=' last_clicked';
 }
 function kfm_selectSingleFile(id){
 	kfm_selectNone();

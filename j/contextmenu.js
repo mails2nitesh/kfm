@@ -23,7 +23,7 @@ function kfm_createContextMenu(m,links){
 				if(disabled && !kfm_vars.show_disabled_contextmenu_links)return;
 				var row=this.addRow();
 				if(disabled){
-					row.addClass('disabled');
+					row.className+=' disabled';
 					href='';
 				}
 				var link=(href!='kfm_0')?newLink('javascript:kfm_closeContextMenu();'+href,text):text;

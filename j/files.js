@@ -202,7 +202,7 @@ function kfm_incrementalFileDisplay(){
 			name=name.replace(kfm_regexps.remove_filename_extension,'')+'.';
 		}
 		var nameEl=$(el.getElementsByTagName('span')[0]);
-		nameEl.removeClass('filename');
+		removeClass(nameEl,'filename');
 		kfm_shrinkName(name,el,nameEl,'offsetWidth',reqWidth,extension);
 	}
 	el.style.width=reqWidth-kfm_file_bits.padding;
