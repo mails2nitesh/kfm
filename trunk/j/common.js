@@ -2,14 +2,8 @@
 function clearSelections(){
 	window.getSelection().removeAllRanges();
 }
-function getEls(i,p){
-	return p?p.getElementsByTagName(i):document.getElementsByTagName(i);
-}
 function getEvent(e){
 	return e?e:(window.event?window.event:"");
-}
-function getEventTarget(e,tagName){
-	return getEvent(e).currentTarget;
 }
 function getMouseAt(e){
 	e=getEvent(e);
@@ -79,7 +73,7 @@ function loadJS(url,id,lang,onload){
 		};
 	}
 	el.src=url;
-	getEls('head')[0].appendChild(el);
+	$E('head').appendChild(el);
 	return 1;
 }
 function newEl(t,id,cn,chld,vals,css){

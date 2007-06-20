@@ -7,9 +7,6 @@ function kfm_cancelEvent(e,c){
 function clearSelections(){
 	document.selection.empty();
 }
-function getEventTarget(e,tagName){
-	return window.event.srcElement;
-}
 function getWindowScrollAt(){
 	var d=document.body;
 	if(d.scrollLeft||d.scrollTop)return {x:d.scrollLeft,y:d.scrollTop};

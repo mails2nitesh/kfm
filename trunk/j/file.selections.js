@@ -7,7 +7,8 @@ function kfm_addToSelection(id){
 	kfm_selectionCheck();
 }
 function kfm_chooseFile(e,o){
-	var el=(o?e:getEventTarget(e)).kfm_attributes;
+	e=new Event(e);
+	var el=(o?e:e.target).kfm_attributes;
 	x_kfm_getFileUrl(el.id,function(url){
 		if(kfm_file_handler=='return'||kfm_file_handler=='fckeditor'){
 			if(!el.width)window.opener.SetUrl(url);
@@ -173,8 +174,9 @@ function kfm_shiftFileSelectionUD(dir){
 	kfm_selectSingleFile(na[a]);
 }
 function kfm_toggleSelectedFile(e){
+	e=new Event(e);
 	kfm_cancelEvent(e);
-	var el=getEventTarget(e),id=el.kfm_attributes.id;
+	var el=e.target,id=el.kfm_attributes.id;
 	if(kfm_lastClicked&&e.shiftKey){
 		clearSelections(e);
 		kfm_selectNone();
