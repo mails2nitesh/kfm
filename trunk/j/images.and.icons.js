@@ -2,7 +2,7 @@
 function kfm_changeCaption(id){
 	var table=newEl('table','kfm_newCaptionDetails',0,0,{kfm_caption_for:id});
 	var row=table.insertRow(0),textarea=newInput('kfm_new_caption','textarea',$('kfm_file_icon_'+id).kfm_attributes.caption);
-	setCss(textarea,'height:50px;width:200px');
+	textarea.setStyles('height:50px;width:200px');
 	row.insertCell(0).appendChild(newText(kfm_lang.NewCaption));
 	row.insertCell(1).appendChild(textarea);
 	kfm_modal_open(table,kfm_lang.ChangeCaption,[[kfm_lang.ChangeCaption,'kfm_changeCaption_set']]);
@@ -28,13 +28,13 @@ function kfm_img_startLightbox(id){
 		window.title=window.kfm_slideshow.at;
 		id=window.kfm_slideshow.ids[window.kfm_slideshow.at%window.kfm_slideshow.ids.length];
 	}
-	var el,data=$('kfm_file_icon_'+id).kfm_attributes,ws=getWindowSize();
+	var el,data=$('kfm_file_icon_'+id).kfm_attributes,ws=getWindowSize(),oldEl=$('kfm_lightboxImage');
 	if(!$('kfm_lightboxShader')){
 		el=newEl('div','kfm_lightboxShader',0,0,0,'position:absolute;left:0;zIndex:1;top:0;width:'+ws.x+'px;height:'+ws.y+'px;background:#000;opacity:.7');
 		addEvent(el,'click',kfm_img_stopLightbox);
 		document.body.addEl(el);
 	}
-	delEl('kfm_lightboxImage');
+	if(oldEl)oldEl.remove();
 	var w=data.width,h=data.height,url='get.php?id='+id,r=0;
 	if(!w||!h){
 		kfm_log(kfm_lang.NotAnImageOrImageDimensionsNotReported);
@@ -63,7 +63,8 @@ function kfm_img_startLightbox(id){
 	document.body.addEl(el);
 }
 function kfm_img_stopLightbox(){
-	delEl(['kfm_lightboxShader','kfm_lightboxImage']);
+	$('kfm_lightboxShader').remove();
+	$('kfm_lightboxImage').remove();
 	window.kfm_slideshow=null;
 }
 function kfm_resizeImage(id){

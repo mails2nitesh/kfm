@@ -1,6 +1,6 @@
 // see license.txt for licensing
 function kfm_closeContextMenu(){
-	delEl(contextmenu);
+	if(contextmenu)contextmenu.remove();
 	contextmenu=null;
 }
 function kfm_contextmenuinit(){
@@ -27,7 +27,7 @@ function kfm_createContextMenu(m,links){
 					href='';
 				}
 				var link=(href!='kfm_0')?newLink('javascript:kfm_closeContextMenu();'+href,text):text;
-				row.addCell(0,0,(icon?newImg('themes/'+kfm_theme+'/icons/'+icon+'.png'):''),'kfm_contextmenu_iconCell');
+				row.addCell(0,0,(icon?new Element('img',{src:'themes/'+kfm_theme+'/icons/'+icon+'.png'}):''),'kfm_contextmenu_iconCell');
 				row.addCell(1,0,link);
 			}
 		},'left:'+m.x+'px;top:'+m.y+'px');
