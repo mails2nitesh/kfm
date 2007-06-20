@@ -38,9 +38,10 @@ function kfm(){
 		left_column.panels_unlocked=1;
 		left_column.setStyles('height:'+w.y+'px');
 		left_column.contextmenu=function(e){
-			e=getEvent(e);
+			var m=getMouseAt(e);
+			e=new Event(e);
 			{ // variables
-				var row,cell,cells,m=getMouseAt(e),rows=0,target=kfm_getParentEl(getEventTarget(e),'DIV');
+				var row,cell,cells,rows=0,target=kfm_getParentEl(e.target,'DIV');
 			}
 			{ // add the links
 				var links=[],i;
@@ -157,7 +158,7 @@ function kfm_handleWindowResizes(){
 	for(var i=0;i<to_max_height.length;++i)if($(to_max_height[i]))$(to_max_height[i]).setStyles('height:'+w.y+'px');
 	for(var i=0;i<to_max_width.length;++i)if($(to_max_width[i]))$(to_max_width[i]).setStyles('width:'+w.x+'px');
 	if($('kfm_codepressTableCell')){
-		var el=$('kfm_codepressTableCell'),iframe=getEls('iframe',el)[0];
+		var el=$('kfm_codepressTableCell'),iframe=$E('iframe',el);
 		iframe.style.height=0;
 		iframe.style.width=0;
 		iframe.style.height=(el.offsetHeight-10)+'px';
