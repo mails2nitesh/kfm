@@ -23,11 +23,11 @@ function newEl(t,id,cn,chld,vals,css){
 		el.id=id;
 		el.name=id;
 	}
-	kfm_addMethods(el);
+	el=kfm_addMethods(el);
 	if(cn)el.className=cn;
 	if(chld)el.addEl(chld);
 	if(vals)$extend(el,vals);
-	if(css)setCss(el,css);
+	if(css)el.setStyles(css);
 	return el;
 }
 function newForm(action,method,enctype,target){
@@ -38,10 +38,4 @@ function removeEvent(o,t,f){
 	if(!o[t+f])return;
 	o.detachEvent('on'+t,o['e'+t+f]);
 	o[t+f]=null;
-}
-function setFloat(e,f){
-	e.style.styleFloat=f;
-}
-function setOpacity(e,o){
-	e.style.filter='alpha(opacity='+(o*100)+')';
 }

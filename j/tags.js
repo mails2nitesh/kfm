@@ -18,7 +18,7 @@ function kfm_tagDraw(id){
 		var el=els[i];
 		if(el.innerHTML==id){
 			el.innerHTML=name;
-			removeClass(el,'kfm_unknown_tag');
+			el.removeClass('kfm_unknown_tag');
 		}
 	}
 }
