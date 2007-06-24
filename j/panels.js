@@ -73,27 +73,27 @@ function kfm_createFileUploadPanel(){
 				window.swfu.loadUI=function(){
 					var t=newEl('table'),r,c,inp1,inp2,instance=this;
 					t.style.width='100%';
-					r=t.addRow();
+					r=kfm_addRow(t);
 					{ // browse button
-						c=r.addCell();
+						c=kfm_addCell(r);
 						c.style.width='10%';
 						inp1=newInput('kfm_multiChooseFile','button',kfm_lang.Browse);
 						addEvent(inp1,'click',function(){instance.browse()});
 						c.addEl(inp1);
 					}
 					{ // file queue
-						c=r.addCell(1);
+						c=kfm_addCell(r,1);
 						c.id='kfm_files_to_upload';
 					}
-					r=t.addRow();
+					r=kfm_addRow(t);
 					{ // upload button
-						c=r.addCell();
+						c=kfm_addCell(r);
 						inp2=newInput('kfm_uploadButton','button',kfm_lang.Upload);
 						addEvent(inp2,'click',function(){instance.upload()});
 						c.addEl(inp2);
 					}
 					{ // progress meter
-						c=r.addCell(1);
+						c=kfm_addCell(r,1);
 						c.appendChild(new Element('div',{id:'kfm_file_upload_progress_meter',styles:{display:'block',background:'#00f',width:0,height:10}}));
 					}
 					$('kfm_uploadForm').empty().addEl(t);
