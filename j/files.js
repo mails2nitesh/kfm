@@ -165,7 +165,7 @@ function kfm_incrementalFileDisplay(){
 	{ // add events
 		addEvent(el,'click',kfm_toggleSelectedFile);
 		addEvent(el,'dblclick',kfm_chooseFile);
-		el.contextmenu=kfm_file_bits.contextmenu;
+		addEvent(el,'contextmenu',kfm_file_bits.contextmenu);
 		addEvent(el,'mousedown',kfm_file_bits.mousedown);
 		addEvent(el,'mouseover',function(){ // initialise info tooltip
 			if(window.kfm_tooltipInit)$clear(window.kfm_tooltipInit);
