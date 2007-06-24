@@ -82,7 +82,7 @@ function kfm(){
 		message=newEl('div','message');
 	}
 	{ // draw areas to screen and load files and directory info
-		document.body.empty().addEl([left_column,right_column,message]);
+		kfm_addEl(document.body.empty(),[left_column,right_column,message]);
 		x_kfm_loadFiles(1,kfm_refreshFiles);
 		x_kfm_loadDirectories(1,kfm_refreshDirectories);
 	}
@@ -91,28 +91,27 @@ function kfm(){
 	kfm_contextmenuinit();
 }
 var kfm_elMethods={
-	addEl:function(a){
-		if(!a)return this;
-		if($type(a)!='array')a=[a];
-		for(var i=0;i<a.length;++i){
-			if($type(a[i])=='array')this.addEl(a[i]);
-			else this.appendChild(a[i].toString()===a[i]?newText(a[i]):a[i]);
-		}
-		return this;
-	},
 	contextmenu:function(e){},
 	contextmenu_real:function(e){this.contextmenu(e)}
 };
 function kfm_addCell(o,b,c,d,e){
 	var f=kfm_addMethods(o.insertCell(b));
 	if(c)f.colSpan=c;
-	if(d)f.addEl(d);
+	if(d)kfm_addEl(f,d);
 	if(e)f.className=e;
 	return f;
 }
+function kfm_addEl(o,a){
+	if(!a)return o;
+	if($type(a)!='array')a=[a];
+	for(var i=0;i<a.length;++i){
+		if($type(a[i])=='array')kfm_addEl(o,a[i]);
+		else o.appendChild(a[i].toString()===a[i]?newText(a[i]):a[i]);
+	}
+	return o;
+}
 function kfm_addMethods(el){
 	$extend(el,{
-		addEl:kfm_elMethods.addEl,
 		contextmenu:kfm_elMethods.contextmenu
 	});
 	addEvent(el,'contextmenu',kfm_elMethods.contextmenu_real);
@@ -242,7 +241,7 @@ function kfm_log(msg){
 	wrapper.visible=1;
 	var el=$E('#kfm_logs_panel div.kfm_panel_body'),p=newEl('p',0,0,msg);
 	if(msg.indexOf(kfm_lang.ErrorPrefix)==0)p.setStyles('background:#ff0;fontWeight:bold;color:red');
-	el.addEl(p);
+	kfm_addEl(el,p);
 	el.scrollTop=el.scrollTop+p.offsetHeight;
 }
 function kfm_prompt(txt,val){

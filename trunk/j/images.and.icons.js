@@ -32,7 +32,7 @@ function kfm_img_startLightbox(id){
 	if(!$('kfm_lightboxShader')){
 		el=newEl('div','kfm_lightboxShader',0,0,0,'position:absolute;left:0;zIndex:1;top:0;width:'+ws.x+'px;height:'+ws.y+'px;background:#000;opacity:.7');
 		addEvent(el,'click',kfm_img_stopLightbox);
-		document.body.addEl(el);
+		kfm_addEl(document.body,el);
 	}
 	if(oldEl)oldEl.remove();
 	var w=data.width,h=data.height,url='get.php?id='+id,r=0;
@@ -60,7 +60,7 @@ function kfm_img_startLightbox(id){
 			setTimeout('kfm_img_startLightbox()',4000);
 		});
 	}
-	document.body.addEl(el);
+	kfm_addEl(document.body,el);
 }
 function kfm_img_stopLightbox(){
 	$('kfm_lightboxShader').remove();

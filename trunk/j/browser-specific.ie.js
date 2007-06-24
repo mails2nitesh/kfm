@@ -22,7 +22,7 @@ function newEl(t,id,cn,chld,vals,css){
 	}
 	el=kfm_addMethods(el);
 	if(cn)el.className=cn;
-	if(chld)el.addEl(chld);
+	if(chld)kfm_addEl(el,chld);
 	if(vals)$extend(el,vals);
 	if(css)el.setStyles(css);
 	return el;

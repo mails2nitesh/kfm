@@ -84,7 +84,7 @@ function newEl(t,id,cn,chld,vals,css){
 		el.name=id;
 	}
 	el=kfm_addMethods(el);
-	if(chld)el.addEl(chld);
+	if(chld)kfm_addEl(el,chld);
 	if(cn)el.className=cn;
 	if(vals)$extend(el,vals);
 	if(css)el.setStyles(css);
@@ -135,7 +135,7 @@ function newSelectbox(name,keys,vals,s,f){
 		var v2=v1.length>20?v1.substr(0,27)+'...':v1;
 		el3=newEl('option',0,0,v2,{value:keys[i],title:v1});
 		if(keys[i]==s)s2=i;
-		el2.addEl(el3);
+		kfm_addEl(el2,el3);
 	}
 	el2.selectedIndex=s2;
 	if(f)el2.onchange=f;
