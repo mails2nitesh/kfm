@@ -44,7 +44,7 @@ var kfm_file_bits={
 		e=getEvent(e);
 		if(e.button==2)return;
 		var id=this.kfm_attributes.id;
-		addEvent(document,'mouseup',kfm_file_dragFinish);
+		document.addEvent('mouseup',kfm_file_dragFinish);
 		$clear(window.dragSelectionTrigger);
 		window.dragTrigger=setTimeout('kfm_file_dragStart('+id+')',100);
 	},
@@ -177,16 +177,16 @@ function kfm_incrementalFileDisplay(){
 	});
 	var writable=fdata.writable;
 	{ // add events
-		addEvent(el,'click',kfm_toggleSelectedFile);
-		addEvent(el,'dblclick',kfm_chooseFile);
-		addEvent(el,'contextmenu',kfm_file_bits.contextmenu);
-		addEvent(el,'mousedown',kfm_file_bits.mousedown);
-		addEvent(el,'mouseover',function(){ // initialise info tooltip
+		el.addEvent('click',kfm_toggleSelectedFile);
+		el.addEvent('dblclick',kfm_chooseFile);
+		el.addEvent('contextmenu',kfm_file_bits.contextmenu);
+		el.addEvent('mousedown',kfm_file_bits.mousedown);
+		el.addEvent('mouseover',function(){ // initialise info tooltip
 			if(window.kfm_tooltipInit)$clear(window.kfm_tooltipInit);
 			if(window.drag_wrapper)return; // don't open if currently dragging files
 			window.kfm_tooltipInit=setTimeout('x_kfm_getFileDetails('+id+',kfm_showToolTip)',500);
 		});
-		addEvent(el,'mouseout',function(){ // remove info tooltip
+		el.addEvent('mouseout',function(){ // remove info tooltip
 			if(window.kfm_tooltipInit)$clear(window.kfm_tooltipInit);
 			var o=$('kfm_tooltip');
 			if(o)o.remove();

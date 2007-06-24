@@ -13,9 +13,3 @@ function getWindowScrollAt(){
 	d=document.documentElement;
 	return {x:d.scrollLeft,y:d.scrollTop};
 }
-function removeEvent(o,t,f){
-	if(!o)return;
-	if(!o[t+f])return;
-	o.detachEvent('on'+t,o['e'+t+f]);
-	o[t+f]=null;
-}
