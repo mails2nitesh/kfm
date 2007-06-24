@@ -119,7 +119,12 @@ function newInput(n,t,v,cl){
 }
 function newLink(h,t,id,c,title){
 	if(!title)title='';
-	return newEl('a',id,c,t,{href:h,title:title});
+	return (new Element('a',{
+		'id':id,
+		'class':c,
+		'href':h,
+		'title':title
+	})).setHTML(t);
 }
 function newSelectbox(name,keys,vals,s,f){
 	var el2=newEl('select',name),el3,s2=0,i=0;

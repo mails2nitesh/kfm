@@ -54,34 +54,34 @@ function kfm_buildFileDetailsTable(res){
 	if(!res)return kfm_log('error: missing file details?');
 	var table=newEl('table'),r;
 	if(res.filename){ // filename
-		r=table.addRow();
-		r.addCell(0,0,newEl('strong',0,0,kfm_lang.Filename));
-		r.addCell(1,0,res.filename);
+		r=kfm_addRow(table);
+		kfm_addCell(r,0,0,newEl('strong',0,0,kfm_lang.Filename));
+		kfm_addCell(r,1,0,res.filename);
 	}
 	if(res.filesize){ // filesize
-		r=table.addRow();
-		r.addCell(0,0,newEl('strong',0,0,kfm_lang.Filesize));
-		r.addCell(1,0,res.filesize);
+		r=kfm_addRow(table);
+		kfm_addCell(r,0,0,newEl('strong',0,0,kfm_lang.Filesize));
+		kfm_addCell(r,1,0,res.filesize);
 	}
 	if(res.tags&&res.tags.length){ // tags
-		r=table.addRow();
-		r.addCell(0).addEl(newEl('strong',0,0,kfm_lang.Tags));
-		var arr=[],c=r.addCell(1);
+		r=kfm_addRow(table);
+		kfm_addCell(r,0).addEl(newEl('strong',0,0,kfm_lang.Tags));
+		var arr=[],c=kfm_addCell(r,1);
 		for(var i=0;i<res.tags.length;++i){
 			c.addEl(kfm_tagDraw(res.tags[i]));
 			if(i!=res.tags.length-1)c.addEl(', ');
 		}
 	}
 	if(res.mimetype){ // mimetype
-		r=table.addRow();
-		r.addCell(0).addEl(newEl('strong',0,0,kfm_lang.Mimetype));
-		r.addCell(1).addEl(res.mimetype);
+		r=kfm_addRow(table);
+		kfm_addCell(r,0).addEl(newEl('strong',0,0,kfm_lang.Mimetype));
+		kfm_addCell(r,1).addEl(res.mimetype);
 		switch(res.mimetype.replace(/\/.*/,'')){
 			case 'image':{
 				if(res.caption){ // caption
-					r=table.addRow();
-					r.addCell(0,0,newEl('strong',0,0,kfm_lang.Caption));
-					r.addCell(1).innerHTML=(res.caption).replace(/\n/g,'<br \/>');
+					r=kfm_addRow(table);
+					kfm_addCell(r,0,0,newEl('strong',0,0,kfm_lang.Caption));
+					kfm_addCell(r,1).innerHTML=(res.caption).replace(/\n/g,'<br \/>');
 				}
 				break;
 			}

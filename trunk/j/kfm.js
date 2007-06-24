@@ -91,13 +91,6 @@ function kfm(){
 	kfm_contextmenuinit();
 }
 var kfm_elMethods={
-	addCell:function(b,c,d,e){
-		var f=kfm_addMethods(this.insertCell(b));
-		if(c)f.colSpan=c;
-		if(d)f.addEl(d);
-		if(e)f.className=e;
-		return f;
-	},
 	addEl:function(a){
 		if(!a)return this;
 		if($type(a)!='array')a=[a];
@@ -107,24 +100,29 @@ var kfm_elMethods={
 		}
 		return this;
 	},
-	addRow:function(p,c){
-		var o=this.insertRow(p===parseInt(p)?p:this.rows.length);
-		kfm_addMethods(o);
-		o.className=c;
-		return o;
-	},
 	contextmenu:function(e){},
 	contextmenu_real:function(e){this.contextmenu(e)}
 };
+function kfm_addCell(o,b,c,d,e){
+	var f=kfm_addMethods(o.insertCell(b));
+	if(c)f.colSpan=c;
+	if(d)f.addEl(d);
+	if(e)f.className=e;
+	return f;
+}
 function kfm_addMethods(el){
 	$extend(el,{
-		addCell:kfm_elMethods.addCell,
 		addEl:kfm_elMethods.addEl,
-		addRow:kfm_elMethods.addRow,
 		contextmenu:kfm_elMethods.contextmenu
 	});
 	addEvent(el,'contextmenu',kfm_elMethods.contextmenu_real);
 	return $(el);
+}
+function kfm_addRow(t,p,c){
+	var o=t.insertRow(p===parseInt(p)?p:t.rows.length);
+	kfm_addMethods(o);
+	o.className=c;
+	return o;
 }
 function kfm_alert(txt){
 	window.inPrompt=1;
