@@ -8,9 +8,11 @@ function kfm_tagAdd(id){
 }
 function kfm_tagDraw(id){
 	if($type(id)!='array'){
-		if(kfm_tags[id])return newEl('span',0,0,kfm_tags[id]);
+		if(kfm_tags[id])return (new Element('span')).setHTML(kfm_tags[id]);
 		x_kfm_getTagName(id,kfm_tagDraw);
-		return newEl('span',0,'kfm_unknown_tag',id);
+		return (new Element('span',{
+			'class':'kfm_unknown_tag'
+		})).setHTML(id);
 	}
 	var name=id[1],id=id[0],els=$ES('span.kfm_unknown_tag');
 	kfm_tags[id]=name;

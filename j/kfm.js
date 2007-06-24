@@ -54,7 +54,9 @@ function kfm(){
 		});
 	}
 	{ // create right_column
-		right_column=newEl('div','kfm_right_column');
+		right_column=new Element('div',{
+			'id':'kfm_right_column'
+		});
 		addEvent(right_column,'click',function(){if(!window.dragType)kfm_selectNone()});
 		addEvent(right_column,'mousedown',function(e){
 			if(e.button==2)return;
@@ -76,7 +78,9 @@ function kfm(){
 		});
 	}
 	{ // create message div
-		message=newEl('div','message');
+		message=new Element('div',{
+			'id':'message'
+		});
 	}
 	{ // draw areas to screen and load files and directory info
 		kfm_addEl(document.body.empty(),[left_column,right_column,message]);
@@ -224,7 +228,7 @@ function kfm_log(msg){
 		wrapper=$('kfm_logs_panel');
 	}
 	wrapper.visible=1;
-	var el=$E('#kfm_logs_panel div.kfm_panel_body'),p=newEl('p',0,0,msg);
+	var el=$E('#kfm_logs_panel div.kfm_panel_body'),p=(new Element('p')).setHTML(msg);
 	if(msg.indexOf(kfm_lang.ErrorPrefix)==0)p.setStyles('background:#ff0;fontWeight:bold;color:red');
 	kfm_addEl(el,p);
 	el.scrollTop=el.scrollTop+p.offsetHeight;

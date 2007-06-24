@@ -52,20 +52,20 @@ var kfm_file_bits={
 }
 function kfm_buildFileDetailsTable(res){
 	if(!res)return kfm_log('error: missing file details?');
-	var table=newEl('table'),r;
+	var table=new Element('table'),r;
 	if(res.filename){ // filename
 		r=kfm_addRow(table);
-		kfm_addCell(r,0,0,newEl('strong',0,0,kfm_lang.Filename));
+		kfm_addCell(r,0,0,(new Element('strong')).setHTML(kfm_lang.Filename));
 		kfm_addCell(r,1,0,res.filename);
 	}
 	if(res.filesize){ // filesize
 		r=kfm_addRow(table);
-		kfm_addCell(r,0,0,newEl('strong',0,0,kfm_lang.Filesize));
+		kfm_addCell(r,0,0,(new Element('strong')).setHTML(kfm_lang.Filesize));
 		kfm_addCell(r,1,0,res.filesize);
 	}
 	if(res.tags&&res.tags.length){ // tags
 		r=kfm_addRow(table);
-		kfm_addEl(kfm_addCell(r,0),newEl('strong',0,0,kfm_lang.Tags));
+		kfm_addEl(kfm_addCell(r,0),(new Element('strong')).setHTML(kfm_lang.Tags));
 		var arr=[],c=kfm_addCell(r,1);
 		for(var i=0;i<res.tags.length;++i){
 			kfm_addEl(c,kfm_tagDraw(res.tags[i]));
@@ -74,13 +74,13 @@ function kfm_buildFileDetailsTable(res){
 	}
 	if(res.mimetype){ // mimetype
 		r=kfm_addRow(table);
-		kfm_addEl(kfm_addCell(r,0),newEl('strong',0,0,kfm_lang.Mimetype));
+		kfm_addEl(kfm_addCell(r,0),(new Element('strong')).setHTML(kfm_lang.Mimetype));
 		kfm_addEl(kfm_addCell(r,1),res.mimetype);
 		switch(res.mimetype.replace(/\/.*/,'')){
 			case 'image':{
 				if(res.caption){ // caption
 					r=kfm_addRow(table);
-					kfm_addCell(r,0,0,newEl('strong',0,0,kfm_lang.Caption));
+					kfm_addCell(r,0,0,(new Element('strong')).setHTML(kfm_lang.Caption));
 					kfm_addCell(r,1).innerHTML=(res.caption).replace(/\n/g,'<br \/>');
 				}
 				break;
@@ -136,7 +136,12 @@ function kfm_downloadFileFromUrl(){
 function kfm_downloadSelectedFiles(id){
 	var wrapper=$('kfm_download_wrapper');
 	if(!wrapper){
-		wrapper=newEl('div','kfm_download_wrapper',0,0,0,'display:none');
+		wrapper=new Element('div',{
+			'id':'kfm_download_wrapper',
+			'styles':{
+				'display':'none'
+			}
+		});
 		kfm_addEl(document.body,wrapper);
 	}
 	wrapper.empty();
@@ -144,7 +149,7 @@ function kfm_downloadSelectedFiles(id){
 	else for(var i=0;i<selectedFiles.length;++i)kfm_downloadSelectedFiles_addIframe(wrapper,selectedFiles[i]);
 }
 function kfm_downloadSelectedFiles_addIframe(wrapper,id){
-	var iframe=newEl('iframe');
+	var iframe=new Element('iframe');
 	iframe.src='get.php?id='+id+'&forcedownload=1';
 	kfm_addEl(wrapper,iframe);
 }
@@ -159,8 +164,17 @@ function kfm_isFileInCWD(filename){
 function kfm_incrementalFileDisplay(){
 	var b=window.kfm_incrementalFileDisplay_vars,a=b.at,fsdata=b.data.files,wrapper=$('kfm_right_column'),fdata=fsdata[a];
 	if(wrapper.contentMode!='file_icons')return (window.kfm_incrementalFileDisplay_vars=null);
-	var name=fdata.name,ext=name.replace(kfm_regexps.all_up_to_last_dot,''),b,fullfilename=kfm_cwd_name+'/'+name,id=fdata.id,nameEl=newEl('span',0,'filename',name);
-	var el=newEl('div','kfm_file_icon_'+id,'kfm_file_icon kfm_icontype_'+ext,0,0,'cursor:'+(Browser.isIE?'hand':'pointer'));
+	var name=fdata.name,ext=name.replace(kfm_regexps.all_up_to_last_dot,''),b,fullfilename=kfm_cwd_name+'/'+name,id=fdata.id;
+	var nameEl=(new Element('span',{
+		'class':'filename'
+	})).setHTML(name);
+	var el=new Element('div',{
+		'id':'kfm_file_icon_'+id,
+		'class':'kfm_file_icon kfm_icontype_'+ext,
+		'styles':{
+			'cursor':(Browser.isIE?'hand':'pointer')
+		}
+	});
 	var writable=fdata.writable;
 	{ // add events
 		addEvent(el,'click',kfm_toggleSelectedFile);
@@ -233,7 +247,9 @@ function kfm_refreshFiles(res){
 	window.kfm_incrementalFileDisplay_vars={at:0,data:res};
 	var a=0,wrapper=$('kfm_right_column').empty();
 	$extend(wrapper,{contentMode:'file_icons',fileids:[],files:[]});
-	kfm_addEl(wrapper,newEl('div',0,'kfm_panel_header',kfm_lang.CurrentWorkingDir(res.reqdir)));
+	kfm_addEl(wrapper,(new Element('div',{
+		'class':'kfm_panel_header'
+	})).setHTML(kfm_lang.CurrentWorkingDir(res.reqdir)));
 	for(;a<res.files.length;++a)wrapper.fileids[a]=res.files[a].id;
 	document.title=res.reqdir;
 	kfm_lastClicked=null;
@@ -241,7 +257,9 @@ function kfm_refreshFiles(res){
 	if(res.uploads_allowed)kfm_addPanel('kfm_left_column','kfm_file_upload_panel');
 	else kfm_removePanel('kfm_left_column','kfm_file_upload_panel');
 	kfm_refreshPanels('kfm_left_column');
-	if(!res.files.length)kfm_addEl(wrapper,newEl('span',0,'kfm_empty',kfm_lang.DirEmpty(res.reqdir)));
+	if(!res.files.length)kfm_addEl(wrapper,(new Element('span',{
+		'class':'kfm_empty'
+	})).setHTML(kfm_lang.DirEmpty(res.reqdir)));
 	else kfm_incrementalFileDisplay();
 }
 function kfm_removeFilesFromView(files){

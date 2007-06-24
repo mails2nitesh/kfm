@@ -6,12 +6,31 @@ function kfm_addPanel(wrapper,panel){
 		kfm_refreshPanels(wrapper);
 		return;
 	}
-	if(panel=='kfm_directories_panel')el=kfm_createPanel(kfm_lang.Directories,'kfm_directories_panel',newEl('table','kfm_directories'),{state:1,abilities:-1,order:1});
-	else if(panel=='kfm_directory_properties_panel')el=kfm_createPanel(kfm_lang.DirectoryProperties,'kfm_directory_properties_panel',newEl('div','kfm_directory_properties'),{state:0,abilities:1});
+	if(panel=='kfm_directories_panel')el=kfm_createPanel(
+		kfm_lang.Directories,
+		'kfm_directories_panel',
+		new Element('table',{
+			'id':'kfm_directories'
+		}),
+		{'state':1,'abilities':-1,'order':1}
+	);
+	else if(panel=='kfm_directory_properties_panel')el=kfm_createPanel(
+		kfm_lang.DirectoryProperties,
+		'kfm_directory_properties_panel',
+		new Element('div',{
+			'class':'kfm_directory_properties'
+		}),
+		{state:0,abilities:1}
+	);
 	else if(panel=='kfm_file_details_panel')el=kfm_createFileDetailsPanel();
 	else if(panel=='kfm_file_upload_panel')el=kfm_createFileUploadPanel();
 	else if(panel=='kfm_search_panel')el=kfm_createSearchPanel();
-	else if(panel=='kfm_logs_panel')el=kfm_createPanel(kfm_lang.Logs,'kfm_logs_panel',newEl('p',0,0,kfm_lang.LoadingKFM),{order:100});
+	else if(panel=='kfm_logs_panel')el=kfm_createPanel(
+		kfm_lang.Logs,
+		'kfm_logs_panel',
+		(new Element('p')).setHTML(kfm_lang.LoadingKFM),
+		{order:100}
+	);
 	else{
 		kfm_log(kfm_lang.NoPanel(panel));
 		return;
@@ -43,7 +62,9 @@ function kfm_createFileUploadPanel(){
 			{ // normal single-file upload form
 				var f1=newForm('upload.php','POST','multipart/form-data','kfm_iframe');
 				f1.id='kfm_uploadForm';
-				var iframe=newEl('iframe','kfm_iframe');
+				var iframe=new Element('iframe',{
+					'id':'kfm_iframe'
+				});
 				iframe.src='javascript:false';
 				iframe.setStyles('display:none');
 				var submit=newInput('upload','submit',kfm_lang.Upload);
@@ -53,7 +74,14 @@ function kfm_createFileUploadPanel(){
 				var input=newInput('kfm_file','file');
 				addEvent(input,'keyup',kfm_uploadPanel_checkForZip);
 				addEvent(input,'change',kfm_uploadPanel_checkForZip);
-				var unzip1=newEl('span','kfm_unzip1','kfm_unzipWhenUploaded',[newInput('kfm_unzipWhenUploaded','checkbox'),kfm_lang.ExtractAfterUpload],0,'visibility:hidden');
+				var unzip1=new Element('span',{
+					'id':'kfm_unzip1',
+					'class':'kfm_unzipWhenUploaded',
+					'styles':{
+						'visibility':'none'
+					}
+				});
+				kfm_addEl(unzip1,[newInput('kfm_unzipWhenUploaded','checkbox'),kfm_lang.ExtractAfterUpload]);
 				kfm_addEl(f1,[input,submit,unzip1]);
 			}
 			{ // load multi-upload thing if possible
@@ -71,7 +99,7 @@ function kfm_createFileUploadPanel(){
 					create_ui:true
 				});
 				window.swfu.loadUI=function(){
-					var t=newEl('table'),r,c,inp1,inp2,instance=this;
+					var t=new Element('table'),r,c,inp1,inp2,instance=this;
 					t.style.width='100%';
 					r=kfm_addRow(t);
 					{ // browse button
@@ -94,7 +122,15 @@ function kfm_createFileUploadPanel(){
 					}
 					{ // progress meter
 						c=kfm_addCell(r,1);
-						c.appendChild(new Element('div',{id:'kfm_file_upload_progress_meter',styles:{display:'block',background:'#00f',width:0,height:10}}));
+						c.appendChild(new Element('div',{
+							'id':'kfm_file_upload_progress_meter',
+							'styles':{
+								'display':'block',
+								'background':'#00f',
+								'width':0,
+								'height':10
+							}
+						}));
 					}
 					kfm_addEl($('kfm_uploadForm').empty(),t);
 					instance.set_number_of_files(0);
@@ -120,13 +156,25 @@ function kfm_createFileUploadPanel(){
 			}
 		}
 		{ // copy from URL
-			var f2=newEl('div','kfm_copyForm',0,0,0,'display:none');
+			var f2=new Element('div',{
+				'id':'kfm_copyForm',
+				'styles':{
+					'display':'none'
+				}
+			});
 			var submit2=newInput('upload','submit',kfm_lang.CopyFromURL);
 			var inp2=newInput('kfm_url',0,0,0,0,'width:100%');
 			inp2.onkeyup=kfm_uploadPanel_checkForZip;
 			inp2.onchange=kfm_uploadPanel_checkForZip;
 			submit2.onclick=kfm_downloadFileFromUrl;
-			var unzip2=newEl('span','kfm_unzip2','kfm_unzipWhenUploaded',[newInput('kfm_unzipWhenUploaded','checkbox'),kfm_lang.ExtractAfterUpload],0,'visibility:hidden');
+			var unzip2=new Element('span',{
+				'id':'kfm_unzip2',
+				'class':'kfm_unzipWhenUploaded',
+				'styles':{
+					'visibility':'hidden'
+				}
+			});
+			kfm_addEl(unzip2,[newInput('kfm_unzipWhenUploaded','checkbox'),kfm_lang.ExtractAfterUpload]);
 			kfm_addEl(f2,[inp2,submit2,unzip2]);
 		}
 	}
@@ -138,27 +186,48 @@ function kfm_createFileDetailsPanel(){
 function kfm_createPanel(title,id,subels,vars){
 	// states:    0=minimised,1=maximised,2=fixed-height, 3=fixed-height-maxed
 	// abilities: -1=disabled,0=not closable,1=closable
-	var el=$extend(newEl('div',id,'kfm_panel',[newEl('div',0,'kfm_panel_header',title),newEl('div',0,'kfm_panel_body',subels)]),{
-		state:0,height:0,panel_title:title,abilities:0,visible:1,order:99,
-		addCloseButton:function(){if(this.abilities&1)this.addButton('removePanel','','x',kfm_lang.Close)},
-		addMaxButton:function(){this.addButton('maximisePanel','','M',kfm_lang.Maximise)},
-		addMinButton:function(){this.addButton('minimisePanel','','_',kfm_lang.Minimise)},
-		addMoveDownButton:function(){if(this.id!=this.parentNode.panels[this.parentNode.panels.length-1])this.addButton('movePanel',',1','d',kfm_lang.MoveDown)},
-		addMoveUpButton:function(){if(this.id!=this.parentNode.panels[0])this.addButton('movePanel',',-1','u',kfm_lang.MoveUp)},
-		addRestoreButton:function(){this.addButton('restorePanel','','r',kfm_lang.Restore)},
-		addButton:function(f,p,b,t){
-			if(this.abilities==-1)return;
-			kfm_addEl(this.childNodes[0],newLink('javascript:kfm_'+f+'("'+this.parentNode.id+'","'+this.id+'"'+p+')','['+b+']',0,'kfm_panel_header_'+b,t));
+	var el=$extend(
+		kfm_addEl(
+			new Element('div',{
+				'id':id,
+				'class':'kfm_panel'
+			}),
+			[
+				(new Element('div',{
+					'class':'kfm_panel_header'
+				})).setHTML(title),
+				kfm_addEl(new Element('div',{
+					'class':'kfm_panel_body'
+				}),subels)
+			]
+		),
+		{
+			state:0,height:0,panel_title:title,abilities:0,visible:1,order:99,
+			addCloseButton:function(){if(this.abilities&1)this.addButton('removePanel','','x',kfm_lang.Close)},
+			addMaxButton:function(){this.addButton('maximisePanel','','M',kfm_lang.Maximise)},
+			addMinButton:function(){this.addButton('minimisePanel','','_',kfm_lang.Minimise)},
+			addMoveDownButton:function(){if(this.id!=this.parentNode.panels[this.parentNode.panels.length-1])this.addButton('movePanel',',1','d',kfm_lang.MoveDown)},
+			addMoveUpButton:function(){if(this.id!=this.parentNode.panels[0])this.addButton('movePanel',',-1','u',kfm_lang.MoveUp)},
+			addRestoreButton:function(){this.addButton('restorePanel','','r',kfm_lang.Restore)},
+			addButton:function(f,p,b,t){
+				if(this.abilities==-1)return;
+				kfm_addEl(this.childNodes[0],newLink('javascript:kfm_'+f+'("'+this.parentNode.id+'","'+this.id+'"'+p+')','['+b+']',0,'kfm_panel_header_'+b,t));
+			}
 		}
-	});
+	);
 	if(vars)el=$extend(el,vars);
 	return el;
 }
 function kfm_createPanelWrapper(name){
-	return newEl('div',name,'kfm_panel_wrapper',0,{panels:[]});
+	return $extend(new Element('div',{
+		'id':name,
+		'class':'kfm_panel_wrapper'
+	}),{panels:[]});
 }
 function kfm_createSearchPanel(){
-	var t=newEl('table','kfm_search_table'),r,inp,rows=0;
+	var t=new Element('table',{
+		'id':'kfm_search_table'
+	}),r,inp,rows=0;
 	{ // filename
 		r=t.insertRow(rows++);
 		r.insertCell(0).appendChild(newText(kfm_lang.Filename));
