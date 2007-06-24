@@ -25,9 +25,6 @@ function kfm(){
 			}
 		}
 	}
-	{ // add custom functions to all existing elements
-		$ES('*').each(function(el){kfm_addMethods(el);});
-	}
 	kfm_cwd_name=starttype;
 	{ // create left column
 		var left_column=kfm_createPanelWrapper('kfm_left_column');
@@ -37,7 +34,7 @@ function kfm(){
 		if(!kfm_inArray('kfm_logs_panel',kfm_hidden_panels))kfm_addPanel(left_column,'kfm_logs_panel');
 		left_column.panels_unlocked=1;
 		left_column.setStyles('height:'+w.y+'px');
-		left_column.contextmenu=function(e){
+		addEvent(left_column,'contextmenu',function(e){
 			var m=getMouseAt(e);
 			e=new Event(e);
 			{ // variables
@@ -54,7 +51,7 @@ function kfm(){
 				}
 				kfm_createContextMenu(m,links);
 			}
-		};
+		});
 	}
 	{ // create right_column
 		right_column=newEl('div','kfm_right_column');
@@ -65,7 +62,7 @@ function kfm(){
 			if(this.contentMode=='file_icons' && this.fileids.length)window.dragSelectionTrigger=setTimeout(function(){kfm_selection_dragStart()},200);
 			addEvent(right_column,'mouseup',kfm_selection_dragFinish);
 		});
-		right_column.contextmenu=function(e){
+		addEvent(right_column,'contextmenu',function(e){
 			var links=[],i;
 			links.push(['kfm_createEmptyFile()',kfm_lang.CreateEmptyFile,'filenew',!kfm_vars.permissions.file.mk]);
 			if(selectedFiles.length>1)links.push(['kfm_renameFiles()',kfm_lang.RenameFile,'edit',!kfm_vars.permissions.file.ed]);
@@ -76,7 +73,7 @@ function kfm(){
 				links.push(['kfm_selectInvert()',kfm_lang.InvertSelection,'invert_selection']);
 			}
 			kfm_createContextMenu(getMouseAt(getEvent(e,1)),links);
-		};
+		});
 	}
 	{ // create message div
 		message=newEl('div','message');
@@ -90,12 +87,8 @@ function kfm(){
 	addEvent(window,'resize',kfm_handleWindowResizes);
 	kfm_contextmenuinit();
 }
-var kfm_elMethods={
-	contextmenu:function(e){},
-	contextmenu_real:function(e){this.contextmenu(e)}
-};
 function kfm_addCell(o,b,c,d,e){
-	var f=kfm_addMethods(o.insertCell(b));
+	var f=o.insertCell(b);
 	if(c)f.colSpan=c;
 	if(d)kfm_addEl(f,d);
 	if(e)f.className=e;
@@ -110,16 +103,8 @@ function kfm_addEl(o,a){
 	}
 	return o;
 }
-function kfm_addMethods(el){
-	$extend(el,{
-		contextmenu:kfm_elMethods.contextmenu
-	});
-	addEvent(el,'contextmenu',kfm_elMethods.contextmenu_real);
-	return $(el);
-}
 function kfm_addRow(t,p,c){
 	var o=t.insertRow(p===parseInt(p)?p:t.rows.length);
-	kfm_addMethods(o);
 	o.className=c;
 	return o;
 }
