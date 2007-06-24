@@ -32,12 +32,12 @@ function kfm_createContextMenu(m,links){
 			}
 		},'left:'+m.x+'px;top:'+m.y+'px');
 		window.contextmenu_loading=setTimeout('window.contextmenu_loading=null',1);
-		document.body.addEl(contextmenu);
+		kfm_addEl(document.body,contextmenu);
 	}
 	else{
 		var col=kfm_addCell(kfm_addRow(contextmenu));
 		col.colSpan=2;
-		col.addEl(newEl('hr'));
+		kfm_addEl(col,newEl('hr'));
 	}
 	var rows=contextmenu.rows.length;
 	for(var i=0;i<links.length;++i)if(links[i][1])contextmenu.addLink(links[i][0],links[i][1],links[i][2],links[i][3]);

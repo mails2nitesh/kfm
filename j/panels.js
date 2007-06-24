@@ -18,7 +18,7 @@ function kfm_addPanel(wrapper,panel){
 	}
 	if(!wrapper.panels)wrapper.panels=[];
 	wrapper.panels[wrapper.panels.length]=panel;
-	wrapper.addEl(el);
+	kfm_addEl(wrapper,el);
 }
 function kfm_createFileUploadPanel(){
 	{ // create form
@@ -54,7 +54,7 @@ function kfm_createFileUploadPanel(){
 				addEvent(input,'keyup',kfm_uploadPanel_checkForZip);
 				addEvent(input,'change',kfm_uploadPanel_checkForZip);
 				var unzip1=newEl('span','kfm_unzip1','kfm_unzipWhenUploaded',[newInput('kfm_unzipWhenUploaded','checkbox'),kfm_lang.ExtractAfterUpload],0,'visibility:hidden');
-				f1.addEl([input,submit,unzip1]);
+				kfm_addEl(f1,[input,submit,unzip1]);
 			}
 			{ // load multi-upload thing if possible
 				window.swfu=new SWFUpload({
@@ -79,7 +79,7 @@ function kfm_createFileUploadPanel(){
 						c.style.width='10%';
 						inp1=newInput('kfm_multiChooseFile','button',kfm_lang.Browse);
 						addEvent(inp1,'click',function(){instance.browse()});
-						c.addEl(inp1);
+						kfm_addEl(c,inp1);
 					}
 					{ // file queue
 						c=kfm_addCell(r,1);
@@ -90,13 +90,13 @@ function kfm_createFileUploadPanel(){
 						c=kfm_addCell(r);
 						inp2=newInput('kfm_uploadButton','button',kfm_lang.Upload);
 						addEvent(inp2,'click',function(){instance.upload()});
-						c.addEl(inp2);
+						kfm_addEl(c,inp2);
 					}
 					{ // progress meter
 						c=kfm_addCell(r,1);
 						c.appendChild(new Element('div',{id:'kfm_file_upload_progress_meter',styles:{display:'block',background:'#00f',width:0,height:10}}));
 					}
-					$('kfm_uploadForm').empty().addEl(t);
+					kfm_addEl($('kfm_uploadForm').empty(),t);
 					instance.set_number_of_files(0);
 				}
 				window.swfu.upload_file_complete=function(){
@@ -113,7 +113,7 @@ function kfm_createFileUploadPanel(){
 					$("kfm_file_upload_progress_meter").setStyle('width',0);
 				}
 				window.swfu.set_number_of_files=function(n){
-					$('kfm_files_to_upload').empty().addEl('Files to upload: '+n);
+					kfm_addEl($('kfm_files_to_upload').empty(),'Files to upload: '+n);
 					window.swfu.number_of_files=n;
 					window.swfu.number_uploaded=0;
 				}
@@ -127,7 +127,7 @@ function kfm_createFileUploadPanel(){
 			inp2.onchange=kfm_uploadPanel_checkForZip;
 			submit2.onclick=kfm_downloadFileFromUrl;
 			var unzip2=newEl('span','kfm_unzip2','kfm_unzipWhenUploaded',[newInput('kfm_unzipWhenUploaded','checkbox'),kfm_lang.ExtractAfterUpload],0,'visibility:hidden');
-			f2.addEl([inp2,submit2,unzip2]);
+			kfm_addEl(f2,[inp2,submit2,unzip2]);
 		}
 	}
 	return kfm_createPanel(kfm_lang.FileUpload,'kfm_file_upload_panel',[sel,f1,iframe,f2],{maxedState:3,state:3,order:2});
@@ -148,9 +148,7 @@ function kfm_createPanel(title,id,subels,vars){
 		addRestoreButton:function(){this.addButton('restorePanel','','r',kfm_lang.Restore)},
 		addButton:function(f,p,b,t){
 			if(this.abilities==-1)return;
-			this.childNodes[0].addEl(
-				newLink('javascript:kfm_'+f+'("'+this.parentNode.id+'","'+this.id+'"'+p+')','['+b+']',0,'kfm_panel_header_'+b,t)
-			);
+			kfm_addEl(this.childNodes[0],newLink('javascript:kfm_'+f+'("'+this.parentNode.id+'","'+this.id+'"'+p+')','['+b+']',0,'kfm_panel_header_'+b,t));
 		}
 	});
 	if(vars)el=$extend(el,vars);
@@ -238,7 +236,7 @@ function kfm_refreshPanels(wrapper){
 			el.addMoveUpButton();
 		}
 		els[els.length]=el.panel_title;
-		head.addEl(els);
+		kfm_addEl(head,els);
 	}
 	for(i=0;i<fixed_height.length;++i){
 		var n=fixed_height[i];
@@ -254,7 +252,7 @@ function kfm_refreshPanels(wrapper){
 			el.addMoveUpButton();
 		}
 		els[els.length]=el.panel_title;
-		head.addEl(els);
+		kfm_addEl(head,els);
 	}
 	for(i=0;i<fixed_height_maxed.length;++i){
 		var n=fixed_height_maxed[i];
@@ -268,7 +266,7 @@ function kfm_refreshPanels(wrapper){
 			el.addMoveUpButton();
 		}
 		els[els.length]=el.panel_title;
-		head.addEl(els);
+		kfm_addEl(head,els);
 	}
 	if(maximised.length)var size=(height-minheight)/maximised.length;
 	for(i=0;i<maximised.length;++i){
@@ -284,7 +282,7 @@ function kfm_refreshPanels(wrapper){
 			el.addMoveUpButton();
 		}
 		els[els.length]=el.panel_title;
-		head.addEl(els);
+		kfm_addEl(head,els);
 	}
 	{ // fix order of panels
 		do{
