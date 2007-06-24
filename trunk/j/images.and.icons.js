@@ -45,7 +45,7 @@ function kfm_img_startLightbox(id){
 				'opacity':'.7'
 			}
 		});
-		addEvent(el,'click',kfm_img_stopLightbox);
+		el.addEvent('click',kfm_img_stopLightbox);
 		kfm_addEl(document.body,el);
 	}
 	if(oldEl)oldEl.remove();
@@ -77,9 +77,9 @@ function kfm_img_startLightbox(id){
 			'z-index':2
 		}
 	});
-	addEvent(el,'click',kfm_img_stopLightbox);
+	el.addEvent('click',kfm_img_stopLightbox);
 	if(window.kfm_slideshow){
-		addEvent(el,'load',function(){
+		el.addEvent('load',function(){
 			setTimeout('kfm_img_startLightbox()',4000);
 		});
 	}

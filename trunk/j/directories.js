@@ -55,7 +55,7 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 		}),name_text),
 		{kfm_directoryname:pdir,node_id:parent}
 	).setStyles('cursor:'+(Browser.isIE?'hand':'pointer'));
-	addEvent(el,'contextmenu',function(e){
+	el.addEvent('contextmenu',function(e){
 		var links=[],i,node_id=this.node_id;
 		links.push(['kfm_renameDirectory("'+node_id+'")',kfm_lang.RenameDir,'',!kfm_vars.permissions.dir.ed]);
 		links.push(['kfm_createDirectory("'+node_id+'")',kfm_lang.CreateSubDir,'folder_new',!kfm_vars.permissions.dir.mk]);
@@ -68,20 +68,20 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 			(new Element('span',{'id':'kfm_dir_node_'+parent})).setHTML(' ')
 		),'kfm_dir_lines_'+(is_last?'lastchild':'child'));
 	kfm_addCell(r,1,0,el,'kfm_dir_name');
-	addEvent(el,'click',function(){
+	el.addEvent('click',function(){
 		kfm_changeDirectory(this.id);
 	});
-	addEvent(el,'mouseout',function(){
+	el.addEvent('mouseout',function(){
 		kfm_directory_over=0;
 		this.removeClass('hovered');
 	});
-	addEvent(el,'mouseover',function(){
+	el.addEvent('mouseover',function(){
 		if(!kfm_directory_over)kfm_directory_over=parseInt(this.node_id);
 	});
-	if(parent!=1)addEvent(el,'mousedown',(function(id){
+	if(parent!=1)el.addEvent('mousedown',(function(id){
 		return function(e){
 			if(e.button==2)return;
-			addEvent(document,'mouseup',kfm_dir_dragFinish);
+			document.addEvent('mouseup',kfm_dir_dragFinish);
 			$clear(window.dragTrigger);
 			window.dragTrigger=setTimeout(function(){
 				kfm_dir_dragStart(id);
@@ -117,8 +117,8 @@ function kfm_dir_dragFinish(e){
 	$clear(window.dragTrigger);
 	if(!window.dragType||window.dragType!=3)return;
 	window.dragType=0;
-	removeEvent(document,'mousemove',kfm_dir_drag);
-	removeEvent(document,'mouseup',kfm_dir_dragFinish);
+	document.removeEvent('mousemove',kfm_dir_drag);
+	document.removeEvent('mouseup',kfm_dir_dragFinish);
 	var dir_from=window.drag_wrapper.dir_id;
 	window.drag_wrapper.remove();
 	window.drag_wrapper=null;
@@ -144,7 +144,7 @@ function kfm_dir_dragStart(pid){
 	);
 	window.drag_wrapper.appendText($('kfm_directory_icon_'+pid).kfm_directoryname);
 	kfm_addEl(document.body,window.drag_wrapper);
-	addEvent(document,'mousemove',kfm_dir_drag);
+	document.addEvent('mousemove',kfm_dir_drag);
 }
 function kfm_dir_openNode(dir){
 	var node=$('kfm_dir_node_'+dir);

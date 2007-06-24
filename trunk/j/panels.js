@@ -68,12 +68,12 @@ function kfm_createFileUploadPanel(){
 				iframe.src='javascript:false';
 				iframe.setStyles('display:none');
 				var submit=newInput('upload','submit',kfm_lang.Upload);
-				addEvent(submit,'click',function(){
+				submit.addEvent('click',function(){
 					setTimeout('$("kfm_file").type="text";$("kfm_file").type="file"',1);
 				});
 				var input=newInput('kfm_file','file');
-				addEvent(input,'keyup',kfm_uploadPanel_checkForZip);
-				addEvent(input,'change',kfm_uploadPanel_checkForZip);
+				input.addEvent('keyup',kfm_uploadPanel_checkForZip);
+				input.addEvent('change',kfm_uploadPanel_checkForZip);
 				var unzip1=new Element('span',{
 					'id':'kfm_unzip1',
 					'class':'kfm_unzipWhenUploaded',
@@ -106,7 +106,7 @@ function kfm_createFileUploadPanel(){
 						c=kfm_addCell(r);
 						c.style.width='10%';
 						inp1=newInput('kfm_multiChooseFile','button',kfm_lang.Browse);
-						addEvent(inp1,'click',function(){instance.browse()});
+						inp1.addEvent('click',function(){instance.browse()});
 						kfm_addEl(c,inp1);
 					}
 					{ // file queue
@@ -117,7 +117,7 @@ function kfm_createFileUploadPanel(){
 					{ // upload button
 						c=kfm_addCell(r);
 						inp2=newInput('kfm_uploadButton','button',kfm_lang.Upload);
-						addEvent(inp2,'click',function(){instance.upload()});
+						inp2.addEvent('click',function(){instance.upload()});
 						kfm_addEl(c,inp2);
 					}
 					{ // progress meter

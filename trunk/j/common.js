@@ -151,9 +151,6 @@ function newSelectbox(name,keys,vals,s,f){
 function newText(a){
 	return document.createTextNode(a);
 }
-function removeEvent(o,t,f){
-	if(o&&o.removeEventListener)o.removeEventListener(t,f,false);
-}
 if(browser.isIE){
 	function XMLHttpRequest(){
 		var l=(ScriptEngineMajorVersion()>=5)?"Msxml2":"Microsoft";

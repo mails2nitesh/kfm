@@ -4,7 +4,7 @@ function kfm_closeContextMenu(){
 	contextmenu=null;
 }
 function kfm_contextmenuinit(){
-	addEvent(getWindow(),'click',function(e){
+	document.addEvent('click',function(e){
 		if(!contextmenu)return;
 		var c=contextmenu,m=getMouseAt(e);
 		var l=c.offsetLeft,t=c.offsetTop;

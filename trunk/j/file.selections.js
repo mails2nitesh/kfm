@@ -38,8 +38,8 @@ function kfm_file_dragFinish(e){
 	window.dragType=0;
 	window.drag_wrapper.remove();
 	window.drag_wrapper=null;
-	removeEvent(document,'mousemove',kfm_file_drag);
-	removeEvent(document,'mouseup',kfm_file_dragFinish);
+	document.removeEvent('mousemove',kfm_file_drag);
+	document.removeEvent('mouseup',kfm_file_dragFinish);
 	if(kfm_directory_over)dir_over=kfm_directory_over;
 	else{ // workaround for Firefox which seems to have trouble with onmouseover for the directories while dragging
 		var a=kfm_getContainer(getMouseAt(e),$$('div.kfm_directory_link'));
@@ -71,7 +71,7 @@ function kfm_file_dragStart(filename){
 		(new Element('i')).setHTML(kfm_lang.AndNMore(selectedFiles.length-10))
 	);
 	kfm_addEl(document.body,window.drag_wrapper);
-	addEvent(document,'mousemove',kfm_file_drag);
+	document.addEvent('mousemove',kfm_file_drag);
 }
 function kfm_isFileSelected(filename){
 	return kfm_inArray(filename,selectedFiles);
@@ -132,8 +132,8 @@ function kfm_selection_dragFinish(e){
 	setTimeout('window.dragType=0;',1); // pause needed for IE
 	window.drag_wrapper.remove();
 	window.drag_wrapper=null;
-	removeEvent(document,'mousemove',kfm_selection_drag);
-	removeEvent(document,'mouseup',kfm_selection_dragFinish);
+	document.removeEvent('mousemove',kfm_selection_drag);
+	document.removeEvent('mouseup',kfm_selection_dragFinish);
 	var fileids=right_column.fileids;
 	kfm_selectNone();
 	for(var i = 0; i<fileids.length; i++){
@@ -151,7 +151,7 @@ function kfm_selection_dragStart(e){
 	if (window.mouseAt.x > $('kfm_right_column').scrollWidth + $('kfm_left_column').scrollWidth) return;
 	window.dragType=2;
 	var w=getWindowSize();
-	addEvent(document,'mouseup',kfm_selection_dragFinish);
+	document.addEvent('mouseup',kfm_selection_dragFinish);
 	window.drag_wrapper=new Element('div',{
 		'id':'kfm_selection_drag_wrapper',
 		'styles':{
@@ -160,7 +160,7 @@ function kfm_selection_dragStart(e){
 	});
 	window.drag_wrapper.orig=window.mouseAt;
 	kfm_addEl(document.body,window.drag_wrapper);
-	addEvent(document,'mousemove',kfm_selection_drag);
+	document.addEvent('mousemove',kfm_selection_drag);
 }
 function kfm_shiftFileSelectionLR(dir){
 	if(selectedFiles.length>1)return;
