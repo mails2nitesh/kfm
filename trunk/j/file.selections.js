@@ -58,9 +58,18 @@ function kfm_file_dragStart(filename){
 	if(!selectedFiles.length)return;
 	window.dragType=1;
 	var w=getWindowSize();
-	window.drag_wrapper=newEl('div','kfm_drag_wrapper',0,0,0,'display:none;opacity:.7');
-	for(var i=0;i<10&&i<selectedFiles.length;++i)kfm_addEl(window.drag_wrapper,[$('kfm_file_icon_'+selectedFiles[i]).kfm_attributes.name,newEl('br')]);
-	if(selectedFiles.length>10)kfm_addEl(window.drag_wrapper,newEl('i',0,0,kfm_lang.AndNMore(selectedFiles.length-10)));
+	window.drag_wrapper=new Element('div',{
+		'id':'kfm_drag_wrapper',
+		styles:{
+			'display':'none',
+			'opacity':'.7'
+		}
+	});
+	for(var i=0;i<10&&i<selectedFiles.length;++i)kfm_addEl(window.drag_wrapper,[$('kfm_file_icon_'+selectedFiles[i]).kfm_attributes.name,new Element('br')]);
+	if(selectedFiles.length>10)kfm_addEl(
+		window.drag_wrapper,
+		(new Element('i')).setHTML(kfm_lang.AndNMore(selectedFiles.length-10))
+	);
 	kfm_addEl(document.body,window.drag_wrapper);
 	addEvent(document,'mousemove',kfm_file_drag);
 }
@@ -143,7 +152,12 @@ function kfm_selection_dragStart(e){
 	window.dragType=2;
 	var w=getWindowSize();
 	addEvent(document,'mouseup',kfm_selection_dragFinish);
-	window.drag_wrapper=newEl('div','kfm_selection_drag_wrapper',0,0,0,'display:none');
+	window.drag_wrapper=new Element('div',{
+		'id':'kfm_selection_drag_wrapper',
+		'styles':{
+			'display':'none'
+		}
+	});
 	window.drag_wrapper.orig=window.mouseAt;
 	kfm_addEl(document.body,window.drag_wrapper);
 	addEvent(document,'mousemove',kfm_selection_drag);

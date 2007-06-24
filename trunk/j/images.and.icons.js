@@ -1,6 +1,8 @@
 // see ../license.txt for licensing
 function kfm_changeCaption(id){
-	var table=newEl('table','kfm_newCaptionDetails',0,0,{kfm_caption_for:id});
+	var table=$extend(new Element('table',{
+		'id':'kfm_newCaptionDetails'
+	}),{kfm_caption_for:id});
 	var row=table.insertRow(0),textarea=newInput('kfm_new_caption','textarea',$('kfm_file_icon_'+id).kfm_attributes.caption);
 	textarea.setStyles('height:50px;width:200px');
 	row.insertCell(0).appendChild(newText(kfm_lang.NewCaption));
@@ -30,7 +32,19 @@ function kfm_img_startLightbox(id){
 	}
 	var el,data=$('kfm_file_icon_'+id).kfm_attributes,ws=getWindowSize(),oldEl=$('kfm_lightboxImage');
 	if(!$('kfm_lightboxShader')){
-		el=newEl('div','kfm_lightboxShader',0,0,0,'position:absolute;left:0;zIndex:1;top:0;width:'+ws.x+'px;height:'+ws.y+'px;background:#000;opacity:.7');
+		el=new Element('div',{
+			'id':'kfm_lightboxShader',
+			'styles':{
+				'position':'absolute',
+				'left':0,
+				'z-index':1,
+				'top':0,
+				'width':ws.x,
+				'height':ws.y,
+				'background':'#000',
+				'opacity':'.7'
+			}
+		});
 		addEvent(el,'click',kfm_img_stopLightbox);
 		kfm_addEl(document.body,el);
 	}
@@ -53,7 +67,16 @@ function kfm_img_startLightbox(id){
 		}
 		url+='&width='+parseInt(w)+'&height='+parseInt(h);
 	}
-	el=newEl('img','kfm_lightboxImage',0,0,{src:url},'position:absolute;left:'+parseInt((ws.x-w)/2)+'px;top:'+parseInt((ws.y-h)/2)+'px;zIndex:2');
+	el=new Element('img',{
+		'id':'kfm_lightboxImage',
+		'src':url,
+		'styles':{
+			'position':'absolute',
+			'left':parseInt((ws.x-w)/2),
+			'top':parseInt((ws.y-h)/2),
+			'z-index':2
+		}
+	});
 	addEvent(el,'click',kfm_img_stopLightbox);
 	if(window.kfm_slideshow){
 		addEvent(el,'load',function(){

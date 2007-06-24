@@ -58,8 +58,9 @@ function loadJS(url,id,lang,onload){
 	var i=0;
 	for(;i<loadedScripts.length;++i)if(loadedScripts[i]==url)return 0;
 	loadedScripts.push(url);
-	var el=newEl('script');
-	el.type="text/javascript";
+	var el=new Element('script',{
+		'type':'text/javascript'
+	});
 	if(id)el.id=id;
 	if(lang)el.lang=lang;
 	if(kfm_kaejax_is_loaded&&/\.php/.test(url))url+=(/\?/.test(url)?'&':'?')+'kfm_kaejax_is_loaded';
@@ -76,37 +77,39 @@ function loadJS(url,id,lang,onload){
 	$E('head').appendChild(el);
 	return 1;
 }
-function newEl(t,id,cn,chld,vals,css){
-	var el=document.createElement(t);
-	if(t=='iframe')el.src='/i/blank.gif';
-	if(id){
-		el.id=id;
-		el.name=id;
-	}
-	if(chld)kfm_addEl(el,chld);
-	if(cn)el.className=cn;
-	if(vals)$extend(el,vals);
-	if(css)el.setStyles(css);
-	return el;
-}
 function newForm(action,method,enctype,target){
-	return newEl('form',0,0,0,{action:action,method:method,enctype:enctype,target:target});
+	return new Element('form',{
+		'action':action,
+		'method':method,
+		'enctype':enctype,
+		'target':target
+	});
 }
 function newInput(n,t,v,cl){
 	var b;
 	if(!t)t='text';
 	switch(t){
 		case 'checkbox':{
-			b=newEl('input',n,0,0,{type:'checkbox'},'width:auto');
+			b=new Element('input',{
+				'id':n,
+				'type':'checkbox',
+				'styles':{
+					'width':'auto'
+				}
+			});
 			break;
 		}
 		case 'textarea':{
-			b=newEl('textarea',n);
+			b=new Element('textarea',{
+				'id':n
+			});
 			break;
 		}
 		default:{
-			b=newEl('input',n);
-			b.type=t;
+			b=new Element('input',{
+				'id':n,
+				'type':t
+			});
 		}
 	}
 	if(v){
@@ -126,13 +129,18 @@ function newLink(h,t,id,c,title){
 	})).setHTML(t);
 }
 function newSelectbox(name,keys,vals,s,f){
-	var el2=newEl('select',name),el3,s2=0,i=0;
+	var el2=new Element('select',{
+		'id':name
+	}),el3,s2=0,i=0;
 	if(!s)s=0;
 	if(!vals)vals=keys;
 	for(;i<vals.length;++i){
 		var v1=vals[i].toString();
 		var v2=v1.length>20?v1.substr(0,27)+'...':v1;
-		el3=newEl('option',0,0,v2,{value:keys[i],title:v1});
+		el3=(new Element('option',{
+			value:keys[i],
+			title:v1
+		})).setHTML(v2);
 		if(keys[i]==s)s2=i;
 		kfm_addEl(el2,el3);
 	}

@@ -18,26 +18,31 @@ function kfm_contextmenuinit(){
 function kfm_createContextMenu(m,links){
 	if(!window.contextmenu_loading)kfm_closeContextMenu();
 	if(!contextmenu){
-		window.contextmenu=newEl('table',0,'contextmenu',0,{
-			addLink:function(href,text,icon,disabled){
-				if(disabled && !kfm_vars.show_disabled_contextmenu_links)return;
-				var row=kfm_addRow(this);
-				if(disabled){
-					row.className+=' disabled';
-					href='';
-				}
-				var link=(href!='kfm_0')?newLink('javascript:kfm_closeContextMenu();'+href,text):text;
-				kfm_addCell(row,0,0,(icon?new Element('img',{src:'themes/'+kfm_theme+'/icons/'+icon+'.png'}):''),'kfm_contextmenu_iconCell');
-				kfm_addCell(row,1,0,link);
+		window.contextmenu=new Element('table',{
+			'class':'contextmenu',
+			'styles':{
+				'left':m.x,
+				'top':m.y
 			}
-		},'left:'+m.x+'px;top:'+m.y+'px');
+		});
+		window.contextmenu.addLink=function(href,text,icon,disabled){
+			if(disabled && !kfm_vars.show_disabled_contextmenu_links)return;
+			var row=kfm_addRow(this);
+			if(disabled){
+				row.className+=' disabled';
+				href='';
+			}
+			var link=(href!='kfm_0')?newLink('javascript:kfm_closeContextMenu();'+href,text):text;
+			kfm_addCell(row,0,0,(icon?new Element('img',{src:'themes/'+kfm_theme+'/icons/'+icon+'.png'}):''),'kfm_contextmenu_iconCell');
+			kfm_addCell(row,1,0,link);
+		};
 		window.contextmenu_loading=setTimeout('window.contextmenu_loading=null',1);
 		kfm_addEl(document.body,contextmenu);
 	}
 	else{
 		var col=kfm_addCell(kfm_addRow(contextmenu));
 		col.colSpan=2;
-		kfm_addEl(col,newEl('hr'));
+		kfm_addEl(col,new Element('hr'));
 	}
 	var rows=contextmenu.rows.length;
 	for(var i=0;i<links.length;++i)if(links[i][1])contextmenu.addLink(links[i][0],links[i][1],links[i][2],links[i][3]);
