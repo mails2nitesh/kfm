@@ -31,10 +31,11 @@ function kfm_createFileUploadPanel(){
 		}
 		var sel=newSelectbox('uploadType',[kfm_lang.Upload,kfm_lang.CopyFromURL],0,0,function(){
 			var copy=parseInt(this.selectedIndex);
-			$('kfm_unzip1').setStyles('visibility:hidden');
-			$('kfm_unzip2').setStyles('visibility:hidden');
-			$('kfm_file').value='';
-			$('kfm_url').value='';
+			var unzip1=$('kfm_unzip1'),unzip2=$('kfm_unzip2'),file=$('kfm_file'),url=$('kfm_url');
+			if(unzip1)unzip1.setStyles('visibility:hidden');
+			if(unzip2)unzip2.setStyles('visibility:hidden');
+			if(file)file.value='';
+			if(url)url.value='';
 			$('kfm_uploadForm').setStyles('display:'+(copy?'none':'block'));
 			$('kfm_copyForm').setStyles('display:'+(copy?'block':'none'));
 		});
