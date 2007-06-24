@@ -47,11 +47,6 @@ require_once($kfm_base_path.'includes/kaejax.php');
 			if($browser->isIE())$js.=file_get_contents('j/kaejax_replaces.ie.js');
 			else $js.=file_get_contents('j/kaejax_replaces.js');
 		}
-		{ # addEvent
-			if($browser->isIE())$js.=file_get_contents('j/addEvent.ie.js');
-			else if($browser->getBrowserString()=='Konqueror/Safari')$js.=file_get_contents('j/addEvent.konqueror.js');
-			else $js.=file_get_contents('j/addEvent.js');
-		}
 		{ # getWindow
 			if($browser->isIE())$js.=file_get_contents('j/getWindow.ie.js');
 			else if($browser->getBrowserString()=='Konqueror/Safari')$js.=file_get_contents('j/getWindow.konqueror.js');
@@ -113,7 +108,6 @@ require_once($kfm_base_path.'includes/kaejax.php');
 	</head>
 	<body>
 		<noscript>KFM relies on JavaScript. Please either turn on JavaScript in your browser, or <a href="http://www.getfirefox.com/">get Firefox</a> if your browser does not support JavaScript.</noscript>
-		<script type="text/javascript">setTimeout('kfm()',10);</script>
 		<?php
 			if(!$kfm_dont_send_metrics){
 				$today=date('Y-m-d');
