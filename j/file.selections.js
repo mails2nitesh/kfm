@@ -48,7 +48,7 @@ function kfm_file_dragFinish(e){
 	if(dir_over=='.'||dir_over==kfm_cwd_id)return;
 	{ // build context menu for "copy/move"
 		var links=[];
-		links.push(['x_kfm_copyFiles(['+selectedFiles.join(',')+'],'+dir_over+',kfm_alert);kfm_selectNone()','copy files']);
+		links.push(['x_kfm_copyFiles(['+selectedFiles.join(',')+'],'+dir_over+',kfm.alert);kfm_selectNone()','copy files']);
 		links.push(['x_kfm_moveFiles(['+selectedFiles.join(',')+'],'+dir_over+',function(){kfm_removeFilesFromView(['+selectedFiles.join(',')+'])});kfm_selectNone()','move files',0,!kfm_vars.permissions.file.mv]);
 		kfm_createContextMenu(getMouseAt(getEvent(e)),links);
 	}
