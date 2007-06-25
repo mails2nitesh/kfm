@@ -142,7 +142,7 @@ function newSelectbox(name,keys,vals,s,f){
 			title:v1
 		})).setHTML(v2);
 		if(keys[i]==s)s2=i;
-		kfm_addEl(el2,el3);
+		kfm.addEl(el2,el3);
 	}
 	el2.selectedIndex=s2;
 	if(f)el2.onchange=f;

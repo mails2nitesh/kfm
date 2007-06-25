@@ -11,8 +11,7 @@
  * 	kae@verens.com
  */
 
-var kfm_lang=
-{
+kfm.lang={
 AddTagsToFiles: "add tags to file(s)",
 AllowedFileExtensions: "allowed file extensions",
 AreYouSureYouWantToCloseKFM: "Are you sure you want to close the KFM window?",

@@ -5,18 +5,18 @@ function kfm_changeCaption(id){
 	}),{kfm_caption_for:id});
 	var row=table.insertRow(0),textarea=newInput('kfm_new_caption','textarea',$('kfm_file_icon_'+id).kfm_attributes.caption);
 	textarea.setStyles('height:50px;width:200px');
-	row.insertCell(0).appendChild(newText(kfm_lang.NewCaption));
+	row.insertCell(0).appendChild(newText(kfm.lang.NewCaption));
 	row.insertCell(1).appendChild(textarea);
-	kfm_modal_open(table,kfm_lang.ChangeCaption,[[kfm_lang.ChangeCaption,'kfm_changeCaption_set']]);
+	kfm_modal_open(table,kfm.lang.ChangeCaption,[[kfm.lang.ChangeCaption,'kfm_changeCaption_set']]);
 	$('kfm_new_caption').focus();
 }
 function kfm_changeCaption_set(){
 	var id=$('kfm_newCaptionDetails').kfm_caption_for,newCaption=$('kfm_new_caption').value;
 	if(!newCaption||newCaption==$('kfm_file_icon_'+id).kfm_attributes.caption)return;
 	kfm_modal_close();
-	if(kfm_confirm(kfm_lang.NewCaptionIsThisCorrect(newCaption))){
+	if(kfm.confirm(kfm.lang.NewCaptionIsThisCorrect(newCaption))){
 		kfm_filesCache[id]=null;
-		kfm_log(kfm_lang.Log_ChangeCaption(id,newCaption));
+		kfm_log(kfm.lang.Log_ChangeCaption(id,newCaption));
 		x_kfm_changeCaption(id,newCaption,kfm_refreshFiles);
 	}
 }
@@ -46,12 +46,12 @@ function kfm_img_startLightbox(id){
 			}
 		});
 		el.addEvent('click',kfm_img_stopLightbox);
-		kfm_addEl(document.body,el);
+		kfm.addEl(document.body,el);
 	}
 	if(oldEl)oldEl.remove();
 	var w=data.width,h=data.height,url='get.php?id='+id,r=0;
 	if(!w||!h){
-		kfm_log(kfm_lang.NotAnImageOrImageDimensionsNotReported);
+		kfm_log(kfm.lang.NotAnImageOrImageDimensionsNotReported);
 		return kfm_img_stopLightbox();
 	}
 	if(w>ws.x*.9||h>ws.y*.9){
@@ -83,7 +83,7 @@ function kfm_img_startLightbox(id){
 			setTimeout('kfm_img_startLightbox()',4000);
 		});
 	}
-	kfm_addEl(document.body,el);
+	kfm.addEl(document.body,el);
 }
 function kfm_img_stopLightbox(){
 	$('kfm_lightboxShader').remove();
@@ -92,13 +92,13 @@ function kfm_img_stopLightbox(){
 }
 function kfm_resizeImage(id){
 	var data=$('kfm_file_icon_'+id).kfm_attributes;
-	var el=kfm_filesCache[id],txt=kfm_lang.CurrentSize(data.width,data.height);
-	var x=parseInt(kfm_prompt(txt+kfm_lang.NewWidth,data.width));
+	var el=kfm_filesCache[id],txt=kfm.lang.CurrentSize(data.width,data.height);
+	var x=parseInt(kfm_prompt(txt+kfm.lang.NewWidth,data.width));
 	if(!x)return;
-	txt+=kfm_lang.NewWidthConfirmTxt(x);
-	var y=parseInt(kfm_prompt(txt+kfm_lang.NewHeight,Math.ceil(data.height*(x/data.width))));
+	txt+=kfm.lang.NewWidthConfirmTxt(x);
+	var y=parseInt(kfm_prompt(txt+kfm.lang.NewHeight,Math.ceil(data.height*(x/data.width))));
 	if(!y)return;
-	if(kfm_confirm(txt+kfm_lang.NewHeightConfirmTxt(y))){
+	if(kfm.confirm(txt+kfm.lang.NewHeightConfirmTxt(y))){
 		kfm_filesCache[id]=null;
 		x_kfm_resizeImage(id,x,y,kfm_refreshFiles);
 	}
@@ -107,7 +107,7 @@ function kfm_returnThumbnail(id){
 	var size;
 	do{
 		valid=1;
-		size=kfm_prompt(kfm_lang.WhatMaximumSize,'64x64');
+		size=kfm_prompt(kfm.lang.WhatMaximumSize,'64x64');
 		if(!size)return;
 		if(!/^[0-9]+x[0-9]+$/.test(size)){
 			alert('The size must be in the format XXxYY, where X is the width and Y is the height');

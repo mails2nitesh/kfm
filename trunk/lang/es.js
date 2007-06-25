@@ -15,7 +15,7 @@
  *  25/05/2007
  */
 
-var kfm_lang=
+var kfm.lang=
 {
 Dir: "ltr", 
 ErrorPrefix: "error: ",
