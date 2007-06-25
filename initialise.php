@@ -208,8 +208,8 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 		$q=$kfmdb->query("select * from ".$kfm_db_prefix."parameters");
 		$rs=$q->fetchAll();
 		foreach($rs as $r)$_SESSION['kfm_parameters'][$r['name']]=$r['value'];
-		if($_SESSION['kfm_parameters']['version']!=KFM_VERSION)require($kfm_base_path.'scripts/update.0.9.1.php');
 	}
+	if($_SESSION['kfm_parameters']['version']!=KFM_VERSION)require($kfm_base_path.'scripts/update.0.9.1.php');
 }
 { # languages
 	$kfm_language='';
