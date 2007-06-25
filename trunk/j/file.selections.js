@@ -125,10 +125,6 @@ function kfm_selection_dragFinish(e){
 	if(!window.dragType||window.dragType!=2||!window.drag_wrapper)return;
 	var right_column=$('kfm_right_column'),p1=getMouseAt(e),p2=window.drag_wrapper.orig,offset=right_column.scrollTop;
 	var x1=p1.x>p2.x?p2.x:p1.x,x2=p2.x>p1.x?p2.x:p1.x,y1=p1.y>p2.y?p2.y:p1.y,y2=p2.y>p1.y?p2.y:p1.y;
-	if(offset){
-		y1+=offset;
-		y2+=offset;
-	}
 	setTimeout('window.dragType=0;',1); // pause needed for IE
 	window.drag_wrapper.remove();
 	window.drag_wrapper=null;
@@ -136,13 +132,11 @@ function kfm_selection_dragFinish(e){
 	document.removeEvent('mouseup',kfm_selection_dragFinish);
 	var fileids=right_column.fileids;
 	kfm_selectNone();
-	for(var i = 0; i<fileids.length; i++){
-	 	var curIcon = $('kfm_file_icon_'+fileids[i]);
-		var curTop = getOffset(curIcon,'Top');
-		var curLeft = getOffset(curIcon,'Left');
-		var curBottom = curTop + curIcon.offsetHeight;
-		var curRight = curLeft + curIcon.offsetWidth;
-		if (curRight > x1 && curLeft < x2 && curBottom > y1 && curTop < y2)kfm_addToSelection(fileids[i]);
+	for(var i=0;i<fileids.length;++i){
+		var curIcon=$('kfm_file_icon_'+fileids[i]);
+		var curTop=getOffset(curIcon,'Top');
+		var curLeft=getOffset(curIcon,'Left');
+		if((curLeft+curIcon.offsetWidth)>x1&&curLeft<x2&&(curTop+curIcon.offsetHeight)>y1&&curTop<y2)kfm_addToSelection(fileids[i]);
 	}
 	kfm_selectionCheck();
 }
