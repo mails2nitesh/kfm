@@ -13,7 +13,7 @@
  *  Kevin Scannell: kscanne@gmail.com (hints and grammatical software)
  */
 
-var kfm_lang=
+var kfm.lang=
 {
 Dir:
 	"ltr", // language direction

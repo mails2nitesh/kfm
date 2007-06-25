@@ -3,7 +3,7 @@ function kfm_addToSelection(id){
 	if(!id)return;
 	selectedFiles.push(id);
 	$('kfm_file_icon_'+id).className+=' selected';
-	if(kfm_log_level>0)kfm_log(kfm_lang.FileSelected(id));
+	if(kfm_log_level>0)kfm_log(kfm.lang.FileSelected(id));
 	kfm_selectionCheck();
 }
 function kfm_chooseFile(e,o){
@@ -42,7 +42,7 @@ function kfm_file_dragFinish(e){
 	document.removeEvent('mouseup',kfm_file_dragFinish);
 	if(kfm_directory_over)dir_over=kfm_directory_over;
 	else{ // workaround for Firefox which seems to have trouble with onmouseover for the directories while dragging
-		var a=kfm_getContainer(getMouseAt(e),$$('div.kfm_directory_link'));
+		var a=kfm.getContainer(getMouseAt(e),$$('div.kfm_directory_link'));
 		dir_over=a?a.node_id:'.';
 	}
 	if(dir_over=='.'||dir_over==kfm_cwd_id)return;
@@ -65,12 +65,12 @@ function kfm_file_dragStart(filename){
 			'opacity':'.7'
 		}
 	});
-	for(var i=0;i<10&&i<selectedFiles.length;++i)kfm_addEl(window.drag_wrapper,[$('kfm_file_icon_'+selectedFiles[i]).kfm_attributes.name,new Element('br')]);
-	if(selectedFiles.length>10)kfm_addEl(
+	for(var i=0;i<10&&i<selectedFiles.length;++i)kfm.addEl(window.drag_wrapper,[$('kfm_file_icon_'+selectedFiles[i]).kfm_attributes.name,new Element('br')]);
+	if(selectedFiles.length>10)kfm.addEl(
 		window.drag_wrapper,
-		(new Element('i')).setHTML(kfm_lang.AndNMore(selectedFiles.length-10))
+		(new Element('i')).setHTML(kfm.lang.AndNMore(selectedFiles.length-10))
 	);
-	kfm_addEl(document.body,window.drag_wrapper);
+	kfm.addEl(document.body,window.drag_wrapper);
 	document.addEvent('mousemove',kfm_file_drag);
 }
 function kfm_isFileSelected(filename){
@@ -159,7 +159,7 @@ function kfm_selection_dragStart(e){
 		}
 	});
 	window.drag_wrapper.orig=window.mouseAt;
-	kfm_addEl(document.body,window.drag_wrapper);
+	kfm.addEl(document.body,window.drag_wrapper);
 	document.addEvent('mousemove',kfm_selection_drag);
 }
 function kfm_shiftFileSelectionLR(dir){
@@ -189,7 +189,7 @@ function kfm_shiftFileSelectionUD(dir){
 }
 function kfm_toggleSelectedFile(e){
 	e=new Event(e);
-	kfm_cancelEvent(e);
+	kfm.cancelEvent(e);
 	var el=e.target,id=el.kfm_attributes.id;
 	if(kfm_lastClicked&&e.shiftKey){
 		clearSelections(e);

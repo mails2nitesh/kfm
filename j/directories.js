@@ -11,25 +11,25 @@ function kfm_changeDirectory(id){
 	setTimeout('x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);x_kfm_loadDirectories(kfm_cwd_id,kfm_refreshDirectories);',20);
 }
 function kfm_createDirectory(id){
-	if(!kfm_vars.permissions.dir.mk)return kfm_alert('permission denied: cannot create directory');
-	var newName=kfm_prompt(kfm_lang.CreateDirMessage(kfm_directories[id].path),kfm_lang.NewDirectory);
+	if(!kfm_vars.permissions.dir.mk)return kfm.alert('permission denied: cannot create directory');
+	var newName=kfm_prompt(kfm.lang.CreateDirMessage(kfm_directories[id].path),kfm.lang.NewDirectory);
 	if(newName&&newName!=''&&!/\/|^\./.test(newName))x_kfm_createDirectory(id,newName,kfm_refreshDirectories);
 }
 function kfm_deleteDirectory(id){
-	if(!kfm_vars.permissions.dir.rm)return kfm_alert('permission denied: cannot delete directory');
-	if(kfm_confirm(kfm_lang.DelDirMessage(kfm_directories[id].path)))x_kfm_deleteDirectory(id,kfm_deleteDirectoryCheck);
+	if(!kfm_vars.permissions.dir.rm)return kfm.alert('permission denied: cannot delete directory');
+	if(kfm.confirm(kfm.lang.DelDirMessage(kfm_directories[id].path)))x_kfm_deleteDirectory(id,kfm_deleteDirectoryCheck);
 }
 function kfm_deleteDirectoryCheck(res){
 	if(res.type&&res.type=='error'){
 		switch(parseInt(res.msg)){
-			case 1: kfm_log('error: '+kfm_lang.IllegalDirectoryName(res.name)); break;
+			case 1: kfm_log('error: '+kfm.lang.IllegalDirectoryName(res.name)); break;
 			case 2:{ // not empty
-				var ok=kfm_confirm(kfm_lang.RecursiveDeleteWarning(res.name));
+				var ok=kfm.confirm(kfm.lang.RecursiveDeleteWarning(res.name));
 				if(ok)x_kfm_deleteDirectory(res.id,1,kfm_deleteDirectoryCheck);
 				break;
 			}
-			case 3: kfm_log('error: '+kfm_lang.RmdirFailed(res.name)); break;
-			case 4: kfm_log('error: '+kfm_lang.DirectoryNotInDb); break;
+			case 3: kfm_log('error: '+kfm.lang.RmdirFailed(res.name)); break;
+			case 4: kfm_log('error: '+kfm.lang.DirectoryNotInDb); break;
 			default: alert(res.msg);
 		}
 	}
@@ -44,30 +44,30 @@ function kfm_deleteDirectoryCheck(res){
 	}
 }
 function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
-	var r=kfm_addRow(t),c,pdir=parent_addr+name,name=(name==''?'root':name);
+	var r=kfm.addRow(t),c,pdir=parent_addr+name,name=(name==''?'root':name);
 	var name_text=(new Element('span',{
 		'id':'directory_name_'+parent
 	})).setHTML('0');
 	var el=$extend(
-		kfm_addEl(new Element('div',{
+		kfm.addEl(new Element('div',{
 			'id':'kfm_directory_icon_'+parent,
 			'class':'kfm_directory_link '+(kfm_cwd_name==pdir?'':'kfm_directory_open')
 		}),name_text),
 		{kfm_directoryname:pdir,node_id:parent}
-	).setStyles('cursor:'+(Browser.isIE?'hand':'pointer'));
+	).setStyles('cursor:'+(browser.isIE?'hand':'pointer'));
 	el.addEvent('contextmenu',function(e){
 		var links=[],i,node_id=this.node_id;
-		links.push(['kfm_renameDirectory("'+node_id+'")',kfm_lang.RenameDir,'',!kfm_vars.permissions.dir.ed]);
-		links.push(['kfm_createDirectory("'+node_id+'")',kfm_lang.CreateSubDir,'folder_new',!kfm_vars.permissions.dir.mk]);
-		if(node_id!=1)links.push(['kfm_deleteDirectory("'+node_id+'")',kfm_lang.DeleteDir,'remove',!kfm_vars.permissions.dir.rm]);
+		links.push(['kfm_renameDirectory("'+node_id+'")',kfm.lang.RenameDir,'',!kfm_vars.permissions.dir.ed]);
+		links.push(['kfm_createDirectory("'+node_id+'")',kfm.lang.CreateSubDir,'folder_new',!kfm_vars.permissions.dir.mk]);
+		if(node_id!=1)links.push(['kfm_deleteDirectory("'+node_id+'")',kfm.lang.DeleteDir,'remove',!kfm_vars.permissions.dir.rm]);
 		kfm_createContextMenu(getMouseAt(getEvent(e)),links);
 	});
-	kfm_addCell(r,0,0,(
+	kfm.addCell(r,0,0,(
 		has_node_control?
 			newLink('javascript:kfm_dir_openNode('+parent+')','[+]','kfm_dir_node_'+parent,'kfm_dir_node_closed'):
 			(new Element('span',{'id':'kfm_dir_node_'+parent})).setHTML(' ')
 		),'kfm_dir_lines_'+(is_last?'lastchild':'child'));
-	kfm_addCell(r,1,0,el,'kfm_dir_name');
+	kfm.addCell(r,1,0,el,'kfm_dir_name');
 	el.addEvent('click',function(){
 		kfm_changeDirectory(this.id);
 	});
@@ -101,9 +101,9 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 		if(!browser.isIE)el.style.position='inherit';
 	}
 	{ // subdir holder
-		r=kfm_addRow(t);
-		kfm_addCell(r,0,0,' ',is_last?0:'kfm_dir_lines_nochild');
-		kfm_addCell(r,1).id='kfm_directories_subdirs_'+parent;
+		r=kfm.addRow(t);
+		kfm.addCell(r,0,0,' ',is_last?0:'kfm_dir_lines_nochild');
+		kfm.addCell(r,1).id='kfm_directories_subdirs_'+parent;
 	}
 	return t;
 }
@@ -124,7 +124,7 @@ function kfm_dir_dragFinish(e){
 	window.drag_wrapper=null;
 	dir_to=kfm_directory_over;
 	if(dir_to==0||dir_to==dir_from)return;
-	if(!kfm_vars.permissions.dir.mv)return kfm_alert('permission denied: cannot move directory');
+	if(!kfm_vars.permissions.dir.mv)return kfm.alert('permission denied: cannot move directory');
 	x_kfm_moveDirectory(dir_from,dir_to,kfm_refreshDirectories);
 	kfm_selectNone();
 }
@@ -143,14 +143,14 @@ function kfm_dir_dragStart(pid){
 		{dir_id:pid}
 	);
 	window.drag_wrapper.appendText($('kfm_directory_icon_'+pid).kfm_directoryname);
-	kfm_addEl(document.body,window.drag_wrapper);
+	kfm.addEl(document.body,window.drag_wrapper);
 	document.addEvent('mousemove',kfm_dir_drag);
 }
 function kfm_dir_openNode(dir){
 	var node=$('kfm_dir_node_'+dir);
 	node.className='kfm_dir_node_opened';
 	node.href=node.href.replace(/open/,'close');
-	$('kfm_directories_subdirs_'+dir).empty().appendText(kfm_lang.Loading);
+	$('kfm_directories_subdirs_'+dir).empty().appendText(kfm.lang.Loading);
 	x_kfm_loadDirectories(dir,kfm_refreshDirectories);
 }
 function kfm_dir_closeNode(dir){
@@ -171,13 +171,13 @@ function kfm_refreshDirectories(res){
 	}
 	var t=new Element('table'),n='kfm_dir_node_'+d;
 	dirwrapper=$('kfm_directories_subdirs_'+d).empty();
-	kfm_addEl(dirwrapper,t);
+	kfm.addEl(dirwrapper,t);
 	var dirs=$A(res.directories);
 	dirs.each(function(dir,a){
 		kfm_dir_addLink(t,dir[0],res.reqdir,l=(a==dirs.length-1),dir[1],dir[2]);
 		if(!kfm_directories[dir[2]])kfm_directories[dir[2]]={parent:res.parent,name:dir[0],path:res.reqdir+dir[0]};
 	});
-	if(d!='')kfm_addEl($(n).parentNode.empty(),dirs.length?
+	if(d!='')kfm.addEl($($(n).parentNode).empty(),dirs.length?
 		newLink('javascript:kfm_dir_closeNode("'+res.parent+'")','[-]',n,'kfm_dir_node_open'):
 		(new Element('span',{
 			'id':n
@@ -187,16 +187,16 @@ function kfm_refreshDirectories(res){
 	if(!kfm_cwd_subdirs[d])kfm_dir_openNode(res.parent);
 	kfm_setDirectoryProperties(res.properties);
 	kfm_selectNone();
-	kfm_log(kfm_lang.DirRefreshed);
+	kfm_log(kfm.lang.DirRefreshed);
 	kfm_directories[kfm_cwd_id]=res.properties;
 	kfm_refreshPanels('kfm_left_column');
 }
 function kfm_renameDirectory(id){
 	var directoryName=kfm_directories[id].name;
-	var newName=kfm_prompt(kfm_lang.RenameTheDirectoryToWhat(directoryName),directoryName);
+	var newName=kfm_prompt(kfm.lang.RenameTheDirectoryToWhat(directoryName),directoryName);
 	if(!newName||newName==directoryName)return;
 	kfm_directories[id]=null;
-	kfm_log(kfm_lang.RenamedDirectoryAs(directoryName,newName));
+	kfm_log(kfm.lang.RenamedDirectoryAs(directoryName,newName));
 	x_kfm_renameDirectory(id,newName,kfm_refreshDirectories);
 }
 function kfm_setDirectoryProperties(properties){
@@ -205,16 +205,16 @@ function kfm_setDirectoryProperties(properties){
 	wrapper.properties=properties;
 	var table=new Element('table'),row,cell,i;
 	{ // directory name
-		i=properties.allowed_file_extensions.length?properties.allowed_file_extensions.join(', '):kfm_lang.NoRestrictions;
-		row=kfm_addRow(table);
-		kfm_addCell(row,0,0,(new Element('strong')).setHTML(kfm_lang.Name));
-		kfm_addCell(row,1,0,'/'+kfm_cwd_name);
+		i=properties.allowed_file_extensions.length?properties.allowed_file_extensions.join(', '):kfm.lang.NoRestrictions;
+		row=kfm.addRow(table);
+		kfm.addCell(row,0,0,(new Element('strong')).setHTML(kfm.lang.Name));
+		kfm.addCell(row,1,0,'/'+kfm_cwd_name);
 	}
 	{ // allowed file extensions
-		i=properties.allowed_file_extensions.length?properties.allowed_file_extensions.join(', '):kfm_lang.NoRestrictions;
-		row=kfm_addRow(table);
-		kfm_addCell(row,0,0,(new Element('strong')).setHTML(kfm_lang.AllowedFileExtensions));
-		kfm_addCell(row,1,0,i);
+		i=properties.allowed_file_extensions.length?properties.allowed_file_extensions.join(', '):kfm.lang.NoRestrictions;
+		row=kfm.addRow(table);
+		kfm.addCell(row,0,0,(new Element('strong')).setHTML(kfm.lang.AllowedFileExtensions));
+		kfm.addCell(row,1,0,i);
 	}
-	kfm_addEl(wrapper,table);
+	kfm.addEl(wrapper,table);
 }

@@ -26,7 +26,6 @@ require_once($kfm_base_path.'includes/kaejax.php');
 		<script type="text/javascript">
 <?php
 	$js='';
-	$js.=file_get_contents('lang/'.$kfm_language.'.js');
 	$js.=file_get_contents('j/variables.js');
 	$js.=file_get_contents('j/kfm.js');
 	$js.=file_get_contents('j/alerts.js');
@@ -59,6 +58,7 @@ require_once($kfm_base_path.'includes/kaejax.php');
 	}
 	$js.=file_get_contents('j/files.js');
 	$js.=file_get_contents('swfupload/SWFUpload.js');
+	$js.=file_get_contents('lang/'.$kfm_language.'.js');
 #	$js=preg_replace('#// .*|[\t]#','',$js); # strip single-line comments and tabs
 #	$js=preg_replace('#/\*.*?\*/#ims','',$js); # strip multi-line comments
 #	$js=preg_replace('#;\n}#ims','}',$js);

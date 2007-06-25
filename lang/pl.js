@@ -11,7 +11,7 @@
  * 	jan.kurek@gmail.com
  */
 
-var kfm_lang=
+var kfm.lang=
 {
 AddTagsToFiles: "dodaj tagi",
 AllowedFileExtensions: "dopuszczalne rozszerzenia plików",

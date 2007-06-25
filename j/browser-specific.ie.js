@@ -1,5 +1,5 @@
 // see ../license.txt for licensing
-function kfm_cancelEvent(e,c){
+function kfm.cancelEvent(e,c){
 	e.cancelBubble=true;
 	if(c)e.returnValue=false; // contextmenu
 }
