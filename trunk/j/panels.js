@@ -168,7 +168,7 @@ function kfm_createFileUploadPanel(){
 					flash_url : "swfuploadr52_0002/swfupload.swf",
 					ui_container_id : "kfm_uploadFormSwf",
 					degraded_container_id : "kfm_uploadForm",
-					debug: true
+					debug:false
 				});
 				b1.addEvent('click',function(){
 					window.swfUpload.browse();
