@@ -39,6 +39,31 @@ function kfm_addPanel(wrapper,panel){
 	wrapper.panels[wrapper.panels.length]=panel;
 	kfm.addEl(wrapper,el);
 }
+function uploadStart(a){
+	$('kfm_fileUploadSWFCancel').disabled=null;
+	window.swfUpload.kfm_file_at=0;
+	uploadProgress({'size':1},0);
+}
+function uploadProgress(file,bytes_uploaded){
+	var percent=Math.ceil((bytes_uploaded/file.size)*100);
+	$('kfm_uploadProgress').setHTML('file '+window.swfUpload.kfm_file_at+' :'+percent+'%');
+}
+function uploadCancel(a){
+	$('kfm_uploadProgress').setHTML('&nbsp;');
+	$('kfm_fileUploadSWFCancel').disabled='disabled';
+}
+function uploadComplete(a){
+	++window.swfUpload.kfm_file_at;
+	uploadProgress({'size':1},0);
+}
+function uploadQueueComplete(a){
+	x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);
+	$('kfm_uploadProgress').setHTML('&nbsp;');
+	$('kfm_fileUploadSWFCancel').disabled='disabled';
+}
+function uploadError(a){
+	alert(a);
+}
 function kfm_createFileUploadPanel(){
 	{ // create form
 		var kfm_uploadPanel_checkForZip=function(e){
@@ -61,7 +86,7 @@ function kfm_createFileUploadPanel(){
 			});
 			if(file)file.value='';
 			if(url)url.value='';
-			$('kfm_uploadForm').setStyles({
+			$('kfm_uploadWrapper').setStyles({
 				'display':(copy?'none':'block')
 			});
 			$('kfm_copyForm').setStyles({
@@ -69,6 +94,9 @@ function kfm_createFileUploadPanel(){
 			});
 		});
 		{ // upload from computer
+			var wrapper=new Element('div',{
+				'id':'kfm_uploadWrapper'
+			});
 			{ // normal single-file upload form
 				var f1=newForm('upload.php','POST','multipart/form-data','kfm_iframe');
 				f1.id='kfm_uploadForm';
@@ -95,76 +123,60 @@ function kfm_createFileUploadPanel(){
 				});
 				kfm.addEl(unzip1,[newInput('kfm_unzipWhenUploaded','checkbox'),kfm.lang.ExtractAfterUpload]);
 				kfm.addEl(f1,[input,submit,unzip1]);
+				wrapper.appendChild(f1);
 			}
 			{ // load multi-upload thing if possible
-				window.swfu=new SWFUpload({
-					upload_script:"../upload.php?session_id="+window.session_id,
-					target:"kfm_iframe",
-					flash_path:"swfupload/SWFUpload.swf",
-					allowed_filesize:99999999,	// large limit
-					allowed_filetypes:"*.*",
-					allowed_filetypes_description:kfm.lang.AllFiles,
-					upload_file_complete_callback:"swfu.upload_file_complete",
-					upload_file_queued_callback:"swfu.upload_file_queued",
-					upload_queue_complete_callback:'swfu.upload_queue_complete',
-					flash_loaded_callback:'swfu.flashLoaded',
-					create_ui:true
+				var f3=newForm('upload.php','POST','multipart/form-data','kfm_iframe');
+				f3.style.display='none';
+				f3.id='kfm_uploadFormSwf';
+				var t=new Element('table');
+				var r=t.insertRow(0);
+				var c=r.insertCell(0);
+				var b1=new Element('input',{
+					'type':'button',
+					'value':kfm.lang.Browse
 				});
-				window.swfu.loadUI=function(){
-					var t=new Element('table'),r,c,inp1,inp2,instance=this;
-					t.style.width='100%';
-					r=kfm.addRow(t);
-					{ // browse button
-						c=kfm.addCell(r);
-						c.style.width='10%';
-						inp1=newInput('kfm_multiChooseFile','button',kfm.lang.Browse);
-						inp1.addEvent('click',function(){instance.browse()});
-						kfm.addEl(c,inp1);
-					}
-					{ // file queue
-						c=kfm.addCell(r,1);
-						c.id='kfm_files_to_upload';
-					}
-					r=kfm.addRow(t);
-					{ // upload button
-						c=kfm.addCell(r);
-						inp2=newInput('kfm_uploadButton','button',kfm.lang.Upload);
-						inp2.addEvent('click',function(){instance.upload()});
-						kfm.addEl(c,inp2);
-					}
-					{ // progress meter
-						c=kfm.addCell(r,1);
-						c.appendChild(new Element('div',{
-							'id':'kfm_file_upload_progress_meter',
-							'styles':{
-								'display':'block',
-								'background':'#00f',
-								'width':0,
-								'height':10
-							}
-						}));
-					}
-					kfm.addEl($('kfm_uploadForm').empty(),t);
-					instance.set_number_of_files(0);
-				}
-				window.swfu.upload_file_complete=function(){
-					window.swfu.number_uploaded++;
-					var meter=$('kfm_file_upload_progress_meter');
-					meter.setStyle('width',meter.parentNode.offsetWidth*(window.swfu.number_uploaded/window.swfu.number_of_files));
-				}
-				window.swfu.upload_file_queued=function(file,qlen){
-					window.swfu.set_number_of_files(qlen);
-				}
-				window.swfu.upload_queue_complete=function(){
-					x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);
-					window.swfu.set_number_of_files(0);
-					$("kfm_file_upload_progress_meter").setStyle('width',0);
-				}
-				window.swfu.set_number_of_files=function(n){
-					kfm.addEl($('kfm_files_to_upload').empty(),'Files to upload: '+n);
-					window.swfu.number_of_files=n;
-					window.swfu.number_uploaded=0;
-				}
+				c.appendChild(b1);
+				c=r.insertCell(1);
+				var b2=new Element('input',{
+					'id':'kfm_fileUploadSWFCancel',
+					'type':'button',
+					'value':'Cancel', // TODO: New String
+					'disabled':'disabled'
+				});
+				c.appendChild(b2);
+				r=t.insertRow(1);
+				c=r.insertCell(0);
+				c.colSpan=2;
+				c.id='kfm_uploadProgress';
+				$(c).setHTML('&nbsp;');
+				f3.appendChild(t);
+				window.swfUpload=new SWFUpload({
+					upload_target_url: "../upload.php?session_id="+window.session_id, // relative to the flash
+					file_size_limit : "102400",	// 100MB
+					file_types : "*.*",
+					file_types_description : "All Files",
+					file_upload_limit : "0",
+					file_queue_limit : "0",
+					begin_upload_on_queue : true,
+					file_queued_handler : uploadStart,
+					file_progress_handler : uploadProgress,
+					file_cancelled_handler : uploadCancel,
+					file_complete_handler : uploadComplete,
+					queue_complete_handler : uploadQueueComplete,
+					error_handler : uploadError,
+					flash_url : "swfuploadr52_0002/swfupload.swf",
+					ui_container_id : "kfm_uploadFormSwf",
+					degraded_container_id : "kfm_uploadForm",
+					debug: true
+				});
+				b1.addEvent('click',function(){
+					window.swfUpload.browse();
+				});
+				b2.addEvent('click',function(){
+					window.swfUpload.cancelQueue();
+				});
+				wrapper.appendChild(f3);
 			}
 		}
 		{ // copy from URL
@@ -190,7 +202,7 @@ function kfm_createFileUploadPanel(){
 			kfm.addEl(f2,[inp2,submit2,unzip2]);
 		}
 	}
-	return kfm_createPanel(kfm.lang.FileUpload,'kfm_file_upload_panel',[sel,f1,iframe,f2],{maxedState:3,state:3,order:2});
+	return kfm_createPanel(kfm.lang.FileUpload,'kfm_file_upload_panel',[sel,wrapper,iframe,f2],{maxedState:3,state:3,order:2});
 }
 function kfm_createFileDetailsPanel(){
 	return kfm_createPanel(kfm.lang.FileDetails,'kfm_file_details_panel',0,{abilities:1,order:4});
