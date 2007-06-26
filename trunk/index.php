@@ -57,7 +57,7 @@ require_once($kfm_base_path.'includes/kaejax.php');
 		}
 	}
 	$js.=file_get_contents('j/files.js');
-	$js.=file_get_contents('swfupload/SWFUpload.js');
+	$js.=file_get_contents('swfuploadr52_0002/swfupload.js');
 	$js.=file_get_contents('lang/'.$kfm_language.'.js');
 #	$js=preg_replace('#// .*|[\t]#','',$js); # strip single-line comments and tabs
 #	$js=preg_replace('#/\*.*?\*/#ims','',$js); # strip multi-line comments
