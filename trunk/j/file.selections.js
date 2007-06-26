@@ -13,7 +13,7 @@ function kfm_chooseFile(e,o){
 		if(kfm_file_handler=='return'||kfm_file_handler=='fckeditor'){
 			if(!el.width)window.opener.SetUrl(url);
 			else window.opener.SetUrl(url.replace(/([^:]\/)\//g,'$1'),0,0,$('kfm_file_icon_'+el.id).kfm_attributes.caption);
-			window.close();
+			setTimeout('window.close()',1);
 		}
 		else if(kfm_file_handler=='download'){
 			if(/get.php/.test(url))url+='&forcedownload=1';
