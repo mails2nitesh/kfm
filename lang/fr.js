@@ -16,7 +16,7 @@
 	liane
  */
 
-var kfm.lang=
+kfm.lang=
 {
 Dir:
 	"ltr", 

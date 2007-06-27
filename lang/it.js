@@ -11,7 +11,7 @@
  * 	stefano.luchetta@consiglio.marche.it
  */
 
-var kfm.lang=
+kfm.lang=
 {
 Dir:
 	"ltr", // language direction
