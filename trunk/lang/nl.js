@@ -6,7 +6,7 @@
  * 	Roy Lubbers (roy@lbsnet.nl)
  */
 
-var kfm.lang=
+kfm.lang=
 {
 
 Dir:

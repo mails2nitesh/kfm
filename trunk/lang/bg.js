@@ -11,7 +11,7 @@
  * 	tondy@tondy.com
  */
 
-var kfm.lang=
+kfm.lang=
 {
 Dir:
 	"ltr", // language direction

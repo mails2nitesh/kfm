@@ -17,7 +17,7 @@
  * 	windwerfer
  */
 
-var kfm.lang=
+kfm.lang=
 {
 
 Dir:
