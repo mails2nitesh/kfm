@@ -1,9 +1,10 @@
 <?php
 # see license.txt for licensing
 if(!isset($kfm_base_path))$kfm_base_path='';
-error_reporting(E_USER_ERROR | E_USER_WARNING | E_USER_NOTICE);
 if(isset($_GET['session_id']))session_id($_GET['session_id']);
-@session_start();
+if(!isset($_SESSION)){
+	session_start();
+}
 if(get_magic_quotes_gpc()){
 	# taken from http://www.phpfreaks.com/quickcode/Get-rid-of-magic_quotes_gpc/618.php
 	function traverse (&$arr){
@@ -16,7 +17,7 @@ if(get_magic_quotes_gpc()){
 	$gpc=array(&$_GET,&$_POST,&$_COOKIE);
 	traverse($gpc);
 }
-set_include_path(get_include_path().PATH_SEPARATOR.$kfm_base_path.'pear');
+set_include_path($kfm_base_path.'pear'.PATH_SEPARATOR.get_include_path());
 if(!file_exists($kfm_base_path.'configuration.php')){
 	echo '<em>Missing <code>configuration.php</code>!</em><p>If this is a fresh installation of KFM, then please rename <code>configuration.php.dist</code> to <code>configuration.php</code>, and edit it according to your project\'s needs.</p><p>If this is an upgraded version of KFM, please remove the parts of your old <code>config.php</code> which do not exist in <code>configuration.php.dist</code>, then rename it to <code>configuration.php</code>.</p>';
 	exit;
@@ -161,6 +162,7 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 			$kfmdb->setFetchMode(MDB2_FETCHMODE_ASSOC);
 			if(!$_SESSION['db_defined']){
 				$res=&$kfmdb->query("show tables like '".$kfm_db_prefix_escaped."%'");
+				if(PEAR::isError($res))die($kfmdb->getMessage());
 				if(!$res->numRows())include($kfm_base_path.'scripts/db.mysql.create.php');
 				else $_SESSION['db_defined']=1;
 			}
@@ -316,7 +318,7 @@ require_once($kfm_base_path.'framework.php');
 		require_once($kfm_base_path.'includes/directories.php');
 		return _renameDirectory($dir,$newname);
 	}
-	function kfm_loadDirectories($root,$oldpid){
+	function kfm_loadDirectories($root,$oldpid=0){
 		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/directories.php');
 		return _loadDirectories($root,$oldpid);

@@ -101,11 +101,18 @@ function kfm_createFileUploadPanel(){
 				var f1=newForm('upload.php','POST','multipart/form-data','kfm_iframe');
 				f1.id='kfm_uploadForm';
 				var iframe=new Element('iframe',{
-					'id':'kfm_iframe'
+					'id':'kfm_iframe',
+					'name':'kfm_iframe',
+					'src':'javascript:false',
+					'styles':{
+						'display':'none'
+					}
 				});
-				iframe.src='javascript:false';
-				iframe.setStyles({
-					'display':'none'
+				var max_upload_size=new Element('input',{
+					'id':'MAX_FILE_SIZE',
+					'name':'MAX_FILE_SIZE',
+					'type':'hidden',
+					'value':'9999999999'
 				});
 				var submit=newInput('upload','submit',kfm.lang.Upload);
 				submit.addEvent('click',function(){
@@ -122,7 +129,7 @@ function kfm_createFileUploadPanel(){
 					}
 				});
 				kfm.addEl(unzip1,[newInput('kfm_unzipWhenUploaded','checkbox'),kfm.lang.ExtractAfterUpload]);
-				kfm.addEl(f1,[input,submit,unzip1]);
+				kfm.addEl(f1,[input,max_upload_size,submit,unzip1]);
 				wrapper.appendChild(f1);
 			}
 			{ // load multi-upload thing if possible

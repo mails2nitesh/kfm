@@ -1,7 +1,7 @@
 <?php
 # see license.txt for licensing
 require_once('initialise.php');
-if($_SERVER['REDIRECT_QUERY_STRING']){
+if(isset($_SERVER['REDIRECT_QUERY_STRING'])&&$_SERVER['REDIRECT_QUERY_STRING']){
 	$arr=explode(',',$_SERVER['REDIRECT_QUERY_STRING']);
 	foreach($arr as $r){
 		$arr2=explode('=',$r);
