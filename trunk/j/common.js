@@ -124,6 +124,7 @@ function newInput(n,t,v,cl){
 		case 'checkbox':{
 			b=new Element('input',{
 				'id':n,
+				'name':n,
 				'type':'checkbox',
 				'styles':{
 					'width':'auto'
@@ -133,6 +134,7 @@ function newInput(n,t,v,cl){
 		}
 		case 'textarea':{
 			b=new Element('textarea',{
+				'id':n,
 				'id':n
 			});
 			break;
@@ -140,6 +142,7 @@ function newInput(n,t,v,cl){
 		default:{
 			b=new Element('input',{
 				'id':n,
+				'name':n,
 				'type':t
 			});
 		}
@@ -152,7 +155,7 @@ function newInput(n,t,v,cl){
 			b.value=v;
 		}
 	}
-	b.className=cl;
+	if(cl)b.className=cl;
 	return b;
 }
 function newLink(h,t,id,c,title){

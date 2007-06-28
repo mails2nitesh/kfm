@@ -16,32 +16,34 @@ if($kfm_allow_file_upload){
 			unlink($to);
 		}
 		else{
-			$imgtype=exif_imagetype($to);
 			$fid=kfm_add_file_to_db($filename,$_SESSION['kfm']['cwd_id']);
 			$file=new File($fid);
-			if($imgtype){
-				$comment='';
-				if($imgtype==1){ # gif
-					$file=file_get_contents($to);
-					$arr=explode('!',$file);
-					$found=0;
-					for($i=0;$i<count($arr)&&!$found;++$i){
-						$block=$arr[$i];
-						if(substr($block,0,2)==chr(254).chr(21)){
-							$found=1;
-							$comment=substr($block,2,strpos($block,0)-1);
+			if(function_exists('exif_imagetype')){
+				$imgtype=exif_imagetype($to);
+				if($imgtype){
+					$comment='';
+					if($imgtype==1){ # gif
+						$file=file_get_contents($to);
+						$arr=explode('!',$file);
+						$found=0;
+						for($i=0;$i<count($arr)&&!$found;++$i){
+							$block=$arr[$i];
+							if(substr($block,0,2)==chr(254).chr(21)){
+								$found=1;
+								$comment=substr($block,2,strpos($block,0)-1);
+							}
 						}
 					}
+					else{
+						$data=exif_read_data($to,0,true);
+						if(is_array($data)&&isset($data['COMMENT'])&&is_array($data['COMMENT']))$comment=join("\n",$data['COMMENT']);
+					}
+					$file->setCaption($comment);
 				}
-				else{
-					$data=exif_read_data($to,0,true);
-					if(is_array($data)&&isset($data['COMMENT'])&&is_array($data['COMMENT']))$comment=join("\n",$data['COMMENT']);
+				else if(isset($_POST['kfm_unzipWhenUploaded'])&&$_POST['kfm_unzipWhenUploaded']){
+					kfm_extractZippedFile($fid);
+					$file->delete();
 				}
-				$file->setCaption($comment);
-			}
-			else if(isset($_POST['kfm_unzipWhenUploaded'])&&$_POST['kfm_unzipWhenUploaded']){
-				kfm_extractZippedFile($fid);
-				$file->delete();
 			}
 		}
 	}
@@ -52,7 +54,8 @@ else $errors[]='permission denied for upload to this directory'; # TODO new stri
 	<head>
 		<script type="text/javascript">
 <?php
-if($_POST['onload'])echo $_POST['onload'];
+$js=isset($_POST['js'])?$js:'';
+if(isset($_POST['onload']))echo $_POST['onload'];
 else if(count($errors))echo 'alert("'.addslashes(join("\n",$errors)).'")';
 else echo 'parent.x_kfm_loadFiles('.$_SESSION['kfm']['cwd_id'].',parent.kfm_refreshFiles);parent.kfm_dir_openNode('.$_SESSION['kfm']['cwd_id'].');'.$js;
 ?>

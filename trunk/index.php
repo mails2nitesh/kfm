@@ -113,7 +113,7 @@ header('Content-type: text/html; Charset=utf-8');
 			if(!$kfm_dont_send_metrics){
 				$today=date('Y-m-d');
 				if(!isset($_SESSION['kfm_parameters']['last_registration'])||$_SESSION['kfm_parameters']['last_registration']!=$today){
-					echo '<img src="http://kfm.verens.com/extras/register.php?version='.urlencode(KFM_VERSION).'&amp;domain_name='.urlencode($_SERVER['SERVER_NAME']).'" />';
+					echo '<img src="http://kfm.verens.com/extras/register.php?version='.urlencode(KFM_VERSION).'&amp;domain_name='.urlencode($_SERVER['SERVER_NAME']).'&amp;db_type='.$kfm_db_type.'" />';
 					$kfmdb->query("delete from ".$kfm_db_prefix."parameters where name='last_registration'");
 					$kfmdb->query("insert into ".$kfm_db_prefix."parameters (name,value) values ('last_registration','".$today."')");
 					$_SESSION['kfm_parameters']['last_registration']=$today;
