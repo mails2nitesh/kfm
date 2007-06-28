@@ -195,14 +195,14 @@ var KFM=new Class({
 				break;
 			}
 			case 65:{ // a
-				if(e.ctrlKey&&$('kfm_right_column').contentMode=='file_icons'){
+				if(e.control&&$('kfm_right_column').contentMode=='file_icons'){
 					clearSelections(e);
 					kfm_selectAll();
 				}
 				break;
 			}
 			case 85:{ // u
-				if(e.ctrlKey&&$('kfm_right_column').contentMode=='file_icons'){
+				if(e.control&&$('kfm_right_column').contentMode=='file_icons'){
 					clearSelections(e);
 					kfm_selectNone();
 				}

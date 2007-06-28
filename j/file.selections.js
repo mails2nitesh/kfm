@@ -184,8 +184,10 @@ function kfm_shiftFileSelectionUD(dir){
 function kfm_toggleSelectedFile(e){
 	e=new Event(e);
 	kfm.cancelEvent(e);
-	var el=e.target,id=el.kfm_attributes.id;
-	if(kfm_lastClicked&&e.shiftKey){
+	var el=e.target;
+	while(el.tagName!='DIV')el=el.parentNode;
+	var id=el.kfm_attributes.id;
+	if(kfm_lastClicked&&e.shift){
 		clearSelections(e);
 		kfm_selectNone();
 		var a=$('kfm_right_column').fileids,b,c,d;
@@ -202,11 +204,11 @@ function kfm_toggleSelectedFile(e){
 	}
 	else{
 		if(kfm_isFileSelected(id)){
-			if(!e.ctrlKey)kfm_selectNone();
+			if(!e.control)kfm_selectNone();
 			else kfm_removeFromSelection(id);
 		}
 		else{
-			if(!e.ctrlKey&&!e.metaKey)kfm_selectNone();
+			if(!e.control&&!e.meta)kfm_selectNone();
 			kfm_addToSelection(id);
 		}
 	}
