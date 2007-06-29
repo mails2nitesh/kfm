@@ -1,9 +1,21 @@
 <?php
 # see license.txt for licensing
 if(!isset($kfm_base_path))$kfm_base_path='';
-if(isset($_GET['session_id']))session_id($_GET['session_id']);
-if(!isset($_SESSION)){
+if(!session_id()){
+#	ini_set('session.use_only_cookies',1);
+	if(isset($_GET['PHPSESSID']))session_id($_GET['PHPSESSID']);
 	session_start();
+	if(isset($_GET['PHPSESSID'])&&$_GET['PHPSESSID']!=session_id()){
+		header("HTTP/1.0 500 Server Error! session id should be ".$_GET['PHPSESSID']." but is ".session_id());
+		exit(0);
+	}
+
+    ob_start();
+    phpinfo();
+	$s = ob_get_contents();
+	ob_end_clean();
+#	mail('kae@verens.com','test1',$_GET['session_id']."\n".session_id()."\n".$_SERVER['REQUEST_URI']."\n".print_r($_SESSION,true));
+#	mail('kae@verens.com','test2',$s,'Content-Type: text/html');
 }
 if(get_magic_quotes_gpc()){
 	# taken from http://www.phpfreaks.com/quickcode/Get-rid-of-magic_quotes_gpc/618.php
@@ -145,7 +157,7 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 		$workpath_tmp = substr($workpath,0,-1);
 		if(is_writable(dirname($workpath_tmp)))mkdir($workpath_tmp, 0755);
 		else{
-			echo 'error: could not create directory "'.htmlspecialchars($workpath_tmp).'"';
+			echo 'error: could not create directory <code>"'.htmlspecialchars($workpath_tmp).'"</code>. please make sure that <code>'.htmlspecialchars(preg_replace('#/[^/]*$#','',$workpath_tmp)).'</code> is writable by the server';
 			exit;
 		}
 	}
