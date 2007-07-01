@@ -57,7 +57,7 @@ function uploadComplete(a){
 	uploadProgress({'size':1},0);
 }
 function uploadQueueComplete(a){
-//	x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);
+	x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);
 	$('kfm_uploadProgress').setHTML('&nbsp;');
 	$('kfm_fileUploadSWFCancel').disabled='disabled';
 }
