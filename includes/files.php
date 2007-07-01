@@ -30,17 +30,24 @@ function _copyFiles($files,$dir_id){
 	return $copied.' files copied'; # TODO: new string
 }
 function _createEmptyFile($filename){
-	if(!kfm_checkAddr($_SESSION['kfm']['currentdir'].'/'.$filename))return 'error: filename "'.$filename.'" not allowed'; # TODO: new string
-	return(touch($_SESSION['kfm']['currentdir'].'/'.$filename))?kfm_loadFiles($_SESSION['kfm']['cwd_id']):'error: could not write file "'.$filename.'"'; # TODO: new string
+	global $kfm_session;
+	$cwd=$kfm_session->get('currentdir');
+	if(!kfm_checkAddr($cwd.'/'.$filename))return 'error: filename "'.$filename.'" not allowed'; # TODO: new string
+	return(touch($cwd.'/'.$filename))?kfm_loadFiles($kfm_session->get('cwd_id')):'error: could not write file "'.$filename.'"'; # TODO: new string
 }
 function _downloadFileFromUrl($url,$filename){
-	if(!kfm_checkAddr($_SESSION['kfm']['currentdir'].'/'.$filename))return 'error: filename not allowed';
+	global $kfm_session;
+	$cwd=$kfm_session->get('currentdir');
+	$cwd_id=$kfm_session->get('cwd_id');
+	if(!kfm_checkAddr($cwd.'/'.$filename))return 'error: filename not allowed';
 	if(substr($url,0,4)!='http')return 'error: url must begin with http';
 	$file=file_get_contents(str_replace(' ','%20',$url));
 	if(!$file)return 'error: could not download file "'.$url.'"';
-	return(file_put_contents($_SESSION['kfm']['currentdir'].'/'.$filename,$file))?kfm_loadFiles($_SESSION['kfm']['cwd_id']):'error: could not write file "'.$filename.'"';
+	return(file_put_contents($cwd.'/'.$filename,$file))?kfm_loadFiles($cwd_id):'error: could not write file "'.$filename.'"';
 }
 function _extractZippedFile($id){
+	global $kfm_session;
+	$cwd_id=$kfm_session->get('cwd_id');
 	if(!$GLOBALS['kfm_allow_file_create'])return 'error: permission denied: cannot create file'; # TODO: new string
 	$file=new File($id);
 	$dir=$file->directory.'/';
@@ -72,7 +79,7 @@ function _extractZippedFile($id){
 			}
 		}
 	}
-	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
+	return kfm_loadFiles($cwd_id);
 }
 function _getFileAsArray($filename){
 	return explode("\n",rtrim(file_get_contents($filename)));
@@ -151,7 +158,7 @@ function _getTextFile($fid){
 	return 'error: "'.$file->name.'" cannot be edited (restricted)'; # TODO: new string
 }
 function _loadFiles($rootid=1){
-	global $kfmdb,$kfm_db_prefix;
+	global $kfmdb,$kfm_db_prefix,$kfm_session;
 	$dirdata=kfm_getDirectoryDbInfo($rootid);
 	$reqdir=kfm_getDirectoryParents($rootid);
 	$root='/'.str_replace($GLOBALS['rootdir'],'',$reqdir);
@@ -197,15 +204,15 @@ function _loadFiles($rootid=1){
 			}
 		}
 		{ # update session data
-			$_SESSION['kfm']['currentdir']=$reqdir;
-			$_SESSION['kfm']['cwd_id']=$rootid;
+			$kfm_session->setMultiple(array('currentdir'=>$reqdir,'cwd_id'=>$rootid));
 		}
 		return array('reqdir'=>$root,'files'=>$files,'uploads_allowed'=>$GLOBALS['kfm_allow_file_upload']);
 	}
 	return 'couldn\'t read directory';
 }
 function _moveFiles($files,$dir_id){
-	global $kfmdb,$kfm_db_prefix;
+	global $kfmdb,$kfm_db_prefix,$kfm_session;
+	$cwd_id=$kfm_session->get('cwd_id');
 	if(!$GLOBALS['kfm_allow_file_move'])return 'error: permission denied: cannot move file'; # TODO: new string
 	$dirdata=kfm_getDirectoryDbInfo($dir_id);
 	if(!$dirdata)return 'error: no data for directory id "'.$dir_id.'"'; # TODO: new string
@@ -220,22 +227,26 @@ function _moveFiles($files,$dir_id){
 		rename($dir.'/'.$file,$to.'/'.$file);
 		$q=$kfmdb->query("update ".$kfm_db_prefix."files set directory=".$dir_id." where id=".$fid);
 	}
-	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
+	return kfm_loadFiles($cwd_id);
 }
 function _renameFile($fid,$newfilename,$refreshFiles=true){
 	if(!$GLOBALS['kfm_allow_file_edit'])return 'error: permission denied: cannot edit file'; # TODO: new string
-	global $kfmdb,$kfm_db_prefix;
+	global $kfmdb,$kfm_db_prefix,$kfm_session;
+	$cwd=$kfm_session->get('currentdir');
+	$cwd_id=$kfm_session->get('cwd_id');
 	$file=new File($fid);
 	if(!file_exists($file->path))return;
 	$filename=$file->name;
 	if(!kfm_checkAddr($filename)||!kfm_checkAddr($newfilename))return 'error: cannot rename "'.$filename.'" to "'.$newfilename.'"'; # TODO: new string
-	$newfile=$_SESSION['kfm']['currentdir'].'/'.$newfilename;
+	$newfile=$cwd.'/'.$newfilename;
 	if(file_exists($newfile))return 'error: a file of that name already exists'; # TODO: new string
-	rename($_SESSION['kfm']['currentdir'].'/'.$filename,$newfile);
+	rename($cwd.'/'.$filename,$newfile);
 	$kfmdb->query("update ".$kfm_db_prefix."files set name='".addslashes($newfilename)."' where id=".$fid);
-	if($refreshFiles)return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
+	if($refreshFiles)return kfm_loadFiles($cwd_id);
 }
 function _renameFiles($files,$template){
+	global $kfm_session;
+	$cwd_id=$kfm_session->get('cwd_id');
 	if(!$GLOBALS['kfm_allow_file_edit'])return 'error: permission denied: cannot edit file'; # TODO: new string
 	$prefix=preg_replace('/\*.*/','',$template);
 	$postfix=preg_replace('/.*\*/','',$template);
@@ -245,7 +256,7 @@ function _renameFiles($files,$template){
 		$ret=_renameFile($files[$i-1],$prefix.$num.$postfix,false);
 		if($ret)return $ret; # error detected
 	}
-	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
+	return kfm_loadFiles($cwd_id);
 }
 function _resize_bytes($size){
 	$count=0;
@@ -380,9 +391,12 @@ function _viewTextFile($fileid){
 	return "error: viewing file is not allowed"; # TODO: new string
 }
 function _zip($filename,$files){
+	global $kfm_session;
+	$cwd=$kfm_session->get('currentdir');
+	$cwd_id=$kfm_session->get('cwd_id');
 	if(!$GLOBALS['kfm_allow_file_create'])return 'error: permission denied: cannot create file'; # TODO: new string
 	global $rootdir;
-	if(!kfm_checkAddr($_SESSION['kfm']['currentdir'].'/'.$filename))return 'error: filename "'.$filename.'" not allowed'; # TODO: new string
+	if(!kfm_checkAddr($cwd.'/'.$filename))return 'error: filename "'.$filename.'" not allowed'; # TODO: new string
 	$arr=array();
 	foreach($files as $f){
 		$file=new File($f);
@@ -391,12 +405,12 @@ function _zip($filename,$files){
 	}
 	{ # try native system zip command
 		$res=-1;
-		$pdir=str_replace('//','/',$_SESSION['kfm']['currentdir'].'/');
+		$pdir=str_replace('//','/',$cwd.'/');
 		$zipfile=$pdir.$filename;
 		for($i=0;$i<count($arr);++$i)$arr[$i]=str_replace($pdir,'',$arr[$i]);
 		exec('cd "'.$rootdir.'" && zip -D "'.$zipfile.'" "'.join('" "',$arr).'"',$arr,$res);
 	}
 	if($res)return 'error: no native "zip" command'; # TODO: new string
-	return kfm_loadFiles($_SESSION['kfm']['cwd_id']);
+	return kfm_loadFiles($cwd_id);
 }
 ?>

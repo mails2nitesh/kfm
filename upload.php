@@ -6,7 +6,7 @@ if($kfm_allow_file_upload){
 	$file=isset($_FILES['kfm_file'])?$_FILES['kfm_file']:$_FILES['Filedata'];
 	$filename=$file['name'];
 	$tmpname=$file['tmp_name'];
-	$to=$_SESSION['kfm']['currentdir'].'/'.$filename;
+	$to=$kfm_session->get('currentdir').'/'.$filename;
 	if(!kfm_checkAddr($to))$errors[]='banned extension in file name'; # TODO new string
 	else{
 		move_uploaded_file($tmpname,$to);
@@ -16,7 +16,7 @@ if($kfm_allow_file_upload){
 			unlink($to);
 		}
 		else{
-			$fid=kfm_add_file_to_db($filename,$_SESSION['kfm']['cwd_id']);
+			$fid=kfm_add_file_to_db($filename,$kfm_session->get('cwd_id'));
 			$file=new File($fid);
 			if(function_exists('exif_imagetype')){
 				$imgtype=exif_imagetype($to);
@@ -57,7 +57,7 @@ else $errors[]='permission denied for upload to this directory'; # TODO new stri
 $js=isset($_POST['js'])?$js:'';
 if(isset($_POST['onload']))echo $_POST['onload'];
 else if(count($errors))echo 'alert("'.addslashes(join("\n",$errors)).'")';
-else echo 'parent.x_kfm_loadFiles('.$_SESSION['kfm']['cwd_id'].',parent.kfm_refreshFiles);parent.kfm_dir_openNode('.$_SESSION['kfm']['cwd_id'].');'.$js;
+else echo 'parent.x_kfm_loadFiles('.$kfm_session->get('cwd_id').',parent.kfm_refreshFiles);parent.kfm_dir_openNode('.$kfm_session->get('cwd_id').');'.$js;
 ?>
 		</script>
 	</head>

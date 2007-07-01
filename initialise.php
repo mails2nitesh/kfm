@@ -1,22 +1,7 @@
 <?php
 # see license.txt for licensing
 if(!isset($kfm_base_path))$kfm_base_path='';
-if(!session_id()){
-#	ini_set('session.use_only_cookies',1);
-	if(isset($_GET['PHPSESSID']))session_id($_GET['PHPSESSID']);
-	session_start();
-	if(isset($_GET['PHPSESSID'])&&$_GET['PHPSESSID']!=session_id()){
-		header("HTTP/1.0 500 Server Error! session id should be ".$_GET['PHPSESSID']." but is ".session_id());
-		exit(0);
-	}
-
-    ob_start();
-    phpinfo();
-	$s = ob_get_contents();
-	ob_end_clean();
-#	mail('kae@verens.com','test1',$_GET['session_id']."\n".session_id()."\n".$_SERVER['REQUEST_URI']."\n".print_r($_SESSION,true));
-#	mail('kae@verens.com','test2',$s,'Content-Type: text/html');
-}
+require_once($kfm_base_path.'framework.php');
 if(get_magic_quotes_gpc()){
 	# taken from http://www.phpfreaks.com/quickcode/Get-rid-of-magic_quotes_gpc/618.php
 	function traverse (&$arr){
@@ -100,15 +85,6 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 	define('KFM_VERSION',rtrim(file_get_contents($kfm_base_path.'version.txt')));
 	$rootdir=str_replace('//','/',$_SERVER['DOCUMENT_ROOT'].$kfm_userfiles.'/');
 	if(!is_dir($rootdir))mkdir($rootdir,0755);
-	if(!isset($_SESSION['kfm']))$_SESSION['kfm']=array('currentdir'=>rtrim($rootdir,' /'),'cwd_id'=>1,'language'=>'','username'=>'','password'=>'');
-	# TODO: remove the following block for 1.0
-	else{
-		if(!isset($_SESSION['kfm']['username'])){
-			$_SESSION['kfm']['username']='';
-			$_SESSION['kfm']['password']='';
-			$_SESSION['kfm']['loggedin']=0;
-		}
-	}
 	define('LSQUIGG','{');
 	define('RSQUIGG','}');
 	define('KFM_DIR', dirname(__FILE__));
@@ -120,24 +96,6 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 	if(!isset($kfm_banned_folders)||!is_array($kfm_banned_folders)) $kfm_banned_folders = array();
 	define('IMAGEMAGICK_PATH',isset($kfm_imagemagick_path)?$kfm_imagemagick_path:'/usr/bin/convert');
 	$cache_directories=array();
-}
-{ # check authentication
-	if(!isset($kfm_username)||!isset($kfm_password)||($kfm_username==''&&$kfm_password==''))$_SESSION['kfm']['loggedin']=1;
-	if(!$_SESSION['kfm']['loggedin'] && (!isset($kfm_api_auth_override)||!$kfm_api_auth_override)){
-		$err='';
-		if(isset($_POST['username'])&&isset($_POST['password'])){
-			if($_POST['username']==$kfm_username && $_POST['password']==$kfm_password){
-				$_SESSION['kfm']['username']=$_POST['username'];
-				$_SESSION['kfm']['password']=$_POST['password'];
-				$_SESSION['kfm']['loggedin']=1;
-			}
-			else $err='<em>Incorrect Password. Please try again, or check your <code>configuration.php</code>.</em>';
-		}
-		if(!$_SESSION['kfm']['loggedin']){
-			include($kfm_base_path.'login.php');
-			exit;
-		}
-	}
 }
 { # work directory
 	$workpath = $rootdir.$kfm_workdirectory; // should be more at the top of this document
@@ -163,7 +121,7 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 	}
 }
 { # database
-	if(!isset($_SESSION['db_defined']))$_SESSION['db_defined']=0;
+	$db_defined=0;
 	$kfm_db_prefix_escaped=str_replace('_','\\\\_',$kfm_db_prefix);
 	switch($kfm_db_type){
 		case 'mysql': {
@@ -172,11 +130,11 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 			$kfmdb=&MDB2::factory($dsn);
 			if(PEAR::isError($kfmdb))die($kfmdb->getMessage());
 			$kfmdb->setFetchMode(MDB2_FETCHMODE_ASSOC);
-			if(!$_SESSION['db_defined']){
+			if(!$db_defined){
 				$res=&$kfmdb->query("show tables like '".$kfm_db_prefix_escaped."%'");
 				if(PEAR::isError($res))die($kfmdb->getMessage());
 				if(!$res->numRows())include($kfm_base_path.'scripts/db.mysql.create.php');
-				else $_SESSION['db_defined']=1;
+				else $db_defined=1;
 			}
 			break;
 		}
@@ -186,10 +144,10 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 			$kfmdb=&MDB2::factory($dsn);
 			if(PEAR::isError($kfmdb))die($kfmdb->getMessage());
 			$kfmdb->setFetchMode(MDB2_FETCHMODE_ASSOC);
-			if(!$_SESSION['db_defined']){
+			if(!$db_defined){
 				$res=&$kfmdb->query("SELECT tablename from pg_tables where tableowner=current_user AND tablename NOT LIKE E'pg\\\\_%' AND tablename NOT LIKE E'sql\\\\_%' AND tablename LIKE E'".$kfm_db_prefix_escaped."%'");
 				if($res->numRows()<1)include($kfm_base_path.'scripts/db.pgsql.create.php');
-				else $_SESSION['db_defined']=1;
+				else $db_defined=1;
 			}
 			break;
 		}
@@ -203,7 +161,7 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 			if(PEAR::isError($kfmdb))die($kfmdb->getMessage());
 			$kfmdb->setFetchMode(MDB2_FETCHMODE_ASSOC);
 			if($kfmdb_create)include($kfm_base_path.'scripts/db.sqlite.create.php');
-			$_SESSION['db_defined']=1;
+			$db_defined=1;
 			break;
 		}
 		default: {
@@ -211,19 +169,40 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 			exit;
 		}
 	}
-	if(!$_SESSION['db_defined']){
+	if(!$db_defined){
 		echo 'failed to connect to database'; # TODO: new string
 		exit;
 	}
 }
 { # get kfm parameters and check for updates
-	if(!isset($_SESSION['kfm_parameters'])){
-		$_SESSION['kfm_parameters']=array();
-		$q=$kfmdb->query("select * from ".$kfm_db_prefix."parameters");
-		$rs=$q->fetchAll();
-		foreach($rs as $r)$_SESSION['kfm_parameters'][$r['name']]=$r['value'];
+	$kfm_parameters=array();
+	$q=$kfmdb->query("select * from ".$kfm_db_prefix."parameters");
+	$rs=$q->fetchAll();
+	foreach($rs as $r)$kfm_parameters[$r['name']]=$r['value'];
+	if($kfm_parameters['version']!=KFM_VERSION)require($kfm_base_path.'scripts/update.0.9.2.php');
+}
+{ # start session
+	$session_id=(isset($_GET['kfm_session']))?$_GET['kfm_session']:'';
+	$kfm_session=new kfmSession($session_id);
+	if($kfm_session->isNew){
+		$kfm_session->setMultiple(array('currentdir'=>rtrim($rootdir,' /'),'cwd_id'=>1,'language'=>'','username'=>'','password'=>'','loggedin'=>0));
 	}
-	if($_SESSION['kfm_parameters']['version']!=KFM_VERSION)require($kfm_base_path.'scripts/update.0.9.1.php');
+}
+{ # check authentication
+	if(!isset($kfm_username)||!isset($kfm_password)||($kfm_username==''&&$kfm_password==''))$kfm_session->set('loggedin',1);
+	if(!$kfm_session->get('loggedin') && (!isset($kfm_api_auth_override)||!$kfm_api_auth_override)){
+		$err='';
+		if(isset($_POST['username'])&&isset($_POST['password'])){
+			if($_POST['username']==$kfm_username && $_POST['password']==$kfm_password){
+				$kfm_session->setMultiple(array('username'=>$_POST['username'],'password'=>$_POST['password'],'loggedin'=>1));
+			}
+			else $err='<em>Incorrect Password. Please try again, or check your <code>configuration.php</code>.</em>';
+		}
+		if(!$kfm_session->get('loggedin')){
+			include($kfm_base_path.'login.php');
+			exit;
+		}
+	}
 }
 { # languages
 	$kfm_language='';
@@ -244,16 +223,16 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 	{ # check for URL parameter "lang"
 		if(isset($_GET['lang'])&&$_GET['lang']&&in_array($_GET['lang'],$kfm_available_languages)){
 			$kfm_language=$_GET['lang'];
-			$_SESSION['kfm']['language']=$kfm_language;
+			$kfm_session->set('language',$kfm_language);
 		}
 	}
 	{ # check session for language selected earlier
 		if(
 			$kfm_language==''&&
-			isset($_SESSION['kfm']['language'])&&
-			$_SESSION['kfm']['language']!=''&&
-			in_array($_SESSION['kfm']['language'],$kfm_available_languages)
-		)$kfm_language=$_SESSION['kfm']['language'];
+			!is_null($kfm_session->get('language'))&&
+			$kfm_session->get('language')!=''&&
+			in_array($kfm_session->get('language'),$kfm_available_languages)
+		)$kfm_language=$kfm_session->get('language');
 	}
 	{ # check the browser's http headers for preferred languages
 		if($kfm_language==''){
@@ -293,7 +272,6 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 		return trim(shell_exec('file -bi '.escapeshellarg($f)));
 	}
 }
-require_once($kfm_base_path.'framework.php');
 { # directory functions
 	function kfm_add_directory_to_db($name,$parent){
 		global $kfm_base_path;
