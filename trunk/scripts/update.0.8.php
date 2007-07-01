@@ -1,5 +1,5 @@
 <?php
-if($_SESSION['kfm_parameters']['version']=='7.0'||$_SESSION['kfm_parameters']['version']<'0.7.2')require 'scripts/update.0.7.2.php';
+if($version==''||$version=='7.0'||$version<'0.7.2')require 'scripts/update.0.7.2.php';
 switch($kfm_db_type){
 	case 'mysql':{
 		require 'scripts/db.mysql.update.0.7.2.php';

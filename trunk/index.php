@@ -74,7 +74,7 @@ header('Content-type: text/html; Charset=utf-8');
 #	}while($redo);
 	echo $js;
 ?>
-			var session_id="<?php echo session_id(); ?>";
+			var session_key="<?php echo $kfm_session->key; ?>";
 			var starttype="<?php echo isset($_GET['Type'])?$_GET['Type']:''; ?>";
 			var fckroot="<?php echo $kfm_userfiles; ?>";
 			var fckrootOutput="<?php echo $kfm_userfiles_output; ?>";
@@ -112,11 +112,12 @@ header('Content-type: text/html; Charset=utf-8');
 		<?php
 			if(!$kfm_dont_send_metrics){
 				$today=date('Y-m-d');
-				if(!isset($_SESSION['kfm_parameters']['last_registration'])||$_SESSION['kfm_parameters']['last_registration']!=$today){
+				$last_registration=$kfm_parameters['last_registration'];
+				if($last_registration!=$today){
 					echo '<img src="http://kfm.verens.com/extras/register.php?version='.urlencode(KFM_VERSION).'&amp;domain_name='.urlencode($_SERVER['SERVER_NAME']).'&amp;db_type='.$kfm_db_type.'" />';
 					$kfmdb->query("delete from ".$kfm_db_prefix."parameters where name='last_registration'");
 					$kfmdb->query("insert into ".$kfm_db_prefix."parameters (name,value) values ('last_registration','".$today."')");
-					$_SESSION['kfm_parameters']['last_registration']=$today;
+					$kfm_parameters['last_registration']=$today;
 				}
 			}
 		?>
