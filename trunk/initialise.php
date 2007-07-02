@@ -127,8 +127,17 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 		case 'mysql': {
 			require_once('MDB2.php');
 			$dsn='mysql://'.$kfm_db_username.':'.$kfm_db_password.'@'.$kfm_db_host.'/'.$kfm_db_name;
-			$kfmdb=&MDB2::factory($dsn);
-			if(PEAR::isError($kfmdb))die($kfmdb->getMessage());
+			$kfmdb=&MDB2::connect($dsn);
+			if(PEAR::isError($kfmdb)){
+				$dsn='mysql://'.$kfm_db_username.':'.$kfm_db_password.'@'.$kfm_db_host;
+				$kfmdb=&MDB2::connect($dsn);
+				if(PEAR::isError($kfmdb))die($kfmdb->getMessage());
+				$kfmdb->query('CREATE DATABASE '.$kfm_db_name.' CHARACTER SET UTF8');
+				$kfmdb->disconnect();
+				$dsn='mysql://'.$kfm_db_username.':'.$kfm_db_password.'@'.$kfm_db_host.'/'.$kfm_db_name;
+				$kfmdb=&MDB2::connect($dsn);
+				if(PEAR::isError($kfmdb))die($kfmdb->getMessage());
+			}
 			$kfmdb->setFetchMode(MDB2_FETCHMODE_ASSOC);
 			if(!$db_defined){
 				$res=&$kfmdb->query("show tables like '".$kfm_db_prefix_escaped."%'");
@@ -142,7 +151,16 @@ function kfm_error_log($errno,$errstr,$errfile,$errline){
 			require_once('MDB2.php');
 			$dsn='pgsql://'.$kfm_db_username.':'.$kfm_db_password.'@'.$kfm_db_host.'/'.$kfm_db_name;
 			$kfmdb=&MDB2::factory($dsn);
-			if(PEAR::isError($kfmdb))die($kfmdb->getMessage());
+			if(PEAR::isError($kfmdb)){
+				$dsn='pgsql://'.$kfm_db_username.':'.$kfm_db_password.'@'.$kfm_db_host;
+				$kfmdb=&MDB2::connect($dsn);
+				if(PEAR::isError($kfmdb))die($kfmdb->getMessage());
+				$kfmdb->query('CREATE DATABASE '.$kfm_db_name);
+				$kfmdb->disconnect();
+				$dsn='pgsql://'.$kfm_db_username.':'.$kfm_db_password.'@'.$kfm_db_host.'/'.$kfm_db_name;
+				$kfmdb=&MDB2::connect($dsn);
+				if(PEAR::isError($kfmdb))die($kfmdb->getMessage());
+			}
 			$kfmdb->setFetchMode(MDB2_FETCHMODE_ASSOC);
 			if(!$db_defined){
 				$res=&$kfmdb->query("SELECT tablename from pg_tables where tableowner=current_user AND tablename NOT LIKE E'pg\\\\_%' AND tablename NOT LIKE E'sql\\\\_%' AND tablename LIKE E'".$kfm_db_prefix_escaped."%'");
