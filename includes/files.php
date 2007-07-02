@@ -408,7 +408,7 @@ function _zip($filename,$files){
 		$pdir=str_replace('//','/',$cwd.'/');
 		$zipfile=$pdir.$filename;
 		for($i=0;$i<count($arr);++$i)$arr[$i]=str_replace($pdir,'',$arr[$i]);
-		exec('cd "'.$rootdir.'" && zip -D "'.$zipfile.'" "'.join('" "',$arr).'"',$arr,$res);
+		exec('cd "'.$cwd.'" && zip -D "'.$zipfile.'" "'.join('" "',$arr).'"',$arr,$res);
 	}
 	if($res)return 'error: no native "zip" command'; # TODO: new string
 	return kfm_loadFiles($cwd_id);
