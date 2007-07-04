@@ -38,7 +38,7 @@ var KFM=new Class({
 		setTimeout('window.inPrompt=0',1);
 	},
 	build:function(){
-		var form_panel,form,right_column,message,directories,logs,logHeight=64,w=getWindowSize(),j,i;
+		var form_panel,form,right_column,directories,logs,logHeight=64,w=getWindowSize(),j,i;
 		{ // extend language objects
 			for(var j in kfm.lang){
 				if(kfm_regexps.percent_numbers.test(kfm.lang[j])){
@@ -104,13 +104,8 @@ var KFM=new Class({
 				kfm_createContextMenu(getMouseAt(getEvent(e,1)),links);
 			});
 		}
-		{ // create message div
-			message=new Element('div',{
-				'id':'message'
-			});
-		}
 		{ // draw areas to screen and load files and directory info
-			kfm.addEl($(document.body).empty(),[left_column,right_column,message]);
+			kfm.addEl($(document.body).empty(),[left_column,right_column]);
 			x_kfm_loadFiles(1,kfm_refreshFiles);
 			x_kfm_loadDirectories(1,kfm_refreshDirectories);
 		}
@@ -152,9 +147,6 @@ var KFM=new Class({
 			iframe.style.width=(el.offsetWidth-10)+'px';
 		}
 		kfm_refreshPanels('kfm_left_column');
-	},
-	hideMessage:function(){
-		$('message').setStyles('display:none');
 	},
 	initialize:function(){
 		document.addEvent('domready',this.build);

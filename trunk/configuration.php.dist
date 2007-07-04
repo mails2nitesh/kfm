@@ -83,7 +83,7 @@ $kfm_allow_file_move=1;
 $kfm_allow_file_upload=1;
 
 # use this array to ban dangerous files from being uploaded.
-$kfm_banned_extensions=array('asp','cfm','cgi','php','php3','php4','pl');
+$kfm_banned_extensions=array('asp','cfm','cgi','php','php3','php4','phtm','pl','sh','shtm','shtml');
 
 # this array tells KFM what extensions indicate files which may be edited online.
 $kfm_editable_extensions=array('css','html','js','txt','xhtml','xml');

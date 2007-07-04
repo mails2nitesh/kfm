@@ -30,7 +30,7 @@ function kfm_deleteDirectoryCheck(res){
 			}
 			case 3: kfm_log('error: '+kfm.lang.RmdirFailed(res.name)); break;
 			case 4: kfm_log('error: '+kfm.lang.DirectoryNotInDb); break;
-			default: alert(res.msg);
+			default: new Notice(res.msg);
 		}
 	}
 	else{
