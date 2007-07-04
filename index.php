@@ -23,11 +23,12 @@ header('Content-type: text/html; Charset=utf-8');
 			echo preg_replace('/\s+/',' ',$css);
 		?></style>
 		<title>KFM - Kae's File Manager</title>
-		<script type="text/javascript" src="mootools-1.1/uncompressed.js"></script>
+		<script type="text/javascript" src="mootools.v1.11/mootools.v1.11.js"></script>
 		<script type="text/javascript">
 <?php
 	$js='';
 	$js.=file_get_contents('j/variables.js');
+	$js.=file_get_contents('j/notice.js');
 	$js.=file_get_contents('j/kfm.js');
 	$js.=file_get_contents('j/alerts.js');
 	$js.=file_get_contents('j/modal.dialog.js');
