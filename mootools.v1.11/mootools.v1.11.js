@@ -3746,6 +3746,349 @@ window.extend({
 });
 
 /*
+Script: Fx.Base.js
+	Contains <Fx.Base>, the foundamentals of the MooTools Effects.
+
+License:
+	MIT-style license.
+*/
+
+var Fx = {};
+
+/*
+Class: Fx.Base
+	Base class for the Effects.
+
+Options:
+	transition - the equation to use for the effect see <Fx.Transitions>; default is <Fx.Transitions.Sine.easeInOut>
+	duration - the duration of the effect in ms; 500 is the default.
+	unit - the unit is 'px' by default (other values include things like 'em' for fonts or '%').
+	wait - boolean: to wait or not to wait for a current transition to end before running another of the same instance. defaults to true.
+	fps - the frames per second for the transition; default is 50
+	
+Events:
+	onStart - the function to execute as the effect begins; nothing (<Class.empty>) by default.
+	onComplete - the function to execute after the effect has processed; nothing (<Class.empty>) by default.
+	onCancel - the function to execute when you manually stop the effect.
+*/
+
+Fx.Base = new Class({
+
+	options: {
+		onStart: Class.empty,
+		onComplete: Class.empty,
+		onCancel: Class.empty,
+		transition: function(p){
+			return -(Math.cos(Math.PI * p) - 1) / 2;
+		},
+		duration: 500,
+		unit: 'px',
+		wait: true,
+		fps: 50
+	},
+
+	initialize: function(options){
+		this.element = this.element || null;
+		this.setOptions(options);
+		if (this.options.initialize) this.options.initialize.call(this);
+	},
+
+	step: function(){
+		var time = $time();
+		if (time < this.time + this.options.duration){
+			this.delta = this.options.transition((time - this.time) / this.options.duration);
+			this.setNow();
+			this.increase();
+		} else {
+			this.stop(true);
+			this.set(this.to);
+			this.fireEvent('onComplete', this.element, 10);
+			this.callChain();
+		}
+	},
+
+	/*
+	Property: set
+		Immediately sets the value with no transition.
+
+	Arguments:
+		to - the point to jump to
+
+	Example:
+		>var myFx = new Fx.Style('myElement', 'opacity').set(0); //will make it immediately transparent
+	*/
+
+	set: function(to){
+		this.now = to;
+		this.increase();
+		return this;
+	},
+
+	setNow: function(){
+		this.now = this.compute(this.from, this.to);
+	},
+
+	compute: function(from, to){
+		return (to - from) * this.delta + from;
+	},
+
+	/*
+	Property: start
+		Executes an effect from one position to the other.
+
+	Arguments:
+		from - integer: staring value
+		to - integer: the ending value
+
+	Examples:
+		>var myFx = new Fx.Style('myElement', 'opacity').start(0,1); //display a transition from transparent to opaque.
+	*/
+
+	start: function(from, to){
+		if (!this.options.wait) this.stop();
+		else if (this.timer) return this;
+		this.from = from;
+		this.to = to;
+		this.change = this.to - this.from;
+		this.time = $time();
+		this.timer = this.step.periodical(Math.round(1000 / this.options.fps), this);
+		this.fireEvent('onStart', this.element);
+		return this;
+	},
+
+	/*
+	Property: stop
+		Stops the transition.
+	*/
+
+	stop: function(end){
+		if (!this.timer) return this;
+		this.timer = $clear(this.timer);
+		if (!end) this.fireEvent('onCancel', this.element);
+		return this;
+	}/*compatibility*/,
+	
+	custom: function(from, to){
+		return this.start(from, to);
+	},
+
+	clearTimer: function(end){
+		return this.stop(end);
+	}
+
+	/*end compatibility*/
+
+});
+
+Fx.Base.implement(new Chain, new Events, new Options);
+
+/*
+Script: Fx.CSS.js
+	Css parsing class for effects. Required by <Fx.Style>, <Fx.Styles>, <Fx.Elements>. No documentation needed, as its used internally.
+
+License:
+	MIT-style license.
+*/
+
+Fx.CSS = {
+
+	select: function(property, to){
+		if (property.test(/color/i)) return this.Color;
+		var type = $type(to);
+		if ((type == 'array') || (type == 'string' && to.contains(' '))) return this.Multi;
+		return this.Single;
+	},
+
+	parse: function(el, property, fromTo){
+		if (!fromTo.push) fromTo = [fromTo];
+		var from = fromTo[0], to = fromTo[1];
+		if (!$chk(to)){
+			to = from;
+			from = el.getStyle(property);
+		}
+		var css = this.select(property, to);
+		return {'from': css.parse(from), 'to': css.parse(to), 'css': css};
+	}
+
+};
+
+Fx.CSS.Single = {
+
+	parse: function(value){
+		return parseFloat(value);
+	},
+
+	getNow: function(from, to, fx){
+		return fx.compute(from, to);
+	},
+
+	getValue: function(value, unit, property){
+		if (unit == 'px' && property != 'opacity') value = Math.round(value);
+		return value + unit;
+	}
+
+};
+
+Fx.CSS.Multi = {
+
+	parse: function(value){
+		return value.push ? value : value.split(' ').map(function(v){
+			return parseFloat(v);
+		});
+	},
+
+	getNow: function(from, to, fx){
+		var now = [];
+		for (var i = 0; i < from.length; i++) now[i] = fx.compute(from[i], to[i]);
+		return now;
+	},
+
+	getValue: function(value, unit, property){
+		if (unit == 'px' && property != 'opacity') value = value.map(Math.round);
+		return value.join(unit + ' ') + unit;
+	}
+
+};
+
+Fx.CSS.Color = {
+
+	parse: function(value){
+		return value.push ? value : value.hexToRgb(true);
+	},
+
+	getNow: function(from, to, fx){
+		var now = [];
+		for (var i = 0; i < from.length; i++) now[i] = Math.round(fx.compute(from[i], to[i]));
+		return now;
+	},
+
+	getValue: function(value){
+		return 'rgb(' + value.join(',') + ')';
+	}
+
+};
+
+/*
+Script: Fx.Style.js
+	Contains <Fx.Style>
+
+License:
+	MIT-style license.
+*/
+
+/*
+Class: Fx.Style
+	The Style effect, used to transition any css property from one value to another. Includes colors.
+	Colors must be in hex format.
+	Inherits methods, properties, options and events from <Fx.Base>.
+
+Arguments:
+	el - the $(element) to apply the style transition to
+	property - the property to transition
+	options - the Fx.Base options (see: <Fx.Base>)
+
+Example:
+	>var marginChange = new Fx.Style('myElement', 'margin-top', {duration:500});
+	>marginChange.start(10, 100);
+*/
+
+Fx.Style = Fx.Base.extend({
+
+	initialize: function(el, property, options){
+		this.element = $(el);
+		this.property = property;
+		this.parent(options);
+	},
+
+	/*
+	Property: hide
+		Same as <Fx.Base.set> (0); hides the element immediately without transition.
+	*/
+
+	hide: function(){
+		return this.set(0);
+	},
+
+	setNow: function(){
+		this.now = this.css.getNow(this.from, this.to, this);
+	},
+
+	/*
+	Property: set
+		Sets the element's css property (specified at instantiation) to the specified value immediately.
+
+	Example:
+		(start code)
+		var marginChange = new Fx.Style('myElement', 'margin-top', {duration:500});
+		marginChange.set(10); //margin-top is set to 10px immediately
+		(end)
+	*/
+
+	set: function(to){
+		this.css = Fx.CSS.select(this.property, to);
+		return this.parent(this.css.parse(to));
+	},
+
+	/*
+	Property: start
+		Displays the transition to the value/values passed in
+
+	Arguments:
+		from - (integer; optional) the starting position for the transition
+		to - (integer) the ending position for the transition
+
+	Note:
+		If you provide only one argument, the transition will use the current css value for its starting value.
+
+	Example:
+		(start code)
+		var marginChange = new Fx.Style('myElement', 'margin-top', {duration:500});
+		marginChange.start(10); //tries to read current margin top value and goes from current to 10
+		(end)
+	*/
+
+	start: function(from, to){
+		if (this.timer && this.options.wait) return this;
+		var parsed = Fx.CSS.parse(this.element, this.property, [from, to]);
+		this.css = parsed.css;
+		return this.parent(parsed.from, parsed.to);
+	},
+
+	increase: function(){
+		this.element.setStyle(this.property, this.css.getValue(this.now, this.options.unit, this.property));
+	}
+
+});
+
+/*
+Class: Element
+	Custom class to allow all of its methods to be used with any DOM element via the dollar function <$>.
+*/
+
+Element.extend({
+
+	/*
+	Property: effect
+		Applies an <Fx.Style> to the Element; This a shortcut for <Fx.Style>.
+
+	Arguments:
+		property - (string) the css property to alter
+		options - (object; optional) key/value set of options (see <Fx.Style>)
+
+	Example:
+		>var myEffect = $('myElement').effect('height', {duration: 1000, transition: Fx.Transitions.linear});
+		>myEffect.start(10, 100);
+		>//OR
+		>$('myElement').effect('height', {duration: 1000, transition: Fx.Transitions.linear}).start(10,100);
+	*/
+
+	effect: function(property, options){
+		return new Fx.Style(this, property, options);
+	}
+
+});
+
+/*
 Script: Json.js
 	Simple Json parser and Stringyfier, See: <http://www.json.org/>
 
