@@ -20,7 +20,7 @@ class kfmSession extends Object{
 		}
 		if($create){
 			$this->db->query("INSERT INTO ".$this->db_prefix."session (last_accessed) VALUES (now())");
-			$this->id=$this->db->lastInsertId($kfm_db_prefix.'session','id');
+			$this->id=$this->db->lastInsertId($this->db_prefix.'session','id');
 			$key=md5($this->id);
 			$this->db->query("UPDATE ".$this->db_prefix."session SET cookie='".$key."' WHERE id=".$this->id);
 			$this->isNew=true;
