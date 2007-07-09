@@ -98,7 +98,10 @@ function kfm_selectInvert(){
 	else kfm_addToSelection(b[a]);
 }
 function kfm_selectNone(){
-	if(kfm_lastClicked)$('kfm_file_icon_'+kfm_lastClicked).removeClass('last_clicked');
+	if(kfm_lastClicked){
+		var el=$('kfm_file_icon_'+kfm_lastClicked);
+		if(el)el.removeClass('last_clicked');
+	}
 	for(var i=selectedFiles.length;i>-1;--i)kfm_removeFromSelection(selectedFiles[i]);
 	kfm_lastClicked=0;
 	kfm_selectionCheck();
@@ -187,7 +190,11 @@ function kfm_toggleSelectedFile(e){
 	var el=e.target;
 	while(el.tagName!='DIV')el=el.parentNode;
 	var id=el.kfm_attributes.id;
-	if(kfm_lastClicked)$('kfm_file_icon_'+kfm_lastClicked).removeClass('last_clicked');
+	if(kfm_lastClicked){
+		var el=$('kfm_file_icon_'+kfm_lastClicked);
+		if(el)el.removeClass('last_clicked');
+		else kfm_lastClicked=0;
+	}
 	if(kfm_lastClicked&&e.shift){
 		var e=kfm_lastClicked;
 		clearSelections(e);
