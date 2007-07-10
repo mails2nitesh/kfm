@@ -47,7 +47,7 @@ function kfm_showTextFile(res){
 	kfm.addCell(r2,0,1,res.name);
 	kfm.addCell(r2,1,1,newLink('javascript:$("kfm_left_column_hider").remove();x_kfm_viewTextFile('+res.id+',kfm_viewTextFile)','View',0,'button'));
 	kfm.addCell(r2,2,1,newLink('javascript:new Notice("saving file...");$("edit-start").value=codepress.getCode();x_kfm_saveTextFile('+res.id+',$("edit-start").value,kfm_showMessage);','Save',0,'button'));
-	kfm.addCell(r2,3,1,newLink('javascript:if($("edit-start").value==codepress.getCode() || kfm.confirm( kfm.lang.CloseWithoutSavingQuestion)){$("kfm_left_column_hider").remove();x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);}',kfm.lang.Close,0,'button'));
+	kfm.addCell(r2,3,1,newLink('javascript:if($("edit-start").value==codepress.getCode() || kfm.confirm( kfm.lang.CloseWithoutSavingQuestion)){$("kfm_left_column_hider").remove();kfm_changeDirectory("kfm_directory_icon_"+kfm_cwd_id);}',kfm.lang.Close,0,'button'));
 	r3=kfm.addCell(kfm.addRow(t).setStyles('height:100%'),0,4);
 	r3.id='kfm_codepressTableCell';
 	var codeEl=new Element('textarea',{
