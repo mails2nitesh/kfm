@@ -206,7 +206,7 @@ function _loadFiles($rootid=1){
 		{ # update session data
 			$kfm_session->setMultiple(array('currentdir'=>$reqdir,'cwd_id'=>$rootid));
 		}
-		return array('reqdir'=>$root,'files'=>$files,'uploads_allowed'=>$GLOBALS['kfm_allow_file_upload']);
+		return array('parent'=>$rootid,'reqdir'=>$root,'files'=>$files,'uploads_allowed'=>$GLOBALS['kfm_allow_file_upload']);
 	}
 	return 'couldn\'t read directory';
 }

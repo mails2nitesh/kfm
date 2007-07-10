@@ -243,6 +243,7 @@ function kfm_refreshFiles(res){
 	}
 	kfm_selectNone();
 	if(!res)return;
+	if(res.parent)kfm_cwd_id=res.parent;
 	if(res.toString()===res)return kfm_log(res);
 	window.kfm_incrementalFileDisplay_vars={at:0,data:res};
 	var a=0,wrapper=$('kfm_right_column').empty();
