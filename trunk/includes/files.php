@@ -287,7 +287,7 @@ function _rm($id,$dontLoadFiles=false){
 function _saveTextFile($fid,$text){
 	if(!$GLOBALS['kfm_allow_file_edit'])return 'error: permission denied: cannot edit file'; # TODO: new string
 	$f=new File($fid);
-	$f->setContent(str_replace(array('&lt;','&gt;'),array('<','>'),$text));
+	$f->setContent($text);
 	return $f->hasErrors()?$f->getErrors():'file saved';
 }
 function _search($keywords,$tags){
