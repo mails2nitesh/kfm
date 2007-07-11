@@ -153,7 +153,7 @@ function _getTextFile($fid){
 				$language = 'generic';
 				break;
 		}
-		return array('content'=>str_replace(array('<','>'),array('&lt;','&gt;'),$file->getContent()),'name'=>$file->name,'id'=>$file->id, 'language'=>$language);
+		return array('content'=>str_replace(array('<','>'),array('&lt;','&gt;'),utf8_encode($file->getContent())),'name'=>$file->name,'id'=>$file->id, 'language'=>$language);
 	}
 	return 'error: "'.$file->name.'" cannot be edited (restricted)'; # TODO: new string
 }
