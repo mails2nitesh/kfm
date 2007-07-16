@@ -132,7 +132,7 @@ function kfm_createFileUploadPanel(){
 				kfm.addEl(f1,[input,max_upload_size,submit,unzip1]);
 				wrapper.appendChild(f1);
 			}
-			{ // load multi-upload thing if possible
+			if(kfm_vars.use_multiple_file_upload){ // load multi-upload thing if possible
 				var f3=newForm('upload.php','POST','multipart/form-data','kfm_iframe');
 				f3.style.display='none';
 				f3.id='kfm_uploadFormSwf';
