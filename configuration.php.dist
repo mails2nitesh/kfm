@@ -121,6 +121,10 @@ $kfm_base_path='';
 # you might use this if you want your users to not know what it is that's been disabled, for example.
 $kfm_show_disabled_contextmenu_links=1;
 
+# multiple file uploads are handled through the external SWFUpload flash application.
+# this can cause difficulties on some systems, so if you have problems uploading, then disable this.
+$kfm_use_multiple_file_upload=0;
+
 # we would like to keep track of installations, to see how many there are, and what versions are in use.
 # if you do not want us to have this information, then set the following variable to '1'.
 $kfm_dont_send_metrics=0;

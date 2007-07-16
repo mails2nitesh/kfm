@@ -91,6 +91,7 @@ header('Content-type: text/html; Charset=utf-8');
 			var viewable_extensions=["<?php echo join('","',$kfm_viewable_extensions);?>"];
 			var kfm_vars={
 				show_disabled_contextmenu_links:<?php echo $kfm_show_disabled_contextmenu_links; ?>,
+				use_multiple_file_upload:<?php echo $kfm_use_multiple_file_upload; ?>,
 				permissions:{
 					dir:{
 						ed:<?php echo $kfm_allow_directory_edit; ?>,
