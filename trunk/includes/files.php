@@ -146,6 +146,9 @@ function _getTextFile($fid){
 			case 'sql':
 				$language = 'sql';
 				break;
+			case 'tex':
+				$language = 'tex';
+				break;
 			case 'txt':
 				$language = 'text';
 				break;
@@ -158,57 +161,24 @@ function _getTextFile($fid){
 	return 'error: "'.$file->name.'" cannot be edited (restricted)'; # TODO: new string
 }
 function _loadFiles($rootid=1){
-	global $kfmdb,$kfm_db_prefix,$kfm_session;
-	$dirdata=kfm_getDirectoryDbInfo($rootid);
-	$reqdir=kfm_getDirectoryParents($rootid);
-	$root='/'.str_replace($GLOBALS['rootdir'],'',$reqdir);
-	if(!kfm_checkAddr($root))return 'error: invalid directory "'.$root.'"';
-	$reqdir=$GLOBALS['rootdir'].$root;
-	if(!is_dir($reqdir))return 'error: "'.$reqdir.'" is not a directory'; # TODO: new string
-	if($handle=opendir($reqdir)){
-		$q=$kfmdb->query("select * from ".$kfm_db_prefix."files where directory=".$rootid);
-		$filesdb=$q->fetchAll();
-		$fileshash=array();
-		if(is_array($filesdb))foreach($filesdb as $r)$fileshash[$r['name']]=$r['id'];
-		$files=array();
-		while(false!==($filename=readdir($handle)))if(strpos($filename,'.')!==0&&is_file($reqdir.'/'.$filename)){
-			if(in_array(strtolower($filename),$GLOBALS['kfm_banned_files']))continue;
-			if(!isset($fileshash[$filename]))$fileshash[$filename]=kfm_add_file_to_db($filename,$rootid);
-			$file=new File($fileshash[$filename]);
-			if($file->isImage())$file=new Image($fileshash[$filename]);
-			$file->writable=$file->isWritable();
-			if($file->isImage()){
-				unset($file->bits);
-				unset($file->channels);
-				unset($file->directory);
-				unset($file->image_id);
-				unset($file->info);
-				unset($file->mimetype);
-				unset($file->parent);
-				unset($file->path);
-				unset($file->size);
-				unset($file->thumb_id);
-				unset($file->thumb_path);
-				unset($file->thumb_url);
-				unset($file->type);
-			}
-			unset($file->error_array);
-			$files[]=$file;
-			unset($fileshash[$filename]);
+	global $kfm_session;
+	$dir=new kfmDirectory($rootid);
+	$oFiles=$dir->getFiles();
+	if($dir->hasErrors())return $dir->getErrors();
+	$files=array();
+	foreach($oFiles as $file){
+		$aFile=array('id'=>$file->id,'name'=>$file->name, 'writable'=>$file->writable);
+		if($file->isImage()){
+			$aFile['width']=$file->width;
+			$aFile['thumb_url']=$file->thumb_url;
 		}
-		closedir($handle);
-		if(count($fileshash)){ # remove stale database entries (directories removed by hand)
-			foreach($fileshash as $k=>$v){
-				$f=new File($v);
-			#	$f->delete();
-			}
-		}
-		{ # update session data
-			$kfm_session->setMultiple(array('currentdir'=>$reqdir,'cwd_id'=>$rootid));
-		}
-		return array('parent'=>$rootid,'reqdir'=>$root,'files'=>$files,'uploads_allowed'=>$GLOBALS['kfm_allow_file_upload']);
+		$files[]=$aFile;
 	}
-	return 'couldn\'t read directory';
+	$root='/'.str_replace($GLOBALS['rootdir'],'',$dir->path);
+	{ # update session data
+		$kfm_session->setMultiple(array('currentdir'=>$root,'cwd_id'=>$rootid));
+	}
+	return array('reqdir'=>$root,'files'=>$files,'uploads_allowed'=>$GLOBALS['kfm_allow_file_uploads']); 
 }
 function _moveFiles($files,$dir_id){
 	global $kfmdb,$kfm_db_prefix,$kfm_session;
