@@ -125,7 +125,7 @@ class kfmDirectory extends Object{
 		$this->handle=opendir($this->path);
 		if($this->handle){
 			while(false!==($file=readdir($this->handle))){
-				if($file[0]!=='.' && is_dir($this->path.$file)) return true;
+				if($file[0]!=='.' && is_dir($this->path.$file) && !in_array(strtolower($file),$GLOBALS['kfm_banned_folders'])) return true;
 			}
 			return false;
 		}else{
