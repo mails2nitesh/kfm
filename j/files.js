@@ -195,7 +195,7 @@ function kfm_incrementalFileDisplay(){
 	{ // file attributes
 		el.kfm_attributes=fdata;
 		if(fdata.width){
-			var url='get.php?id='+id+'&width=64&height=64&r'+Math.random();
+			var url='get.php?id='+id+'&width=64&height=64&get_params='+b.data.get_params+'&r'+Math.random();
 			var img=new Element('img',{
 				src:url,
 				styles:{
