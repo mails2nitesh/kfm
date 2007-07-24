@@ -170,6 +170,7 @@ function _loadFiles($rootid=1){
 		$aFile=array('id'=>$file->id,'name'=>$file->name, 'writable'=>$file->writable);
 		if($file->isImage()){
 			$aFile['width']=$file->width;
+			$aFile['height']=$file->height;
 			$aFile['thumb_url']=$file->thumb_url;
 		}
 		$files[]=$aFile;
