@@ -114,7 +114,7 @@ header('Content-type: text/html; Charset=utf-8');
 		<?php
 			if(!$kfm_dont_send_metrics){
 				$today=date('Y-m-d');
-				$last_registration=$kfm_parameters['last_registration'];
+				$last_registration=isset($kfm_parameters['last_registration'])?$kfm_parameters['last_registration']:'';
 				if($last_registration!=$today){
 					echo '<img src="http://kfm.verens.com/extras/register.php?version='.urlencode(KFM_VERSION).'&amp;domain_name='.urlencode($_SERVER['SERVER_NAME']).'&amp;db_type='.$kfm_db_type.'" />';
 					$kfmdb->query("delete from ".$kfm_db_prefix."parameters where name='last_registration'");
