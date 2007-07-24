@@ -50,37 +50,6 @@ require_once($kfm_base_path.'configuration.php');
 	if(file_exists($kfm_base_path.'api/cms_hooks.php'))include_once($kfm_base_path.'api/cms_hooks.php');
 	else include_once($kfm_base_path.'api/cms_hooks.php.dist');
 }
-function kfm_error_log($errno,$errstr,$errfile,$errline){
-	if(!defined('WORKPATH')){
-		echo '<p><em>error: WORKPATH not yet defined, and an error has occurred.</em><br />'
-			.$errno.': ('.$errfile.', '.$errline.') - '.$errstr.'</p>';
-	}
-	if(!defined('ERROR_LOG_LEVEL')||!defined('WORKPATH'))return;
-	$msg=false;
-	switch ($errno) {
-		case E_USER_ERROR:{
-			if(ERROR_LOG_LEVEL>2)$msg='error|'.$errno.'|'.$errfile.'|'.$errline.'|'.$errstr."\n";
-			break;
-		}
-		case E_USER_WARNING:{
-			if(ERROR_LOG_LEVEL>1)$msg='warning|'.$errno.'|'.$errfile.'|'.$errline.'|'.$errstr."\n";
-			break;
-		}
-		case E_USER_NOTICE:{
-			if(ERROR_LOG_LEVEL)$msg='notice|'.$errno.'|'.$errfile.'|'.$errline.'|'.$errstr."\n";
-			break;
-		}
-		default:{
-			if(ERROR_LOG_LEVEL>3)$msg='unknown|'.$errno.'|'.$errfile.'|'.$errline.'|'.$errstr."\n";
-			break;
-		}
-	}
-	if($msg&&$handle=fopen(WORKPATH.'errors.log', 'a')){
-		@fwrite($handle, date('Y-m-d H:i:s').' '.$msg."\n" );
-		@fclose($handle);
-	}
-}
-#set_error_handler('kfm_error_log');
 { # variables
 	if(!isset($kfm_show_files_in_groups_of))$kfm_show_files_in_groups_of=10;
 	define('KFM_VERSION',rtrim(file_get_contents($kfm_base_path.'version.txt')));
