@@ -1,30 +1,33 @@
 <?php
-# see ../license.txt for licensing
-
 # this file should be renamed to config.php if you want to override ../config.php with scripts and such.
 
-# example of how to choose between three different root directories based on POST variable 'choose_root'
 /*
-	if(!isset($_SESSION['choose_root']))$_SESSION['choose_root']=0;
-	if(isset($_POST['choose_root']))$_SESSION['choose_root']=$_POST['choose_root'];
-	switch($_SESSION['choose_root']){
-		case 1: { # completely different files area than ../config.php
-			$kfm_userfiles='/root/test1';
-			$kfm_userfiles_output='/root/test1/';
-			$kfm_db_type='mysql';
-			$kfm_db_name='test1';
-			$kfm_db_username='test1';
-			$kfm_db_password='test1';
-			break;
-		}
-		case 2: { # same as ../config.php, but read-only
-			$kfm_allow_file_upload=1;
-			break;
-		}
-		default:{
-			# nothing. uses the config as defined in ../config.php
-		}
+ THIS IS AN EXAMPLE
+
+
+session_start();
+include($_SERVER['DOCUMENT_ROOT'].'/config/config.php');
+//var_dump($_SESSION);
+if(!isset($_SESSION['system_auth'])||!isset($_SESSION['system_auth']['user']))exit('access denied!');
+{ # load config.ini
+	$c=array();
+	$f=file(APP_ROOT.'/application/config/config.ini');
+	foreach($f as $l){
+		$s=explode('=',$l);
+		if(count($s)!=2)continue;
+		$k=ltrim(rtrim($s[0]));
+		$v=ltrim(rtrim($s[1]));
+		if(!isset($c[$k]))$c[$k]=$v;
 	}
+}
+$kfm_userfiles='/uploads/'.$_SESSION['system_auth']['user']->uid;
+$kfm_userfiles_output=$kfm_userfiles.'/';
+$kfm_db_host=$c['db.config.host'];
+$kfm_db_prefix="kfm_".$_SESSION['system_auth']['user']->uid.'_';
+$kfm_db_name=$c['db.config.dbname'];
+$kfm_db_username=$c['db.config.username'];
+$kfm_db_password=$c['db.config.password'];
+$kfm_api_auth_override=1;
 */
 
 ?>

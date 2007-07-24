@@ -86,8 +86,9 @@ function kfm_img_startLightbox(id){
 	kfm.addEl(document.body,el);
 }
 function kfm_img_stopLightbox(){
-	$('kfm_lightboxShader').remove();
-	$('kfm_lightboxImage').remove();
+	var shader=$('kfm_lightboxShader'),image=$('kfm_lightboxImage');
+	if(shader)shader.remove();
+	if(image)image.remove();
 	window.kfm_slideshow=null;
 }
 function kfm_resizeImage(id){
