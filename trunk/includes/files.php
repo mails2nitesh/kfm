@@ -178,7 +178,7 @@ function _loadFiles($rootid=1){
 	{ # update session data
 		$kfm_session->setMultiple(array('currentdir'=>$root,'cwd_id'=>$rootid));
 	}
-	return array('reqdir'=>$root,'files'=>$files,'uploads_allowed'=>$GLOBALS['kfm_allow_file_uploads'], 'get_params'=>GET_PARAMS); 
+	return array('reqdir'=>$root,'files'=>$files,'uploads_allowed'=>$GLOBALS['kfm_allow_file_upload'], 'get_params'=>GET_PARAMS); 
 }
 function _moveFiles($files,$dir_id){
 	global $kfmdb,$kfm_db_prefix,$kfm_session;
