@@ -17,8 +17,9 @@ class File extends Object{
 			$filedata=$qf->fetchRow();
 			$this->name=$filedata['name'];
 			$this->parent=$filedata['directory'];
-			$this->directory=kfm_getDirectoryParents($this->parent,1);
-			$this->path=str_replace('//','/',$this->directory.'/'.$filedata['name']);
+			$dir=new kfmDirectory($this->parent);
+			$this->directory=$dir->path;
+			$this->path=$dir->path.'/'.$filedata['name'];
 			if(!file_exists($this->path)){
 				$this->error('File cannot be found');
 				$this->delete();
