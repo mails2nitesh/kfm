@@ -10,7 +10,7 @@ if($kfm_allow_file_upload){
 	$to=$toDir->path.'/'.$filename;
 	if(!kfm_checkAddr($to))$errors[]='banned extension in file name'; # TODO new string
 	else{
-		move_uploaded_file($tmpname,$rootdir.$to);
+		move_uploaded_file($tmpname,$to);
 		if(!file_exists($to))$errors[]='failure to save tmp file "'.$tmpname.'" to location "'.$to.'"'; # TODO new string
 		else if($kfm_only_allow_image_upload && !getimagesize($to)){
 			$errors[]='only images may be uploaded';
