@@ -22,10 +22,11 @@ if($kfm_allow_file_upload){
 			if(function_exists('exif_imagetype')){
 				$imgtype=exif_imagetype($to);
 				if($imgtype){
+					$file=new Image($file);
 					$comment='';
 					if($imgtype==1){ # gif
-						$file=file_get_contents($to);
-						$arr=explode('!',$file);
+						$fc=file_get_contents($to);
+						$arr=explode('!',$fc);
 						$found=0;
 						for($i=0;$i<count($arr)&&!$found;++$i){
 							$block=$arr[$i];
