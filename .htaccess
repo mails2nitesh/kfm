@@ -8,6 +8,9 @@
 
 DirectoryIndex index.php
 FileETag none
-ExpiresByType application/x-shockwave-flash "access plus 52 weeks"
+<IfModule mod_expires.c>
+	ExpiresActive On
+	ExpiresByType application/x-shockwave-flash "access plus 52 weeks"
+</IfModule>
 
 php_value magic_quotes_gpc off
