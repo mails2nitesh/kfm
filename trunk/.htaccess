@@ -8,5 +8,6 @@
 
 DirectoryIndex index.php
 FileETag none
+ExpiresByType application/x-shockwave-flash "access plus 52 weeks"
 
 php_value magic_quotes_gpc off
