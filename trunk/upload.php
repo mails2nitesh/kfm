@@ -6,7 +6,7 @@ if($kfm_allow_file_upload){
 	$file=isset($_FILES['kfm_file'])?$_FILES['kfm_file']:$_FILES['Filedata'];
 	$filename=$file['name'];
 	$tmpname=$file['tmp_name'];
-	$toDir=new kfmDirectory($kfm_session->get('cwd_id'));
+	$toDir=kfmDirectory::getInstance($kfm_session->get('cwd_id'));
 	$to=$toDir->path.'/'.$filename;
 	if(!kfm_checkAddr($to))$errors[]='banned extension in file name'; # TODO new string
 	else{

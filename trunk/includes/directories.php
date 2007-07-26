@@ -2,7 +2,7 @@
 function _createDirectory($parent,$name){
 	global $kfm_allow_directory_create;
 	if(!$kfm_allow_directory_create)return 'error: permission denied: cannot create directory'; # TODO: new string
-	$dir=new kfmDirectory($parent);
+	$dir=kfmDirectory::getInstance($parent);
 	$dir->createSubdir($name);
 	if($dir->hasErrors()) return $dir->getErrors();
 	return kfm_loadDirectories($parent);
@@ -10,7 +10,7 @@ function _createDirectory($parent,$name){
 function _deleteDirectory($id,$recursive=0){
 	global $kfm_allow_directory_delete;
 	if(!$kfm_allow_directory_delete)return 'error: permission denied: cannot delete directory'; # TODO: new string
-	$dir=new kfmDirectory($id);
+	$dir=kfmDirectory::getInstance($id);
 	$dir->delete();
 	if($dir->hasErrors()) return $dir->getErrors();
 	return kfm_loadDirectories($dir->pid,$id);
@@ -31,7 +31,7 @@ function _getDirectoryParents($pid,$type=1){
 }
 function _loadDirectories($pid,$oldpid=0){
 	global $kfmdb,$kfm_db_prefix, $kfm_banned_folders;
-	$dir=new kfmDirectory($pid);
+	$dir=kfmDirectory::getInstance($pid);
 	$pdir=str_replace($GLOBALS['rootdir'],'',$dir->path);
 	$directories=array();
 	foreach($dir->getSubdirs() as $subDir)$directories[]=array($subDir->name,$subDir->hasSubdirs(),$subDir->id);
@@ -47,7 +47,7 @@ function _loadDirectories($pid,$oldpid=0){
 function _moveDirectory($from,$to){
 	global $kfm_allow_directory_move;
 	if(!$kfm_allow_directory_move)return 'error: permission denied: cannot move directory'; # TODO: new string
-	$dir=new kfmDirectory($from);
+	$dir=kfmDirectory::getInstance($from);
 	$dir->moveTo($to);
 	if($dir->hasErrors()) return $dir->getErrors();
 	return _loadDirectories(1);
@@ -68,7 +68,7 @@ function _recursivelyRemoveDirectory($dir){
 function _renameDirectory($fid,$newname){
 	global $kfm_allow_directory_edit;
 	if(!$kfm_allow_directory_edit)return 'error: permission denied: cannot edit directory'; # TODO: new string
-	$dir=new kfmDirectory($fid);
+	$dir=kfmDirectory::getInstance($fid);
 	$dir->rename($newname);
 	if($dir->hasErrors())return $dir->getErrors();
 	return _loadDirectories($dir->pid);
