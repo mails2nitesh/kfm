@@ -162,7 +162,7 @@ function _getTextFile($fid){
 }
 function _loadFiles($rootid=1){
 	global $kfm_session;
-	$dir=new kfmDirectory($rootid);
+	$dir=kfmDirectory::getInstance($rootid);
 	$oFiles=$dir->getFiles();
 	if($dir->hasErrors())return $dir->getErrors();
 	$files=array();

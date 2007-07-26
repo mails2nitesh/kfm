@@ -7,5 +7,6 @@
 </IfModule>
 
 DirectoryIndex index.php
+FileETag none
 
 php_value magic_quotes_gpc off
