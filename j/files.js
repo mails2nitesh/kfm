@@ -246,12 +246,29 @@ function kfm_refreshFiles(res){
 	if(res.parent)kfm_cwd_id=res.parent;
 	if(res.toString()===res)return kfm_log(res);
 	window.kfm_incrementalFileDisplay_vars={at:0,data:res};
-	var a=0,wrapper=$('kfm_right_column').empty();
+	var a,b,lowest_name,lowest_index,wrapper=$('kfm_right_column').empty();
 	$extend(wrapper,{contentMode:'file_icons',fileids:[],files:[]});
 	kfm.addEl(wrapper,(new Element('div',{
 		'class':'kfm_panel_header'
 	})).setHTML(kfm.lang.CurrentWorkingDir(res.reqdir)));
-	for(;a<res.files.length;++a)wrapper.fileids[a]=res.files[a].id;
+	{ // order files by name
+		for(a=0;a<res.files.length-1;++a){
+			lowest_name=res.files[a].name;
+			lowest_index=a;
+			for(b=a+1;b<res.files.length;++b){
+				if(res.files[b].name<lowest_name){
+					lowest_index=b;
+					lowest_name=res.files[b].name;
+				}
+			}
+			if(lowest_index!=a){
+				b=res.files[a];
+				res.files[a]=res.files[lowest_index];
+				res.files[lowest_index]=b;
+			}
+		}
+	}
+	for(a=0;a<res.files.length;++a)wrapper.fileids[a]=res.files[a].id;
 	document.title=res.reqdir;
 	kfm_lastClicked=null;
 	kfm_log(kfm.lang.FilesRefreshed);
