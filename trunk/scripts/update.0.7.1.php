@@ -13,7 +13,7 @@ switch($kfm_db_type){
 		break;
 	}
 	default:{
-		echo 'error: unknown database specified in scripts/update.0.7.1.php'; # TODO: new string
+		echo 'error: unknown database specified in scripts/update.0.7.1.php';
 		exit;
 	}
 }

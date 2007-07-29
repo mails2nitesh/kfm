@@ -77,7 +77,7 @@ require_once($kfm_base_path.'configuration.php');
 	define('WORKURL', $workurl);
 	if(is_dir($workpath)){
 		if(!is_writable($workpath)){
-			echo 'error: "'.htmlspecialchars($workpath).'" is not writable'; # TODO: new string
+			echo 'error: "'.htmlspecialchars($workpath).'" is not writable';
 			exit;
 		}
 	}else{
@@ -153,12 +153,12 @@ require_once($kfm_base_path.'configuration.php');
 			break;
 		}
 		default: {
-			echo "unknown database type specified ($kfm_db_type)"; # TODO: new string
+			echo "unknown database type specified ($kfm_db_type)";
 			exit;
 		}
 	}
 	if(!$db_defined){
-		echo 'failed to connect to database'; # TODO: new string
+		echo 'failed to connect to database';
 		exit;
 	}
 }

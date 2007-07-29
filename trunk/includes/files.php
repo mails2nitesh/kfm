@@ -6,14 +6,14 @@ function _add_file_to_db($filename,$directory_id){
 	return $kfmdb->lastInsertId($kfm_db_prefix.'files','id');
 }
 function _copyFiles($files,$dir_id){
-	if(!$GLOBALS['kfm_allow_file_create'])return 'error: permission denied: cannot create file'; # TODO: new string
+	if(!$GLOBALS['kfm_allow_file_create'])return 'error: '.kfm_lang('permissionDeniedCreateFile');
 	global $kfmdb,$kfm_db_prefix;
 	$to=kfm_getDirectoryParents($dir_id);
 	$copied=0;
-	if(!kfm_checkAddr($to))return 'error: illegal directory "'.$to.'"'; # TODO: new string
+	if(!kfm_checkAddr($to))return 'error: '.kfm_lang('illegalTargetDirectory',$to);
 	foreach($files as $fid){
 		$oldFile=new File($fid);
-		if(!$oldFile)return 'error: no data for file id "'.$fid.'"'; # TODO: new string
+		if(!$oldFile)return 'error: '.kfm_lang('noDataForFileID',$fid);
 		$filename=$oldFile->name;
 		if(!kfm_checkAddr($oldFile->path))return;
 		copy($oldFile->path,$to.'/'.$filename);
@@ -27,13 +27,13 @@ function _copyFiles($files,$dir_id){
 		$newFile->setTags($oldFile->getTags());
 		++$copied;
 	}
-	return $copied.' files copied'; # TODO: new string
+	return kfm_lang('filesCopied',$copied);
 }
 function _createEmptyFile($filename){
 	global $kfm_session;
 	$cwd=$kfm_session->get('currentdir');
-	if(!kfm_checkAddr($cwd.'/'.$filename))return 'error: filename "'.$filename.'" not allowed'; # TODO: new string
-	return(touch($cwd.'/'.$filename))?kfm_loadFiles($kfm_session->get('cwd_id')):'error: could not write file "'.$filename.'"'; # TODO: new string
+	if(!kfm_checkAddr($cwd.'/'.$filename))return 'error: '.kfm_lang('illegalFileName',$filename);
+	return(touch($cwd.'/'.$filename))?kfm_loadFiles($kfm_session->get('cwd_id')):'error: '.kfm_lang('couldNotCreateFile',$filename);
 }
 function _downloadFileFromUrl($url,$filename){
 	global $kfm_session;
@@ -48,7 +48,7 @@ function _downloadFileFromUrl($url,$filename){
 function _extractZippedFile($id){
 	global $kfm_session;
 	$cwd_id=$kfm_session->get('cwd_id');
-	if(!$GLOBALS['kfm_allow_file_create'])return 'error: permission denied: cannot create file'; # TODO: new string
+	if(!$GLOBALS['kfm_allow_file_create'])return 'error: '.kfm_lang('permissionDeniedCreateFile');
 	$file=new File($id);
 	$dir=$file->directory.'/';
 	{ # try native system unzip command
@@ -116,7 +116,7 @@ function _getTextFile($fid){
 	if(!kfm_checkAddr($file->name))return;
 	$ext=$file->getExtension();
 	if(in_array($ext,$GLOBALS['kfm_editable_extensions'])){
-		if(!$file->isWritable())return 'error: '.$file->name.' is not writable'; # TODO: new string
+		if(!$file->isWritable())return 'error: '.kfm_lang('isNotWritable',$file->name);
 		/**
 		 * determine language for Codepress
 		 */
@@ -158,7 +158,7 @@ function _getTextFile($fid){
 		}
 		return array('content'=>utf8_encode($file->getContent()),'name'=>$file->name,'id'=>$file->id, 'language'=>$language);
 	}
-	return 'error: "'.$file->name.'" cannot be edited (restricted)'; # TODO: new string
+	return 'error: '.kfm_lang('cannotEditRestrictedExtension',$file->name);
 }
 function _loadFiles($rootid=1){
 	global $kfm_session;
@@ -184,14 +184,14 @@ function _loadFiles($rootid=1){
 function _moveFiles($files,$dir_id){
 	global $kfmdb,$kfm_db_prefix,$kfm_session;
 	$cwd_id=$kfm_session->get('cwd_id');
-	if(!$GLOBALS['kfm_allow_file_move'])return 'error: permission denied: cannot move file'; # TODO: new string
+	if(!$GLOBALS['kfm_allow_file_move'])return 'error: '.kfm_lang('permissionsDeniedMoveFile');
 	$dirdata=kfm_getDirectoryDbInfo($dir_id);
-	if(!$dirdata)return 'error: no data for directory id "'.$dir_id.'"'; # TODO: new string
+	if(!$dirdata)return 'error: '.kfm_lang('noDataForDirectoryID',$dir_id);
 	$to=kfm_getDirectoryParents($dir_id);
-	if(!kfm_checkAddr($to))return 'error: illegal directory "'.$to.'"'; # TODO: new string
+	if(!kfm_checkAddr($to))return 'error: '.kfm_lang('illegalTargetDirectory',$to);
 	foreach($files as $fid){
 		$q=$kfmdb->query("select directory,name from ".$kfm_db_prefix."files where id=".$fid);
-		if(!($filedata=$q->fetchRow()))return 'error: no data for file id "'.$file.'"'; # TODO: new string
+		if(!($filedata=$q->fetchRow()))return 'error: '.kfm_lang('noDataForFileID',$file);
 		$dir=kfm_getDirectoryParents($filedata['directory']);
 		$file=$filedata['name'];
 		if(!kfm_checkAddr($dir.'/'.$file))return;
@@ -201,24 +201,23 @@ function _moveFiles($files,$dir_id){
 	return kfm_loadFiles($cwd_id);
 }
 function _renameFile($fid,$newfilename,$refreshFiles=true){
-	if(!$GLOBALS['kfm_allow_file_edit'])return 'error: permission denied: cannot edit file'; # TODO: new string
+	if(!$GLOBALS['kfm_allow_file_edit'])return 'error: '.kfm_lang('permissionDeniedEditFile');
 	global $kfmdb,$kfm_db_prefix,$kfm_session;
-	$cwd=$kfm_session->get('currentdir');
 	$cwd_id=$kfm_session->get('cwd_id');
 	$file=new File($fid);
 	if(!file_exists($file->path))return;
 	$filename=$file->name;
-	if(!kfm_checkAddr($filename)||!kfm_checkAddr($newfilename))return 'error: cannot rename "'.$filename.'" to "'.$newfilename.'"'; # TODO: new string
-	$newfile=$cwd.'/'.$newfilename;
-	if(file_exists($newfile))return 'error: a file of that name already exists'; # TODO: new string
-	rename($cwd.'/'.$filename,$newfile);
+	if(!kfm_checkAddr($filename)||!kfm_checkAddr($newfilename))return 'error: '.kfm_lang('cannotRenameFromTo',$filename,$newfilename);
+	$newfile=$file->directory.'/'.$newfilename;
+	if(file_exists($newfile))return 'error: '.kfm_lang('fileAlreadyExists');
+	rename($file->path,$newfile);
 	$kfmdb->query("update ".$kfm_db_prefix."files set name='".addslashes($newfilename)."' where id=".$fid);
 	if($refreshFiles)return kfm_loadFiles($cwd_id);
 }
 function _renameFiles($files,$template){
 	global $kfm_session;
 	$cwd_id=$kfm_session->get('cwd_id');
-	if(!$GLOBALS['kfm_allow_file_edit'])return 'error: permission denied: cannot edit file'; # TODO: new string
+	if(!$GLOBALS['kfm_allow_file_edit'])return 'error: '.kfm_lang('permissionDeniedEditFile');
 	$prefix=preg_replace('/\*.*/','',$template);
 	$postfix=preg_replace('/.*\*/','',$template);
 	$precision=strlen(preg_replace('/[^*]/','',$template));
@@ -240,7 +239,7 @@ function _resize_bytes($size){
 	return $return;
 }
 function _rm($id,$dontLoadFiles=false){
-	if(!$GLOBALS['kfm_allow_file_delete'])return 'error: permission denied: cannot delete file'; # TODO: new string
+	if(!$GLOBALS['kfm_allow_file_delete'])return 'error: '.kfm_lang('permissionDeniedDeleteFile');
 	if(is_array($id)){
 		foreach($id as $f){
 			$ret=_rm($f,true);
@@ -256,7 +255,7 @@ function _rm($id,$dontLoadFiles=false){
 	if(!$dontLoadFiles)return $id;
 }
 function _saveTextFile($fid,$text){
-	if(!$GLOBALS['kfm_allow_file_edit'])return 'error: permission denied: cannot edit file'; # TODO: new string
+	if(!$GLOBALS['kfm_allow_file_edit'])return 'error: '.kfm_lang('permissionDeniedEditFile');
 	$f=new File($fid);
 	$f->setContent($text);
 	return $f->hasErrors()?$f->getErrors():'file saved';
@@ -295,10 +294,10 @@ function _search($keywords,$tags){
 			$files[]=$file;
 		}
 	}
-	return array('reqdir'=>'search results','files'=>$files,'uploads_allowed'=>0); # TODO: new string
+	return array('reqdir'=>kfm_lang('searchResults'),'files'=>$files,'uploads_allowed'=>0);
 }
 function _tagAdd($recipients,$tagList){
-	if(!$GLOBALS['kfm_allow_file_edit'])return 'error: permission denied: cannot edit file'; # TODO: new string
+	if(!$GLOBALS['kfm_allow_file_edit'])return 'error: '.kfm_lang('permissionDeniedEditFile');
 	global $kfmdb,$kfm_db_prefix;
 	if(!is_array($recipients))$recipients=array($recipients);
 	$arr=explode(',',$tagList);
@@ -323,7 +322,7 @@ function _tagAdd($recipients,$tagList){
 	return _getFileDetails($recipients[0]);
 }
 function _tagRemove($recipients,$tagList){
-	if(!$GLOBALS['kfm_allow_file_edit'])return 'error: permission denied: cannot edit file'; # TODO: new string
+	if(!$GLOBALS['kfm_allow_file_edit'])return 'error: '.kfm_lang('permissionDeniedEditFile');
 	global $kfmdb,$kfm_db_prefix;
 	if(!is_array($recipients))$recipients=array($recipients);
 	$arr=explode(',',$tagList);
@@ -359,19 +358,19 @@ function _viewTextFile($fileid){
 		}
 		return array('id'=>$fileid,'content'=>$code,'buttons_to_show'=>$buttons_to_show,'name'=>$file->name);
 	}
-	return "error: viewing file is not allowed"; # TODO: new string
+	return 'error: '.kfm_lang('permissionDeniedViewFile');
 }
 function _zip($filename,$files){
 	global $kfm_session;
 	$cwd=$kfm_session->get('currentdir');
 	$cwd_id=$kfm_session->get('cwd_id');
-	if(!$GLOBALS['kfm_allow_file_create'])return 'error: permission denied: cannot create file'; # TODO: new string
+	if(!$GLOBALS['kfm_allow_file_create'])return 'error: '.kfm_lang('permissionDeniedCreateFile');
 	global $rootdir;
-	if(!kfm_checkAddr($cwd.'/'.$filename))return 'error: filename "'.$filename.'" not allowed'; # TODO: new string
+	if(!kfm_checkAddr($cwd.'/'.$filename))return 'error: '.kfm_lang('illegalFileName',$filename);
 	$arr=array();
 	foreach($files as $f){
 		$file=new File($f);
-		if(!$file)return 'error: missing file in selection'; # TODO: new string
+		if(!$file)return 'error: '.kfm_lang('missingFileInSelection');
 		$arr[]=$file->path;
 	}
 	{ # try native system zip command
@@ -381,7 +380,7 @@ function _zip($filename,$files){
 		for($i=0;$i<count($arr);++$i)$arr[$i]=str_replace($pdir,'',$arr[$i]);
 		exec('cd "'.$cwd.'" && zip -D "'.$zipfile.'" "'.join('" "',$arr).'"',$arr,$res);
 	}
-	if($res)return 'error: no native "zip" command'; # TODO: new string
+	if($res)return 'error: '.kfm_lang('noNativeZipCommand');
 	return kfm_loadFiles($cwd_id);
 }
 ?>

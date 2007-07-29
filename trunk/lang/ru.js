@@ -271,4 +271,9 @@ RenameTheDirectoryToWhat: "Переименовать каталог '%1' в...?
 RenamedDirectoryAs: "Переименован '%1' в '%2'",
 TheFilenameShouldEndWithN: " Имя файла должно заканчиваться на %1",
 WhatFilenameDoYouWantToUse: "Какое имя файла вы хотите использовать?"
+
+,
+// New in 1.0
+ZipUpFiles: "zip up files",
+Cancel: "cancel"
 }

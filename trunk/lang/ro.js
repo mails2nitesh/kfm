@@ -2,7 +2,7 @@
  * See ../license.txt for licensing
  *
  * File Name: ru.js
- * 	Russian language file.
+ * 	Romanian language file.
  *
  * File Authors:
  * 	
@@ -270,4 +270,9 @@ RenameTheDirectoryToWhat: "Modifica numele mapei din '%1' în...?",
 RenamedDirectoryAs: "Numele mapei a fost modificată din '%1' în '%2'",
 TheFilenameShouldEndWithN: "La sfârşitul numii de fişier trebuie să puneţi %1",
 WhatFilenameDoYouWantToUse: "Care numele de fişier doriţi să utilizaţi?"
+
+,
+// New in 1.0
+ZipUpFiles: "zip up files",
+Cancel: "cancel"
 }
