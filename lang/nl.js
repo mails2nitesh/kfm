@@ -264,4 +264,9 @@ RenameTheDirectoryToWhat: "Hernoem map '%1' naar?",
 RenamedDirectoryAs: "'%1' hernoemd als '%2'",
 TheFilenameShouldEndWithN: "Bestandsnaam moet eindigen met %1",
 WhatFilenameDoYouWantToUse: "Welke bestandsnaam wilt u gebruiken?"
+
+,
+// New in 1.0
+ZipUpFiles: "zip up files",
+Cancel: "cancel"
 }

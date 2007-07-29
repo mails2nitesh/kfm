@@ -8,10 +8,10 @@ if($kfm_allow_file_upload){
 	$tmpname=$file['tmp_name'];
 	$toDir=kfmDirectory::getInstance($kfm_session->get('cwd_id'));
 	$to=$toDir->path.'/'.$filename;
-	if(!kfm_checkAddr($to))$errors[]='banned extension in file name'; # TODO new string
+	if(!kfm_checkAddr($to))$errors[]=kfm_lang('bannedFilenameExtension');
 	else{
 		move_uploaded_file($tmpname,$to);
-		if(!file_exists($to))$errors[]='failure to save tmp file "'.$tmpname.'" to location "'.$to.'"'; # TODO new string
+		if(!file_exists($to))$errors[]=kfm_lang('failedToSaveTmpFile',$tmpname,$to);
 		else if($kfm_only_allow_image_upload && !getimagesize($to)){
 			$errors[]='only images may be uploaded';
 			unlink($to);
@@ -50,7 +50,7 @@ if($kfm_allow_file_upload){
 		}
 	}
 }
-else $errors[]='permission denied for upload to this directory'; # TODO new string
+else $errors[]=kfm_lang('permissionDeniedUpload');
 ?>
 <html>
 	<head>

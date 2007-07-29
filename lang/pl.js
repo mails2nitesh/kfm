@@ -136,4 +136,9 @@ kfm.lang={
 	RenamedDirectoryAs: "Zmieniono nazwę z '%1' na '%2'",
 	TheFilenameShouldEndWithN: "nazwa pliku powinna kończyć się %1",
 	WhatFilenameDoYouWantToUse: "Jakiej nazwy pliku użyć?"
+
+,
+// New in 1.0
+ZipUpFiles: "zip up files",
+Cancel: "cancel"
 }

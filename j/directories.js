@@ -1,5 +1,6 @@
 // see license.txt for licensing
 function kfm_changeDirectory(id){
+	if(id=='kfm_directory_icon_0')id='kfm_directory_icon_1';
 	var el=$(id),a,els=$$('td.kfm_directory_open');
 	if(!el)return;
 	setTimeout('$clear(window.dragTrigger);',1);
@@ -196,6 +197,7 @@ function kfm_refreshDirectories(res){
 	kfm_selectNone();
 	kfm_log(kfm.lang.DirRefreshed);
 	kfm_directories[kfm_cwd_id]=res.properties;
+	kfm_directories[d].hasChildren=1;
 	kfm_refreshPanels('kfm_left_column');
 }
 function kfm_renameDirectory(id){

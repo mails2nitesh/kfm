@@ -10,7 +10,7 @@ if(isset($_SERVER['REDIRECT_QUERY_STRING'])&&$_SERVER['REDIRECT_QUERY_STRING']){
 }
 $id=$_GET['id'];
 if(!is_numeric($id)){
-	echo 'error: invalid id'; # TODO: new string
+	echo kfm_lang('errorInvalidID');
 	exit;
 }
 if(isset($_GET['type'])&&$_GET['type']=='thumb'){
@@ -21,7 +21,7 @@ else{
 	$q=$kfmdb->query("select directory,name from ".$kfm_db_prefix."files where id=".$id);
 	$r=$q->fetchRow();
 	if(!count($r)){
-		echo 'error: file id #'.$id.' not found in database'; # TODO: new string
+		echo kfm_lang('errorFileIDNotFound',$id);
 		exit;
 	}
 	if(isset($_GET['width'])&&isset($_GET['height'])){

@@ -269,4 +269,9 @@ RenameTheDirectoryToWhat: "Renommer le dossier '%1' en?",
 RenamedDirectoryAs: "dossier '%1' renommé en '%2'",
 TheFilenameShouldEndWithN: "Le nom du fichier devrait finir par %1",
 WhatFilenameDoYouWantToUse: "Quel nom de fichier souhaitez-vous utiliser?"
+
+,
+// New in 1.0
+ZipUpFiles: "zip up files",
+Cancel: "cancel"
 }
