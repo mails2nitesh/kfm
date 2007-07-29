@@ -37,11 +37,10 @@ class kfmDirectory extends Object{
 	function delete(){
 		if(!$GLOBALS['kfm_allow_directory_delete'])return $this->error('permission denied: cannot delete directory'); # TODO: new string
 		$q=$this->db->query("select id from ".$this->db_prefix."files where directory=".$this->id);
-		$files=$q->fetchAll();
-		foreach($files as $r){
-			$f=new File($r['id']);
+		$files=$this->getFiles();
+		foreach($files as $f){
 			$f->delete();
-			if($f->hasErrors()) $this->addErrors($f);
+			if($f->hasErrors())$this->addErrors($f);
 		}
 		$subdirs=$this->getSubdirs();
 		foreach($subdirs as $subdir){
@@ -50,11 +49,8 @@ class kfmDirectory extends Object{
 		}
 		rmdir($this->path);
 		if(is_dir($this->path))$this->error('failed to delete directory '.$this->path);
-		if(!$this->hasErrors()){
-			$this->db->exec("delete from ".$this->db_prefix."directories where id=".$this->id);
-		}else{
-			return false;
-		}
+		if(!$this->hasErrors())$this->db->exec("delete from ".$this->db_prefix."directories where id=".$this->id);
+		else return false;
 	}
 	function getFiles(){
 		$this->handle=opendir($this->path);
@@ -72,11 +68,6 @@ class kfmDirectory extends Object{
 			if($file->isImage())$file=new Image($fileshash[$filename]);
 			$files[]=$file;
 			unset($fileshash[$filename]);
-		}
-		foreach($fileshash as $k=>$v){
-			// maybe this should happen in de constructor of the file
-			#	$f=new File($v);
-			#	$f->delete();
 		}
 		return $files;
 	}
