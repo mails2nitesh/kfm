@@ -17,7 +17,9 @@ function kfm_createDirectory(id){
 }
 function kfm_deleteDirectory(id){
 	if(!kfm_vars.permissions.dir.rm)return kfm.alert('permission denied: cannot delete directory');
-	if(kfm.confirm(kfm.lang.DelDirMessage(kfm_directories[id].path)))x_kfm_deleteDirectory(id,kfm_deleteDirectoryCheck);
+	if(!kfm.confirm(kfm.lang.DelDirMessage(kfm_directories[id].path)))return;
+	if(kfm_directories[id].hasChildren && !kfm.confirm(kfm.lang.RecursiveDeleteWarning(kfm_directories[id].name)))return;
+	x_kfm_deleteDirectory(id,kfm_deleteDirectoryCheck);
 }
 function kfm_deleteDirectoryCheck(res){
 	if(res.type&&res.type=='error'){
@@ -175,7 +177,12 @@ function kfm_refreshDirectories(res){
 	var dirs=$A(res.directories);
 	dirs.each(function(dir,a){
 		kfm_dir_addLink(t,dir[0],res.reqdir,l=(a==dirs.length-1),dir[1],dir[2]);
-		if(!kfm_directories[dir[2]])kfm_directories[dir[2]]={parent:res.parent,name:dir[0],path:res.reqdir+dir[0]};
+		if(!kfm_directories[dir[2]])kfm_directories[dir[2]]={
+			'parent':res.parent,
+			'name':dir[0],
+			'path':res.reqdir+dir[0],
+			'hasChildren':dir[1]
+		};
 	});
 	if(d!='')kfm.addEl($($(n).parentNode).empty(),dirs.length?
 		newLink('javascript:kfm_dir_closeNode("'+res.parent+'")','[-]',n,'kfm_dir_node_open'):
