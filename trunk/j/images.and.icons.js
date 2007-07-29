@@ -27,7 +27,7 @@ function kfm_img_startLightbox(id){
 	}
 	if(!id){
 		window.kfm_slideshow.at++;
-		window.title=window.kfm_slideshow.at;
+		document.title='KFM Slideshow: '+window.kfm_slideshow.at;
 		id=window.kfm_slideshow.ids[window.kfm_slideshow.at%window.kfm_slideshow.ids.length];
 	}
 	var el,data=$('kfm_file_icon_'+id).kfm_attributes,ws=getWindowSize(),oldEl=$('kfm_lightboxImage');

@@ -269,7 +269,7 @@ function kfm_refreshFiles(res){
 		}
 	}
 	for(a=0;a<res.files.length;++a)wrapper.fileids[a]=res.files[a].id;
-	document.title=res.reqdir;
+	document.title='KFM: '+res.reqdir;
 	kfm_lastClicked=null;
 	kfm_log(kfm.lang.FilesRefreshed);
 	if(res.uploads_allowed)kfm_addPanel('kfm_left_column','kfm_file_upload_panel');
