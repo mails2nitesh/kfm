@@ -272,6 +272,6 @@ WhatFilenameDoYouWantToUse: "Welchen Dateinamen möchten Sie benutzen?"
 
 ,
 // New in 1.0
-ZipUpFiles: "zip up files",
-Cancel: "cancel"
+ZipUpFiles: "zippen der Dateien",
+Cancel: "Abbrechen"
 }

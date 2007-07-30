@@ -218,8 +218,8 @@ function kfm_inArray(needle,haystack){
 function kfm_log(msg){
 	var wrapper=$('kfm_logs_panel');
 	if(!wrapper){
-		if(msg.indexOf(kfm.lang.ErrorPrefix)!=0)return;
-		if(kfm_inArray('kfm_logs_panel',kfm_hidden_panels))return kfm.alert(msg.replace(kfm.lang.ErrorPrefix,''));
+		if(msg.indexOf(kfm.lang.ErrorPrefix)!=0 && msg.indexOf('error: ')!=0)return;
+		if(kfm_inArray('kfm_logs_panel',kfm_hidden_panels))return kfm.alert(msg.replace(kfm.lang.ErrorPrefix,'').replace('error: ',''));
 		kfm_addPanel('kfm_left_column','kfm_logs_panel');
 		kfm_refreshPanels('kfm_left_column');
 		wrapper=$('kfm_logs_panel');
