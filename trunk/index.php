@@ -76,7 +76,7 @@ header('Content-type: text/html; Charset=utf-8');
 	echo $js;
 ?>
 			var session_key="<?php echo $kfm_session->key; ?>";
-			var starttype="<?php echo isset($_GET['Type'])?$_GET['Type']:''; ?>";
+			var starttype="<?php echo isset($_GET['type'])?$_GET['type']:''; ?>";
 			var fckroot="<?php echo $kfm_userfiles; ?>";
 			var fckrootOutput="<?php echo $kfm_userfiles_output; ?>";
 			var kfm_file_handler="<?php echo $kfm_file_handler; ?>";
@@ -86,7 +86,7 @@ header('Content-type: text/html; Charset=utf-8');
 			var kfm_show_files_in_groups_of=<?php echo $kfm_show_files_in_groups_of; ?>;
 			for(var i=0;i<kfm_hidden_panels.length;++i)kfm_hidden_panels[i]='kfm_'+kfm_hidden_panels[i]+'_panel';
 			<?php echo kfm_kaejax_get_javascript(); ?>
-			<?php if(isset($_GET['kfm_callerType']))echo 'window.kfm_callerType="'.addslashes($_GET['kfm_callerType']).'";'; ?>
+			<?php if(isset($_GET['kfm_caller_type']))echo 'window.kfm_caller_type="'.addslashes($_GET['kfm_caller_type']).'";'; ?>
 			var editable_extensions=["<?php echo join('","',$kfm_editable_extensions);?>"];
 			var viewable_extensions=["<?php echo join('","',$kfm_viewable_extensions);?>"];
 			var kfm_vars={
