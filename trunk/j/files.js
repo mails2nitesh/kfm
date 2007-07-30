@@ -31,8 +31,8 @@ var kfm_file_bits={
 				}
 				if(kfm_inArray(extension,['zip']))links.push(['kfm_extractZippedFile("'+id+'")',kfm.lang.ExtractZippedFile,'extract_zip',!kfm_vars.permissions.file.mk]);
 				if(kfm_inArray(extension,viewable_extensions)){
-					links.push(['x_kfm_viewTextFile('+id+',kfm_viewTextFile)','view','edit']);
 					if(writable&&kfm_inArray(extension,editable_extensions))links.push(['x_kfm_getTextFile("'+id+'",kfm_showTextFile)',kfm.lang.EditTextFile,'edit',!kfm_vars.permissions.file.ed]);
+					else links.push(['x_kfm_viewTextFile('+id+',kfm_viewTextFile)','view','edit']);
 				}
 			}
 			links.push(['kfm_tagAdd('+id+')',kfm.lang.AddTagsToFiles,'add_tags',!kfm_vars.permissions.file.ed]);
