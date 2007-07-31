@@ -318,10 +318,10 @@ require_once($kfm_base_path.'configuration.php');
 		require_once($kfm_base_path.'includes/files.php');
 		return _copyFiles($files,$dir_id);
 	}
-	function kfm_createEmptyFile($filename){
+	function kfm_createEmptyFile($cwd,$filename){
 		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/files.php');
-		return _createEmptyFile($filename);
+		return _createEmptyFile($cwd,$filename);
 	}
 	function kfm_downloadFileFromUrl($url,$filename){
 		global $kfm_base_path;
