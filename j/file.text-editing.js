@@ -14,7 +14,7 @@ function kfm_createEmptyFile(){
 			not_ok=1;
 		}
 	}while(not_ok);
-	x_kfm_createEmptyFile(filename,kfm_refreshFiles);
+	x_kfm_createEmptyFile(kfm_cwd_id,filename,kfm_refreshFiles);
 }
 function kfm_disableLeftColumn(){
 	var left_column=$('kfm_left_column');

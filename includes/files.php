@@ -29,11 +29,12 @@ function _copyFiles($files,$dir_id){
 	}
 	return kfm_lang('filesCopied',$copied);
 }
-function _createEmptyFile($filename){
+function _createEmptyFile($cwd,$filename){
 	global $kfm_session;
-	$cwd=$kfm_session->get('currentdir');
-	if(!kfm_checkAddr($cwd.'/'.$filename))return 'error: '.kfm_lang('illegalFileName',$filename);
-	return(touch($cwd.'/'.$filename))?kfm_loadFiles($kfm_session->get('cwd_id')):'error: '.kfm_lang('couldNotCreateFile',$filename);
+	$dir=new kfmDirectory($cwd);
+	$path=$dir->path;
+	if(!kfm_checkAddr($path.'/'.$filename))return 'error: '.kfm_lang('illegalFileName',$filename);
+	return(touch($path.'/'.$filename))?kfm_loadFiles($cwd):'error: '.kfm_lang('couldNotCreateFile',$filename);
 }
 function _downloadFileFromUrl($url,$filename){
 	global $kfm_session;
