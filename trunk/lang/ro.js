@@ -273,6 +273,6 @@ WhatFilenameDoYouWantToUse: "Care numele de fişier doriţi să utilizaţi?"
 
 ,
 // New in 1.0
-ZipUpFiles: "zip up files",
+ZipUpFiles: "adăuga fişieri în arhivă",
 Cancel: "cancel"
 }

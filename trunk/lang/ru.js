@@ -274,6 +274,6 @@ WhatFilenameDoYouWantToUse: "Какое имя файла вы хотите ис
 
 ,
 // New in 1.0
-ZipUpFiles: "zip up files",
-Cancel: "cancel"
+ZipUpFiles: "заархивировать файлы",
+Cancel: "отменить"
 }
