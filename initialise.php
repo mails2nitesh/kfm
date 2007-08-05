@@ -167,7 +167,7 @@ require_once($kfm_base_path.'configuration.php');
 	$q=$kfmdb->query("select * from ".$kfm_db_prefix."parameters");
 	$rs=$q->fetchAll();
 	foreach($rs as $r)$kfm_parameters[$r['name']]=$r['value'];
-	if($kfm_parameters['version']!=KFM_VERSION)require($kfm_base_path.'scripts/update.0.9.2.php');
+	if($kfm_parameters['version']!=KFM_VERSION)require($kfm_base_path.'scripts/update.1.0.php');
 }
 { # start session
 	$session_id=(isset($_GET['kfm_session']))?$_GET['kfm_session']:'';
