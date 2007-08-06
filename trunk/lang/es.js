@@ -227,6 +227,6 @@ WhatFilenameDoYouWantToUse: "¿Qué nombre de archivo desea utilizar?"
 
 ,
 // New in 1.0
-ZipUpFiles: "zip up files",
-Cancel: "cancel"
+ZipUpFiles: "comprimir archivos (en zip)",
+Cancel: "cancelar"
 }
