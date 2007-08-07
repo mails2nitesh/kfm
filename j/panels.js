@@ -115,7 +115,7 @@ function kfm_createFileUploadPanel(){
 					'value':'9999999999'
 				});
 				var submit=newInput('upload','submit',kfm.lang.Upload);
-				submit.addEvent('click',function(){
+				if(!window.ie)submit.addEvent('click',function(){
 					setTimeout('$("kfm_file").type="text";$("kfm_file").type="file"',1);
 				});
 				var input=newInput('kfm_file','file');
