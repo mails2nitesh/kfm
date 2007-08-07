@@ -1,7 +1,7 @@
 <?php
 class kfmSession extends Object{
-	public $vars;
-	public $id;
+	var $vars;
+	var $id;
 	function kfmSession($key=''){
 		parent::__construct();
 		$create=1;
