@@ -170,6 +170,12 @@ require_once($kfm_base_path.'configuration.php');
 	foreach($rs as $r)$kfm_parameters[$r['name']]=$r['value'];
 	if($kfm_parameters['version']!=KFM_VERSION)require($kfm_base_path.'scripts/update.1.0.php');
 }
+{ # JSON
+	if(!function_exists('json_encode')){ # php-json is not installed
+		require_once('JSON.php');
+		require_once($kfm_base_path.'includes/json.php');
+	}
+}
 { # start session
 	$session_id=(isset($_GET['kfm_session']))?$_GET['kfm_session']:'';
 	$kfm_session=new kfmSession($session_id);
@@ -442,12 +448,6 @@ require_once($kfm_base_path.'configuration.php');
 		global $kfm_base_path;
 		require_once($kfm_base_path.'includes/images.php');
 		return _rotateImage($filename,$direction);
-	}
-}
-{ # JSON
-	if(!function_exists('json_encode')){ # php-json is not installed
-		require_once('JSON.php');
-		require_once($kfm_base_path.'includes/json.php');
 	}
 }
 ?>
