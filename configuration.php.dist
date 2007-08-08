@@ -107,6 +107,9 @@ $kfm_preferred_languages=array('en','de','da','es','fr','nl','ga');
 # to use a different theme, replace 'default' with the name of the theme's directory.
 $kfm_theme='default';
 
+# use ImageMagick's 'convert' program?
+$kfm_use_imagemagick=1;
+
 # where is the 'convert' program kept, if you have it installed?
 $kfm_imagemagick_path='/usr/bin/convert';
 
