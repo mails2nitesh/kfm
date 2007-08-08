@@ -31,7 +31,7 @@ class Image extends File{
 		imagedestroy($im);
 	}
 	function createThumb($width=64,$height=64){
-		global $kfmdb,$kfm_db_prefix;
+		global $kfmdb,$kfm_db_prefix,$kfm_use_imagemagick;
 		if(!is_dir(WORKPATH.'thumbs'))mkdir(WORKPATH.'thumbs');
 		$ratio=min($width/$this->width,$height/$this->height);
 		$thumb_width=$this->width*$ratio;
@@ -39,7 +39,7 @@ class Image extends File{
 		$kfmdb->exec("INSERT INTO ".$kfm_db_prefix."files_images_thumbs (image_id,width,height) VALUES(".$this->id.",".$thumb_width.",".$thumb_height.")");
 		$id=$kfmdb->lastInsertId($kfm_db_prefix.'files_images_thumbs','id');
 		$file=WORKPATH.'thumbs/'.$id;
-		if($this->useImageMagick($this->path,'resize '.$thumb_width.'x'.$thumb_height,$file))$this->createResizedCopy($file,$thumb_width,$thumb_height);
+		if(!$kfm_use_imagemagick || $this->useImageMagick($this->path,'resize '.$thumb_width.'x'.$thumb_height,$file))$this->createResizedCopy($file,$thumb_width,$thumb_height);
 		return $id;
 	}
 	function delete(){
@@ -79,22 +79,24 @@ class Image extends File{
 		return $row['id'];
 	}
 	function resize($new_width, $new_height=-1){
+		global $kfm_use_imagemagick;
 		if(!$this->isWritable()){
 			$this->error('Image is not writable, so cannot be resized');
 			return false;
 		}
 		$this->deleteThumbs();
 		if($new_height==-1)$new_height=$this->height*$new_width/$this->width;
-		if(!$this->useImageMagick($this->path,'resize '.$new_width.'x'.$new_height,$this->path))return;
+		if($kfm_use_imagemagick && !$this->useImageMagick($this->path,'resize '.$new_width.'x'.$new_height,$this->path))return;
 		$this->createResizedCopy($this->path,$new_width,$new_height);
 	}
 	function rotate($direction){
+		global $kfm_use_imagemagick;
 		if(!$this->isWritable()){
 			$this->error('Image is not writable, so cannot be rotated');
 			return false;
 		}
 		$this->deleteThumbs();
-		if(!$this->useImageMagick($this->path,'rotate -'.$direction,$this->path))return;
+		if($kfm_use_imagemagick && !$this->useImageMagick($this->path,'rotate -'.$direction,$this->path))return;
 		{ # else use GD
 			$load='imagecreatefrom'.$this->type;
 			$save='image'.$this->type;
