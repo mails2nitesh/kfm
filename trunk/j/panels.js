@@ -67,7 +67,8 @@ function uploadError(a){
 function kfm_createFileUploadPanel(){
 	{ // create form
 		var kfm_uploadPanel_checkForZip=function(e){
-			kfm.cancelEvent(e);
+			e=new Event(e);
+			e.stopPropagation();
 			var v=this.value;
 			var h=(v.indexOf('.')==-1||v.replace(/.*(\.[^.]*)/,'$1')!='.zip');
 			$('kfm_unzip1').setStyles({

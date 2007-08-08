@@ -1,11 +1,4 @@
 // see ../license.txt for licensing
-kfm.cancelEvent=function(e,c){
-	e.cancelBubble=true;
-	if(c){
-		e.returnValue=false; // contextmenu
-	}
-};
-
 function clearSelections(){
 	document.selection.empty();
 }
