@@ -363,8 +363,9 @@ function _viewTextFile($fileid){
 }
 function _zip($filename,$files){
 	global $kfm_session;
-	$cwd=$kfm_session->get('currentdir');
 	$cwd_id=$kfm_session->get('cwd_id');
+	$dir=kfmDirectory::getInstance($cwd_id);
+	$cwd=$dir->path;
 	if(!$GLOBALS['kfm_allow_file_create'])return 'error: '.kfm_lang('permissionDeniedCreateFile');
 	global $rootdir;
 	if(!kfm_checkAddr($cwd.'/'.$filename))return 'error: '.kfm_lang('illegalFileName',$filename);
@@ -376,7 +377,7 @@ function _zip($filename,$files){
 	}
 	{ # try native system zip command
 		$res=-1;
-		$pdir=str_replace('//','/',$cwd.'/');
+		$pdir=$cwd.'/';
 		$zipfile=$pdir.$filename;
 		for($i=0;$i<count($arr);++$i)$arr[$i]=str_replace($pdir,'',$arr[$i]);
 		exec('cd "'.$cwd.'" && zip -D "'.$zipfile.'" "'.join('" "',$arr).'"',$arr,$res);
