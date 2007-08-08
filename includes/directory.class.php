@@ -157,7 +157,7 @@ class kfmDirectory extends Object{
 		$parent=kfmDirectory::getInstance($this->pid);
 		if(file_exists($parent->path.$newname))return $this->error(kfm_lang('aDirectoryNamedAlreadyExists',$newname));
 		rename($this->path,$parent->path.$newname);
-		if(!file_exists($parent->path.$newname))return $this->error(kfm_lang('failedRenameDirectory'));
+		if(file_exists($this->path))return $this->error(kfm_lang('failedRenameDirectory'));
 		$this->db->query("update ".$this->db_prefix."directories set name='".addslashes($newname)."' where id=".$this->id);
 		$this->name=$newname;
 	}
