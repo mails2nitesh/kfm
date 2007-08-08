@@ -54,7 +54,7 @@ require_once($kfm_base_path.'configuration.php');
 { # variables
 	if(!isset($kfm_show_files_in_groups_of))$kfm_show_files_in_groups_of=10;
 	define('KFM_VERSION',rtrim(file_get_contents($kfm_base_path.'version.txt')));
-	$rootdir=str_replace('//','/',$_SERVER['DOCUMENT_ROOT'].$kfm_userfiles.'/');
+	$rootdir=realpath($_SERVER['DOCUMENT_ROOT'].$kfm_userfiles).'/';
 	if(!is_dir($rootdir))mkdir($rootdir,0755);
 	define('LSQUIGG','{');
 	define('RSQUIGG','}');

@@ -26,8 +26,8 @@ class kfmDirectory extends Object{
 	}
 	function createSubdir($name){
 		if(!$GLOBALS['kfm_allow_directory_create'])return $this->error(kfm_lang('permissionDeniedCreateDirectory'));
-		$short_version=str_replace($GLOBALS['rootdir'],'',$this->path);
 		$physical_address=$this->path.$name;
+		$short_version=str_replace($GLOBALS['rootdir'],'',$physical_address);
 		if(!$this->checkAddr($physical_address)){
 			$this->error(kfm_lang('illegalDirectoryName',$short_version));
 			return false;
@@ -86,8 +86,8 @@ class kfmDirectory extends Object{
 	}
 	function getPath(){
 		$pathTmp=$this->name.'/';
-		if($this->name=='')$pathTmp='/';
 		$pid=$this->pid;
+		if(!$pid)return $GLOBALS['rootdir'];
 		while($pid>1){
 			$p=kfmDirectory::getInstance($pid);
 			$pathTmp=$p->name.'/'.$pathTmp;
