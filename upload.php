@@ -20,7 +20,7 @@ if($kfm_allow_file_upload){
 			$fid=kfm_add_file_to_db($filename,$kfm_session->get('cwd_id'));
 			$file=new File($fid);
 			if(function_exists('exif_imagetype')){
-				$imgtype=exif_imagetype($to);
+				$imgtype=@exif_imagetype($to);
 				if($imgtype){
 					$file=new Image($file);
 					$comment='';
