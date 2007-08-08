@@ -70,7 +70,7 @@ DelDirMessage:
 DelFileMessage:
 	"Sind Sie sicher das Sie die Datei  \"%1\" löschen möchten?",
 DelMultipleFilesMessage:
-	"Sind Sie sicher das Sie die folgenden Dateien löschen möchten? \n\n %1",
+	"Sind Sie sicher das Sie die folgenden Dateien löschen möchten? \n\n",
 DownloadFileFromMessage : "Herunterladen der Datei von wo?",
 FileSavedAsMessage:
 	"Als was soll die Datei gespeichert werden?",
