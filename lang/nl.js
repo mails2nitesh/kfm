@@ -63,7 +63,7 @@ DelDirMessage:
 DelFileMessage:
 	"Weet u zeker dat u het bestand  \"%1\" wilt verwijderen?",
 DelMultipleFilesMessage:
-	"Weet u zeker dat u de volgende bestanden verwijderen wilt? \n\n %1",
+	"Weet u zeker dat u de volgende bestanden verwijderen wilt? \n\n'",
 DownloadFileFromMessage : "Bestand van waar downloaden?", 
 FileSavedAsMessage:
 	"Als wat moet het bestand opgeslagen worden?",
