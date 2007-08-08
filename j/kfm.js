@@ -113,10 +113,6 @@ var KFM=new Class({
 		window.addEvent('resize',kfm.handleWindowResizes);
 		kfm_contextmenuinit();
 	},
-	cancelEvent:function(e,c){
-		e.stopPropagation();
-		if(c)e.preventDefault();
-	},
 	confirm:function(txt){
 		window.inPrompt=1;
 		var ret=confirm(txt);
