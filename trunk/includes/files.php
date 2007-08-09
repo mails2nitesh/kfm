@@ -93,7 +93,8 @@ function _getFileDetails($fid){
 		'filename'=>$file->name,
 		'mimetype'=>$file->mimetype,
 		'filesize'=>$file->size2str(),
-		'tags'=>$file->getTags()
+		'tags'=>$file->getTags(),
+		'ctime'=>$file->ctime
 	);
 	if($file->isImage()){
 		$im=new Image($file);
@@ -168,7 +169,7 @@ function _loadFiles($rootid=1){
 	if($dir->hasErrors())return $dir->getErrors();
 	$files=array();
 	foreach($oFiles as $file){
-		$aFile=array('id'=>$file->id,'name'=>$file->name, 'writable'=>$file->writable);
+		$aFile=array('id'=>$file->id,'ctime'=>$file->ctime,'name'=>$file->name,'writable'=>$file->writable);
 		if($file->isImage()){
 			$aFile['width']=$file->width;
 			$aFile['height']=$file->height;
