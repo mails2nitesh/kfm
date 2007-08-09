@@ -87,6 +87,12 @@ function kfm_buildFileDetailsTable(res){
 			}
 		}
 	}
+	if(res.ctime){ // last change time
+		r=kfm.addRow(table);
+		kfm.addEl(kfm.addCell(r,0),(new Element('strong')).setHTML('last modified')); // TODO: new string
+		var d=(new Date(res.ctime*1000)).toGMTString();
+		kfm.addEl(kfm.addCell(r,1),d);
+	}
 	return table;
 }
 function kfm_deleteFile(id){

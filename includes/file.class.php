@@ -1,11 +1,12 @@
 <?php
 class File extends Object{
-	var $id=-1;
-	var $name='';
+	var $ctime='';
 	var $directory='';
+	var $id=-1;
+	var $mimetype='';
+	var $name='';
 	var $parent=0;
 	var $path='';
-	var $mimetype='';
 	var $size=0;
 	var $type;
 	var $writable=false;
@@ -26,6 +27,7 @@ class File extends Object{
 				return false;
 			}
 			$this->writable=$this->isWritable();
+			$this->ctime=filectime($this->path);
 			$mimetype=get_mimetype($this->path);
 			$pos=strpos($mimetype,';');
 			$this->mimetype=($pos===false)?$mimetype:substr($mimetype,0,$pos);
