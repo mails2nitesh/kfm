@@ -74,7 +74,7 @@ var KFM=new Class({
 					var ps=left_column.panels;
 					for(var i=0;i<ps.length;++i){
 						var p=$(ps[i]);
-						if(!p.visible)links.push(['kfm_addPanel("kfm_left_column","'+ps[i]+'")',kfm.lang.ShowPanel(p.panel_title),'show_panel']);
+						if(!p.visible && !kfm_inArray(ps[i],kfm_hidden_panels))links.push(['kfm_addPanel("kfm_left_column","'+ps[i]+'")',kfm.lang.ShowPanel(p.panel_title),'show_panel']);
 					}
 					kfm_createContextMenu(m,links);
 				}
