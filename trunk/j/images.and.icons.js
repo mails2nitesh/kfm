@@ -80,7 +80,7 @@ function kfm_img_startLightbox(id){
 	el.addEvent('click',kfm_img_stopLightbox);
 	if(window.kfm_slideshow){
 		el.addEvent('load',function(){
-			setTimeout('kfm_img_startLightbox()',4000);
+			setTimeout('kfm_img_startLightbox()',kfm_slideshow_delay);
 		});
 	}
 	kfm.addEl(document.body,el);

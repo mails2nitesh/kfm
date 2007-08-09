@@ -84,6 +84,7 @@ header('Content-type: text/html; Charset=utf-8');
 			var kfm_theme="<?php echo $kfm_theme; ?>";
 			var kfm_hidden_panels="<?php echo $kfm_hidden_panels; ?>".split(',');
 			var kfm_show_files_in_groups_of=<?php echo $kfm_show_files_in_groups_of; ?>;
+			var kfm_slideshow_delay=<?php echo ((int)$kfm_slideshow_delay)*1000; ?>;
 			for(var i=0;i<kfm_hidden_panels.length;++i)kfm_hidden_panels[i]='kfm_'+kfm_hidden_panels[i]+'_panel';
 			<?php echo kfm_kaejax_get_javascript(); ?>
 			<?php if(isset($_GET['kfm_caller_type']))echo 'window.kfm_caller_type="'.addslashes($_GET['kfm_caller_type']).'";'; ?>
