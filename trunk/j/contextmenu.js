@@ -12,7 +12,7 @@ function kfm_contextmenuinit(){
 	});
 	getWindow().oncontextmenu=function(e){
 		e=new Event(e);
-		e.stop();
+		if(!e.control)e.stop();
 	}
 }
 function kfm_createContextMenu(m,links){
