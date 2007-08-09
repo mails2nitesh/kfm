@@ -38,6 +38,7 @@ require_once($kfm_base_path.'configuration.php');
 	if(!isset($kfm_use_multiple_file_upload))$m[]='missing <code>$kfm_use_multiple_file_upload</code> variable';
 	if(!isset($kfm_use_imagemagick))$m[]='missing <code>$kfm_use_imagemagick</code> variable';
 	if(!isset($kfm_slideshow_delay))$m[]='missing <code>$kfm_slideshow_delay</code> variable';
+	if(!isset($kfm_db_port))$m[]='missing <code>$kfm_db_port</code> variable';
 	if(count($m)){
 		echo '<html><body><p>There are errors in your configuration or server. If the messages below describe missing variables, please check the supplied <code>configuration.php.dist</code> for notes on their usage.</p><ul>';
 		foreach($m as $a)echo '<li>'.$a.'</li>';
@@ -95,10 +96,11 @@ require_once($kfm_base_path.'configuration.php');
 { # database
 	$db_defined=0;
 	$kfm_db_prefix_escaped=str_replace('_','\\\\_',$kfm_db_prefix);
+	$port=($kfm_db_port=='')?'':':'.$kfm_db_port;
 	switch($kfm_db_type){
 		case 'mysql': {
 			require_once('MDB2.php');
-			$dsn='mysql://'.$kfm_db_username.':'.$kfm_db_password.'@'.$kfm_db_host.'/'.$kfm_db_name;
+			$dsn='mysql://'.$kfm_db_username.':'.$kfm_db_password.'@'.$kfm_db_host.$port.'/'.$kfm_db_name;
 			$kfmdb=&MDB2::connect($dsn);
 			if(PEAR::isError($kfmdb)){
 				$dsn='mysql://'.$kfm_db_username.':'.$kfm_db_password.'@'.$kfm_db_host;
@@ -121,7 +123,7 @@ require_once($kfm_base_path.'configuration.php');
 		}
 		case 'pgsql': {
 			require_once('MDB2.php');
-			$dsn='pgsql://'.$kfm_db_username.':'.$kfm_db_password.'@'.$kfm_db_host.'/'.$kfm_db_name;
+			$dsn='pgsql://'.$kfm_db_username.':'.$kfm_db_password.'@'.$kfm_db_host.$port.'/'.$kfm_db_name;
 			$kfmdb=&MDB2::factory($dsn);
 			if(PEAR::isError($kfmdb)){
 				$dsn='pgsql://'.$kfm_db_username.':'.$kfm_db_password.'@'.$kfm_db_host;

@@ -17,6 +17,7 @@ $kfm_db_host='localhost';
 $kfm_db_name='kfm';
 $kfm_db_username='username';
 $kfm_db_password='password';
+$kfm_db_port=''; # leave blank if using default port
 
 # where are the files located on the hard-drive, relative to the website's root directory?
 # In the default example, the user-files are at http://kfm.verens.com/sandbox/UserFiles/
