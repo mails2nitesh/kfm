@@ -18,31 +18,26 @@ if(isset($_GET['type'])&&$_GET['type']=='thumb'){
 	$name=$id;
 }
 else{
-	$q=$kfmdb->query("select directory,name from ".$kfm_db_prefix."files where id=".$id);
-	$r=$q->fetchRow();
-	if(!count($r)){
-		echo kfm_lang('errorFileIDNotFound',$id);
-		exit;
-	}
 	if(isset($_GET['width'])&&isset($_GET['height'])){
 		$width=$_GET['width'];
 		$height=$_GET['height'];
-		$q2=$kfmdb->query("select id from ".$kfm_db_prefix."files_images_thumbs where image_id=".$id." and width<=".$width." and height<=".$height." and (width=".$width." or height=".$height.")");
-		$r2=$q2->fetchRow();
-		if(count($r2)){
-			$path=WORKPATH.'thumbs/'.$r2['id'];
-			$name=$r2['id'];
+		$image=new Image($id);
+		if(!$image){
+			echo kfm_lang('errorFileIDNotFound',$id);
+			exit;
 		}
-		else{
-			$image=new Image($id);
-			$thumb=$image->createThumb($width,$height);
-			$path=WORKPATH.'thumbs/'.$thumb;
-			$name=$thumb;
-		}
+		$image->setThumbnail($width,$height);
+		$name=$image->thumb_id;
+		$path=$image->thumb_path;
 	}
 	else{
-		$path=kfm_getDirectoryParents($r['directory']).$r['name'];
-		$name=$r['name'];
+		$file=new File($id);
+		if(!$file){
+			echo kfm_lang('errorFileIDNotFound',$id);
+			exit;
+		}
+		$path=$file->path;
+		$name=$file->name;
 	}
 }
 { # headers
