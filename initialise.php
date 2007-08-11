@@ -71,9 +71,14 @@ require_once($kfm_base_path.'configuration.php');
 	$cache_directories=array();
 }
 { # work directory
-	$workpath = $rootdir.$kfm_workdirectory; // should be more at the top of this document
-	$workurl = $kfm_userfiles_output.$kfm_workdirectory;
-	$workdir = true;
+	if($kfm_workdirectory[0]=='/'){
+		$workpath=$kfm_workdirectory;
+	}
+	else{
+		$workpath=$rootdir.$kfm_workdirectory;
+	}
+	$workurl=$kfm_userfiles_output.$kfm_workdirectory;
+	$workdir=true;
 	if(substr($workpath,-1)!='/') $workpath.='/';
 	if(substr($workurl,-1)!='/') $workurl.='/';
 	define('WORKPATH', $workpath);
