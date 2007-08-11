@@ -31,7 +31,24 @@ function kfm_disableLeftColumn(){
 		}
 	}));
 }
-function kfm_showTextFile(res){
+function kfm_textfile_attachKeyBinding(){
+	if(!codepress.editor||!codepress.editor.body)return setTimeout('kfm_textfile_attachKeyBinding();',1);
+	var doc=codepress.contentWindow.document;
+	if(doc.attachEvent)doc.attachEvent('onkeypress',kfm_textfile_keybinding);
+	else doc.addEventListener('keypress',kfm_textfile_keybinding,false);
+}
+function kfm_textfile_close(){
+	if($("edit-start").value!=codepress.getCode() && !kfm.confirm( kfm.lang.CloseWithoutSavingQuestion))return;
+	if($("kfm_left_column_hider"))$("kfm_left_column_hider").remove();
+	kfm_changeDirectory("kfm_directory_icon_"+kfm_cwd_id);
+	$('kfm_right_column').removeEvent('keyup',kfm_textfile_keybinding);
+}
+function kfm_textfile_createEditor(){
+	CodePress.run();
+	if($("kfm_tooltip"))$("kfm_tooltip").remove();
+	kfm_textfile_attachKeyBinding();
+}
+function kfm_textfile_initEditor(res){
 	if(!$('kfm_left_column_hider'))kfm_disableLeftColumn();
 	var t=new Element('table',{
 		'id':'kfm_editFileTable',
@@ -69,7 +86,13 @@ function kfm_showTextFile(res){
 	if(window.CodePress)kfm_textfile_createEditor();
 	else loadJS('codepress-0.9.5/codepress.js','cp-script','en-us','kfm_textfile_createEditor();');
 }
-function kfm_viewTextFile(res){
+function kfm_textfile_keybinding(e){
+	e=new Event(e);
+	if(e.code!=27)return;
+	e.stopPropagation();
+	kfm_textfile_close();
+}
+function kfm_textfile_view(res){
 	var right_column=$('kfm_right_column').empty();
 	right_column.contentMode='viewtext';
 	var t=new Element('table',{
@@ -81,7 +104,7 @@ function kfm_viewTextFile(res){
 	});
 	var r=kfm.addRow(t),c=0;
 	kfm.addCell(r,c++,1,res.name);
-	if(res.buttons_to_show&2)kfm.addCell(r,c++,1,newLink('javascript:x_kfm_getTextFile('+res.id+',kfm_showTextFile)','Edit',0,'button'));
+	if(res.buttons_to_show&2)kfm.addCell(r,c++,1,newLink('javascript:x_kfm_getTextFile('+res.id+',kfm_textfile_initEditor)','Edit',0,'button'));
 	if(res.buttons_to_show&1)kfm.addCell(r,c++,1,newLink('javascript:x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);',kfm.lang.Close,0,'button'));
 	kfm.addEl(right_column,t);
 	var textCell=kfm.addEl(kfm.addCell(kfm.addRow(t).setStyles('height:100%'),0,c),'please wait...');
@@ -94,28 +117,4 @@ function kfm_viewTextFile(res){
 	});
 	kfm.addEl(textCell.empty(),wrapper);
 	wrapper.innerHTML=res.content;
-}
-function kfm_textfile_close(){
-	if($("edit-start").value!=codepress.getCode() && !kfm.confirm( kfm.lang.CloseWithoutSavingQuestion))return;
-	if($("kfm_left_column_hider"))$("kfm_left_column_hider").remove();
-	kfm_changeDirectory("kfm_directory_icon_"+kfm_cwd_id);
-	$('kfm_right_column').removeEvent('keyup',kfm_textfile_keybinding);
-}
-function kfm_textfile_keybinding(e){
-	window.title=Math.random();
-	e=new Event(e);
-	if(e.code!=27)return;
-	e.stopPropagation();
-	kfm_textfile_close();
-}
-function kfm_textfile_createEditor(){
-	CodePress.run();
-	if($("kfm_tooltip"))$("kfm_tooltip").remove();
-	kfm_textfile_attachKeyBinding();
-}
-function kfm_textfile_attachKeyBinding(){
-	if(!codepress.editor||!codepress.editor.body)return setTimeout('kfm_textfile_attachKeyBinding();',1);
-	var doc=codepress.contentWindow.document;
-	if(doc.attachEvent)doc.attachEvent('onkeypress',kfm_textfile_keybinding);
-	else doc.addEventListener('keypress',kfm_textfile_keybinding,false);
 }
