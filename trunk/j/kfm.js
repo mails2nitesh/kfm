@@ -148,7 +148,8 @@ var KFM=new Class({
 		document.addEvent('domready',this.build);
 	},
 	keyup:function(e){
-		var key=browser.isIE?e.keyCode:e.which;
+		var e=new Event(e);
+		var key=e.code;
 		switch(key){
 			case 13:{ // enter
 				if(!selectedFiles.length||window.inPrompt||$('kfm_right_column').contentMode!='file_icons')return;
