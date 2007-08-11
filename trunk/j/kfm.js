@@ -53,6 +53,7 @@ var KFM=new Class({
 			}
 		}
 		kfm_cwd_name=starttype;
+		document.body.setStyle('overflow','hidden');
 		{ // create left column
 			var left_column=kfm_createPanelWrapper('kfm_left_column');
 			kfm_addPanel(left_column,'kfm_directories_panel');
@@ -131,10 +132,10 @@ var KFM=new Class({
 	},
 	handleWindowResizes:function(){
 		var w=getWindowSize();
-		var to_max_height=['kfm_left_column','kfm_left_column_hider','kfm_lightboxShader'];
-		var to_max_width=['kfm_lightboxShader'];
-		for(var i=0;i<to_max_height.length;++i)if($(to_max_height[i]))$(to_max_height[i]).setStyles('height:'+w.y+'px');
-		for(var i=0;i<to_max_width.length;++i)if($(to_max_width[i]))$(to_max_width[i]).setStyles('width:'+w.x+'px');
+		var to_max_height=['kfm_left_column','kfm_left_column_hider','kfm_lightboxShader','kfm_lightboxWrapper'];
+		var to_max_width=['kfm_lightboxShader','kfm_lightboxWrapper'];
+		for(var i=0;i<to_max_height.length;++i)if($(to_max_height[i]))$(to_max_height[i]).setStyle('height',w.y);
+		for(var i=0;i<to_max_width.length;++i)if($(to_max_width[i]))$(to_max_width[i]).setStyle('width',w.x);
 		if($('kfm_codepressTableCell')){
 			var el=$('kfm_codepressTableCell'),iframe=$E('iframe',el);
 			iframe.style.height=0;
@@ -150,55 +151,72 @@ var KFM=new Class({
 	keyup:function(e){
 		var e=new Event(e);
 		var key=e.code;
+		var cm=$('kfm_right_column').contentMode;
 		switch(key){
 			case 13:{ // enter
-				if(!selectedFiles.length||window.inPrompt||$('kfm_right_column').contentMode!='file_icons')return;
+				if(!selectedFiles.length||window.inPrompt||cm!='file_icons')return;
 				if(selectedFiles.length>1)return kfm_log(kfm.lang.NotMoreThanOneFile);
 				kfm_chooseFile($('kfm_file_icon_'+selectedFiles[0]),1);
 				break;
 			}
 			case 27:{ // escape
-				if(!window.inPrompt&&kfm.confirm(kfm.lang.AreYouSureYouWantToCloseKFM))window.close();
+				if(cm=='lightbox')kfm_img_stopLightbox();
+				else if(!window.inPrompt&&kfm.confirm(kfm.lang.AreYouSureYouWantToCloseKFM))window.close();
 				break;
 			}
 			case 37:{ // left arrow
-				if($('kfm_right_column').contentMode=='file_icons')kfm_shiftFileSelectionLR(-1);
+				if(cm=='file_icons')kfm_shiftFileSelectionLR(-1);
+				else if(cm=='lightbox'){
+					window.kfm_slideshow_stopped=1;
+					if(window.lightbox_slideshowTimer)clearTimeout(window.lightbox_slideshowTimer);
+					window.kfm_slideshow.at-=2;
+					kfm_img_startLightbox();
+				}
+				else break;
+				e.stopPropagation();
 				break;
 			}
 			case 38:{ // up arrow
-				if($('kfm_right_column').contentMode=='file_icons')kfm_shiftFileSelectionUD(-1);
+				if(cm=='file_icons')kfm_shiftFileSelectionUD(-1);
 				break;
 			}
 			case 39:{ // right arrow
-				if($('kfm_right_column').contentMode=='file_icons')kfm_shiftFileSelectionLR(1);
+				if(cm=='file_icons')kfm_shiftFileSelectionLR(1);
+				else if(cm=='lightbox'){
+					window.kfm_slideshow_stopped=1;
+					if(window.lightbox_slideshowTimer)clearTimeout(window.lightbox_slideshowTimer);
+					kfm_img_startLightbox();
+				}
+				else break;
+				e.stopPropagation();
 				break;
 			}
 			case 40:{ // down arrow
-				if($('kfm_right_column').contentMode=='file_icons')kfm_shiftFileSelectionUD(1);
+				if(cm=='file_icons')kfm_shiftFileSelectionUD(1);
 				break;
 			}
 			case 46:{ // delete
-				if(!selectedFiles.length||$('kfm_right_column').contentMode!='file_icons')return;
+				if(!selectedFiles.length||cm!='file_icons')return;
 				if(selectedFiles.length>1)kfm_deleteSelectedFiles();
 				else kfm_deleteFile(selectedFiles[0]);
 				break;
 			}
 			case 65:{ // a
-				if(e.control&&$('kfm_right_column').contentMode=='file_icons'){
+				if(e.control&&cm=='file_icons'){
 					clearSelections(e);
 					kfm_selectAll();
 				}
 				break;
 			}
 			case 85:{ // u
-				if(e.control&&$('kfm_right_column').contentMode=='file_icons'){
+				if(e.control&&cm=='file_icons'){
 					clearSelections(e);
 					kfm_selectNone();
 				}
 				break;
 			}
 			case 113:{ // f2
-				if($('kfm_right_column').contentMode!='file_icons')return;
+				if(cm!='file_icons')return;
 				if(!selectedFiles.length)return kfm.alert(kfm.lang.PleaseSelectFileBeforeRename);
 				if(selectedFiles.length==1){
 					kfm_renameFile(selectedFiles[0]);
