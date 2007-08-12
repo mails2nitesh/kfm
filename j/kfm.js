@@ -104,6 +104,7 @@ var KFM=new Class({
 				}
 				kfm_createContextMenu(getMouseAt(getEvent(e,1)),links);
 			});
+			right_column.parentResized=kfm_files_panelResized;
 		}
 		{ // draw areas to screen and load files and directory info
 			kfm.addEl($(document.body).empty(),[left_column,right_column]);
@@ -144,6 +145,10 @@ var KFM=new Class({
 			iframe.style.width=(el.offsetWidth-10)+'px';
 		}
 		kfm_refreshPanels('kfm_left_column');
+		var els=$ES('body *');
+		els.each(function(el){
+			if(el.parentResized)el.parentResized();
+		});
 	},
 	initialize:function(){
 		document.addEvent('domready',this.build);
