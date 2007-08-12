@@ -81,6 +81,7 @@ header('Content-type: text/html; Charset=utf-8');
 			var fckrootOutput="<?php echo $kfm_userfiles_output; ?>";
 			var kfm_file_handler="<?php echo $kfm_file_handler; ?>";
 			var kfm_log_level=<?php echo $kfm_log_level; ?>;
+			var kfm_return_directory=<?php echo isset($_GET['return_directory'])?'1':'0'; ?>;
 			var kfm_theme="<?php echo $kfm_theme; ?>";
 			var kfm_hidden_panels="<?php echo $kfm_hidden_panels; ?>".split(',');
 			var kfm_show_files_in_groups_of=<?php echo $kfm_show_files_in_groups_of; ?>;

@@ -63,6 +63,7 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 		links.push(['kfm_renameDirectory("'+node_id+'")',kfm.lang.RenameDir,'',!kfm_vars.permissions.dir.ed]);
 		links.push(['kfm_createDirectory("'+node_id+'")',kfm.lang.CreateSubDir,'folder_new',!kfm_vars.permissions.dir.mk]);
 		if(node_id!=1)links.push(['kfm_deleteDirectory("'+node_id+'")',kfm.lang.DeleteDir,'remove',!kfm_vars.permissions.dir.rm]);
+		if(kfm_return_directory)links.push(['setTimeout("window.close()",1);window.opener.SetUrl("'+kfm_directories[node_id].realpath+'/");','send to CMS']); // TODO: New String
 		kfm_createContextMenu(getMouseAt(getEvent(e)),links);
 	});
 	kfm.addCell(r,0,0,(
@@ -170,6 +171,13 @@ function kfm_refreshDirectories(res){
 		p.parentNode.replaceChild(kfm_dir_addLink(new Element('table',{
 			'id':'kfm_directories'
 		}),'','',1,0,1),p);
+		kfm_directories[1]={
+			'parent':0,
+			'name':'root',
+			'path':'/',
+			'realpath':res.properties.path,
+			'hasChildren':res.directories.length
+		}
 		$('kfm_directory_icon_1').parentNode.className+=' kfm_directory_open';
 	}
 	var t=new Element('table'),n='kfm_dir_node_'+d;
@@ -182,6 +190,7 @@ function kfm_refreshDirectories(res){
 			'parent':res.parent,
 			'name':dir[0],
 			'path':res.reqdir+dir[0],
+			'realpath':res.properties.path+dir[0]+'/',
 			'hasChildren':dir[1]
 		};
 	});
