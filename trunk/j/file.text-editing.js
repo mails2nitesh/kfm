@@ -5,7 +5,7 @@ function kfm_createEmptyFile(filename,msg){
 		msg='';
 	}
 	var not_ok=0;
-	filename=kfm_prompt(kfm.lang.WhatFilenameToCreateAs+msg,filename,function(filename){
+	kfm_prompt(kfm.lang.WhatFilenameToCreateAs+msg,filename,function(filename){
 		if(!filename)return;
 		if(kfm_isFileInCWD(filename)){
 			var o=kfm.confirm(kfm.lang.AskIfOverwrite(filename));

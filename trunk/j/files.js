@@ -125,7 +125,7 @@ function kfm_downloadFileFromUrl(filename,msg){
 	}
 	if(!filename)filename=url.replace(kfm_regexps.all_up_to_last_slash,'');
 	var not_ok=0,o;
-	filename=kfm_prompt(kfm.lang.FileSavedAsMessage+msg,filename,function(filename){
+	kfm_prompt(kfm.lang.FileSavedAsMessage+msg,filename,function(filename){
 		if(!filename)return;
 		if(kfm_isFileInCWD(filename)){
 			o=kfm.confirm(kfm.lang.AskIfOverwrite(filename));
@@ -308,7 +308,7 @@ function kfm_removeFilesFromView(files){
 }
 function kfm_renameFile(id){
 	var filename=$('kfm_file_icon_'+id).kfm_attributes.name;
-	var newName=kfm_prompt(kfm.lang.RenameFileToWhat(filename),filename,function(newName){
+	kfm_prompt(kfm.lang.RenameFileToWhat(filename),filename,function(newName){
 		if(!newName||newName==filename)return;
 		kfm_filesCache[id]=null;
 		kfm_log(kfm.lang.RenamedFile(filename,newName));
@@ -318,7 +318,7 @@ function kfm_renameFile(id){
 function kfm_renameFiles(nameTemplate){
 	if(nameTemplate && nameTemplate.toString()!==nameTemplate)nameTemplate='';
 	var ok=false;
-	nameTemplate=kfm_prompt(kfm.lang.HowWouldYouLikeToRenameTheseFiles,nameTemplate,function(nameTemplate){
+	kfm_prompt(kfm.lang.HowWouldYouLikeToRenameTheseFiles,nameTemplate,function(nameTemplate){
 		var asterisks=nameTemplate.replace(/[^*]/g,'').length;
 		if(!nameTemplate)return;
 		if(!/\*/.test(nameTemplate))alert(kfm.lang.YouMustPlaceTheWildcard);
@@ -360,7 +360,7 @@ function kfm_showToolTip(res){
 function kfm_zip(name){
 	if(!name || name.toString()!==name)name='zipped.zip';
 	var ok=false;
-	name=kfm_prompt(kfm.lang.WhatFilenameDoYouWantToUse,name,function(name){
+	kfm_prompt(kfm.lang.WhatFilenameDoYouWantToUse,name,function(name){
 		if(!name)return;
 		if(/\.zip$/.test(name))ok=true;
 		else kfm.alert(kfm.lang.TheFilenameShouldEndWithN('.zip'));

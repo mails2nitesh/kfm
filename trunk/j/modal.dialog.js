@@ -61,10 +61,7 @@ function kfm_modal_open(form,title,actions){
 				if(v[1].toString()===v[1])link=newLink('javascript:'+v[1]+'()',v[0],0,'button');
 				else{
 					link=newLink('#',v[0],0,'button');
-					link.onclick=function(){
-						v[1][0][v[1][1]]();
-						return false;
-					}
+					link.addEvent('click',v[1]);
 				}
 				link.setStyles(buttonStyle);
 				kfm.addEl(row,link);

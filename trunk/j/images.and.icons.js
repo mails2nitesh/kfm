@@ -124,7 +124,7 @@ function kfm_resizeImage(id){
 function kfm_returnThumbnail(id,size){
 	if(!size)size='64x64';
 	valid=1;
-	size=kfm_prompt(kfm.lang.WhatMaximumSize,'64x64',function(size){
+	kfm_prompt(kfm.lang.WhatMaximumSize,size,function(size){
 		if(!size)return;
 		if(!/^[0-9]+x[0-9]+$/.test(size)){
 			alert('The size must be in the format XXxYY, where X is the width and Y is the height');
