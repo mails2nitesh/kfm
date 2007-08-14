@@ -217,14 +217,12 @@ function kfm_incrementalFileDisplay(){
 				styles:{
 					width:1,
 					height:1
-				},
-				events:{
-					'load':function(){
-						var p=this.parentNode;
-						p.setStyle('background-image','url("'+url+'")');
-						this.remove();
-					}
 				}
+			});
+			img.addEvent('load',function(){
+				var p=this.parentNode;
+				p.setStyle('background-image','url("'+url+'")');
+				this.remove();
 			});
 			kfm.addEl(el,img);
 		}

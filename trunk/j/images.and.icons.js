@@ -43,11 +43,9 @@ function kfm_img_startLightbox(id){
 				'top':0,
 				'width':ws.x,
 				'height':ws.y
-			},
-			'events':{
-				'click':kfm_img_stopLightbox,
 			}
 		});
+		wrapper.addEvent('click',kfm_img_stopLightbox);
 		kfm.addEl(document.body,wrapper);
 		wrapper.focus();
 	}
