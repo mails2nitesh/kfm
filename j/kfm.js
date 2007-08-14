@@ -53,7 +53,7 @@ var KFM=new Class({
 			}
 		}
 		kfm_cwd_name=starttype;
-		document.body.setStyle('overflow','hidden');
+		$(document.body).setStyle('overflow','hidden');
 		{ // create left column
 			var left_column=kfm_createPanelWrapper('kfm_left_column');
 			kfm_addPanel(left_column,'kfm_directories_panel');
