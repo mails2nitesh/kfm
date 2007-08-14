@@ -116,16 +116,16 @@ function kfm_deleteSelectedFiles(){
 		x_kfm_rm(selectedFiles,kfm_removeFilesFromView);
 	}
 }
-function kfm_downloadFileFromUrl(){
+function kfm_downloadFileFromUrl(filename,msg){
+	if(filename.toString()!==filename)filename='';
 	var url=$('kfm_url').value;
 	if(url.substring(0,4)!='http'){
 		kfm_log(kfm.lang.UrlNotValidLog);
 		return;
 	}
-	var filename=url.replace(kfm_regexps.all_up_to_last_slash,''),msg='';
-	do{
-		var not_ok=0,o;
-		filename=kfm_prompt(kfm.lang.FileSavedAsMessage+msg,filename);
+	if(!filename)filename=url.replace(kfm_regexps.all_up_to_last_slash,'');
+	var not_ok=0,o;
+	filename=kfm_prompt(kfm.lang.FileSavedAsMessage+msg,filename,function(filename){
 		if(!filename)return;
 		if(kfm_isFileInCWD(filename)){
 			o=kfm.confirm(kfm.lang.AskIfOverwrite(filename));
@@ -135,9 +135,10 @@ function kfm_downloadFileFromUrl(){
 			msg=kfm.lang.NoForwardslash;
 			not_ok=1;
 		}
-	}while(not_ok);
-	x_kfm_downloadFileFromUrl(url,filename,kfm_refreshFiles);
-	$('kfm_url').value='';
+		if(not_ok)return kfm_downloadFileFromUrl(filename,msg);
+		x_kfm_downloadFileFromUrl(url,filename,kfm_refreshFiles);
+		$('kfm_url').value='';
+	});
 }
 function kfm_downloadSelectedFiles(id){
 	var wrapper=$('kfm_download_wrapper');
@@ -307,25 +308,27 @@ function kfm_removeFilesFromView(files){
 }
 function kfm_renameFile(id){
 	var filename=$('kfm_file_icon_'+id).kfm_attributes.name;
-	var newName=kfm_prompt(kfm.lang.RenameFileToWhat(filename),filename);
-	if(!newName||newName==filename)return;
-	kfm_filesCache[id]=null;
-	kfm_log(kfm.lang.RenamedFile(filename,newName));
-	x_kfm_renameFile(id,newName,kfm_refreshFiles);
+	var newName=kfm_prompt(kfm.lang.RenameFileToWhat(filename),filename,function(newName){
+		if(!newName||newName==filename)return;
+		kfm_filesCache[id]=null;
+		kfm_log(kfm.lang.RenamedFile(filename,newName));
+		x_kfm_renameFile(id,newName,kfm_refreshFiles);
+	});
 }
-function kfm_renameFiles(){
-	var nameTemplate='',ok=false;
-	do{
-		nameTemplate=kfm_prompt(kfm.lang.HowWouldYouLikeToRenameTheseFiles,nameTemplate);
+function kfm_renameFiles(nameTemplate){
+	if(nameTemplate && nameTemplate.toString()!==nameTemplate)nameTemplate='';
+	var ok=false;
+	nameTemplate=kfm_prompt(kfm.lang.HowWouldYouLikeToRenameTheseFiles,nameTemplate,function(nameTemplate){
 		var asterisks=nameTemplate.replace(/[^*]/g,'').length;
 		if(!nameTemplate)return;
 		if(!/\*/.test(nameTemplate))alert(kfm.lang.YouMustPlaceTheWildcard);
 		else if(/\*[^*]+\*/.test(nameTemplate))alert(kfm.lang.IfYouUseMultipleWildcards);
 		else if(asterisks<(''+selectedFiles.length).length)alert(kfm.lang.YouNeedMoreThan(asterisks,selectedFiles.length));
 		else ok=true;
-	}while(!ok);
-	for(var i=0;i<selectedFiles.length;++i)kfm_filesCache[selectedFiles[i]]=null;
-	x_kfm_renameFiles(selectedFiles,nameTemplate,kfm_refreshFiles);
+		if(!ok)return kfm_renameFiles(nameTemplate);
+		for(var i=0;i<selectedFiles.length;++i)kfm_filesCache[selectedFiles[i]]=null;
+		x_kfm_renameFiles(selectedFiles,nameTemplate,kfm_refreshFiles);
+	});
 }
 function kfm_runSearch(){
 	kfm_run_delayed('search','var keywords=$("kfm_search_keywords").value,tags=$("kfm_search_tags").value;if(keywords==""&&tags=="")x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);else x_kfm_search(keywords,tags,kfm_refreshFiles)');
@@ -354,13 +357,14 @@ function kfm_showToolTip(res){
 	l=(l+(w/2)>ws.x/2)?l-table.offsetWidth:l+w;
 	table.setStyles('position:absolute;top:'+t+'px;left:'+l+'px;visibility:visible;opacity:.9');
 }
-function kfm_zip(){
-	var name='zipped.zip',ok=false;
-	do{
-		name=kfm_prompt(kfm.lang.WhatFilenameDoYouWantToUse,name);
+function kfm_zip(name){
+	if(!name || name.toString()!==name)name='zipped.zip';
+	var ok=false;
+	name=kfm_prompt(kfm.lang.WhatFilenameDoYouWantToUse,name,function(name){
 		if(!name)return;
 		if(/\.zip$/.test(name))ok=true;
-		else alert(kfm.lang.TheFilenameShouldEndWithN('.zip'));
-	}while(!ok);
-	x_kfm_zip(name,selectedFiles,kfm_refreshFiles);
+		else kfm.alert(kfm.lang.TheFilenameShouldEndWithN('.zip'));
+		if(!ok)return kfm_zip(name);
+		x_kfm_zip(name,selectedFiles,kfm_refreshFiles);
+	});
 }

@@ -1,10 +1,11 @@
 // see license.txt for licensing
 function kfm_tagAdd(id){
-	var newTag=kfm_prompt(kfm.lang.WhatIsTheNewTag);
-	if(newTag){
-		files=selectedFiles.length?selectedFiles:id;
-		x_kfm_tagAdd(files,newTag,kfm_showFileDetails);
-	}
+	kfm_prompt(kfm.lang.WhatIsTheNewTag,'',function(newTag){
+		if(newTag){
+			files=selectedFiles.length?selectedFiles:id;
+			x_kfm_tagAdd(files,newTag,kfm_showFileDetails);
+		}
+	});
 }
 function kfm_tagDraw(id){
 	if($type(id)!='array'){
@@ -25,9 +26,10 @@ function kfm_tagDraw(id){
 	}
 }
 function kfm_tagRemove(id){
-	var tagsToRemove=kfm_prompt(kfm.lang.WhichTagsDoYouWantToRemove);
-	if(tagsToRemove){
-		files=selectedFiles.length?selectedFiles:id;
-		x_kfm_tagRemove(files,tagsToRemove,kfm_showFileDetails);
-	}
+	kfm_prompt(kfm.lang.WhichTagsDoYouWantToRemove,'',function(tagsToRemove){
+		if(tagsToRemove){
+			files=selectedFiles.length?selectedFiles:id;
+			x_kfm_tagRemove(files,tagsToRemove,kfm_showFileDetails);
+		}
+	});
 }

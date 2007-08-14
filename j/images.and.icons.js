@@ -107,37 +107,41 @@ function kfm_img_stopLightbox(){
 function kfm_resizeImage(id){
 	var data=$('kfm_file_icon_'+id).kfm_attributes;
 	var el=kfm_filesCache[id],txt=kfm.lang.CurrentSize(data.width,data.height);
-	var x=parseInt(kfm_prompt(txt+kfm.lang.NewWidth,data.width));
-	if(!x)return;
-	txt+=kfm.lang.NewWidthConfirmTxt(x);
-	var y=parseInt(kfm_prompt(txt+kfm.lang.NewHeight,Math.ceil(data.height*(x/data.width))));
-	if(!y)return;
-	if(kfm.confirm(txt+kfm.lang.NewHeightConfirmTxt(y))){
-		kfm_filesCache[id]=null;
-		x_kfm_resizeImage(id,x,y,kfm_refreshFiles);
-	}
+	kfm_prompt(txt+kfm.lang.NewWidth,data.width,function(x){
+		x=parseInt(x);
+		if(!x)return;
+		txt+=kfm.lang.NewWidthConfirmTxt(x);
+		kfm_prompt(txt+kfm.lang.NewHeight,Math.ceil(data.height*(x/data.width)),function(y){
+			y=parseInt(y);
+			if(!y)return;
+			if(kfm.confirm(txt+kfm.lang.NewHeightConfirmTxt(y))){
+				kfm_filesCache[id]=null;
+				x_kfm_resizeImage(id,x,y,kfm_refreshFiles);
+			}
+		});
+	});
 }
-function kfm_returnThumbnail(id){
-	var size;
-	do{
-		valid=1;
-		size=kfm_prompt(kfm.lang.WhatMaximumSize,'64x64');
+function kfm_returnThumbnail(id,size){
+	if(!size)size='64x64';
+	valid=1;
+	size=kfm_prompt(kfm.lang.WhatMaximumSize,'64x64',function(size){
 		if(!size)return;
 		if(!/^[0-9]+x[0-9]+$/.test(size)){
 			alert('The size must be in the format XXxYY, where X is the width and Y is the height');
 			valid=0;
 		}
-	}while(!valid);
-	var x=size.replace(/x.*/,''),y=size.replace(/.*x/,'');
-	x_kfm_getFileUrl(id,x,y,function(url){
-		if(kfm_file_handler=='return'||kfm_file_handler=='fckeditor'){
-			window.opener.SetUrl(url,0,0,$('kfm_file_icon_'+id).kfm_attributes.caption);
-			window.close();
-		}
-		else if(kfm_file_handler=='download'){
-			if(/get.php/.test(url))url+='&forcedownload=1';
-			document.location=url;
-		}
+		if(!valid)return kfm_returnThumbnail(id,size);
+		var x=size.replace(/x.*/,''),y=size.replace(/.*x/,'');
+		x_kfm_getFileUrl(id,x,y,function(url){
+			if(kfm_file_handler=='return'||kfm_file_handler=='fckeditor'){
+				window.opener.SetUrl(url,0,0,$('kfm_file_icon_'+id).kfm_attributes.caption);
+				window.close();
+			}
+			else if(kfm_file_handler=='download'){
+				if(/get.php/.test(url))url+='&forcedownload=1';
+				document.location=url;
+			}
+		});
 	});
 }
 function kfm_rotateImage(id,direction){
