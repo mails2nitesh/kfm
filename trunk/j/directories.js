@@ -13,8 +13,9 @@ function kfm_changeDirectory(id){
 }
 function kfm_createDirectory(id){
 	if(!kfm_vars.permissions.dir.mk)return kfm.alert('permission denied: cannot create directory');
-	var newName=kfm_prompt(kfm.lang.CreateDirMessage(kfm_directories[id].path),kfm.lang.NewDirectory);
-	if(newName&&newName!=''&&!/\/|^\./.test(newName))x_kfm_createDirectory(id,newName,kfm_refreshDirectories);
+	var newName=kfm_prompt(kfm.lang.CreateDirMessage(kfm_directories[id].path),kfm.lang.NewDirectory,function(newName){
+		if(newName&&newName!=''&&!/\/|^\./.test(newName))x_kfm_createDirectory(id,newName,kfm_refreshDirectories);
+	});
 }
 function kfm_deleteDirectory(id){
 	if(!kfm_vars.permissions.dir.rm)return kfm.alert('permission denied: cannot delete directory');
@@ -211,11 +212,12 @@ function kfm_refreshDirectories(res){
 }
 function kfm_renameDirectory(id){
 	var directoryName=kfm_directories[id].name;
-	var newName=kfm_prompt(kfm.lang.RenameTheDirectoryToWhat(directoryName),directoryName);
-	if(!newName||newName==directoryName)return;
-	kfm_directories[id]=null;
-	kfm_log(kfm.lang.RenamedDirectoryAs(directoryName,newName));
-	x_kfm_renameDirectory(id,newName,kfm_refreshDirectories);
+	var newName=kfm_prompt(kfm.lang.RenameTheDirectoryToWhat(directoryName),directoryName,function(newName){
+		if(!newName||newName==directoryName)return;
+		kfm_directories[id]=null;
+		kfm_log(kfm.lang.RenamedDirectoryAs(directoryName,newName));
+		x_kfm_renameDirectory(id,newName,kfm_refreshDirectories);
+	});
 }
 function kfm_setDirectoryProperties(properties){
 	if(!$('kfm_directory_properties'))return;

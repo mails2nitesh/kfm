@@ -250,10 +250,11 @@ function kfm_log(msg){
 	kfm.addEl(el,p);
 	el.scrollTop=el.scrollTop+p.offsetHeight;
 }
-function kfm_prompt(txt,val){
+function kfm_prompt(txt,val,fn){
 	window.inPrompt=1;
 	var newVal=prompt(txt,val?val:'');
 	setTimeout('window.inPrompt=0',1);
+	if(fn)fn(newVal);
 	return newVal;
 }
 function kfm_run_delayed(name,call){
