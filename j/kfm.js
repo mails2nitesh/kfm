@@ -252,10 +252,20 @@ function kfm_log(msg){
 }
 function kfm_prompt(txt,val,fn){
 	window.inPrompt=1;
-	var newVal=prompt(txt,val?val:'');
-	setTimeout('window.inPrompt=0',1);
-	if(fn)fn(newVal);
-	return newVal;
+//	var newVal=prompt(txt,val?val:'');
+//	return fn(newVal);
+	var table=new Element('table',{
+		'id':'kfm_prompt_table'
+	});
+	var row=table.insertRow(0),inp=newInput('kfm_prompt',0,val);
+	row.insertCell(0).innerHTML=txt.replace(/\n/g,'<br />');
+	row.insertCell(1).appendChild(inp);
+	kfm_modal_open(table,'',[['Ok',function(){
+		var v=$('kfm_prompt').value;
+		kfm_modal_close();
+		window.inPrompt=0;
+		fn(v);
+	}]]);
 }
 function kfm_run_delayed(name,call){
 	name=name+'_timeout';
