@@ -19,7 +19,7 @@ function kfm_createEmptyFile(filename,msg){
 		x_kfm_createEmptyFile(kfm_cwd_id,filename,kfm_refreshFiles);
 	});
 }
-function kfm_disableLeftColumn(){
+function kfm_leftColumn_disable(){
 	var left_column=$('kfm_left_column');
 	kfm.addEl(document.body,new Element('div',{
 		'id':'kfm_left_column_hider',
@@ -33,6 +33,12 @@ function kfm_disableLeftColumn(){
 			'background':'#fff'
 		}
 	}));
+	kfm_resizeHandler_addMaxHeight('kfm_left_column_hider');
+}
+function kfm_leftColumn_enable(){
+	if(!$("kfm_left_column_hider"))return;
+	$("kfm_left_column_hider").remove();
+	kfm_resizeHandler_removeMaxHeight('kfm_left_column_hider');
 }
 function kfm_textfile_attachKeyBinding(){
 	if(!codepress.editor||!codepress.editor.body)return setTimeout('kfm_textfile_attachKeyBinding();',1);
@@ -42,7 +48,7 @@ function kfm_textfile_attachKeyBinding(){
 }
 function kfm_textfile_close(){
 	if($("edit-start").value!=codepress.getCode() && !kfm.confirm( kfm.lang.CloseWithoutSavingQuestion))return;
-	if($("kfm_left_column_hider"))$("kfm_left_column_hider").remove();
+	kfm_leftColumn_enable();
 	kfm_changeDirectory("kfm_directory_icon_"+kfm_cwd_id);
 	$('kfm_right_column').removeEvent('keyup',kfm_textfile_keybinding);
 }
@@ -52,7 +58,7 @@ function kfm_textfile_createEditor(){
 	kfm_textfile_attachKeyBinding();
 }
 function kfm_textfile_initEditor(res){
-	if(!$('kfm_left_column_hider'))kfm_disableLeftColumn();
+	if(!$('kfm_left_column_hider'))kfm_leftColumn_disable();
 	var t=new Element('table',{
 		'id':'kfm_editFileTable',
 		'styles':{
