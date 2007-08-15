@@ -9,7 +9,7 @@ var kfm_file_bits={
 		}
 		{ // add the links
 			if(selectedFiles.length>1){
-				if(!browser.isIE)links.push(['kfm_downloadSelectedFiles()','download selected files']); // IE can't handle this...
+				if(!window.ie)links.push(['kfm_downloadSelectedFiles()','download selected files']); // IE can't handle this...
 				links.push(['kfm_deleteSelectedFiles()',kfm.lang.DeleteFile,'remove',!kfm_vars.permissions.file.rm]);
 				var imgs=[];
 				for(var i=0;i<selectedFiles.length;++i)if($('kfm_file_icon_'+selectedFiles[i]).kfm_attributes.width)imgs.push(selectedFiles[i]);
@@ -189,7 +189,7 @@ function kfm_incrementalFileDisplay(){
 		'id':'kfm_file_icon_'+id,
 		'class':'kfm_file_icon kfm_icontype_'+ext,
 		'styles':{
-			'cursor':(browser.isIE?'hand':'pointer')
+			'cursor':(window.ie?'hand':'pointer')
 		}
 	});
 	var writable=fdata.writable;

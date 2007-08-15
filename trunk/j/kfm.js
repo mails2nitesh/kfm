@@ -1,15 +1,4 @@
 // see license.txt for licensing
-function Browser(){
-	var ua=navigator.userAgent;
-	this.isFirefox=ua.indexOf('Firefox')>=0;
-	this.isOpera=ua.indexOf('Opera')>=0;
-	this.isIE=ua.indexOf('MSIE')>=0&&!this.isOpera;
-	this.isSafari=ua.indexOf('Safari')>=0;
-	this.isKonqueror=ua.indexOf('KHTML')>=0&&!this.isSafari;
-	this.versionMinor=parseFloat(navigator.appVersion);
-	if(this.isIE)this.versionMinor=parseFloat(ua.substring(ua.indexOf('MSIE')+5));
-	this.versionMajor=parseInt(this.versionMinor);
-}
 var KFM=new Class({
 	addCell:function(o,b,c,d,e){
 		var f=o.insertCell(b);

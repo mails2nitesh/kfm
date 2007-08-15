@@ -5,8 +5,8 @@ function kfm_modal_close(msg){
 }
 function kfm_modal_open(form,title,actions){
 	window.inPrompt=1;
-	var body=document.body,scrollAt=browser.isIE?getWindowScrollAt():{x:0,y:0},a=getWindowSize(),wx=0,wy=0,pos=browser.isIE?'absolute':'fixed',i;
-	if(browser.isIE)body.setStyles({
+	var body=document.body,scrollAt=window.ie?getWindowScrollAt():{x:0,y:0},a=getWindowSize(),wx=0,wy=0,pos=window.ie?'absolute':'fixed',i;
+	if(window.ie)body.setStyles({
 		'overflow':'hidden'
 	});
 	{ // shader
@@ -75,7 +75,7 @@ function kfm_modal_open(form,title,actions){
 				'width':w
 			});
 		}
-		var h=browser.isIE?wrapper.offsetHeight:h2.offsetHeight+form.offsetHeight+row.offsetHeight,q=browser.isIE?1:0,r=browser.isIE?0:4;
+		var h=window.ie?wrapper.offsetHeight:h2.offsetHeight+form.offsetHeight+row.offsetHeight,q=window.ie?1:0,r=window.ie?0:4;
 		if(parseFloat(h)>parseFloat(a.y*.9)){
 			h=parseInt(a.y*.9);
 			var h3=h-row.offsetHeight-h2.offsetHeight-q;
