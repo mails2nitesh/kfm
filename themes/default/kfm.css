@@ -4,6 +4,11 @@ body{margin:0;padding:0;height:100%}
 form{padding:0;margin:0}
 td{vertical-align:top}
 
+#formWrapper{background:url('themes/default/bitsandpieces/panelheader-bg.png') repeat-x #eee;border-left:1px solid #000}
+#formWrapper h2.prompt{background:url(themes/default/bitsandpieces/panelheader.png) right -23px no-repeat;padding:0 5px;position:relative;font-size:12px;line-height:23px;height:23px;margin:0;}
+#formWrapper input,#formwrapper textarea{min-width:200px}
+#formWrapper .button{float:right;border:1px solid;border-color:#ccc #666 #666 #ccc;display:block;background:#ddd;color:#000;text-decoration:none;margin:2;padding:0 5px}
+
 #kfm_directories .kfm_dir_name.kfm_directory_open{background:url(themes/default/folders.gif) -48px -18px no-repeat #fe9}
 #kfm_directory_properties{color:#666}
 #kfm_directory_properties strong{display:block;font-weight:bold;border:solid #bababa;border-width:0 1px 1px 0}

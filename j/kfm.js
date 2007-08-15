@@ -56,6 +56,7 @@ var KFM=new Class({
 		$(document.body).setStyle('overflow','hidden');
 		{ // create left column
 			var left_column=kfm_createPanelWrapper('kfm_left_column');
+			kfm_resizeHandler_addMaxHeight('kfm_left_column');
 			kfm_addPanel(left_column,'kfm_directories_panel');
 			kfm_addPanel(left_column,'kfm_search_panel');
 			kfm_addPanel(left_column,'kfm_directory_properties_panel');
@@ -112,7 +113,7 @@ var KFM=new Class({
 			x_kfm_loadDirectories(1,kfm_refreshDirectories);
 		}
 		document.addEvent('keyup',kfm.keyup);
-		window.addEvent('resize',kfm.handleWindowResizes);
+		window.addEvent('resize',kfm_resizeHandler);
 		kfm_contextmenuinit();
 	},
 	confirm:function(txt){
@@ -130,25 +131,6 @@ var KFM=new Class({
 	getParentEl:function(c,t){
 		while(c.tagName!=t&&c)c=c.parentNode;
 		return c;
-	},
-	handleWindowResizes:function(){
-		var w=getWindowSize();
-		var to_max_height=['kfm_left_column','kfm_left_column_hider','kfm_lightboxShader','kfm_lightboxWrapper'];
-		var to_max_width=['kfm_lightboxShader','kfm_lightboxWrapper'];
-		for(var i=0;i<to_max_height.length;++i)if($(to_max_height[i]))$(to_max_height[i]).setStyle('height',w.y);
-		for(var i=0;i<to_max_width.length;++i)if($(to_max_width[i]))$(to_max_width[i]).setStyle('width',w.x);
-		if($('kfm_codepressTableCell')){
-			var el=$('kfm_codepressTableCell'),iframe=$E('iframe',el);
-			iframe.style.height=0;
-			iframe.style.width=0;
-			iframe.style.height=(el.offsetHeight-10)+'px';
-			iframe.style.width=(el.offsetWidth-10)+'px';
-		}
-		kfm_refreshPanels('kfm_left_column');
-		var els=$ES('body *');
-		els.each(function(el){
-			if(el.parentResized)el.parentResized();
-		});
 	},
 	initialize:function(){
 		document.addEvent('domready',this.build);
@@ -252,20 +234,19 @@ function kfm_log(msg){
 }
 function kfm_prompt(txt,val,fn){
 	window.inPrompt=1;
-//	var newVal=prompt(txt,val?val:'');
-//	return fn(newVal);
 	var table=new Element('table',{
 		'id':'kfm_prompt_table'
 	});
 	var row=table.insertRow(0),inp=newInput('kfm_prompt',0,val);
 	row.insertCell(0).innerHTML=txt.replace(/\n/g,'<br />');
 	row.insertCell(1).appendChild(inp);
-	kfm_modal_open(table,'',[['Ok',function(){
+	kfm_modal_open(table,'prompt',[['Ok',function(){ // TODO: new string
 		var v=$('kfm_prompt').value;
 		kfm_modal_close();
 		window.inPrompt=0;
 		fn(v);
 	}]]);
+	$('kfm_prompt').focus();
 }
 function kfm_run_delayed(name,call){
 	name=name+'_timeout';

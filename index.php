@@ -59,6 +59,7 @@ header('Content-type: text/html; Charset=utf-8');
 		}
 	}
 	$js.=file_get_contents('j/files.js');
+	$js.=file_get_contents('j/resize_handler.js');
 	$js.=file_get_contents('swfuploadr52_0002/swfupload.js');
 	$js.=file_get_contents('lang/'.$kfm_language.'.js');
 #	$js=preg_replace('#// .*|[\t]#','',$js); # strip single-line comments and tabs
