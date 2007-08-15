@@ -201,13 +201,13 @@ function newSelectbox(name,keys,vals,s,f){
 function newText(a){
 	return document.createTextNode(a);
 }
-if(browser.isIE){
+if(window.ie){
 	function XMLHttpRequest(){
 		var l=(ScriptEngineMajorVersion()>=5)?"Msxml2":"Microsoft";
 		return new ActiveXObject(l+".XMLHTTP")
 	}
 	loadJS('j/browser-specific.ie.js');
 }
-if(browser.isKonqueror){
+if(window.webkit){
 	loadJS('j/browser-specific.konqueror.js');
 }
