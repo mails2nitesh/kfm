@@ -21,3 +21,5 @@
 
 DirectoryIndex index.php
 FileETag none
+
+AddType "text/javascript;charset=UTF-8" .js
