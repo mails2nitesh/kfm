@@ -57,7 +57,7 @@ function kfm_textfile_createEditor(){
 	if($("kfm_tooltip"))$("kfm_tooltip").remove();
 	kfm_textfile_attachKeyBinding();
 }
-function kfm_textfile_initEditor(res){
+function kfm_textfile_initEditor(res,readonly){
 	if(!$('kfm_left_column_hider'))kfm_leftColumn_disable();
 	var t=new Element('table',{
 		'id':'kfm_editFileTable',
@@ -72,15 +72,18 @@ function kfm_textfile_initEditor(res){
 	kfm.addEl(right_column,t);
 	var r2=kfm.addRow(t),c=0;
 	kfm.addCell(r2,c++,1,res.name);
-	kfm.addCell(r2,c++,1,newLink('javascript:new Notice("saving file...");$("edit-start").value=codepress.getCode();x_kfm_saveTextFile('+res.id+',$("edit-start").value,kfm_showMessage);','Save',0,'button'));
+	if(!readonly){ /* show option to save edits */
+		kfm.addCell(r2,c++,1,newLink('javascript:new Notice("saving file...");$("edit-start").value=codepress.getCode();x_kfm_saveTextFile('+res.id+',$("edit-start").value,kfm_showMessage);','Save',0,'button'));
+	}
 	kfm.addCell(r2,c++,1,newLink('javascript:kfm_textfile_close()',kfm.lang.Close,0,'button'));
 	var row=$(kfm.addRow(t));
 	row.setStyle('height','100%');
 	r3=kfm.addCell(row,0,c);
 	r3.id='kfm_codepressTableCell';
+	var className='codepress '+res.language+(readonly?' readonly-on':'');
 	var codeEl=new Element('textarea',{
 		'id':'codepress',
-		'class':'codepress '+res.language,
+		'class':className,
 		'value':res.content,
 		'title':res.name,
 		'styles':{
@@ -100,30 +103,4 @@ function kfm_textfile_keybinding(e){
 	if(e.code!=27)return;
 	e.stopPropagation();
 	kfm_textfile_close();
-}
-function kfm_textfile_view(res){
-	var right_column=$('kfm_right_column').empty();
-	right_column.contentMode='viewtext';
-	var t=new Element('table',{
-		'id':'kfm_viewFileTable',
-		'styles':{
-			'height':right_column.offsetHeight,
-			'width':right_column.offsetWidth-2
-		}
-	});
-	var r=kfm.addRow(t),c=0;
-	kfm.addCell(r,c++,1,res.name);
-	if(res.buttons_to_show&2)kfm.addCell(r,c++,1,newLink('javascript:x_kfm_getTextFile('+res.id+',kfm_textfile_initEditor)','Edit',0,'button'));
-	if(res.buttons_to_show&1)kfm.addCell(r,c++,1,newLink('javascript:x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);',kfm.lang.Close,0,'button'));
-	kfm.addEl(right_column,t);
-	var textCell=kfm.addEl(kfm.addCell(kfm.addRow(t).setStyles('height:100%'),0,c),'please wait...');
-	var wrapper=new Element('div',{
-		'styles':{
-			'overflow':'auto',
-			'height':textCell.offsetHeight-2,
-			'width':textCell.offsetWidth
-		}
-	});
-	kfm.addEl(textCell.empty(),wrapper);
-	wrapper.innerHTML=res.content;
 }

@@ -117,50 +117,47 @@ function _getTextFile($fid){
 	$file=new File($fid);
 	if(!kfm_checkAddr($file->name))return;
 	$ext=$file->getExtension();
-	if(in_array($ext,$GLOBALS['kfm_editable_extensions'])){
-		if(!$file->isWritable())return 'error: '.kfm_lang('isNotWritable',$file->name);
-		/**
-		 * determine language for Codepress
-		 */
-		switch($ext){
-			case 'html':
-			case 'tpl':
-				$language='html';
-				break;
-			case 'php':
-				$language = 'php';
-				break;
-			case 'css':
-				$language = 'css';
-				break;
-			case 'js':
-				$language = 'javascript';
-				break;
-			case 'j':
-				$language = 'java';
-				break;
-			case 'pl':
-				$language = 'perl';
-				break;
-			case 'ruby':
-				$language = 'ruby';
-				break;
-			case 'sql':
-				$language = 'sql';
-				break;
-			case 'tex':
-				$language = 'tex';
-				break;
-			case 'txt':
-				$language = 'text';
-				break;
-			default:
-				$language = 'generic';
-				break;
-		}
-		return array('content'=>utf8_encode($file->getContent()),'name'=>$file->name,'id'=>$file->id, 'language'=>$language);
+	if(!$file->isWritable())return 'error: '.kfm_lang('isNotWritable',$file->name);
+	/**
+	 * determine language for Codepress
+	 */
+	switch($ext){
+		case 'html':
+		case 'tpl':
+			$language='html';
+			break;
+		case 'php':
+			$language = 'php';
+			break;
+		case 'css':
+			$language = 'css';
+			break;
+		case 'js':
+			$language = 'javascript';
+			break;
+		case 'j':
+			$language = 'java';
+			break;
+		case 'pl':
+			$language = 'perl';
+			break;
+		case 'ruby':
+			$language = 'ruby';
+			break;
+		case 'sql':
+			$language = 'sql';
+			break;
+		case 'tex':
+			$language = 'tex';
+			break;
+		case 'txt':
+			$language = 'text';
+			break;
+		default:
+			$language = 'generic';
+			break;
 	}
-	return 'error: '.kfm_lang('cannotEditRestrictedExtension',$file->name);
+	return array('content'=>utf8_encode($file->getContent()),'name'=>$file->name,'id'=>$file->id, 'language'=>$language);
 }
 function _loadFiles($rootid=1){
 	global $kfm_session;
