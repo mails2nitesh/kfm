@@ -62,7 +62,7 @@ require_once($kfm_base_path.'configuration.php');
 	}
 	$rootdir=$_SERVER['DOCUMENT_ROOT'].$kfm_userfiles.'/';
 	if(!is_dir($rootdir))mkdir($rootdir,0755);
-	$rootdir=realpath($rootdir);
+	$rootdir=realpath($rootdir).'/';
 	define('LSQUIGG','{');
 	define('RSQUIGG','}');
 	define('KFM_DIR', dirname(__FILE__));
