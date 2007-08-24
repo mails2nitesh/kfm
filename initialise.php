@@ -60,8 +60,9 @@ require_once($kfm_base_path.'configuration.php');
 	if(!isset($_SERVER['DOCUMENT_ROOT'])){ # fix for IIS
 		$_SERVER['DOCUMENT_ROOT']=str_replace('\\','/',substr($_SERVER['SCRIPT_FILENAME'],0,0-strlen($_SERVER['PHP_SELF'])));
 	}
-	$rootdir=realpath($_SERVER['DOCUMENT_ROOT'].$kfm_userfiles).'/';
+	$rootdir=$_SERVER['DOCUMENT_ROOT'].$kfm_userfiles.'/';
 	if(!is_dir($rootdir))mkdir($rootdir,0755);
+	$rootdir=realpath($rootdir);
 	define('LSQUIGG','{');
 	define('RSQUIGG','}');
 	define('KFM_DIR', dirname(__FILE__));
