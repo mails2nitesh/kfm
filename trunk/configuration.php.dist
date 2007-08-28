@@ -9,9 +9,9 @@ $kfm_username='';
 $kfm_password='';
 
 # what type of database to use
-$kfm_db_type='mysql'; # values allowed: sqlite, mysql, pgsql
+$kfm_db_type='mysql'; # values allowed: mysql, pgsql, sqlite, sqlitepdo
 
-# the following options should only be filled if you are not using sqlite as the database
+# the following options should only be filled if you are not using sqlite/sqlitepdo as the database
 $kfm_db_prefix='kfm_';
 $kfm_db_host='localhost';
 $kfm_db_name='kfm';
