@@ -19,7 +19,6 @@ header('Content-type: text/html; Charset=utf-8');
 	<head>
 		<style type="text/css"><?php
 			$css=file_get_contents('themes/'.$kfm_theme.'/kfm.css');
-			$css.=file_get_contents('pear/Text/hilight.css');
 			echo preg_replace('/\s+/',' ',$css);
 		?></style>
 		<title>KFM - Kae's File Manager</title>

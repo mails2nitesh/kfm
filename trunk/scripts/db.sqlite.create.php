@@ -1,9 +1,7 @@
 <?php
-	$kfmdb->query("create table ".$kfm_db_prefix."parameters(name text, value text)");
 	$kfmdb->query("create table ".$kfm_db_prefix."directories(
 		id INTEGER PRIMARY KEY,
 		name text,
-		physical_address text,
 		parent integer not null
 	)");
 	$kfmdb->query("create table ".$kfm_db_prefix."files(
@@ -27,18 +25,17 @@
 		height integer default 0,
 		foreign key (image_id) references ".$kfm_db_prefix."files_images(id)
 	)");
+	$kfmdb->query("create table ".$kfm_db_prefix."parameters(name text, value text)");
 	$kfmdb->query("CREATE TABLE ".$kfm_db_prefix."session (
-		`id` int(11) NOT NULL auto_increment,
-		`cookie` varchar(32) default NULL,
-		`last_accessed` datetime default NULL,
-		PRIMARY KEY  (`id`)
-	) ENGINE=InnoDB DEFAULT CHARSET=utf8");
+		id INTEGER PRIMARY KEY,
+		cookie varchar(32) default NULL,
+		last_accessed datetime default NULL
+	)");
 	$kfmdb->query("CREATE TABLE ".$kfm_db_prefix."session_vars (
-		`session_id` int(11) default NULL,
-		`varname` text,
-		`varvalue` text,
-		KEY `session_id` (`session_id`),
-		CONSTRAINT `".$kfm_db_prefix."session_vars_ibfk_1` FOREIGN KEY (`session_id`) REFERENCES `".$kfm_db_prefix."session` (`id`)
+		session_id INTEGER,
+		varname text,
+		varvalue text,
+		FOREIGN KEY (session_id) REFERENCES ".$kfm_db_prefix."session (id)
 	)");
 	$kfmdb->query("create table ".$kfm_db_prefix."tags(
 		id INTEGER PRIMARY KEY,
@@ -51,7 +48,7 @@
 		foreign key(tag_id) references ".$kfm_db_prefix."tags(id)
 	)");
 
-	$kfmdb->query("insert into ".$kfm_db_prefix."parameters values('version','0.9')");
+	$kfmdb->query("insert into ".$kfm_db_prefix."parameters values('version','1.0')");
 	$kfmdb->query("insert into ".$kfm_db_prefix."directories values(1,'',0)");
-	if(!PEAR::isError($kfmdb))$db_defined=1;
+	$db_defined=1;
 ?>

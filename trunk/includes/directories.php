@@ -18,8 +18,7 @@ function _deleteDirectory($id,$recursive=0){
 function _getDirectoryDbInfo($id){
 	global $kfmdb,$kfm_db_prefix;
 	if(!isset($_GLOBALS['cache_directories'][$id])){
-		$q=$kfmdb->query("select * from ".$kfm_db_prefix."directories where id=".$id);
-		$_GLOBALS['cache_directories'][$id]=$q->fetchRow();
+		$_GLOBALS['cache_directories'][$id]=db_fetch_row("select * from ".$kfm_db_prefix."directories where id=".$id);
 	}
 	return $_GLOBALS['cache_directories'][$id];
 }
@@ -76,14 +75,12 @@ function _renameDirectory($fid,$newname){
 function _rmdir($pid){
 	global $kfmdb,$kfm_db_prefix;
 	{ # remove db entries
-		$q=$kfmdb->query("select id from ".$kfm_db_prefix."files where directory=".$pid);
-		$files=$q->fetchAll();
+		$files=db_fetch_all("select id from ".$kfm_db_prefix."files where directory=".$pid);
 		foreach($files as $r){
 			$f=new File($r['id']);
 			$f->delete();
 		}
-		$q=$kfmdb->query("select id from ".$kfm_db_prefix."directories where parent=".$pid);
-		$dirs=$q->fetchAll();
+		$dirs=db_fetch_all("select id from ".$kfm_db_prefix."directories where parent=".$pid);
 		foreach($dirs as $r)_rmdir($r['id']);
 	}
 	_recursivelyRemoveDirectory(_getDirectoryParents($pid));

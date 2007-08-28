@@ -166,6 +166,16 @@ require_once($kfm_base_path.'configuration.php');
 			$db_defined=1;
 			break;
 		}
+		case 'sqlitepdo': {
+			$kfmdb_create=false;
+			define('DBNAME',$kfm_db_name);
+			if(!file_exists(WORKPATH.DBNAME))$kfmdb_create=true;
+			$dsn=array('type'=>'sqlitepdo','database'=>WORKPATH.DBNAME,'mode'=>'0644');
+			$kfmdb=new DB($dsn);
+			if($kfmdb_create)include($kfm_base_path.'scripts/db.sqlite.create.php');
+			$db_defined=1;
+			break;
+		}
 		default: {
 			echo "unknown database type specified ($kfm_db_type)";
 			exit;
@@ -178,8 +188,7 @@ require_once($kfm_base_path.'configuration.php');
 }
 { # get kfm parameters and check for updates
 	$kfm_parameters=array();
-	$q=$kfmdb->query("select * from ".$kfm_db_prefix."parameters");
-	$rs=$q->fetchAll();
+	$rs=db_fetch_all("select * from ".$kfm_db_prefix."parameters");
 	foreach($rs as $r)$kfm_parameters[$r['name']]=$r['value'];
 	if($kfm_parameters['version']!=KFM_VERSION)require($kfm_base_path.'scripts/update.1.0.php');
 }

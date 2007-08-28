@@ -53,27 +53,23 @@ class Image extends File{
 	}
 	function deleteThumbs(){
 		global $kfm_db_prefix;
-		$q=$this->db->query("SELECT id FROM ".$kfm_db_prefix."files_images_thumbs WHERE image_id=".$this->id);
-		$rs=$q->fetchAll();
+		$rs=db_fetch_all("SELECT id FROM ".$kfm_db_prefix."files_images_thumbs WHERE image_id=".$this->id);
 		foreach($rs as $r){
 			$icons=glob(WORKPATH.'thumbnails/'.$r['id'].'.*');
 			foreach($icons as $f)unlink($f);
 		}
-		$q=null;
 		$this->db->exec("DELETE FROM ".$kfm_db_prefix."files_images_thumbs WHERE image_id=".$this->id);
 	}
 	function getImageId(){
 		global $kfm_db_prefix;
-		$sql="SELECT id,caption FROM ".$kfm_db_prefix."files_images WHERE file_id='".$this->id."'";
-		$res=$this->db->query($sql);
-		if(!$res->numRows()){ # db record not found. create it
+		$row=db_fetch_row("SELECT id,caption FROM ".$kfm_db_prefix."files_images WHERE file_id='".$this->id."'");
+		if(!$row){ # db record not found. create it
 			# TODO: retrieve caption generation code from get.php
 			$sql="INSERT INTO ".$kfm_db_prefix."files_images (file_id, caption) VALUES ('".$this->id."','".$this->name."')";
 			$this->caption=$this->name;
 			$this->db->exec($sql);
 			return $this->db->lastInsertId($kfm_db_prefix.'files_images','id');
 		}
-		$row=$res->fetchRow();
 		$this->caption=$row['caption'];
 		return $row['id'];
 	}
@@ -114,14 +110,12 @@ class Image extends File{
 		global $kfm_db_prefix;
 		$thumbname=$this->id.' '.$width.'x'.$height.' '.$this->name;
 		if(!isset($this->info['mime'])||!in_array($this->info['mime'],array('image/jpeg','image/gif','image/png')))return false;
-		$q=$this->db->query("SELECT id FROM ".$kfm_db_prefix."files_images_thumbs WHERE image_id=".$this->id." and width<=".$width." and height<=".$height." and (width=".$width." or height=".$height.")");
-		if($q->numRows()){
-			$r=$q->fetchRow();
+		$r=db_fetch_row("SELECT id FROM ".$kfm_db_prefix."files_images_thumbs WHERE image_id=".$this->id." and width<=".$width." and height<=".$height." and (width=".$width." or height=".$height.")");
+		if($r){
 			$id=$r['id'];
 			if(!file_exists(WORKPATH.'thumbs/'.$id))$this->createThumb($width,$height,$id); // missing thumb file - recreate it
 		}
 		else{
-			$q=null;
 			$id=$this->createThumb($width,$height);
 		}
 		$this->thumb_url='get.php?type=thumb&id='.$id.GET_PARAMS;

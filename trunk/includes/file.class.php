@@ -15,8 +15,7 @@ class File extends Object{
 		if(func_num_args()==1){
 			$this->id=func_get_arg(0);
 			parent::Object();
-			$qf=$this->db->query("SELECT id,name,directory FROM ".$kfm_db_prefix."files WHERE id=".$this->id);
-			$filedata=$qf->fetchRow();
+			$filedata=db_fetch_row("SELECT id,name,directory FROM ".$kfm_db_prefix."files WHERE id=".$this->id);
 			$this->name=$filedata['name'];
 			$this->parent=$filedata['directory'];
 			$dir=kfmDirectory::getInstance($this->parent);
@@ -96,9 +95,9 @@ class File extends Object{
 	}
 	function getTags(){
 		global $kfm_db_prefix;
-		$q=$this->db->query("select tag_id from ".$kfm_db_prefix."tagged_files where file_id=".$this->id);
 		$arr=array();
-		foreach($q->fetchAll() as $r)$arr[]=$r['tag_id'];
+		$tags=db_fetch_all("select tag_id from ".$kfm_db_prefix."tagged_files where file_id=".$this->id);
+		foreach($tags as $r)$arr[]=$r['tag_id'];
 		return $arr;
 	}
 	function isImage(){
