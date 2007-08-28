@@ -5,8 +5,7 @@ class kfmDirectory extends Object{
 	function kfmDirectory($id=1){
 		parent::__construct();
 		$this->id=$id;
-		$q=$this->db->query("SELECT * FROM ".$this->db_prefix."directories WHERE id=".$this->id);
-		$res=$q->fetchRow();
+		$res=db_fetch_row("SELECT * FROM ".$this->db_prefix."directories WHERE id=".$this->id);
 		$this->name=$res['name'];
 		$this->pid=$res['parent'];
 		$this->path=$this->getPath();
@@ -64,8 +63,7 @@ class kfmDirectory extends Object{
 	function getFiles(){
 		$this->handle=opendir($this->path);
 		if(!$this->handle)return $this->error('unable to open directory');
-		$q=$this->db->query("select * from ".$this->db_prefix."files where directory=".$this->id);
-		$filesdb=$q->fetchAll();
+		$filesdb=db_fetch_all("select * from ".$this->db_prefix."files where directory=".$this->id);
 		$fileshash=array();
 		if(is_array($filesdb))foreach($filesdb as $r)$fileshash[$r['name']]=$r['id'];
 		$files=array();
@@ -108,8 +106,7 @@ class kfmDirectory extends Object{
 	function getSubdirs($oldstyle=false){
 		global $kfm_banned_folders;
 		$this->handle=opendir($this->path);
-		$q=$this->db->query("select id,name from ".$this->db_prefix."directories where parent=".$this->id);
-		$dirsdb=$q->fetchAll();
+		$dirsdb=db_fetch_all("select id,name from ".$this->db_prefix."directories where parent=".$this->id);
 		$dirshash=array();
 		if(is_array($dirsdb))foreach($dirsdb as $r)$dirshash[$r['name']]=$r['id'];
 		$directories=array();
