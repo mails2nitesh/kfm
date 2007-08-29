@@ -1,6 +1,8 @@
 <?php
 /**
- * File/Directory manipulation
+ * PEAR, the PHP Extension and Application Repository
+ *
+ * PEAR class and PEAR_Error class
  *
  * PHP versions 4 and 5
  *
@@ -11,584 +13,1096 @@
  * send a note to license@php.net so we can mail you a copy immediately.
  *
  * @category   pear
- * @package    System
+ * @package    PEAR
+ * @author     Sterling Hughes <sterling@php.net>
+ * @author     Stig Bakken <ssb@php.net>
  * @author     Tomas V.V.Cox <cox@idecnet.com>
+ * @author     Greg Beaver <cellog@php.net>
  * @copyright  1997-2006 The PHP Group
  * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version    CVS: $Id: System.php,v 1.56 2007/04/12 02:01:55 cellog Exp $
+ * @version    CVS: $Id: PEAR.php,v 1.101 2006/04/25 02:41:03 cellog Exp $
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 0.1
  */
 
-/**
- * base class
+/**#@+
+ * ERROR constants
  */
-require_once 'PEAR.php';
-require_once 'Console/Getopt.php';
+define('PEAR_ERROR_RETURN',     1);
+define('PEAR_ERROR_PRINT',      2);
+define('PEAR_ERROR_TRIGGER',    4);
+define('PEAR_ERROR_DIE',        8);
+define('PEAR_ERROR_CALLBACK',  16);
+/**
+ * WARNING: obsolete
+ * @deprecated
+ */
+define('PEAR_ERROR_EXCEPTION', 32);
+/**#@-*/
+define('PEAR_ZE2', (function_exists('version_compare') &&
+                    version_compare(zend_version(), "2-dev", "ge")));
 
-$GLOBALS['_System_temp_files'] = array();
+if (substr(PHP_OS, 0, 3) == 'WIN') {
+    define('OS_WINDOWS', true);
+    define('OS_UNIX',    false);
+    define('PEAR_OS',    'Windows');
+} else {
+    define('OS_WINDOWS', false);
+    define('OS_UNIX',    true);
+    define('PEAR_OS',    'Unix'); // blatant assumption
+}
+
+// instant backwards compatibility
+if (!defined('PATH_SEPARATOR')) {
+    if (OS_WINDOWS) {
+        define('PATH_SEPARATOR', ';');
+    } else {
+        define('PATH_SEPARATOR', ':');
+    }
+}
+
+$GLOBALS['_PEAR_default_error_mode']     = PEAR_ERROR_RETURN;
+$GLOBALS['_PEAR_default_error_options']  = E_USER_NOTICE;
+$GLOBALS['_PEAR_destructor_object_list'] = array();
+$GLOBALS['_PEAR_shutdown_funcs']         = array();
+$GLOBALS['_PEAR_error_handler_stack']    = array();
+
+@ini_set('track_errors', true);
 
 /**
-* System offers cross plattform compatible system functions
-*
-* Static functions for different operations. Should work under
-* Unix and Windows. The names and usage has been taken from its respectively
-* GNU commands. The functions will return (bool) false on error and will
-* trigger the error with the PHP trigger_error() function (you can silence
-* the error by prefixing a '@' sign after the function call, but this
-* is not recommended practice.  Instead use an error handler with
-* {@link set_error_handler()}).
-*
-* Documentation on this class you can find in:
-* http://pear.php.net/manual/
-*
-* Example usage:
-* if (!@System::rm('-r file1 dir1')) {
-*    print "could not delete file1 or dir1";
-* }
-*
-* In case you need to to pass file names with spaces,
-* pass the params as an array:
-*
-* System::rm(array('-r', $file1, $dir1));
-*
-* @category   pear
-* @package    System
-* @author     Tomas V.V. Cox <cox@idecnet.com>
-* @copyright  1997-2006 The PHP Group
-* @license    http://www.php.net/license/3_0.txt  PHP License 3.0
-* @version    Release: 1.6.1
-* @link       http://pear.php.net/package/PEAR
-* @since      Class available since Release 0.1
-*/
-class System
+ * Base class for other PEAR classes.  Provides rudimentary
+ * emulation of destructors.
+ *
+ * If you want a destructor in your class, inherit PEAR and make a
+ * destructor method called _yourclassname (same name as the
+ * constructor, but with a "_" prefix).  Also, in your constructor you
+ * have to call the PEAR constructor: $this->PEAR();.
+ * The destructor method will be called without parameters.  Note that
+ * at in some SAPI implementations (such as Apache), any output during
+ * the request shutdown (in which destructors are called) seems to be
+ * discarded.  If you need to get any debug information from your
+ * destructor, use error_log(), syslog() or something similar.
+ *
+ * IMPORTANT! To use the emulated destructors you need to create the
+ * objects by reference: $obj =& new PEAR_child;
+ *
+ * @category   pear
+ * @package    PEAR
+ * @author     Stig Bakken <ssb@php.net>
+ * @author     Tomas V.V. Cox <cox@idecnet.com>
+ * @author     Greg Beaver <cellog@php.net>
+ * @copyright  1997-2006 The PHP Group
+ * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @version    Release: 1.6.1
+ * @link       http://pear.php.net/package/PEAR
+ * @see        PEAR_Error
+ * @since      Class available since PHP 4.0.2
+ * @link        http://pear.php.net/manual/en/core.pear.php#core.pear.pear
+ */
+class PEAR
 {
+    // {{{ properties
+
     /**
-    * returns the commandline arguments of a function
-    *
-    * @param    string  $argv           the commandline
-    * @param    string  $short_options  the allowed option short-tags
-    * @param    string  $long_options   the allowed option long-tags
-    * @return   array   the given options and there values
-    * @access private
-    */
-    function _parseArgs($argv, $short_options, $long_options = null)
+     * Whether to enable internal debug messages.
+     *
+     * @var     bool
+     * @access  private
+     */
+    var $_debug = false;
+
+    /**
+     * Default error mode for this object.
+     *
+     * @var     int
+     * @access  private
+     */
+    var $_default_error_mode = null;
+
+    /**
+     * Default error options used for this object when error mode
+     * is PEAR_ERROR_TRIGGER.
+     *
+     * @var     int
+     * @access  private
+     */
+    var $_default_error_options = null;
+
+    /**
+     * Default error handler (callback) for this object, if error mode is
+     * PEAR_ERROR_CALLBACK.
+     *
+     * @var     string
+     * @access  private
+     */
+    var $_default_error_handler = '';
+
+    /**
+     * Which class to use for error objects.
+     *
+     * @var     string
+     * @access  private
+     */
+    var $_error_class = 'PEAR_Error';
+
+    /**
+     * An array of expected errors.
+     *
+     * @var     array
+     * @access  private
+     */
+    var $_expected_errors = array();
+
+    // }}}
+
+    // {{{ constructor
+
+    /**
+     * Constructor.  Registers this object in
+     * $_PEAR_destructor_object_list for destructor emulation if a
+     * destructor object exists.
+     *
+     * @param string $error_class  (optional) which class to use for
+     *        error objects, defaults to PEAR_Error.
+     * @access public
+     * @return void
+     */
+    function PEAR($error_class = null)
     {
-        if (!is_array($argv) && $argv !== null) {
-            $argv = preg_split('/\s+/', $argv, -1, PREG_SPLIT_NO_EMPTY);
+        $classname = strtolower(get_class($this));
+        if ($this->_debug) {
+            print "PEAR constructor called, class=$classname\n";
         }
-        return Console_Getopt::getopt2($argv, $short_options);
+        if ($error_class !== null) {
+            $this->_error_class = $error_class;
+        }
+        while ($classname && strcasecmp($classname, "pear")) {
+            $destructor = "_$classname";
+            if (method_exists($this, $destructor)) {
+                global $_PEAR_destructor_object_list;
+                $_PEAR_destructor_object_list[] = &$this;
+                if (!isset($GLOBALS['_PEAR_SHUTDOWN_REGISTERED'])) {
+                    register_shutdown_function("_PEAR_call_destructors");
+                    $GLOBALS['_PEAR_SHUTDOWN_REGISTERED'] = true;
+                }
+                break;
+            } else {
+                $classname = get_parent_class($classname);
+            }
+        }
     }
 
+    // }}}
+    // {{{ destructor
+
     /**
-    * Output errors with PHP trigger_error(). You can silence the errors
-    * with prefixing a "@" sign to the function call: @System::mkdir(..);
-    *
-    * @param mixed $error a PEAR error or a string with the error message
-    * @return bool false
-    * @access private
-    */
-    function raiseError($error)
-    {
-        if (PEAR::isError($error)) {
-            $error = $error->getMessage();
+     * Destructor (the emulated type of...).  Does nothing right now,
+     * but is included for forward compatibility, so subclass
+     * destructors should always call it.
+     *
+     * See the note in the class desciption about output from
+     * destructors.
+     *
+     * @access public
+     * @return void
+     */
+    function _PEAR() {
+        if ($this->_debug) {
+            printf("PEAR destructor called, class=%s\n", strtolower(get_class($this)));
         }
-        trigger_error($error, E_USER_WARNING);
+    }
+
+    // }}}
+    // {{{ getStaticProperty()
+
+    /**
+    * If you have a class that's mostly/entirely static, and you need static
+    * properties, you can use this method to simulate them. Eg. in your method(s)
+    * do this: $myVar = &PEAR::getStaticProperty('myclass', 'myVar');
+    * You MUST use a reference, or they will not persist!
+    *
+    * @access public
+    * @param  string $class  The calling classname, to prevent clashes
+    * @param  string $var    The variable to retrieve.
+    * @return mixed   A reference to the variable. If not set it will be
+    *                 auto initialised to NULL.
+    */
+    function &getStaticProperty($class, $var)
+    {
+        static $properties;
+        if (!isset($properties[$class])) {
+            $properties[$class] = array();
+        }
+        if (!array_key_exists($var, $properties[$class])) {
+            $properties[$class][$var] = null;
+        }
+        return $properties[$class][$var];
+    }
+
+    // }}}
+    // {{{ registerShutdownFunc()
+
+    /**
+    * Use this function to register a shutdown method for static
+    * classes.
+    *
+    * @access public
+    * @param  mixed $func  The function name (or array of class/method) to call
+    * @param  mixed $args  The arguments to pass to the function
+    * @return void
+    */
+    function registerShutdownFunc($func, $args = array())
+    {
+        // if we are called statically, there is a potential
+        // that no shutdown func is registered.  Bug #6445
+        if (!isset($GLOBALS['_PEAR_SHUTDOWN_REGISTERED'])) {
+            register_shutdown_function("_PEAR_call_destructors");
+            $GLOBALS['_PEAR_SHUTDOWN_REGISTERED'] = true;
+        }
+        $GLOBALS['_PEAR_shutdown_funcs'][] = array($func, $args);
+    }
+
+    // }}}
+    // {{{ isError()
+
+    /**
+     * Tell whether a value is a PEAR error.
+     *
+     * @param   mixed $data   the value to test
+     * @param   int   $code   if $data is an error object, return true
+     *                        only if $code is a string and
+     *                        $obj->getMessage() == $code or
+     *                        $code is an integer and $obj->getCode() == $code
+     * @access  public
+     * @return  bool    true if parameter is an error
+     */
+    function isError($data, $code = null)
+    {
+        if (is_a($data, 'PEAR_Error')) {
+            if (is_null($code)) {
+                return true;
+            } elseif (is_string($code)) {
+                return $data->getMessage() == $code;
+            } else {
+                return $data->getCode() == $code;
+            }
+        }
         return false;
     }
 
-    /**
-    * Creates a nested array representing the structure of a directory
-    *
-    * System::_dirToStruct('dir1', 0) =>
-    *   Array
-    *    (
-    *    [dirs] => Array
-    *        (
-    *            [0] => dir1
-    *        )
-    *
-    *    [files] => Array
-    *        (
-    *            [0] => dir1/file2
-    *            [1] => dir1/file3
-    *        )
-    *    )
-    * @param    string  $sPath      Name of the directory
-    * @param    integer $maxinst    max. deep of the lookup
-    * @param    integer $aktinst    starting deep of the lookup
-    * @return   array   the structure of the dir
-    * @access   private
-    */
-
-    function _dirToStruct($sPath, $maxinst, $aktinst = 0)
-    {
-        $struct = array('dirs' => array(), 'files' => array());
-        if (($dir = @opendir($sPath)) === false) {
-            System::raiseError("Could not open dir $sPath");
-            return $struct; // XXX could not open error
-        }
-        $struct['dirs'][] = $sPath = realpath($sPath); // XXX don't add if '.' or '..' ?
-        $list = array();
-        while (false !== ($file = readdir($dir))) {
-            if ($file != '.' && $file != '..') {
-                $list[] = $file;
-            }
-        }
-        closedir($dir);
-        sort($list);
-        if ($aktinst < $maxinst || $maxinst == 0) {
-            foreach($list as $val) {
-                $path = $sPath . DIRECTORY_SEPARATOR . $val;
-                if (is_dir($path) && !is_link($path)) {
-                    $tmp = System::_dirToStruct($path, $maxinst, $aktinst+1);
-                    $struct = array_merge_recursive($tmp, $struct);
-                } else {
-                    $struct['files'][] = $path;
-                }
-            }
-        }
-        return $struct;
-    }
+    // }}}
+    // {{{ setErrorHandling()
 
     /**
-    * Creates a nested array representing the structure of a directory and files
-    *
-    * @param    array $files Array listing files and dirs
-    * @return   array
-    * @see System::_dirToStruct()
-    */
-    function _multipleToStruct($files)
-    {
-        $struct = array('dirs' => array(), 'files' => array());
-        settype($files, 'array');
-        foreach ($files as $file) {
-            if (is_dir($file) && !is_link($file)) {
-                $tmp = System::_dirToStruct($file, 0);
-                $struct = array_merge_recursive($tmp, $struct);
-            } else {
-                $struct['files'][] = $file;
-            }
-        }
-        return $struct;
-    }
+     * Sets how errors generated by this object should be handled.
+     * Can be invoked both in objects and statically.  If called
+     * statically, setErrorHandling sets the default behaviour for all
+     * PEAR objects.  If called in an object, setErrorHandling sets
+     * the default behaviour for that object.
+     *
+     * @param int $mode
+     *        One of PEAR_ERROR_RETURN, PEAR_ERROR_PRINT,
+     *        PEAR_ERROR_TRIGGER, PEAR_ERROR_DIE,
+     *        PEAR_ERROR_CALLBACK or PEAR_ERROR_EXCEPTION.
+     *
+     * @param mixed $options
+     *        When $mode is PEAR_ERROR_TRIGGER, this is the error level (one
+     *        of E_USER_NOTICE, E_USER_WARNING or E_USER_ERROR).
+     *
+     *        When $mode is PEAR_ERROR_CALLBACK, this parameter is expected
+     *        to be the callback function or method.  A callback
+     *        function is a string with the name of the function, a
+     *        callback method is an array of two elements: the element
+     *        at index 0 is the object, and the element at index 1 is
+     *        the name of the method to call in the object.
+     *
+     *        When $mode is PEAR_ERROR_PRINT or PEAR_ERROR_DIE, this is
+     *        a printf format string used when printing the error
+     *        message.
+     *
+     * @access public
+     * @return void
+     * @see PEAR_ERROR_RETURN
+     * @see PEAR_ERROR_PRINT
+     * @see PEAR_ERROR_TRIGGER
+     * @see PEAR_ERROR_DIE
+     * @see PEAR_ERROR_CALLBACK
+     * @see PEAR_ERROR_EXCEPTION
+     *
+     * @since PHP 4.0.5
+     */
 
-    /**
-    * The rm command for removing files.
-    * Supports multiple files and dirs and also recursive deletes
-    *
-    * @param    string  $args   the arguments for rm
-    * @return   mixed   PEAR_Error or true for success
-    * @access   public
-    */
-    function rm($args)
+    function setErrorHandling($mode = null, $options = null)
     {
-        $opts = System::_parseArgs($args, 'rf'); // "f" do nothing but like it :-)
-        if (PEAR::isError($opts)) {
-            return System::raiseError($opts);
-        }
-        foreach($opts[0] as $opt) {
-            if ($opt[0] == 'r') {
-                $do_recursive = true;
-            }
-        }
-        $ret = true;
-        if (isset($do_recursive)) {
-            $struct = System::_multipleToStruct($opts[1]);
-            foreach($struct['files'] as $file) {
-                if (!@unlink($file)) {
-                    $ret = false;
-                }
-            }
-            foreach($struct['dirs'] as $dir) {
-                if (!@rmdir($dir)) {
-                    $ret = false;
-                }
-            }
+        if (isset($this) && is_a($this, 'PEAR')) {
+            $setmode     = &$this->_default_error_mode;
+            $setoptions  = &$this->_default_error_options;
         } else {
-            foreach ($opts[1] as $file) {
-                $delete = (is_dir($file)) ? 'rmdir' : 'unlink';
-                if (!@$delete($file)) {
-                    $ret = false;
-                }
-            }
+            $setmode     = &$GLOBALS['_PEAR_default_error_mode'];
+            $setoptions  = &$GLOBALS['_PEAR_default_error_options'];
         }
-        return $ret;
-    }
 
-    /**
-    * Make directories.
-    *
-    * The -p option will create parent directories
-    * @param    string  $args    the name of the director(y|ies) to create
-    * @return   bool    True for success
-    * @access   public
-    */
-    function mkDir($args)
-    {
-        $opts = System::_parseArgs($args, 'pm:');
-        if (PEAR::isError($opts)) {
-            return System::raiseError($opts);
-        }
-        $mode = 0777; // default mode
-        foreach($opts[0] as $opt) {
-            if ($opt[0] == 'p') {
-                $create_parents = true;
-            } elseif($opt[0] == 'm') {
-                // if the mode is clearly an octal number (starts with 0)
-                // convert it to decimal
-                if (strlen($opt[1]) && $opt[1]{0} == '0') {
-                    $opt[1] = octdec($opt[1]);
-                } else {
-                    // convert to int
-                    $opt[1] += 0;
-                }
-                $mode = $opt[1];
-            }
-        }
-        $ret = true;
-        if (isset($create_parents)) {
-            foreach($opts[1] as $dir) {
-                $dirstack = array();
-                while ((!file_exists($dir) || !is_dir($dir)) &&
-                        $dir != DIRECTORY_SEPARATOR) {
-                    array_unshift($dirstack, $dir);
-                    $dir = dirname($dir);
-                }
-                while ($newdir = array_shift($dirstack)) {
-                    if (!is_writeable(dirname($newdir))) {
-                        $ret = false;
-                        break;
-                    }
-                    if (!mkdir($newdir, $mode)) {
-                        $ret = false;
-                    }
-                }
-            }
-        } else {
-            foreach($opts[1] as $dir) {
-                if ((@file_exists($dir) || !is_dir($dir)) && !mkdir($dir, $mode)) {
-                    $ret = false;
-                }
-            }
-        }
-        return $ret;
-    }
-
-    /**
-    * Concatenate files
-    *
-    * Usage:
-    * 1) $var = System::cat('sample.txt test.txt');
-    * 2) System::cat('sample.txt test.txt > final.txt');
-    * 3) System::cat('sample.txt test.txt >> final.txt');
-    *
-    * Note: as the class use fopen, urls should work also (test that)
-    *
-    * @param    string  $args   the arguments
-    * @return   boolean true on success
-    * @access   public
-    */
-    function &cat($args)
-    {
-        $ret = null;
-        $files = array();
-        if (!is_array($args)) {
-            $args = preg_split('/\s+/', $args, -1, PREG_SPLIT_NO_EMPTY);
-        }
-        for($i=0; $i < count($args); $i++) {
-            if ($args[$i] == '>') {
-                $mode = 'wb';
-                $outputfile = $args[$i+1];
+        switch ($mode) {
+            case PEAR_ERROR_EXCEPTION:
+            case PEAR_ERROR_RETURN:
+            case PEAR_ERROR_PRINT:
+            case PEAR_ERROR_TRIGGER:
+            case PEAR_ERROR_DIE:
+            case null:
+                $setmode = $mode;
+                $setoptions = $options;
                 break;
-            } elseif ($args[$i] == '>>') {
-                $mode = 'ab+';
-                $outputfile = $args[$i+1];
-                break;
-            } else {
-                $files[] = $args[$i];
-            }
-        }
-        $outputfd = false;
-        if (isset($mode)) {
-            if (!$outputfd = fopen($outputfile, $mode)) {
-                $err = System::raiseError("Could not open $outputfile");
-                return $err;
-            }
-            $ret = true;
-        }
-        foreach ($files as $file) {
-            if (!$fd = fopen($file, 'r')) {
-                System::raiseError("Could not open $file");
-                continue;
-            }
-            while ($cont = fread($fd, 2048)) {
-                if (is_resource($outputfd)) {
-                    fwrite($outputfd, $cont);
+
+            case PEAR_ERROR_CALLBACK:
+                $setmode = $mode;
+                // class/object method callback
+                if (is_callable($options)) {
+                    $setoptions = $options;
                 } else {
-                    $ret .= $cont;
+                    trigger_error("invalid error callback", E_USER_WARNING);
+                }
+                break;
+
+            default:
+                trigger_error("invalid error mode", E_USER_WARNING);
+                break;
+        }
+    }
+
+    // }}}
+    // {{{ expectError()
+
+    /**
+     * This method is used to tell which errors you expect to get.
+     * Expected errors are always returned with error mode
+     * PEAR_ERROR_RETURN.  Expected error codes are stored in a stack,
+     * and this method pushes a new element onto it.  The list of
+     * expected errors are in effect until they are popped off the
+     * stack with the popExpect() method.
+     *
+     * Note that this method can not be called statically
+     *
+     * @param mixed $code a single error code or an array of error codes to expect
+     *
+     * @return int     the new depth of the "expected errors" stack
+     * @access public
+     */
+    function expectError($code = '*')
+    {
+        if (is_array($code)) {
+            array_push($this->_expected_errors, $code);
+        } else {
+            array_push($this->_expected_errors, array($code));
+        }
+        return sizeof($this->_expected_errors);
+    }
+
+    // }}}
+    // {{{ popExpect()
+
+    /**
+     * This method pops one element off the expected error codes
+     * stack.
+     *
+     * @return array   the list of error codes that were popped
+     */
+    function popExpect()
+    {
+        return array_pop($this->_expected_errors);
+    }
+
+    // }}}
+    // {{{ _checkDelExpect()
+
+    /**
+     * This method checks unsets an error code if available
+     *
+     * @param mixed error code
+     * @return bool true if the error code was unset, false otherwise
+     * @access private
+     * @since PHP 4.3.0
+     */
+    function _checkDelExpect($error_code)
+    {
+        $deleted = false;
+
+        foreach ($this->_expected_errors AS $key => $error_array) {
+            if (in_array($error_code, $error_array)) {
+                unset($this->_expected_errors[$key][array_search($error_code, $error_array)]);
+                $deleted = true;
+            }
+
+            // clean up empty arrays
+            if (0 == count($this->_expected_errors[$key])) {
+                unset($this->_expected_errors[$key]);
+            }
+        }
+        return $deleted;
+    }
+
+    // }}}
+    // {{{ delExpect()
+
+    /**
+     * This method deletes all occurences of the specified element from
+     * the expected error codes stack.
+     *
+     * @param  mixed $error_code error code that should be deleted
+     * @return mixed list of error codes that were deleted or error
+     * @access public
+     * @since PHP 4.3.0
+     */
+    function delExpect($error_code)
+    {
+        $deleted = false;
+
+        if ((is_array($error_code) && (0 != count($error_code)))) {
+            // $error_code is a non-empty array here;
+            // we walk through it trying to unset all
+            // values
+            foreach($error_code as $key => $error) {
+                if ($this->_checkDelExpect($error)) {
+                    $deleted =  true;
+                } else {
+                    $deleted = false;
                 }
             }
-            fclose($fd);
-        }
-        if (is_resource($outputfd)) {
-            fclose($outputfd);
-        }
-        return $ret;
-    }
-
-    /**
-    * Creates temporary files or directories. This function will remove
-    * the created files when the scripts finish its execution.
-    *
-    * Usage:
-    *   1) $tempfile = System::mktemp("prefix");
-    *   2) $tempdir  = System::mktemp("-d prefix");
-    *   3) $tempfile = System::mktemp();
-    *   4) $tempfile = System::mktemp("-t /var/tmp prefix");
-    *
-    * prefix -> The string that will be prepended to the temp name
-    *           (defaults to "tmp").
-    * -d     -> A temporary dir will be created instead of a file.
-    * -t     -> The target dir where the temporary (file|dir) will be created. If
-    *           this param is missing by default the env vars TMP on Windows or
-    *           TMPDIR in Unix will be used. If these vars are also missing
-    *           c:\windows\temp or /tmp will be used.
-    *
-    * @param   string  $args  The arguments
-    * @return  mixed   the full path of the created (file|dir) or false
-    * @see System::tmpdir()
-    * @access  public
-    */
-    function mktemp($args = null)
-    {
-        static $first_time = true;
-        $opts = System::_parseArgs($args, 't:d');
-        if (PEAR::isError($opts)) {
-            return System::raiseError($opts);
-        }
-        foreach($opts[0] as $opt) {
-            if($opt[0] == 'd') {
-                $tmp_is_dir = true;
-            } elseif($opt[0] == 't') {
-                $tmpdir = $opt[1];
+            return $deleted ? true : PEAR::raiseError("The expected error you submitted does not exist"); // IMPROVE ME
+        } elseif (!empty($error_code)) {
+            // $error_code comes alone, trying to unset it
+            if ($this->_checkDelExpect($error_code)) {
+                return true;
+            } else {
+                return PEAR::raiseError("The expected error you submitted does not exist"); // IMPROVE ME
             }
-        }
-        $prefix = (isset($opts[1][0])) ? $opts[1][0] : 'tmp';
-        if (!isset($tmpdir)) {
-            $tmpdir = System::tmpdir();
-        }
-        if (!System::mkDir(array('-p', $tmpdir))) {
-            return false;
-        }
-        $tmp = tempnam($tmpdir, $prefix);
-        if (isset($tmp_is_dir)) {
-            unlink($tmp); // be careful possible race condition here
-            if (!mkdir($tmp, 0700)) {
-                return System::raiseError("Unable to create temporary directory $tmpdir");
-            }
-        }
-        $GLOBALS['_System_temp_files'][] = $tmp;
-        if ($first_time) {
-            PEAR::registerShutdownFunc(array('System', '_removeTmpFiles'));
-            $first_time = false;
-        }
-        return $tmp;
-    }
-
-    /**
-    * Remove temporary files created my mkTemp. This function is executed
-    * at script shutdown time
-    *
-    * @access private
-    */
-    function _removeTmpFiles()
-    {
-        if (count($GLOBALS['_System_temp_files'])) {
-            $delete = $GLOBALS['_System_temp_files'];
-            array_unshift($delete, '-r');
-            System::rm($delete);
-            $GLOBALS['_System_temp_files'] = array();
-        }
-    }
-
-    /**
-    * Get the path of the temporal directory set in the system
-    * by looking in its environments variables.
-    * Note: php.ini-recommended removes the "E" from the variables_order setting,
-    * making unavaible the $_ENV array, that s why we do tests with _ENV
-    *
-    * @return string The temporary directory on the system
-    */
-    function tmpdir()
-    {
-        if (OS_WINDOWS) {
-            if ($var = isset($_ENV['TMP']) ? $_ENV['TMP'] : getenv('TMP')) {
-                return $var;
-            }
-            if ($var = isset($_ENV['TEMP']) ? $_ENV['TEMP'] : getenv('TEMP')) {
-                return $var;
-            }
-            if ($var = isset($_ENV['USERPROFILE']) ? $_ENV['USERPROFILE'] : getenv('USERPROFILE')) {
-                return $var;
-            }
-            if ($var = isset($_ENV['windir']) ? $_ENV['windir'] : getenv('windir')) {
-                return $var;
-            }
-            return getenv('SystemRoot') . '\temp';
-        }
-        if ($var = isset($_ENV['TMPDIR']) ? $_ENV['TMPDIR'] : getenv('TMPDIR')) {
-            return $var;
-        }
-        return '/tmp';
-    }
-
-    /**
-    * The "which" command (show the full path of a command)
-    *
-    * @param string $program The command to search for
-    * @param mixed  $fallback Value to return if $program is not found
-    *
-    * @return mixed A string with the full path or false if not found
-    * @author Stig Bakken <ssb@php.net>
-    */
-    function which($program, $fallback = false)
-    {
-        // enforce API
-        if (!is_string($program) || '' == $program) {
-            return $fallback;
-        }
-
-        // available since 4.3.0RC2
-        if (defined('PATH_SEPARATOR')) {
-            $path_delim = PATH_SEPARATOR;
         } else {
-            $path_delim = OS_WINDOWS ? ';' : ':';
+            // $error_code is empty
+            return PEAR::raiseError("The expected error you submitted is empty"); // IMPROVE ME
         }
-        // full path given
-        if (basename($program) != $program) {
-            $path_elements[] = dirname($program);
-            $program = basename($program);
+    }
+
+    // }}}
+    // {{{ raiseError()
+
+    /**
+     * This method is a wrapper that returns an instance of the
+     * configured error class with this object's default error
+     * handling applied.  If the $mode and $options parameters are not
+     * specified, the object's defaults are used.
+     *
+     * @param mixed $message a text error message or a PEAR error object
+     *
+     * @param int $code      a numeric error code (it is up to your class
+     *                  to define these if you want to use codes)
+     *
+     * @param int $mode      One of PEAR_ERROR_RETURN, PEAR_ERROR_PRINT,
+     *                  PEAR_ERROR_TRIGGER, PEAR_ERROR_DIE,
+     *                  PEAR_ERROR_CALLBACK, PEAR_ERROR_EXCEPTION.
+     *
+     * @param mixed $options If $mode is PEAR_ERROR_TRIGGER, this parameter
+     *                  specifies the PHP-internal error level (one of
+     *                  E_USER_NOTICE, E_USER_WARNING or E_USER_ERROR).
+     *                  If $mode is PEAR_ERROR_CALLBACK, this
+     *                  parameter specifies the callback function or
+     *                  method.  In other error modes this parameter
+     *                  is ignored.
+     *
+     * @param string $userinfo If you need to pass along for example debug
+     *                  information, this parameter is meant for that.
+     *
+     * @param string $error_class The returned error object will be
+     *                  instantiated from this class, if specified.
+     *
+     * @param bool $skipmsg If true, raiseError will only pass error codes,
+     *                  the error message parameter will be dropped.
+     *
+     * @access public
+     * @return object   a PEAR error object
+     * @see PEAR::setErrorHandling
+     * @since PHP 4.0.5
+     */
+    function &raiseError($message = null,
+                         $code = null,
+                         $mode = null,
+                         $options = null,
+                         $userinfo = null,
+                         $error_class = null,
+                         $skipmsg = false)
+    {
+        // The error is yet a PEAR error object
+        if (is_object($message)) {
+            $code        = $message->getCode();
+            $userinfo    = $message->getUserInfo();
+            $error_class = $message->getType();
+            $message->error_message_prefix = '';
+            $message     = $message->getMessage();
+        }
+
+        if (isset($this) && isset($this->_expected_errors) && sizeof($this->_expected_errors) > 0 && sizeof($exp = end($this->_expected_errors))) {
+            if ($exp[0] == "*" ||
+                (is_int(reset($exp)) && in_array($code, $exp)) ||
+                (is_string(reset($exp)) && in_array($message, $exp))) {
+                $mode = PEAR_ERROR_RETURN;
+            }
+        }
+        // No mode given, try global ones
+        if ($mode === null) {
+            // Class error handler
+            if (isset($this) && isset($this->_default_error_mode)) {
+                $mode    = $this->_default_error_mode;
+                $options = $this->_default_error_options;
+            // Global error handler
+            } elseif (isset($GLOBALS['_PEAR_default_error_mode'])) {
+                $mode    = $GLOBALS['_PEAR_default_error_mode'];
+                $options = $GLOBALS['_PEAR_default_error_options'];
+            }
+        }
+
+        if ($error_class !== null) {
+            $ec = $error_class;
+        } elseif (isset($this) && isset($this->_error_class)) {
+            $ec = $this->_error_class;
         } else {
-            // Honor safe mode
-            if (!ini_get('safe_mode') || !$path = ini_get('safe_mode_exec_dir')) {
-                $path = getenv('PATH');
-                if (!$path) {
-                    $path = getenv('Path'); // some OSes are just stupid enough to do this
+            $ec = 'PEAR_Error';
+        }
+        if ($skipmsg) {
+            $a = &new $ec($code, $mode, $options, $userinfo);
+            return $a;
+        } else {
+            $a = &new $ec($message, $code, $mode, $options, $userinfo);
+            return $a;
+        }
+    }
+
+    // }}}
+    // {{{ throwError()
+
+    /**
+     * Simpler form of raiseError with fewer options.  In most cases
+     * message, code and userinfo are enough.
+     *
+     * @param string $message
+     *
+     */
+    function &throwError($message = null,
+                         $code = null,
+                         $userinfo = null)
+    {
+        if (isset($this) && is_a($this, 'PEAR')) {
+            $a = &$this->raiseError($message, $code, null, null, $userinfo);
+            return $a;
+        } else {
+            $a = &PEAR::raiseError($message, $code, null, null, $userinfo);
+            return $a;
+        }
+    }
+
+    // }}}
+    function staticPushErrorHandling($mode, $options = null)
+    {
+        $stack = &$GLOBALS['_PEAR_error_handler_stack'];
+        $def_mode    = &$GLOBALS['_PEAR_default_error_mode'];
+        $def_options = &$GLOBALS['_PEAR_default_error_options'];
+        $stack[] = array($def_mode, $def_options);
+        switch ($mode) {
+            case PEAR_ERROR_EXCEPTION:
+            case PEAR_ERROR_RETURN:
+            case PEAR_ERROR_PRINT:
+            case PEAR_ERROR_TRIGGER:
+            case PEAR_ERROR_DIE:
+            case null:
+                $def_mode = $mode;
+                $def_options = $options;
+                break;
+
+            case PEAR_ERROR_CALLBACK:
+                $def_mode = $mode;
+                // class/object method callback
+                if (is_callable($options)) {
+                    $def_options = $options;
+                } else {
+                    trigger_error("invalid error callback", E_USER_WARNING);
                 }
-            }
-            $path_elements = explode($path_delim, $path);
-        }
+                break;
 
-        if (OS_WINDOWS) {
-            $exe_suffixes = getenv('PATHEXT')
-                                ? explode($path_delim, getenv('PATHEXT'))
-                                : array('.exe','.bat','.cmd','.com');
-            // allow passing a command.exe param
-            if (strpos($program, '.') !== false) {
-                array_unshift($exe_suffixes, '');
-            }
-            // is_executable() is not available on windows for PHP4
-            $pear_is_executable = (function_exists('is_executable')) ? 'is_executable' : 'is_file';
-        } else {
-            $exe_suffixes = array('');
-            $pear_is_executable = 'is_executable';
+            default:
+                trigger_error("invalid error mode", E_USER_WARNING);
+                break;
         }
-
-        foreach ($exe_suffixes as $suff) {
-            foreach ($path_elements as $dir) {
-                $file = $dir . DIRECTORY_SEPARATOR . $program . $suff;
-                if (@$pear_is_executable($file)) {
-                    return $file;
-                }
-            }
-        }
-        return $fallback;
+        $stack[] = array($mode, $options);
+        return true;
     }
 
-    /**
-    * The "find" command
-    *
-    * Usage:
-    *
-    * System::find($dir);
-    * System::find("$dir -type d");
-    * System::find("$dir -type f");
-    * System::find("$dir -name *.php");
-    * System::find("$dir -name *.php -name *.htm*");
-    * System::find("$dir -maxdepth 1");
-    *
-    * Params implmented:
-    * $dir            -> Start the search at this directory
-    * -type d         -> return only directories
-    * -type f         -> return only files
-    * -maxdepth <n>   -> max depth of recursion
-    * -name <pattern> -> search pattern (bash style). Multiple -name param allowed
-    *
-    * @param  mixed Either array or string with the command line
-    * @return array Array of found files
-    *
-    */
-    function find($args)
+    function staticPopErrorHandling()
     {
-        if (!is_array($args)) {
-            $args = preg_split('/\s+/', $args, -1, PREG_SPLIT_NO_EMPTY);
+        $stack = &$GLOBALS['_PEAR_error_handler_stack'];
+        $setmode     = &$GLOBALS['_PEAR_default_error_mode'];
+        $setoptions  = &$GLOBALS['_PEAR_default_error_options'];
+        array_pop($stack);
+        list($mode, $options) = $stack[sizeof($stack) - 1];
+        array_pop($stack);
+        switch ($mode) {
+            case PEAR_ERROR_EXCEPTION:
+            case PEAR_ERROR_RETURN:
+            case PEAR_ERROR_PRINT:
+            case PEAR_ERROR_TRIGGER:
+            case PEAR_ERROR_DIE:
+            case null:
+                $setmode = $mode;
+                $setoptions = $options;
+                break;
+
+            case PEAR_ERROR_CALLBACK:
+                $setmode = $mode;
+                // class/object method callback
+                if (is_callable($options)) {
+                    $setoptions = $options;
+                } else {
+                    trigger_error("invalid error callback", E_USER_WARNING);
+                }
+                break;
+
+            default:
+                trigger_error("invalid error mode", E_USER_WARNING);
+                break;
         }
-        $dir = array_shift($args);
-        $patterns = array();
-        $depth = 0;
-        $do_files = $do_dirs = true;
-        for ($i = 0; $i < count($args); $i++) {
-            switch ($args[$i]) {
-                case '-type':
-                    if (in_array($args[$i+1], array('d', 'f'))) {
-                        if ($args[$i+1] == 'd') {
-                            $do_files = false;
-                        } else {
-                            $do_dirs = false;
-                        }
-                    }
-                    $i++;
+        return true;
+    }
+
+    // {{{ pushErrorHandling()
+
+    /**
+     * Push a new error handler on top of the error handler options stack. With this
+     * you can easily override the actual error handler for some code and restore
+     * it later with popErrorHandling.
+     *
+     * @param mixed $mode (same as setErrorHandling)
+     * @param mixed $options (same as setErrorHandling)
+     *
+     * @return bool Always true
+     *
+     * @see PEAR::setErrorHandling
+     */
+    function pushErrorHandling($mode, $options = null)
+    {
+        $stack = &$GLOBALS['_PEAR_error_handler_stack'];
+        if (isset($this) && is_a($this, 'PEAR')) {
+            $def_mode    = &$this->_default_error_mode;
+            $def_options = &$this->_default_error_options;
+        } else {
+            $def_mode    = &$GLOBALS['_PEAR_default_error_mode'];
+            $def_options = &$GLOBALS['_PEAR_default_error_options'];
+        }
+        $stack[] = array($def_mode, $def_options);
+
+        if (isset($this) && is_a($this, 'PEAR')) {
+            $this->setErrorHandling($mode, $options);
+        } else {
+            PEAR::setErrorHandling($mode, $options);
+        }
+        $stack[] = array($mode, $options);
+        return true;
+    }
+
+    // }}}
+    // {{{ popErrorHandling()
+
+    /**
+    * Pop the last error handler used
+    *
+    * @return bool Always true
+    *
+    * @see PEAR::pushErrorHandling
+    */
+    function popErrorHandling()
+    {
+        $stack = &$GLOBALS['_PEAR_error_handler_stack'];
+        array_pop($stack);
+        list($mode, $options) = $stack[sizeof($stack) - 1];
+        array_pop($stack);
+        if (isset($this) && is_a($this, 'PEAR')) {
+            $this->setErrorHandling($mode, $options);
+        } else {
+            PEAR::setErrorHandling($mode, $options);
+        }
+        return true;
+    }
+
+    // }}}
+    // {{{ loadExtension()
+
+    /**
+    * OS independant PHP extension load. Remember to take care
+    * on the correct extension name for case sensitive OSes.
+    *
+    * @param string $ext The extension name
+    * @return bool Success or not on the dl() call
+    */
+    function loadExtension($ext)
+    {
+        if (!extension_loaded($ext)) {
+            // if either returns true dl() will produce a FATAL error, stop that
+            if ((ini_get('enable_dl') != 1) || (ini_get('safe_mode') == 1)) {
+                return false;
+            }
+            if (OS_WINDOWS) {
+                $suffix = '.dll';
+            } elseif (PHP_OS == 'HP-UX') {
+                $suffix = '.sl';
+            } elseif (PHP_OS == 'AIX') {
+                $suffix = '.a';
+            } elseif (PHP_OS == 'OSX') {
+                $suffix = '.bundle';
+            } else {
+                $suffix = '.so';
+            }
+            return @dl('php_'.$ext.$suffix) || @dl($ext.$suffix);
+        }
+        return true;
+    }
+
+    // }}}
+}
+
+// {{{ _PEAR_call_destructors()
+
+function _PEAR_call_destructors()
+{
+    global $_PEAR_destructor_object_list;
+    if (is_array($_PEAR_destructor_object_list) &&
+        sizeof($_PEAR_destructor_object_list))
+    {
+        reset($_PEAR_destructor_object_list);
+        if (PEAR::getStaticProperty('PEAR', 'destructlifo')) {
+            $_PEAR_destructor_object_list = array_reverse($_PEAR_destructor_object_list);
+        }
+        while (list($k, $objref) = each($_PEAR_destructor_object_list)) {
+            $classname = get_class($objref);
+            while ($classname) {
+                $destructor = "_$classname";
+                if (method_exists($objref, $destructor)) {
+                    $objref->$destructor();
                     break;
-                case '-name':
-                    if (OS_WINDOWS) {
-                        if ($args[$i+1]{0} == '\\') {
-                            // prepend drive
-                            $args[$i+1] = addslashes(substr(getcwd(), 0, 2) . $args[$i + 1]);
-                        }
-                        // escape path separators to avoid PCRE problems
-                        $args[$i+1] = str_replace('\\', '\\\\', $args[$i+1]);
-                    }
-                    $patterns[] = "(" . preg_replace(array('/\./', '/\*/'),
-                                                     array('\.', '.*', ),
-                                                     $args[$i+1])
-                                      . ")";
-                    $i++;
-                    break;
-                case '-maxdepth':
-                    $depth = $args[$i+1];
-                    break;
-            }
-        }
-        $path = System::_dirToStruct($dir, $depth);
-        if ($do_files && $do_dirs) {
-            $files = array_merge($path['files'], $path['dirs']);
-        } elseif ($do_dirs) {
-            $files = $path['dirs'];
-        } else {
-            $files = $path['files'];
-        }
-        if (count($patterns)) {
-            $patterns = implode('|', $patterns);
-            $ret = array();
-            for ($i = 0; $i < count($files); $i++) {
-                if (preg_match("#^$patterns\$#", $files[$i])) {
-                    $ret[] = $files[$i];
+                } else {
+                    $classname = get_parent_class($classname);
                 }
             }
-            return $ret;
         }
-        return $files;
+        // Empty the object list to ensure that destructors are
+        // not called more than once.
+        $_PEAR_destructor_object_list = array();
+    }
+
+    // Now call the shutdown functions
+    if (is_array($GLOBALS['_PEAR_shutdown_funcs']) AND !empty($GLOBALS['_PEAR_shutdown_funcs'])) {
+        foreach ($GLOBALS['_PEAR_shutdown_funcs'] as $value) {
+            call_user_func_array($value[0], $value[1]);
+        }
     }
 }
+
+// }}}
+/**
+ * Standard PEAR error class for PHP 4
+ *
+ * This class is supserseded by {@link PEAR_Exception} in PHP 5
+ *
+ * @category   pear
+ * @package    PEAR
+ * @author     Stig Bakken <ssb@php.net>
+ * @author     Tomas V.V. Cox <cox@idecnet.com>
+ * @author     Gregory Beaver <cellog@php.net>
+ * @copyright  1997-2006 The PHP Group
+ * @license    http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @version    Release: 1.6.1
+ * @link       http://pear.php.net/manual/en/core.pear.pear-error.php
+ * @see        PEAR::raiseError(), PEAR::throwError()
+ * @since      Class available since PHP 4.0.2
+ */
+class PEAR_Error
+{
+    // {{{ properties
+
+    var $error_message_prefix = '';
+    var $mode                 = PEAR_ERROR_RETURN;
+    var $level                = E_USER_NOTICE;
+    var $code                 = -1;
+    var $message              = '';
+    var $userinfo             = '';
+    var $backtrace            = null;
+
+    // }}}
+    // {{{ constructor
+
+    /**
+     * PEAR_Error constructor
+     *
+     * @param string $message  message
+     *
+     * @param int $code     (optional) error code
+     *
+     * @param int $mode     (optional) error mode, one of: PEAR_ERROR_RETURN,
+     * PEAR_ERROR_PRINT, PEAR_ERROR_DIE, PEAR_ERROR_TRIGGER,
+     * PEAR_ERROR_CALLBACK or PEAR_ERROR_EXCEPTION
+     *
+     * @param mixed $options   (optional) error level, _OR_ in the case of
+     * PEAR_ERROR_CALLBACK, the callback function or object/method
+     * tuple.
+     *
+     * @param string $userinfo (optional) additional user/debug info
+     *
+     * @access public
+     *
+     */
+    function PEAR_Error($message = 'unknown error', $code = null,
+                        $mode = null, $options = null, $userinfo = null)
+    {
+        if ($mode === null) {
+            $mode = PEAR_ERROR_RETURN;
+        }
+        $this->message   = $message;
+        $this->code      = $code;
+        $this->mode      = $mode;
+        $this->userinfo  = $userinfo;
+        if (!PEAR::getStaticProperty('PEAR_Error', 'skiptrace')) {
+            $this->backtrace = debug_backtrace();
+            if (isset($this->backtrace[0]) && isset($this->backtrace[0]['object'])) {
+                unset($this->backtrace[0]['object']);
+            }
+        }
+        if ($mode & PEAR_ERROR_CALLBACK) {
+            $this->level = E_USER_NOTICE;
+            $this->callback = $options;
+        } else {
+            if ($options === null) {
+                $options = E_USER_NOTICE;
+            }
+            $this->level = $options;
+            $this->callback = null;
+        }
+        if ($this->mode & PEAR_ERROR_PRINT) {
+            if (is_null($options) || is_int($options)) {
+                $format = "%s";
+            } else {
+                $format = $options;
+            }
+            printf($format, $this->getMessage());
+        }
+        if ($this->mode & PEAR_ERROR_TRIGGER) {
+            trigger_error($this->getMessage(), $this->level);
+        }
+        if ($this->mode & PEAR_ERROR_DIE) {
+            $msg = $this->getMessage();
+            if (is_null($options) || is_int($options)) {
+                $format = "%s";
+                if (substr($msg, -1) != "\n") {
+                    $msg .= "\n";
+                }
+            } else {
+                $format = $options;
+            }
+            die(sprintf($format, $msg));
+        }
+        if ($this->mode & PEAR_ERROR_CALLBACK) {
+            if (is_callable($this->callback)) {
+                call_user_func($this->callback, $this);
+            }
+        }
+        if ($this->mode & PEAR_ERROR_EXCEPTION) {
+            trigger_error("PEAR_ERROR_EXCEPTION is obsolete, use class PEAR_Exception for exceptions", E_USER_WARNING);
+            eval('$e = new Exception($this->message, $this->code);throw($e);');
+        }
+    }
+
+    // }}}
+    // {{{ getMode()
+
+    /**
+     * Get the error mode from an error object.
+     *
+     * @return int error mode
+     * @access public
+     */
+    function getMode() {
+        return $this->mode;
+    }
+
+    // }}}
+    // {{{ getCallback()
+
+    /**
+     * Get the callback function/method from an error object.
+     *
+     * @return mixed callback function or object/method array
+     * @access public
+     */
+    function getCallback() {
+        return $this->callback;
+    }
+
+    // }}}
+    // {{{ getMessage()
+
+
+    /**
+     * Get the error message from an error object.
+     *
+     * @return  string  full error message
+     * @access public
+     */
+    function getMessage()
+    {
+        return ($this->error_message_prefix . $this->message);
+    }
+
+
+    // }}}
+    // {{{ getCode()
+
+    /**
+     * Get error code from an error object
+     *
+     * @return int error code
+     * @access public
+     */
+     function getCode()
+     {
+        return $this->code;
+     }
+
+    // }}}
+    // {{{ getType()
+
+    /**
+     * Get the name of this error/exception.
+     *
+     * @return string error/exception name (type)
+     * @access public
+     */
+    function getType()
+    {
+        return get_class($this);
+    }
+
+    // }}}
+    // {{{ getUserInfo()
+
+    /**
+     * Get additional user-supplied information.
+     *
+     * @return string user-supplied information
+     * @access public
+     */
+    function getUserInfo()
+    {
+        return $this->userinfo;
+    }
+
+    // }}}
+    // {{{ getDebugInfo()
+
+    /**
+     * Get additional debug information supplied by the application.
+     *
+     * @return string debug information
+     * @access public
+     */
+    function getDebugInfo()
+    {
+        return $this->getUserInfo();
+    }
+
+    // }}}
+    // {{{ getBacktrace()
+
+    /**
+     * Get the call backtrace from where the error was generated.
+     * Supported with PHP 4.3.0 or newer.
+     *
+     * @param int $frame (optional) what frame to fetch
+     * @return array Backtrace, or NULL if not available.
+     * @access public
+     */
+    function getBacktrace($frame = null)
+    {
+        if (defined('PEAR_IGNORE_BACKTRACE')) {
+            return null;
+        }
+        if ($frame === null) {
+            return $this->backtrace;
+        }
+        return $this->backtrace[$frame];
+    }
+
+    // }}}
+    // {{{ addUserInfo()
+
+    function addUserInfo($info)
+    {
+        if (empty($this->userinfo)) {
+            $this->userinfo = $info;
+        } else {
+            $this->userinfo .= " ** $info";
+        }
+    }
+
+    // }}}
+    // {{{ toString()
+
+    /**
+     * Make a string representation of this object.
+     *
+     * @return string a string with an object summary
+     * @access public
+     */
+    function toString() {
+        $modes = array();
+        $levels = array(E_USER_NOTICE  => 'notice',
+                        E_USER_WARNING => 'warning',
+                        E_USER_ERROR   => 'error');
+        if ($this->mode & PEAR_ERROR_CALLBACK) {
+            if (is_array($this->callback)) {
+                $callback = (is_object($this->callback[0]) ?
+                    strtolower(get_class($this->callback[0])) :
+                    $this->callback[0]) . '::' .
+                    $this->callback[1];
+            } else {
+                $callback = $this->callback;
+            }
+            return sprintf('[%s: message="%s" code=%d mode=callback '.
+                           'callback=%s prefix="%s" info="%s"]',
+                           strtolower(get_class($this)), $this->message, $this->code,
+                           $callback, $this->error_message_prefix,
+                           $this->userinfo);
+        }
+        if ($this->mode & PEAR_ERROR_PRINT) {
+            $modes[] = 'print';
+        }
+        if ($this->mode & PEAR_ERROR_TRIGGER) {
+            $modes[] = 'trigger';
+        }
+        if ($this->mode & PEAR_ERROR_DIE) {
+            $modes[] = 'die';
+        }
+        if ($this->mode & PEAR_ERROR_RETURN) {
+            $modes[] = 'return';
+        }
+        return sprintf('[%s: message="%s" code=%d mode=%s level=%s '.
+                       'prefix="%s" info="%s"]',
+                       strtolower(get_class($this)), $this->message, $this->code,
+                       implode("|", $modes), $levels[$this->level],
+                       $this->error_message_prefix,
+                       $this->userinfo);
+    }
+
+    // }}}
+}
+
+/*
+ * Local Variables:
+ * mode: php
+ * tab-width: 4
+ * c-basic-offset: 4
+ * End:
+ */
 ?>
