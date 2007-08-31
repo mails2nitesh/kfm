@@ -123,6 +123,7 @@ class File extends Object{
 		# expects input size in bytes
 	 	# if no input parameter is given, the size of the file object is returned 
 		$size=func_num_args()?func_get_arg(0):$this->getSize();
+		if(!$size)return '0';
 		$format=array("B","KB","MB","GB","TB","PB","EB","ZB","YB");
 		$n=floor(log($size)/log(1024));
 		return $n?round($size/pow(1024,$n),1).' '.$format[$n]:'0 B';
