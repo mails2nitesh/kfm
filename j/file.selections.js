@@ -7,8 +7,9 @@ function kfm_addToSelection(id){
 	kfm_selectionCheck();
 }
 function kfm_chooseFile(e,o){
-	e=new Event(e);
-	var el=(o?e:e.target).kfm_attributes;
+	var el=(o?e:new Event(e).target);
+	if(el.tagName=='SPAN')el=el.parentNode;
+	el=el.kfm_attributes;
 	x_kfm_getFileUrl(el.id,function(url){
 		if(kfm_file_handler=='return'||kfm_file_handler=='fckeditor'){
 			if(!el.width)window.opener.SetUrl(url);
