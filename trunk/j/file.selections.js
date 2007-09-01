@@ -26,7 +26,7 @@ function kfm_file_drag(e){
 	if(!window.dragType||window.dragType!=1)return;
 	clearSelections();
 	var m=getMouseAt(e);
-	var w=drag_wrapper.offsetWidth,h=drag_wrapper.offsetHeight,ws=window.getSize().size();
+	var w=drag_wrapper.offsetWidth,h=drag_wrapper.offsetHeight,ws=window.getSize().size;
 	var x=(w+m.x>ws.x-16)?ws.x-w:m.x+16;
 	var y=(h+m.y>ws.y)?ws.y-h:m.y;
 	if(x<0)x=0;
@@ -58,7 +58,7 @@ function kfm_file_dragStart(filename){
 	if(!kfm_isFileSelected(filename))kfm_addToSelection(filename);
 	if(!selectedFiles.length)return;
 	window.dragType=1;
-	var w=window.getSize().size();
+	var w=window.getSize().size;
 	window.drag_wrapper=new Element('div',{
 		'id':'kfm_drag_wrapper',
 		styles:{
@@ -148,7 +148,7 @@ function kfm_selection_dragStart(e){
 	if(window.dragType)return;
 	if (window.mouseAt.x > $('kfm_right_column').scrollWidth + $('kfm_left_column').scrollWidth) return;
 	window.dragType=2;
-	var w=window.getSize().size();
+	var w=window.getSize().size;
 	document.addEvent('mouseup',kfm_selection_dragFinish);
 	window.drag_wrapper=new Element('div',{
 		'id':'kfm_selection_drag_wrapper',

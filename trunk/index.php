@@ -18,48 +18,19 @@ header('Content-type: text/html; Charset=utf-8');
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
-		<style type="text/css"><?php
-			$css=file_get_contents('themes/'.$kfm_theme.'/kfm.css');
-			echo preg_replace('/\s+/',' ',$css);
-		?></style>
+		<style type="text/css">@import "themes/<?php echo $kfm_theme; ?>/kfm.css";</style>
 		<title>KFM - Kae's File Manager</title>
 		<script type="text/javascript" src="mootools.v1.11/mootools.v1.11.js"></script>
+		<?php
+			if(isset($kfm_dev)){
+				$js_files=array('variables.js','notice.js','kfm.js','alerts.js','modal.dialog.js','contextmenu.js','directories.js','file.selections.js','file.text-editing.js','images.and.icons.js','panels.js','tags.js','common.js','kaejax_replaces.js','files.js','resize_handler.js');
+				echo '<script type="text/javascript" src="j/'.join("\"></script>\n		<script type=\"text/javascript\" src=\"j/",$js_files).'"></script>'."\n";
+			}
+			else echo '<script type="text/javascript" src="j/all.php"></script>';
+		?>
+		<script type="text/javascript" src="swfuploadr52_0002/swfupload.js"></script>
+		<script type="text/javascript" src="lang/<?php echo $kfm_language; ?>.js"></script>
 		<script type="text/javascript">
-<?php
-	if(!isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))$_SERVER['HTTP_ACCEPT_LANGUAGE']='';
-	$js='';
-	$js.=file_get_contents('j/variables.js');
-	$js.=file_get_contents('j/notice.js');
-	$js.=file_get_contents('j/kfm.js');
-	$js.=file_get_contents('j/alerts.js');
-	$js.=file_get_contents('j/modal.dialog.js');
-	$js.=file_get_contents('j/contextmenu.js');
-	$js.=file_get_contents('j/directories.js');
-	$js.=file_get_contents('j/file.selections.js');
-	$js.=file_get_contents('j/file.text-editing.js');
-	$js.=file_get_contents('j/images.and.icons.js');
-	$js.=file_get_contents('j/panels.js');
-	$js.=file_get_contents('j/tags.js');
-	$js.=file_get_contents('j/common.js');
-	$js.=file_get_contents('j/kaejax_replaces.js');
-	$js.=file_get_contents('j/files.js');
-	$js.=file_get_contents('j/resize_handler.js');
-	$js.=file_get_contents('swfuploadr52_0002/swfupload.js');
-	$js.=file_get_contents('lang/'.$kfm_language.'.js');
-#	$js=preg_replace('#// .*|[\t]#','',$js); # strip single-line comments and tabs
-#	$js=preg_replace('#/\*.*?\*/#ims','',$js); # strip multi-line comments
-#	$js=preg_replace('#;\n}#ims','}',$js);
-#	$js=preg_replace('#:\n"#ims',':"',$js);
-#	$jsnew=$js;
-#	do{
-#		$redo=0;
-#		$jsnew=preg_replace('#\n\n#ims',"\n",$jsnew);
-#		$jsnew=preg_replace('#([{}])\n([{}])#ims','\1\2',$jsnew);
-#		if($js!=$jsnew)$redo=1;
-#		$js=$jsnew;
-#	}while($redo);
-	echo $js;
-?>
 			var session_key="<?php echo $kfm_session->key; ?>";
 			var starttype="<?php echo isset($_GET['type'])?$_GET['type']:''; ?>";
 			var fckroot="<?php echo $kfm_userfiles; ?>";
