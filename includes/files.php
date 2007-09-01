@@ -38,8 +38,9 @@ function _createEmptyFile($cwd,$filename){
 }
 function _downloadFileFromUrl($url,$filename){
 	global $kfm_session;
-	$cwd=$kfm_session->get('currentdir');
 	$cwd_id=$kfm_session->get('cwd_id');
+	$dir=new kfmDirectory($cwd_id);
+	$cwd=$dir->getPath();
 	if(!kfm_checkAddr($cwd.'/'.$filename))return 'error: filename not allowed';
 	if(substr($url,0,4)!='http')return 'error: url must begin with http';
 	$file=file_get_contents(str_replace(' ','%20',$url));
@@ -174,9 +175,7 @@ function _loadFiles($rootid=1){
 		$files[]=$aFile;
 	}
 	$root='/'.str_replace($GLOBALS['rootdir'],'',$dir->path);
-	{ # update session data
-		$kfm_session->setMultiple(array('currentdir'=>$root,'cwd_id'=>$rootid));
-	}
+	$kfm_session->set('cwd_id',$rootid);
 	return array('reqdir'=>$root,'files'=>$files,'uploads_allowed'=>$GLOBALS['kfm_allow_file_upload'], 'get_params'=>GET_PARAMS); 
 }
 function _moveFiles($files,$dir_id){
