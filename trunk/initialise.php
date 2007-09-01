@@ -202,7 +202,7 @@ require_once($kfm_base_path.'configuration.php');
 	$session_id=(isset($_GET['kfm_session']))?$_GET['kfm_session']:'';
 	$kfm_session=new kfmSession($session_id);
 	if($kfm_session->isNew){
-		$kfm_session->setMultiple(array('currentdir'=>rtrim($rootdir,' /'),'cwd_id'=>1,'language'=>'','username'=>'','password'=>'','loggedin'=>0));
+		$kfm_session->setMultiple(array('cwd_id'=>1,'language'=>'','username'=>'','password'=>'','loggedin'=>0));
 	}
 }
 { # check authentication
