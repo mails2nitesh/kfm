@@ -229,24 +229,8 @@ function kfm_incrementalFileDisplay(){
 		wrapper.files[a]=el;
 	}
 	kfm.addEl(wrapper,el);
-	var reqWidth=el.offsetWidth;
 	el.appendChild(nameEl);
-	el.style.width='auto';
-	if(0&&el.offsetWidth>reqWidth){
-		var extension='';
-		if(name.indexOf('.')>-1){
-			extension=name.replace(kfm_regexps.get_filename_extension,'$1');
-			name=name.replace(kfm_regexps.remove_filename_extension,'')+'.';
-		}
-		var nameEl=$(el.getElementsByTagName('span')[0]);
-		nameEl.removeClass('filename');
-		kfm_shrinkName(name,el,nameEl,'offsetWidth',reqWidth,extension);
-	}
-	el.style.width=reqWidth-kfm_file_bits.padding;
-	if(el.offsetWidth!=reqWidth){ // padding is causing an error in width
-		kfm_file_bits.padding=el.offsetWidth-reqWidth;
-		el.style.width=reqWidth-kfm_file_bits.padding;
-	}
+	if(a)alert(a+"\n"+$('kfm_file_icon_'+fsdata[a-1].id).offsetLeft+"\n"+el.offsetLeft);
 	if(a&&$('kfm_file_icon_'+fsdata[a-1].id).offsetLeft>=el.offsetLeft)el.setStyle('clear','left');
 	window.kfm_incrementalFileDisplay_vars.at=a+1;
 	if(a+1<fsdata.length)window.kfm_incrementalFileDisplay_loader=setTimeout('kfm_incrementalFileDisplay()',((a+1)%kfm_show_files_in_groups_of?0:1));
