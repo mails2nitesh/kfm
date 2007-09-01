@@ -5,7 +5,7 @@ function kfm_modal_close(msg){
 }
 function kfm_modal_open(form,title,actions){
 	window.inPrompt=1;
-	var body=document.body,scrollAt=window.ie?getWindowScrollAt():{x:0,y:0},a=getWindowSize(),wx=0,wy=0,pos=window.ie?'absolute':'fixed',i;
+	var body=document.body,scrollAt=window.ie?getWindowScrollAt():{x:0,y:0},a=window.getSize().size,wx=0,wy=0,pos=window.ie?'absolute':'fixed',i;
 	if(window.ie)body.setStyles({
 		'overflow':'hidden'
 	});

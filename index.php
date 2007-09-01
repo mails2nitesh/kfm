@@ -52,10 +52,6 @@ header('Content-type: text/html; Charset=utf-8');
 			else if($browser->getBrowserString()=='Konqueror/Safari')$js.=file_get_contents('j/getWindow.konqueror.js');
 			else $js.=file_get_contents('j/getWindow.js');
 		}
-		{ # getWindowSize
-			if($browser->isIE())$js.=file_get_contents('j/getWindowSize.ie.js');
-			else $js.=file_get_contents('j/getWindowSize.js');
-		}
 	}
 	$js.=file_get_contents('j/files.js');
 	$js.=file_get_contents('j/resize_handler.js');

@@ -135,7 +135,7 @@ function kfm_dir_dragFinish(e){
 }
 function kfm_dir_dragStart(pid){
 	window.dragType=3;
-	var w=getWindowSize();
+	var w=window.getSize().size;
 	window.drag_wrapper=$extend(
 		new Element('div',{
 			'id':'kfm_drag_wrapper',

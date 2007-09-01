@@ -352,7 +352,7 @@ function kfm_showToolTip(res){
 	if(!icon||contextmenu)return;
 	table.id='kfm_tooltip';
 	kfm.addEl(document.body,table);
-	var l=getOffset(icon,'Left'),t=getOffset(icon,'Top'),w=icon.offsetWidth,h=icon.offsetHeight,ws=getWindowSize();
+	var l=getOffset(icon,'Left'),t=getOffset(icon,'Top'),w=icon.offsetWidth,h=icon.offsetHeight,ws=window.getSize().size;
 	l=(l+(w/2)>ws.x/2)?l-table.offsetWidth:l+w;
 	table.setStyles('position:absolute;top:'+t+'px;left:'+l+'px;visibility:visible;opacity:.9');
 }

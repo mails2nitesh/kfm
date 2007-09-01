@@ -27,7 +27,7 @@ var KFM=new Class({
 		setTimeout('window.inPrompt=0',1);
 	},
 	build:function(){
-		var form_panel,form,right_column,directories,logs,logHeight=64,w=getWindowSize(),j,i;
+		var form_panel,form,right_column,directories,logs,logHeight=64,w=window.getSize().size,j,i;
 		{ // extend language objects
 			for(var j in kfm.lang){
 				if(kfm_regexps.percent_numbers.test(kfm.lang[j])){
