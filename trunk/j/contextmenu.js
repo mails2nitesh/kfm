@@ -46,7 +46,7 @@ function kfm_createContextMenu(m,links){
 	}
 	var rows=contextmenu.rows.length;
 	for(var i=0;i<links.length;++i)if(links[i][1])contextmenu.addLink(links[i][0],links[i][1],links[i][2],links[i][3]);
-	var w=contextmenu.offsetWidth,h=contextmenu.offsetHeight,ws=getWindowSize();
+	var w=contextmenu.offsetWidth,h=contextmenu.offsetHeight,ws=window.getSize().size;
 	if(h+m.y>ws.y)contextmenu.style.top=(ws.y-h)+'px';
 	if(w+m.x>ws.x)contextmenu.style.left=(m.x-w)+'px';
 }

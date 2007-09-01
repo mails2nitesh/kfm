@@ -1,6 +1,6 @@
 // see license.txt for licensing
 function kfm_resizeHandler(){
-	var w=getWindowSize();
+	var w=window.getSize().size;
 	for(var i=0;i<kfm_resizeHandler_maxHeights.length;++i)if($(kfm_resizeHandler_maxHeights[i]))$(kfm_resizeHandler_maxHeights[i]).setStyle('height',w.y);
 	for(var i=0;i<kfm_resizeHandler_maxWidths.length;++i)if($(kfm_resizeHandler_maxWidths[i]))$(kfm_resizeHandler_maxWidths[i]).setStyle('width',w.x);
 	if($('kfm_codepressTableCell')){

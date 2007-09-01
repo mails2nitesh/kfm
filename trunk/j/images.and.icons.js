@@ -32,7 +32,7 @@ function kfm_img_startLightbox(id){
 		document.title='KFM Slideshow: '+window.kfm_slideshow.at;
 		id=window.kfm_slideshow.ids[window.kfm_slideshow.at%window.kfm_slideshow.ids.length];
 	}
-	var el,data=$('kfm_file_icon_'+id).kfm_attributes,ws=getWindowSize(),oldEl=$('kfm_lightboxImage'),wrapper=$('kfm_lightboxWrapper');
+	var el,data=$('kfm_file_icon_'+id).kfm_attributes,ws=window.getSize().size,oldEl=$('kfm_lightboxImage'),wrapper=$('kfm_lightboxWrapper');
 	if(!wrapper){
 		wrapper=new Element('div',{
 			'id':'kfm_lightboxWrapper',
