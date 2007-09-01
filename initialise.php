@@ -68,7 +68,7 @@ require_once($kfm_base_path.'configuration.php');
 	if(!isset($kfm_show_files_in_groups_of))$kfm_show_files_in_groups_of=10;
 	define('KFM_VERSION',rtrim(file_get_contents($kfm_base_path.'version.txt')));
 	if(!isset($_SERVER['DOCUMENT_ROOT'])){ # fix for IIS
-		$_SERVER['DOCUMENT_ROOT']=str_replace('\\','/',substr($_SERVER['SCRIPT_FILENAME'],0,0-strlen($_SERVER['PHP_SELF'])));
+		$_SERVER['DOCUMENT_ROOT']=preg_replace('/\/[^\/]*$/','',str_replace('\\','/',$_SERVER['SCRIPT_FILENAME']));
 	}
 	$rootdir=$_SERVER['DOCUMENT_ROOT'].$kfm_userfiles.'/';
 	if(!is_dir($rootdir))mkdir($rootdir,0755);
@@ -105,7 +105,7 @@ require_once($kfm_base_path.'configuration.php');
 		}
 	}else{
 		# Support for creating the directory
-		$workpath_tmp = substr($workpath,0,-1);
+		$workpath_tmp=substr($workpath,0,-1);
 		if(is_writable(dirname($workpath_tmp)))mkdir($workpath_tmp, 0755);
 		else{
 			echo 'error: could not create directory <code>"'.htmlspecialchars($workpath_tmp).'"</code>. please make sure that <code>'.htmlspecialchars(preg_replace('#/[^/]*$#','',$workpath_tmp)).'</code> is writable by the server';
