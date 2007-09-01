@@ -15,6 +15,7 @@ header('Content-type: text/html; Charset=utf-8');
 }
 
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
 		<style type="text/css"><?php
@@ -46,11 +47,6 @@ header('Content-type: text/html; Charset=utf-8');
 		{ # kaejax_replaces
 			if($browser->isIE())$js.=file_get_contents('j/kaejax_replaces.ie.js');
 			else $js.=file_get_contents('j/kaejax_replaces.js');
-		}
-		{ # getWindow
-			if($browser->isIE())$js.=file_get_contents('j/getWindow.ie.js');
-			else if($browser->getBrowserString()=='Konqueror/Safari')$js.=file_get_contents('j/getWindow.konqueror.js');
-			else $js.=file_get_contents('j/getWindow.js');
 		}
 	}
 	$js.=file_get_contents('j/files.js');
@@ -108,6 +104,7 @@ header('Content-type: text/html; Charset=utf-8');
 		</script>
 	</head>
 	<body>
+		<p>Please Wait - loading...</p>
 		<noscript>KFM relies on JavaScript. Please either turn on JavaScript in your browser, or <a href="http://www.getfirefox.com/">get Firefox</a> if your browser does not support JavaScript.</noscript>
 		<?php
 			if(!$kfm_dont_send_metrics){

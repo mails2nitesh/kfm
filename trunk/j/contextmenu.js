@@ -10,7 +10,7 @@ function kfm_contextmenuinit(){
 		var l=c.offsetLeft,t=c.offsetTop;
 		if(m.x<l||m.x>l+c.offsetWidth||m.y<t||m.y>t+c.offsetHeight)kfm_closeContextMenu();
 	});
-	getWindow().oncontextmenu=function(e){
+	document.body.oncontextmenu=function(e){
 		e=new Event(e);
 		if(!e.control)e.stop();
 	}
