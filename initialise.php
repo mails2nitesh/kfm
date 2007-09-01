@@ -1,7 +1,17 @@
 <?php
 # see license.txt for licensing
 if(!isset($kfm_base_path))$kfm_base_path='';
-require_once($kfm_base_path.'framework.php');
+
+{ # load classes and helper functions
+	require $kfm_base_path.'includes/lang.php';
+	require $kfm_base_path.'includes/db.php';
+	require $kfm_base_path.'includes/object.class.php';
+	require $kfm_base_path.'includes/session.class.php';
+	require $kfm_base_path.'includes/file.class.php';
+	require $kfm_base_path.'includes/image.class.php';
+	require $kfm_base_path.'includes/directory.class.php';
+}
+
 if(get_magic_quotes_gpc()){
 	# taken from http://www.phpfreaks.com/quickcode/Get-rid-of-magic_quotes_gpc/618.php
 	function traverse (&$arr){
