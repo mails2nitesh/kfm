@@ -33,8 +33,8 @@ function _createEmptyFile($cwd,$filename){
 	global $kfm_session;
 	$dir=new kfmDirectory($cwd);
 	$path=$dir->path;
-	if(!kfm_checkAddr($path.'/'.$filename))return 'error: '.kfm_lang('illegalFileName',$filename);
-	return(touch($path.'/'.$filename))?kfm_loadFiles($cwd):'error: '.kfm_lang('couldNotCreateFile',$filename);
+	if(!kfm_checkAddr($path.$filename))return 'error: '.kfm_lang('illegalFileName',$filename);
+	return(touch($path.$filename))?kfm_loadFiles($cwd):'error: '.kfm_lang('couldNotCreateFile',$filename);
 }
 function _downloadFileFromUrl($url,$filename){
 	global $kfm_session;

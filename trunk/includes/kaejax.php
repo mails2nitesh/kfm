@@ -2,7 +2,7 @@
 { # variables
 	$kfm_kaejax_js_has_been_shown=0;
 	$kfm_kaejax_export_list=array();
-	$kfm_kaejax_is_loaded=strstr($_SERVER['REQUEST_URI'],'kfm_kaejax_is_loaded');
+	$kfm_kaejax_is_loaded=1;#strstr($_SERVER['REQUEST_URI'],'kfm_kaejax_is_loaded');
 }	
 function kfm_kaejax_handle_client_request(){
 	if(!isset($_POST['kaejax']))return;
@@ -25,7 +25,7 @@ function kfm_kaejax_esc($val){
 	return str_replace(array("\\","\r","\n",'"'),array("\\\\","\\r","\\n",'\\"'),$val);
 }
 function kfm_kaejax_get_one_stub($func_name){
-	$a='function x_'.$func_name.'()'.LSQUIGG.'kfm_kaejax_do_call("'.$func_name.'",$A(arguments));'.RSQUIGG.'function_urls.'.$func_name."='".$_SERVER['REQUEST_URI']."';";
+	$a='function x_'.$func_name.'()'.LSQUIGG.'kfm_kaejax_do_call("'.$func_name.'",$A(arguments));'.RSQUIGG.'function_urls.'.$func_name."='".$_SERVER['PHP_SELF']."';";
 	if(!$GLOBALS['kfm_kaejax_is_loaded'])$a.='kfm_kaejax_is_loaded=1;';
 	$GLOBALS['kfm_kaejax_is_loaded']=1;
 	return $a;
