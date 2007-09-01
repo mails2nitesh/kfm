@@ -26,6 +26,7 @@ header('Content-type: text/html; Charset=utf-8');
 		<script type="text/javascript" src="mootools.v1.11/mootools.v1.11.js"></script>
 		<script type="text/javascript">
 <?php
+	if(!isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))$_SERVER['HTTP_ACCEPT_LANGUAGE']='';
 	$js='';
 	$js.=file_get_contents('j/variables.js');
 	$js.=file_get_contents('j/notice.js');
@@ -40,15 +41,7 @@ header('Content-type: text/html; Charset=utf-8');
 	$js.=file_get_contents('j/panels.js');
 	$js.=file_get_contents('j/tags.js');
 	$js.=file_get_contents('j/common.js');
-	{ # browser-specific functions
-		if(!isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))$_SERVER['HTTP_ACCEPT_LANGUAGE']='';
-		require_once('Detect.php');
-		$browser=new Net_UserAgent_Detect();
-		{ # kaejax_replaces
-			if($browser->isIE())$js.=file_get_contents('j/kaejax_replaces.ie.js');
-			else $js.=file_get_contents('j/kaejax_replaces.js');
-		}
-	}
+	$js.=file_get_contents('j/kaejax_replaces.js');
 	$js.=file_get_contents('j/files.js');
 	$js.=file_get_contents('j/resize_handler.js');
 	$js.=file_get_contents('swfuploadr52_0002/swfupload.js');
