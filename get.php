@@ -31,7 +31,7 @@ else{
 		$path=$image->thumb_path;
 	}
 	else{
-		$file=new File($id);
+		$file=File::getInstance($id);
 		if(!$file){
 			echo kfm_lang('errorFileIDNotFound',$id);
 			exit;
