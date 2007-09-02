@@ -77,7 +77,7 @@ function _rmdir($pid){
 	{ # remove db entries
 		$files=db_fetch_all("select id from ".$kfm_db_prefix."files where directory=".$pid);
 		foreach($files as $r){
-			$f=new File($r['id']);
+			$f=File::getInstance($r['id']);
 			$f->delete();
 		}
 		$dirs=db_fetch_all("select id from ".$kfm_db_prefix."directories where parent=".$pid);

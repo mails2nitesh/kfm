@@ -1,4 +1,5 @@
 <?php
+$fileInstances=array();
 class File extends Object{
 	var $ctime='';
 	var $directory='';
@@ -88,6 +89,12 @@ class File extends Object{
 			else $this->error('unable to delete file '.$this->name);
 		}
 		return !$this->hasErrors();
+	}
+	function getInstance($id=0){
+		if(!$id)return false;
+		global $fileInstances;
+		if(!isset($fileInstances[$id]))$fileInstances[$id]=new File($id);
+		return $fileInstances[$id];
 	}
 	function getSize(){
 		if(!$this->size)$this->size=filesize($this->path);

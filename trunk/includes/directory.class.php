@@ -70,7 +70,7 @@ class kfmDirectory extends Object{
 		while(false!==($filename=readdir($this->handle)))if($filename[0]!='.'&&is_file($this->path.$filename)){
 			if(in_array(strtolower($filename),$GLOBALS['kfm_banned_files']))continue;
 			if(!isset($fileshash[$filename]))$fileshash[$filename]=kfm_add_file_to_db($filename,$this->id);
-			$file=new File($fileshash[$filename]);
+			$file=File::getInstance($fileshash[$filename]);
 			if(!$file)continue;
 			if($file->isImage())$file=new Image($fileshash[$filename]);
 			$files[]=$file;
