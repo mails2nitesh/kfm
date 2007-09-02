@@ -24,7 +24,7 @@ if(get_magic_quotes_gpc()){
 	$gpc=array(&$_GET,&$_POST,&$_COOKIE);
 	traverse($gpc);
 }
-set_include_path($kfm_base_path.'pear'.PATH_SEPARATOR.get_include_path());
+set_include_path($kfm_base_path.'includes/pear'.PATH_SEPARATOR.get_include_path());
 if(!file_exists($kfm_base_path.'configuration.php')){
 	echo '<em>Missing <code>configuration.php</code>!</em><p>If this is a fresh installation of KFM, then please rename <code>configuration.php.dist</code> to <code>configuration.php</code>, and edit it according to your project\'s needs.</p><p>If this is an upgraded version of KFM, please remove the parts of your old <code>config.php</code> which do not exist in <code>configuration.php.dist</code>, then rename it to <code>configuration.php</code>.</p>';
 	exit;
@@ -226,7 +226,7 @@ require_once($kfm_base_path.'configuration.php');
 			else $err='<em>Incorrect Password. Please try again, or check your <code>configuration.php</code>.</em>';
 		}
 		if(!$kfm_session->get('loggedin')){
-			include($kfm_base_path.'login.php');
+			include($kfm_base_path.'includes/login.php');
 			exit;
 		}
 	}
