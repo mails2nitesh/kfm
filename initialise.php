@@ -66,7 +66,7 @@ require_once($kfm_base_path.'configuration.php');
 }
 { # variables
 	if(!isset($kfm_show_files_in_groups_of))$kfm_show_files_in_groups_of=10;
-	define('KFM_VERSION',rtrim(file_get_contents($kfm_base_path.'version.txt')));
+	define('KFM_VERSION',rtrim(file_get_contents($kfm_base_path.'docs/version.txt')));
 	if(!isset($_SERVER['DOCUMENT_ROOT'])){ # fix for IIS
 		$_SERVER['DOCUMENT_ROOT']=preg_replace('/\/[^\/]*$/','',str_replace('\\','/',$_SERVER['SCRIPT_FILENAME']));
 	}

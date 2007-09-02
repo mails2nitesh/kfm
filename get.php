@@ -1,5 +1,5 @@
 <?php
-# see license.txt for licensing
+# see docs/license.txt for licensing
 require_once('initialise.php');
 if(isset($_SERVER['REDIRECT_QUERY_STRING'])&&$_SERVER['REDIRECT_QUERY_STRING']){
 	$arr=explode(',',$_SERVER['REDIRECT_QUERY_STRING']);

@@ -1,5 +1,5 @@
 <?php
-# see license.txt for licensing
+# see docs/license.txt for licensing
 
 # user access details. all users may use get.php without logging in, but
 #   if the following details are filled in, then login will be required
