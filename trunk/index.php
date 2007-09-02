@@ -20,7 +20,7 @@ header('Content-type: text/html; Charset=utf-8');
 	<head>
 		<style type="text/css">@import "themes/<?php echo $kfm_theme; ?>/kfm.css";</style>
 		<title>KFM - Kae's File Manager</title>
-		<script type="text/javascript" src="mootools.v1.11/mootools.v1.11.js"></script>
+		<script type="text/javascript" src="j/mootools.v1.11/mootools.v1.11.js"></script>
 		<?php
 			if(isset($kfm_dev)){
 				$js_files=array('variables.js','notice.js','kfm.js','alerts.js','modal.dialog.js','contextmenu.js','directories.js','file.selections.js','file.text-editing.js','images.and.icons.js','panels.js','tags.js','common.js','kaejax_replaces.js','files.js','resize_handler.js');
@@ -28,7 +28,7 @@ header('Content-type: text/html; Charset=utf-8');
 			}
 			else echo '<script type="text/javascript" src="j/all.php"></script>';
 		?>
-		<script type="text/javascript" src="swfuploadr52_0002/swfupload.js"></script>
+		<script type="text/javascript" src="j/swfuploadr52_0002/swfupload.js"></script>
 		<script type="text/javascript" src="lang/<?php echo $kfm_language; ?>.js"></script>
 		<script type="text/javascript">
 			var session_key="<?php echo $kfm_session->key; ?>";
