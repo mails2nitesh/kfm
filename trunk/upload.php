@@ -1,5 +1,5 @@
 <?php
-# see license.txt for licensing
+# see docs/license.txt for licensing
 include('initialise.php');
 $errors=array();
 if($kfm_allow_file_upload){

@@ -1,5 +1,5 @@
 <?php
-# see license.txt for licensing
+# see docs/license.txt for licensing
 require_once('initialise.php');
 require_once($kfm_base_path.'includes/kaejax.php');
 header('Content-type: text/html; Charset=utf-8');
