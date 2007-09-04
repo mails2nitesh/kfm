@@ -12,10 +12,17 @@ class Image extends File{
 		else if(is_numeric($file))parent::File($file);
 		else return false;
 		$this->image_id=$this->getImageId();
-		$this->info=getimagesize($this->path);
-		$this->type=str_replace('image/','',$this->info['mime']);
-		$this->width=$this->info[0];
-		$this->height=$this->info[1];
+		if($this->getSize()){
+			$this->info=getimagesize($this->path);
+			$this->type=str_replace('image/','',$this->info['mime']);
+			$this->width=$this->info[0];
+			$this->height=$this->info[1];
+		}
+		else{
+			$this->type='null';
+			$this->width=0;
+			$this->height=0;
+		}
 	}
 	function createResizedCopy($to,$width,$height){
 		$load='imagecreatefrom'.$this->type;

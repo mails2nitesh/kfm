@@ -1,7 +1,7 @@
 <?php
 function _add_file_to_db($filename,$directory_id){
 	global $kfmdb,$kfm_db_prefix;
-	$sql="insert into ".$kfm_db_prefix."files (name,directory) values('".addslashes($filename)."',".$directory_id.")";
+	$sql="INSERT INTO ".$kfm_db_prefix."files (name,directory) VALUES ('".addslashes($filename)."',".$directory_id.")";
 	$q=$kfmdb->query($sql);
 	return $kfmdb->lastInsertId($kfm_db_prefix.'files','id');
 }
