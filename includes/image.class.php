@@ -81,22 +81,20 @@ class Image extends File{
 		return $row['id'];
 	}
 	function resize($new_width, $new_height=-1){
-		global $kfm_use_imagemagick;
-		if(!$this->isWritable()){
-			$this->error('Image is not writable, so cannot be resized');
-			return false;
-		}
+		global $kfm_use_imagemagick,$kfm_allow_image_manipulation;
+		if(!$kfm_allow_image_manipulation)$this->error('permission denied: cannot manipulate images'); # TODO New String
+		if(!$this->isWritable())$this->error('Image is not writable, so cannot be resized'); # TODO New String
+		if($this->hasErrors())return false;
 		$this->deleteThumbs();
 		if($new_height==-1)$new_height=$this->height*$new_width/$this->width;
 		if($kfm_use_imagemagick && !$this->useImageMagick($this->path,'resize '.$new_width.'x'.$new_height,$this->path))return;
 		$this->createResizedCopy($this->path,$new_width,$new_height);
 	}
 	function rotate($direction){
-		global $kfm_use_imagemagick;
-		if(!$this->isWritable()){
-			$this->error('Image is not writable, so cannot be rotated');
-			return false;
-		}
+		global $kfm_use_imagemagick,$kfm_allow_image_manipulation;
+		if(!$kfm_allow_image_manipulation)$this->error('permission denied: cannot manipulate images'); # TODO New String
+		if(!$this->isWritable())$this->error('Image is not writable, so cannot be rotated'); # TODO New String
+		if($this->hasErrors())return false;
 		$this->deleteThumbs();
 		if($kfm_use_imagemagick && !$this->useImageMagick($this->path,'rotate -'.$direction,$this->path))return;
 		{ # else use GD

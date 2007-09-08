@@ -139,6 +139,9 @@ $kfm_slideshow_delay=4;
 # use filenames such as "longf[...].txt" where the filename is very long
 $kfm_shorten_filenames=0;
 
+# allow users to resize/rotate images
+$kfm_allow_image_manipulation=1;
+
 # we would like to keep track of installations, to see how many there are, and what versions are in use.
 # if you do not want us to have this information, then set the following variable to '1'.
 $kfm_dont_send_metrics=0;

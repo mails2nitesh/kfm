@@ -16,11 +16,13 @@ function _resizeImage($fid,$width,$height){
 	$cwd_id=$kfm_session->get('cwd_id');
 	$im=new Image($fid);
 	$im->resize($width, $height);
+	if($im->hasErrors())return $im->getErrors();
 	return kfm_loadFiles($cwd_id);
 }
 function _rotateImage($fid,$direction){
 	$im = new Image($fid);
 	$im->rotate($direction);
+	if($im->hasErrors())return $im->getErrors();
 	return $fid;
 }
 function _setCaption($fid,$caption){

@@ -62,6 +62,9 @@ header('Content-type: text/html; Charset=utf-8');
 						ed:<?php echo $kfm_allow_file_edit; ?>,
 		   				mk:<?php echo $kfm_allow_file_create; ?>,
 		   				mv:<?php echo $kfm_allow_file_move; ?>
+					},
+					image:{
+						manip:<?php echo $kfm_allow_image_manipulation; ?>
 					}
 				}
 			};
