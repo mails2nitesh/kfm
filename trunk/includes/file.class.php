@@ -116,7 +116,7 @@ class File extends Object{
 	function setContent($content){
 		global $kfm_allow_file_edit;
 		if(!$kfm_allow_file_edit)return $this->error('permissionDeniedEditFile');
-		$result=file_put_contents($this->path, $content);
+		$result=file_put_contents($this->path,$content);
 		if(!$result)$this->error(kfm_lang('errorSettingFileContent'));
 	}
 	function setTags($tags){
