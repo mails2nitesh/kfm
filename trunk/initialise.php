@@ -43,6 +43,7 @@ require_once($kfm_base_path.'configuration.php');
 	if(!isset($kfm_allow_file_edit))$m[]='missing <code>$kfm_allow_file_edit</code> variable';
 	if(!isset($kfm_allow_file_move))$m[]='missing <code>$kfm_allow_file_move</code> variable';
 	if(!isset($kfm_allow_file_upload))$m[]='missing <code>$kfm_allow_file_upload</code> variable';
+	if(!isset($kfm_allow_image_manipulation))$m[]='missing <code>$kfm_allow_image_manipulation</code> variable';
 	if(!isset($kfm_only_allow_image_upload))$m[]='missing <code>$kfm_only_allow_image_upload</code> variable';
 	if(!isset($kfm_show_disabled_contextmenu_links))$m[]='missing <code>$kfm_show_disabled_contextmenu_links</code> variable';
 	if(!isset($kfm_use_multiple_file_upload))$m[]='missing <code>$kfm_use_multiple_file_upload</code> variable';
