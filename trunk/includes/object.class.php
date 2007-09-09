@@ -5,9 +5,10 @@ class Object{
 		$this->Object();
 	}
 	function Object(){
-		global $kfmdb, $kfm_db_prefix;
+		global $kfmdb,$kfm_db_prefix,$kfm_db_type;
 		$this->db=&$kfmdb;
 		$this->db_prefix=&$kfm_db_prefix;
+		$this->db_type=&$kfm_db_type;
 	}
 	function error($message){
 		$this->error_array[] = $message;
