@@ -198,6 +198,7 @@ var KFM=new Class({
 					kfm_renameFile(selectedFiles[0]);
 				}
 				else kfm.alert(kfm.lang.RenameOnlyOneFile);
+				break;
 			}
 		}
 	}

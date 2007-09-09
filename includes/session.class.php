@@ -18,7 +18,12 @@ class kfmSession extends Object{
 			}
 		}
 		if($create){
-			$this->db->query("INSERT INTO ".$this->db_prefix."session (last_accessed) VALUES (now())");
+			if(strpos($this->db->db_type,'sqlite')===0){
+				$this->db->query("INSERT INTO ".$this->db_prefix."session (last_accessed) VALUES (datetime(strftime('%s','now'),'unixepoch','localtime'))");
+			}
+			else{
+				$this->db->query("INSERT INTO ".$this->db_prefix."session (last_accessed) VALUES (now())");
+			}
 			$this->id=$this->db->lastInsertId($this->db_prefix.'session','id');
 			$key=md5($this->id);
 			$this->db->query("UPDATE ".$this->db_prefix."session SET cookie='".$key."' WHERE id=".$this->id);
