@@ -18,7 +18,7 @@ class kfmSession extends Object{
 			}
 		}
 		if($create){
-			if(strpos($this->db->db_type,'sqlite')===0){
+			if(strpos($this->db_type,'sqlite')===0){
 				$this->db->query("INSERT INTO ".$this->db_prefix."session (last_accessed) VALUES (datetime(strftime('%s','now'),'unixepoch','localtime'))");
 			}
 			else{
