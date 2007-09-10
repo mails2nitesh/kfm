@@ -15,16 +15,11 @@ class kfmSession extends kfmObject{
 				$create=0;
 				$this->id=$res['id'];
 				$this->isNew=false;
-				$this->db->query("UPDATE ".$this->db_prefix."session SET last_accessed=NOW() WHERE id='".$this->id."'");
+				$this->db->query("UPDATE ".$this->db_prefix."session SET last_accessed='".date('Y-m-d G:i:s')."' WHERE id='".$this->id."'");
 			}
 		}
 		if($create){
-			if(strpos($this->db_type,'sqlite')===0){
-				$this->db->query("INSERT INTO ".$this->db_prefix."session (last_accessed) VALUES (datetime(strftime('%s','now'),'unixepoch','localtime'))");
-			}
-			else{
-				$this->db->query("INSERT INTO ".$this->db_prefix."session (last_accessed) VALUES (now())");
-			}
+			$this->db->query("INSERT INTO ".$this->db_prefix."session (last_accessed) VALUES ('".date('Y-m-d G:i:s')."')");
 			$this->id=$this->db->lastInsertId($this->db_prefix.'session','id');
 			$key=md5($this->id);
 			$this->db->query("UPDATE ".$this->db_prefix."session SET cookie='".$key."' WHERE id=".$this->id);
