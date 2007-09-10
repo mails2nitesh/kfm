@@ -22,7 +22,7 @@ if($kfm_allow_file_upload){
 			if(function_exists('exif_imagetype')){
 				$imgtype=@exif_imagetype($to);
 				if($imgtype){
-					$file=new kfmImage($file);
+					$file=kfmImage::getInstance($file);
 					$comment='';
 					if($imgtype==1){ # gif
 						$fc=file_get_contents($to);

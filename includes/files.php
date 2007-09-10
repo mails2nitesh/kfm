@@ -19,8 +19,8 @@ function _copyFiles($files,$dir_id){
 		copy($oldFile->path,$to.'/'.$filename);
 		$id=kfm_add_file_to_db($filename,$dir_id);
 		if($oldFile->isImage()){
-			$oldFile=new kfmImage($fid);
-			$newFile=new kfmImage($id);
+			$oldFile=kfmImage::getInstance($fid);
+			$newFile=kfmImage::getInstance($id);
 			$newFile->setCaption($oldFile->caption);
 		}
 		else $newFile=kfmFile::getInstance($id);
@@ -31,7 +31,7 @@ function _copyFiles($files,$dir_id){
 }
 function _createEmptyFile($cwd,$filename){
 	global $kfm_session;
-	$dir=new kfmDirectory($cwd);
+	$dir=kfmDirectory::getInstance($cwd);
 	$path=$dir->path;
 	if(!kfm_checkAddr($path.$filename))return 'error: '.kfm_lang('illegalFileName',$filename);
 	return(touch($path.$filename))?kfm_loadFiles($cwd):'error: '.kfm_lang('couldNotCreateFile',$filename);
@@ -39,7 +39,7 @@ function _createEmptyFile($cwd,$filename){
 function _downloadFileFromUrl($url,$filename){
 	global $kfm_session;
 	$cwd_id=$kfm_session->get('cwd_id');
-	$dir=new kfmDirectory($cwd_id);
+	$dir=kfmDirectory::getInstance($cwd_id);
 	$cwd=$dir->getPath();
 	if(!kfm_checkAddr($cwd.'/'.$filename))return 'error: filename not allowed';
 	if(substr($url,0,4)!='http')return 'error: url must begin with http';
@@ -98,7 +98,7 @@ function _getFileDetails($fid){
 		'ctime'=>$file->ctime
 	);
 	if($file->isImage()){
-		$im=new kfmImage($file);
+		$im=kfmImage::getInstance($file);
 		$details['caption']=$im->caption;
 	}
 	return $details;
@@ -245,7 +245,7 @@ function _rm($id,$dontLoadFiles=false){
 	}
 	else{
 		$file=kfmFile::getInstance($id);
-		if($file->isImage())$file=new kfmImage($file->id);
+		if($file->isImage())$file=kfmImage::getInstance($file->id);
 		$ret=$file->delete();
 		if(!$ret)return $file->getErrors();
 	}
@@ -285,7 +285,7 @@ function _search($keywords,$tags){
 		$fs=db_fetch_all("select id from ".$kfm_db_prefix."files where name like '%".addslashes($keywords)."%'".$constraints." order by name");
 		foreach($fs as $f){
 			$file=kfmFile::getInstance($f['id']);
-			if($file->isImage())$file=new kfmImage($f['id']);
+			if($file->isImage())$file=kfmImage::getInstance($f['id']);
 			unset($file->db);
 			unset($file->db);
 			$files[]=$file;

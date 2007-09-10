@@ -1,4 +1,5 @@
 <?php
+$imageInstances=array();
 class kfmImage extends kfmFile{
 	var $caption='';
 	var $width;
@@ -79,6 +80,12 @@ class kfmImage extends kfmFile{
 		}
 		$this->caption=$row['caption'];
 		return $row['id'];
+	}
+	function getInstance($id=0){
+		if(!$id)return false;
+		global $imageInstances;
+		if(!isset($imageInstances[$id]))$imageInstances[$id]=new kfmImage($id);
+		return $imageInstances[$id];
 	}
 	function resize($new_width, $new_height=-1){
 		global $kfm_use_imagemagick,$kfm_allow_image_manipulation;
