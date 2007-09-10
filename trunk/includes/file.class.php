@@ -1,6 +1,6 @@
 <?php
 $fileInstances=array();
-class File extends Object{
+class kfmFile extends kfmObject{
 	var $ctime='';
 	var $directory='';
 	var $id=-1;
@@ -11,11 +11,11 @@ class File extends Object{
 	var $size=0;
 	var $type;
 	var $writable=false;
-	function File(){
+	function kfmFile(){
 		global $kfm_db_prefix;
 		if(func_num_args()==1){
 			$this->id=func_get_arg(0);
-			parent::Object();
+			parent::kfmObject();
 			$filedata=db_fetch_row("SELECT id,name,directory FROM ".$kfm_db_prefix."files WHERE id=".$this->id);
 			$this->name=$filedata['name'];
 			$this->parent=$filedata['directory'];
@@ -72,7 +72,7 @@ class File extends Object{
 		}
 		else{
 			if($this->isImage()&&$x&&$y){
-				$img=new Image($this);
+				$img=new kfmImage($this);
 				$img->setThumbnail($x,$y);
 				return $kfm_userfiles_output.$kfm_workdirectory.'/thumbs/'.$img->thumb_id;
 			}
@@ -93,7 +93,7 @@ class File extends Object{
 	function getInstance($id=0){
 		if(!$id)return false;
 		global $fileInstances;
-		if(!isset($fileInstances[$id]))$fileInstances[$id]=new File($id);
+		if(!isset($fileInstances[$id]))$fileInstances[$id]=new kfmFile($id);
 		return $fileInstances[$id];
 	}
 	function getSize(){

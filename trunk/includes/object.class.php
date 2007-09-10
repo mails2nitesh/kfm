@@ -1,10 +1,10 @@
 <?php
-class Object{
+class kfmObject{
 	var $error_array = array();
 	function __construct(){
-		$this->Object();
+		$this->kfmObject();
 	}
-	function Object(){
+	function kfmObject(){
 		global $kfmdb,$kfm_db_prefix,$kfm_db_type;
 		$this->db=&$kfmdb;
 		$this->db_prefix=&$kfm_db_prefix;

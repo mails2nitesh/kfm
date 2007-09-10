@@ -21,7 +21,7 @@ else{
 	if(isset($_GET['width'])&&isset($_GET['height'])){
 		$width=$_GET['width'];
 		$height=$_GET['height'];
-		$image=new Image($id);
+		$image=new kfmImage($id);
 		if(!$image){
 			echo kfm_lang('errorFileIDNotFound',$id);
 			exit;
@@ -31,7 +31,7 @@ else{
 		$path=$image->thumb_path;
 	}
 	else{
-		$file=File::getInstance($id);
+		$file=kfmFile::getInstance($id);
 		if(!$file){
 			echo kfm_lang('errorFileIDNotFound',$id);
 			exit;

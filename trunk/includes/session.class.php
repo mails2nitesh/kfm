@@ -1,5 +1,5 @@
 <?php
-class kfmSession extends Object{
+class kfmSession extends kfmObject{
 	var $vars;
 	var $id;
 	function kfmSession($key=''){

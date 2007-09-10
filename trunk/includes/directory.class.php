@@ -1,6 +1,6 @@
 <?php
 $kfmDirectoryInstances=array();
-class kfmDirectory extends Object{
+class kfmDirectory extends kfmObject{
 	var $subDirs=array();
 	function kfmDirectory($id=1){
 		parent::__construct();
@@ -70,9 +70,9 @@ class kfmDirectory extends Object{
 		while(false!==($filename=readdir($this->handle)))if($filename[0]!='.'&&is_file($this->path.$filename)){
 			if(in_array(strtolower($filename),$GLOBALS['kfm_banned_files']))continue;
 			if(!isset($fileshash[$filename]))$fileshash[$filename]=kfm_add_file_to_db($filename,$this->id);
-			$file=File::getInstance($fileshash[$filename]);
+			$file=kfmFile::getInstance($fileshash[$filename]);
 			if(!$file)continue;
-			if($file->isImage())$file=new Image($fileshash[$filename]);
+			if($file->isImage())$file=new kfmImage($fileshash[$filename]);
 			$files[]=$file;
 			unset($fileshash[$filename]);
 		}

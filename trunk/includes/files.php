@@ -12,18 +12,18 @@ function _copyFiles($files,$dir_id){
 	$copied=0;
 	if(!kfm_checkAddr($to))return 'error: '.kfm_lang('illegalTargetDirectory',$to);
 	foreach($files as $fid){
-		$oldFile=File::getInstance($fid);
+		$oldFile=kfmFile::getInstance($fid);
 		if(!$oldFile)return 'error: '.kfm_lang('noDataForFileID',$fid);
 		$filename=$oldFile->name;
 		if(!kfm_checkAddr($oldFile->path))return;
 		copy($oldFile->path,$to.'/'.$filename);
 		$id=kfm_add_file_to_db($filename,$dir_id);
 		if($oldFile->isImage()){
-			$oldFile=new Image($fid);
-			$newFile=new Image($id);
+			$oldFile=new kfmImage($fid);
+			$newFile=new kfmImage($id);
 			$newFile->setCaption($oldFile->caption);
 		}
-		else $newFile=File::getInstance($id);
+		else $newFile=kfmFile::getInstance($id);
 		$newFile->setTags($oldFile->getTags());
 		++$copied;
 	}
@@ -51,7 +51,7 @@ function _extractZippedFile($id){
 	global $kfm_session;
 	$cwd_id=$kfm_session->get('cwd_id');
 	if(!$GLOBALS['kfm_allow_file_create'])return 'error: '.kfm_lang('permissionDeniedCreateFile');
-	$file=File::getInstance($id);
+	$file=kfmFile::getInstance($id);
 	$dir=$file->directory.'/';
 	{ # try native system unzip command
 		$res=-1;
@@ -87,7 +87,7 @@ function _getFileAsArray($filename){
 	return explode("\n",rtrim(file_get_contents($filename)));
 }
 function _getFileDetails($fid){
-	$file=File::getInstance($fid);
+	$file=kfmFile::getInstance($fid);
 	if(!file_exists($file->path))return;
 	$details=array(
 		'id'=>$fid,
@@ -98,13 +98,13 @@ function _getFileDetails($fid){
 		'ctime'=>$file->ctime
 	);
 	if($file->isImage()){
-		$im=new Image($file);
+		$im=new kfmImage($file);
 		$details['caption']=$im->caption;
 	}
 	return $details;
 }
 function _getFileUrl($fid,$x=0,$y=0){
-	$file=File::getInstance($fid);
+	$file=kfmFile::getInstance($fid);
 	return $file->getUrl($x,$y);
 }
 function _getTagName($id){
@@ -114,7 +114,7 @@ function _getTagName($id){
 	return array($id,'UNKNOWN TAG '.$id);
 }
 function _getTextFile($fid){
-	$file=File::getInstance($fid);
+	$file=kfmFile::getInstance($fid);
 	if(!kfm_checkAddr($file->name))return;
 	$ext=$file->getExtension();
 	if(!$file->isWritable())return 'error: '.kfm_lang('isNotWritable',$file->name);
@@ -201,7 +201,7 @@ function _renameFile($fid,$newfilename,$refreshFiles=true){
 	if(!$GLOBALS['kfm_allow_file_edit'])return 'error: '.kfm_lang('permissionDeniedEditFile');
 	global $kfmdb,$kfm_db_prefix,$kfm_session;
 	$cwd_id=$kfm_session->get('cwd_id');
-	$file=File::getInstance($fid);
+	$file=kfmFile::getInstance($fid);
 	if(!file_exists($file->path))return;
 	$filename=$file->name;
 	if(!kfm_checkAddr($filename)||!kfm_checkAddr($newfilename))return 'error: '.kfm_lang('cannotRenameFromTo',$filename,$newfilename);
@@ -244,8 +244,8 @@ function _rm($id,$dontLoadFiles=false){
 		}
 	}
 	else{
-		$file=File::getInstance($id);
-		if($file->isImage())$file=new Image($file->id);
+		$file=kfmFile::getInstance($id);
+		if($file->isImage())$file=new kfmImage($file->id);
 		$ret=$file->delete();
 		if(!$ret)return $file->getErrors();
 	}
@@ -253,7 +253,7 @@ function _rm($id,$dontLoadFiles=false){
 }
 function _saveTextFile($fid,$text){
 	if(!$GLOBALS['kfm_allow_file_edit'])return 'error: '.kfm_lang('permissionDeniedEditFile');
-	$f=File::getInstance($fid);
+	$f=kfmFile::getInstance($fid);
 	$f->setContent($text);
 	return $f->hasErrors()?$f->getErrors():'file saved';
 }
@@ -284,8 +284,8 @@ function _search($keywords,$tags){
 		$files=array();
 		$fs=db_fetch_all("select id from ".$kfm_db_prefix."files where name like '%".addslashes($keywords)."%'".$constraints." order by name");
 		foreach($fs as $f){
-			$file=File::getInstance($f['id']);
-			if($file->isImage())$file=new Image($f['id']);
+			$file=kfmFile::getInstance($f['id']);
+			if($file->isImage())$file=new kfmImage($f['id']);
 			unset($file->db);
 			unset($file->db);
 			$files[]=$file;
@@ -335,7 +335,7 @@ function _tagRemove($recipients,$tagList){
 }
 function _viewTextFile($fileid){
 	global $kfm_viewable_extensions, $kfm_highlight_extensions, $kfm_editable_extensions;
-	$file=File::getInstance($fileid);
+	$file=kfmFile::getInstance($fileid);
 	$ext=$file->getExtension();
 	$buttons_to_show=1; # boolean addition: 1=Close, 2=Edit
 	if(in_array($ext,$kfm_editable_extensions)&&$file->isWritable())$buttons_to_show+=2;
@@ -365,7 +365,7 @@ function _zip($filename,$files){
 	if(!kfm_checkAddr($cwd.'/'.$filename))return 'error: '.kfm_lang('illegalFileName',$filename);
 	$arr=array();
 	foreach($files as $f){
-		$file=File::getInstance($f);
+		$file=kfmFile::getInstance($f);
 		if(!$file)return 'error: '.kfm_lang('missingFileInSelection');
 		$arr[]=$file->path;
 	}
