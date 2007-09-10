@@ -84,6 +84,10 @@ class kfmImage extends kfmFile{
 	function getInstance($id=0){
 		if(!$id)return false;
 		global $imageInstances;
+		if(is_object($id)){
+			if($id->isImage())$id=$id->id;
+			else return false;
+		}
 		if(!isset($imageInstances[$id]))$imageInstances[$id]=new kfmImage($id);
 		return $imageInstances[$id];
 	}
