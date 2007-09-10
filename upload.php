@@ -18,11 +18,11 @@ if($kfm_allow_file_upload){
 		}
 		else{
 			$fid=kfm_add_file_to_db($filename,$kfm_session->get('cwd_id'));
-			$file=File::getInstance($fid);
+			$file=kfmFile::getInstance($fid);
 			if(function_exists('exif_imagetype')){
 				$imgtype=@exif_imagetype($to);
 				if($imgtype){
-					$file=new Image($file);
+					$file=new kfmImage($file);
 					$comment='';
 					if($imgtype==1){ # gif
 						$fc=file_get_contents($to);

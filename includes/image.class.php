@@ -1,5 +1,5 @@
 <?php
-class Image extends File{
+class kfmImage extends kfmFile{
 	var $caption='';
 	var $width;
 	var $height;
@@ -7,9 +7,9 @@ class Image extends File{
 	var $thumb_id;
 	var $thumb_path;
 	var $info=array(); # info from getimagesize
-	function Image($file){
-		if(is_object($file) && $file->isImage())parent::File($file->id);
-		else if(is_numeric($file))parent::File($file);
+	function kfmImage($file){
+		if(is_object($file) && $file->isImage())parent::kfmFile($file->id);
+		else if(is_numeric($file))parent::kfmFile($file);
 		else return false;
 		$this->image_id=$this->getImageId();
 		if($this->getSize()){
