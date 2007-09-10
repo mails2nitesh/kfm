@@ -72,7 +72,7 @@ class kfmFile extends kfmObject{
 		}
 		else{
 			if($this->isImage()&&$x&&$y){
-				$img=new kfmImage($this);
+				$img=kfmImage::getInstance($this);
 				$img->setThumbnail($x,$y);
 				return $kfm_userfiles_output.$kfm_workdirectory.'/thumbs/'.$img->thumb_id;
 			}

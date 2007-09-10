@@ -72,7 +72,7 @@ class kfmDirectory extends kfmObject{
 			if(!isset($fileshash[$filename]))$fileshash[$filename]=kfm_add_file_to_db($filename,$this->id);
 			$file=kfmFile::getInstance($fileshash[$filename]);
 			if(!$file)continue;
-			if($file->isImage())$file=new kfmImage($fileshash[$filename]);
+			if($file->isImage())$file=kfmImage::getInstance($fileshash[$filename]);
 			$files[]=$file;
 			unset($fileshash[$filename]);
 		}
