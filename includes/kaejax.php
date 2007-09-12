@@ -26,7 +26,7 @@ function kfm_kaejax_esc($val){
 	return str_replace(array("\\","\r","\n",'"'),array("\\\\","\\r","\\n",'\\"'),$val);
 }
 function kfm_kaejax_get_one_stub($func_name){
-	$a='function x_'.$func_name.'()'.LSQUIGG.'kfm_kaejax_do_call("'.$func_name.'",$A(arguments));'.RSQUIGG.'function_urls.'.$func_name."='".$_SERVER['PHP_SELF']."';";
+	$a='function x_'.$func_name.'()'.LSQUIGG.'kfm_kaejax_do_call("'.$func_name.'",$A(arguments));'.RSQUIGG.'function_urls.'.$func_name."='".$_SERVER['PHP_SELF'].GET_PARAMS."';";
 	if(!$GLOBALS['kfm_kaejax_is_loaded'])$a.='kfm_kaejax_is_loaded=1;';
 	$GLOBALS['kfm_kaejax_is_loaded']=1;
 	return $a;
