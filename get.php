@@ -8,11 +8,23 @@ if(isset($_SERVER['REDIRECT_QUERY_STRING'])&&$_SERVER['REDIRECT_QUERY_STRING']){
 		$_GET[$arr2[0]]=$arr2[1];
 	}
 }
+{ # rebuild $_GET (in case it's been mangled by something)
+	$uri=$_SERVER['REQUEST_URI'];
+	$uri2=explode('?',$uri);
+	$parts=explode('&',$uri2[1]);
+	foreach($parts as $part){
+		$arr=explode('=',$part);
+		if(!(count($arr)>1))continue;
+		list($varname,$varval)=$arr;
+		$_GET[$varname]=urldecode($varval);
+	}
+}
 $id=$_GET['id'];
 if(!is_numeric($id)){
 	echo kfm_lang('errorInvalidID');
 	exit;
 }
+$extension='unknown';
 if(isset($_GET['type'])&&$_GET['type']=='thumb'){
 	$path=WORKPATH.'thumbs/'.$id;
 	$name=$id;
@@ -29,6 +41,7 @@ else{
 		$image->setThumbnail($width,$height);
 		$name=$image->thumb_id;
 		$path=$image->thumb_path;
+		$extension=$image->getExtension();
 	}
 	else{
 		$file=kfmFile::getInstance($id);
@@ -38,6 +51,7 @@ else{
 		}
 		$path=$file->path;
 		$name=$file->name;
+		$extension=$file->getExtension();
 	}
 }
 { # headers
@@ -52,7 +66,7 @@ else{
 		header('Content-Type: force/download');
 		header('Content-Disposition: attachment; filename="'.$name.'"');
 	}
-	else header('Content-Type: '.get_mimetype($path));
+	else header('Content-Type: '.get_mimetype($extension));
 	header('Content-Transfer-Encoding: binary');
 }
 if($file=fopen($path,'rb')){ # send file
