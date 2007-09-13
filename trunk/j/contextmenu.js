@@ -10,10 +10,10 @@ function kfm_contextmenuinit(){
 		var l=c.offsetLeft,t=c.offsetTop;
 		if(m.x<l||m.x>l+c.offsetWidth||m.y<t||m.y>t+c.offsetHeight)kfm_closeContextMenu();
 	});
-	document.body.oncontextmenu=function(e){
+	document.addEvent('contextmenu',function(e){
 		e=new Event(e);
 		if(!e.control)e.stop();
-	}
+	});
 }
 function kfm_createContextMenu(m,links){
 	if(!window.contextmenu_loading)kfm_closeContextMenu();
