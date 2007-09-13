@@ -160,7 +160,7 @@ function kfm_createFileUploadPanel(){
 				$(c).setHTML('&nbsp;');
 				f3.appendChild(t);
 				window.swfUpload=new SWFUpload({
-					upload_target_url:"../upload.php?kfm_session="+window.session_key, // relative to the flash
+					upload_target_url:"../../upload.php?kfm_session="+window.session_key, // relative to the flash
 					upload_cookies:["kfm_session"],
 					file_size_limit : "102400",	// 100MB
 					file_types : "*.*",
@@ -174,7 +174,7 @@ function kfm_createFileUploadPanel(){
 					file_complete_handler : uploadComplete,
 					queue_complete_handler : uploadQueueComplete,
 					error_handler : uploadError,
-					flash_url : "swfuploadr52_0002/swfupload.swf",
+					flash_url : "j/swfuploadr52_0002/swfupload.swf",
 					ui_container_id : "kfm_uploadFormSwf",
 					degraded_container_id : "kfm_uploadForm",
 					debug:false
