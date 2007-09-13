@@ -35,9 +35,6 @@ class kfmFile extends kfmObject{
 			$this->type=trim(substr(strstr($this->mimetype,'/'),1));
 		}
 	}
-	function getContent(){
-		return ($this->id==-1)?false:file_get_contents($this->path);
-	}
 	function checkAddr($addr){
 		return (
 			strpos($addr,'..')===false&&
@@ -45,6 +42,9 @@ class kfmFile extends kfmObject{
 			strpos($addr,'/')===false &&
 			!in_array(preg_replace('/.*\./','',$addr),$GLOBALS['kfm_banned_extensions'])
 			);
+	}
+	function getContent(){
+		return ($this->id==-1)?false:utf8_encode(file_get_contents($this->path));
 	}
 	function getExtension(){
 		/* Function that returns the extension of the file.
@@ -116,7 +116,7 @@ class kfmFile extends kfmObject{
 	function setContent($content){
 		global $kfm_allow_file_edit;
 		if(!$kfm_allow_file_edit)return $this->error('permissionDeniedEditFile');
-		$result=file_put_contents($this->path,$content);
+		$result=file_put_contents($this->path,utf8_decode($content));
 		if(!$result)$this->error(kfm_lang('errorSettingFileContent'));
 	}
 	function setTags($tags){
