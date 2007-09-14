@@ -138,14 +138,22 @@ class kfmDirectory extends kfmObject{
 		return is_writable($this->path);	
 	}
 	function moveTo($newParent){
-		if(!$GLOBALS['kfm_allow_directory_move'])return $this->error(kfm_lang('permissionDeniedMoveDirectory'));
-		if(is_numeric($newParent)) $newParent = kfmDirectory::getInstance($newParent);
-		if(strpos($newParent->path,$this->path)===0) return $this->error(kfm_lang('cannotMoveIntoSelf'));
-		if(file_exists($newParent->path.$this->name))return $this->error(kfm_lang('alreadyExists',$newParent->path.$this->name));
-		if(!$newParent->isWritable()) return $this->error(kfm_lang('isNotWritable',$newParent->path));
-		rename($this->path,$newParent->path.$this->name);
-		if(!file_exists($newParent->path.$this->name))return $this->error(kfm_lang('couldNotMoveDirectory',$this->path,$newParent->path.$this->name));
-		$this->db->exec("update ".$this->db_prefix."directories set parent=".$newParent->id." where id=".$this->id) or die('error: '.print_r($kfmdb->errorInfo(),true));
+		if(is_numeric($newParent))$newParent=kfmDirectory::getInstance($newParent);
+		{ # check for errors
+			if(!$GLOBALS['kfm_allow_directory_move'])return $this->error(kfm_lang('permissionDeniedMoveDirectory'));
+			if(strpos($newParent->path,$this->path)===0) return $this->error(kfm_lang('cannotMoveIntoSelf'));
+			if(file_exists($newParent->path.$this->name))return $this->error(kfm_lang('alreadyExists',$newParent->path.$this->name));
+			if(!$newParent->isWritable())return $this->error(kfm_lang('isNotWritable',$newParent->path));
+		}
+		{ # do the move and check that it was successful
+			rename($this->path,$newParent->path.$this->name);
+			if(!file_exists($newParent->path.$this->name))return $this->error(kfm_lang('couldNotMoveDirectory',$this->path,$newParent->path.$this->name));
+		}
+		{ # update database and kfmDirectory object
+			$this->db->exec("update ".$this->db_prefix."directories set parent=".$newParent->id." where id=".$this->id) or die('error: '.print_r($kfmdb->errorInfo(),true));
+			$this->pid=$newParent->id;
+			$this->path=$this->getPath();
+		}
 	}
 	function rename($newname){
 		global $kfm_allow_directory_edit;
