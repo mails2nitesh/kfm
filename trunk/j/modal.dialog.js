@@ -100,5 +100,9 @@ function kfm_modal_open(form,title,actions){
 			'z-index':3
 		});
 	}
+	wrapper.addEvent('keyup',function(e){
+		e=new Event(e);
+		e.stop();
+	});
 	kfm_resizeHandler_add('shader');
 }
