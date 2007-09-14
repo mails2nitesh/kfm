@@ -113,9 +113,19 @@ class kfmFile extends kfmObject{
 	function isWritable(){
 		return (($this->id==-1)||!is_writable($this->path))?false:true;
 	}
+	function rename($newName){
+		global $kfm_allow_file_edit,$kfm_db_prefix;
+		if(!$kfm_allow_file_edit)return $this->error(kfm_lang('permissionDeniedEditFile'));
+		if(!kfm_checkAddr($newName))return $this->error(kfm_lang('cannotRenameFromTo',$this->name,$newName));
+		$newFileAddress=$this->directory.$newName;
+		if(file_exists($newFileAddress))return $this->error(kfm_lang('fileAlreadyExists'));
+		rename($this->path,$newFileAddress);
+		$this->name=$newName;
+		$this->db->query("UPDATE ".$kfm_db_prefix."files SET name='".addslashes($newName)."' WHERE id=".$this->id);
+	}
 	function setContent($content){
 		global $kfm_allow_file_edit;
-		if(!$kfm_allow_file_edit)return $this->error('permissionDeniedEditFile');
+		if(!$kfm_allow_file_edit)return $this->error(kfm_lang('permissionDeniedEditFile'));
 		$result=file_put_contents($this->path,utf8_decode($content));
 		if(!$result)$this->error(kfm_lang('errorSettingFileContent'));
 	}
