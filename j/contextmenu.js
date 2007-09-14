@@ -5,13 +5,14 @@ function kfm_closeContextMenu(){
 }
 function kfm_contextmenuinit(){
 	document.addEvent('click',function(e){
+		e=new Event(e);
+		if(e.control)return;
 		if(!contextmenu)return;
-		var c=contextmenu,m=getMouseAt(e);
+		var c=contextmenu,m=e.page;
 		var l=c.offsetLeft,t=c.offsetTop;
 		if(m.x<l||m.x>l+c.offsetWidth||m.y<t||m.y>t+c.offsetHeight)kfm_closeContextMenu();
 	});
-	document.addEvent('contextmenu',function(e){
-		e=new Event(e);
+	kfm_addContextMenu(document,function(e){
 		if(!e.control)e.stop();
 	});
 }
@@ -49,4 +50,12 @@ function kfm_createContextMenu(m,links){
 	var w=contextmenu.offsetWidth,h=contextmenu.offsetHeight,ws=window.getSize().size;
 	if(h+m.y>ws.y)contextmenu.style.top=(ws.y-h)+'px';
 	if(w+m.x>ws.x)contextmenu.style.left=(m.x-w)+'px';
+}
+function kfm_addContextMenu(el,fn){
+	el.addEvent('contextmenu',function(e){
+		e=new Event(e);
+		if(!e.rightClick)return;
+		fn(e);
+	});
+	return el;
 }

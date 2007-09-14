@@ -59,13 +59,14 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 		}),name_text),
 		{kfm_directoryname:pdir,node_id:parent}
 	).setStyles('cursor:'+(window.ie?'hand':'pointer'));
-	el.addEvent('contextmenu',function(e){
+	kfm_addContextMenu(el,function(e){
 		var links=[],i,node_id=this.node_id;
 		links.push(['kfm_renameDirectory("'+node_id+'")',kfm.lang.RenameDir,'',!kfm_vars.permissions.dir.ed]);
 		links.push(['kfm_createDirectory("'+node_id+'")',kfm.lang.CreateSubDir,'folder_new',!kfm_vars.permissions.dir.mk]);
 		if(node_id!=1)links.push(['kfm_deleteDirectory("'+node_id+'")',kfm.lang.DeleteDir,'remove',!kfm_vars.permissions.dir.rm]);
 		if(kfm_return_directory)links.push(['setTimeout("window.close()",1);window.opener.SetUrl("'+kfm_directories[node_id].realpath+'/");','send to CMS']); // TODO: New String
-		kfm_createContextMenu(getMouseAt(getEvent(e)),links);
+		e=new Event(e);
+		kfm_createContextMenu(e.page,links);
 	});
 	kfm.addCell(r,0,0,(
 		has_node_control?
@@ -85,7 +86,8 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 	});
 	if(parent!=1)el.addEvent('mousedown',(function(id){
 		return function(e){
-			if(e.button==2)return;
+			e=new Event(e);
+			if(e.rightClick)return;
 			document.addEvent('mouseup',kfm_dir_dragFinish);
 			$clear(window.dragTrigger);
 			window.dragTrigger=setTimeout(function(){
@@ -114,7 +116,8 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 }
 function kfm_dir_drag(e){
 	if(!window.dragType||window.dragType!=3)return;
-	var m=getMouseAt(e);
+	e=new Event(e);
+	var m=e.page;
 	clearSelections();
 	window.drag_wrapper.setStyles('display:block;left:'+(m.x+16)+'px;top:'+m.y+'px');
 }

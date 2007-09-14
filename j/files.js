@@ -1,11 +1,12 @@
 // see license.txt for licensing
 var kfm_file_bits={
 	contextmenu:function(e){
-		e=getEvent(e);
+		var el=e.target;
+		while(el.parentNode&&!el.kfm_attributes)el=el.parentNode;
 		{ // variables
-			var name=this.kfm_attributes.name,links=[],i,id=this.kfm_attributes.id;
+			var name=el.kfm_attributes.name,links=[],i,id=el.kfm_attributes.id;
 			var extension=name.replace(/.*\./,'').toLowerCase();
-			var writable=this.kfm_attributes.writable;
+			var writable=el.kfm_attributes.writable;
 		}
 		{ // add the links
 			if(selectedFiles.length>1){
@@ -19,7 +20,7 @@ var kfm_file_bits={
 				links.push(['kfm_downloadSelectedFiles('+id+')','download file']);
 				links.push(['kfm_deleteFile('+id+')',kfm.lang.DeleteFile,'remove',!kfm_vars.permissions.file.rm]);
 				links.push(['kfm_renameFile('+id+')',kfm.lang.RenameFile,'edit',!kfm_vars.permissions.file.ed]);
-				if(this.kfm_attributes.width){
+				if(el.kfm_attributes.width){
 					if(writable){
 						var manip=!(kfm_vars.permissions.file.ed&&kfm_vars.permissions.image.manip);
 						links.push(['kfm_rotateImage('+id+',270)',kfm.lang.RotateClockwise,'rotate_cw',manip]);
@@ -37,13 +38,13 @@ var kfm_file_bits={
 			}
 			links.push(['kfm_tagAdd('+id+')',kfm.lang.AddTagsToFiles,'add_tags',!kfm_vars.permissions.file.ed]);
 			links.push(['kfm_tagRemove('+id+')',kfm.lang.RemoveTagsFromFiles,'',!kfm_vars.permissions.file.ed]);
-			kfm_createContextMenu(getMouseAt(getEvent(e)),links);
+			kfm_createContextMenu(e.page,links);
 		}
 	},
 	mousedown:function(e){
-		e=getEvent(e);
-		if(e.button==2)return;
-		var id=this.kfm_attributes.id;
+		e=new Event(e);
+		if(e.rightClick)return;
+		var id=el.kfm_attributes.id;
 		document.addEvent('mouseup',kfm_file_dragFinish);
 		$clear(window.dragSelectionTrigger);
 		window.dragTrigger=setTimeout('kfm_file_dragStart('+id+')',100);
@@ -196,7 +197,7 @@ function kfm_incrementalFileDisplay(){
 	{ // add events
 		el.addEvent('click',kfm_toggleSelectedFile);
 		el.addEvent('dblclick',kfm_chooseFile);
-		el.addEvent('contextmenu',kfm_file_bits.contextmenu);
+		kfm_addContextMenu(el,kfm_file_bits.contextmenu);
 		el.addEvent('mousedown',kfm_file_bits.mousedown);
 		el.addEvent('mouseover',function(){ // initialise info tooltip
 			if(window.kfm_tooltipInit)$clear(window.kfm_tooltipInit);

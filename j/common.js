@@ -2,16 +2,6 @@
 function clearSelections(){
 	window.getSelection().removeAllRanges();
 }
-function getEvent(e){
-	return e?e:(window.event?window.event:"");
-}
-function getMouseAt(e){
-	e=getEvent(e);
-	var m=getWindowScrollAt();
-	m.x+=e.clientX;
-	m.y+=e.clientY;
-	return m;
-}
 function getOffset(el,s) {
 	if(!el){
 		return 0;
