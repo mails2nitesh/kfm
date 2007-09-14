@@ -198,18 +198,11 @@ function _moveFiles($files,$dir_id){
 	return kfm_loadFiles($cwd_id);
 }
 function _renameFile($fid,$newfilename,$refreshFiles=true){
-	if(!$GLOBALS['kfm_allow_file_edit'])return 'error: '.kfm_lang('permissionDeniedEditFile');
-	global $kfmdb,$kfm_db_prefix,$kfm_session;
-	$cwd_id=$kfm_session->get('cwd_id');
+	global $kfm_session;
 	$file=kfmFile::getInstance($fid);
-	if(!file_exists($file->path))return;
-	$filename=$file->name;
-	if(!kfm_checkAddr($filename)||!kfm_checkAddr($newfilename))return 'error: '.kfm_lang('cannotRenameFromTo',$filename,$newfilename);
-	$newfile=$file->directory.'/'.$newfilename;
-	if(file_exists($newfile))return 'error: '.kfm_lang('fileAlreadyExists');
-	rename($file->path,$newfile);
-	$kfmdb->query("update ".$kfm_db_prefix."files set name='".addslashes($newfilename)."' where id=".$fid);
-	if($refreshFiles)return kfm_loadFiles($cwd_id);
+	$file->rename($newfilename);
+	if($file->hasErrors())return $file->getErrors();
+	if($refreshFiles)return kfm_loadFiles($kfm_session->get('cwd_id'));
 }
 function _renameFiles($files,$template){
 	global $kfm_session;
