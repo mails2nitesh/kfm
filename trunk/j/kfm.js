@@ -52,9 +52,7 @@ var KFM=new Class({
 			if(!kfm_inArray('kfm_logs_panel',kfm_hidden_panels))kfm_addPanel(left_column,'kfm_logs_panel');
 			left_column.panels_unlocked=1;
 			left_column.setStyles('height:'+w.y+'px');
-			left_column.addEvent('contextmenu',function(e){
-				var m=getMouseAt(e);
-				e=new Event(e);
+			kfm_addContextMenu(left_column,function(e){
 				{ // variables
 					var row,cell,cells,rows=0,target=kfm.getParentEl(e.target,'DIV');
 				}
@@ -67,7 +65,7 @@ var KFM=new Class({
 						var p=$(ps[i]);
 						if(!p.visible && !kfm_inArray(ps[i],kfm_hidden_panels))links.push(['kfm_addPanel("kfm_left_column","'+ps[i]+'")',kfm.lang.ShowPanel(p.panel_title),'show_panel']);
 					}
-					kfm_createContextMenu(m,links);
+					kfm_createContextMenu(e.page,links);
 				}
 			});
 		}
@@ -77,12 +75,13 @@ var KFM=new Class({
 			});
 			right_column.addEvent('click',function(){if(!window.dragType)kfm_selectNone()});
 			right_column.addEvent('mousedown',function(e){
-				if(e.button==2)return;
-				window.mouseAt=getMouseAt(e);
+				e=new Event(e);
+				if(e.rightClick)return;
+				window.mouseAt=e.page;
 				if(this.contentMode=='file_icons' && this.fileids.length)window.dragSelectionTrigger=setTimeout(function(){kfm_selection_dragStart()},200);
 				right_column.addEvent('mouseup',kfm_selection_dragFinish);
 			});
-			right_column.addEvent('contextmenu',function(e){
+			kfm_addContextMenu(right_column,function(e){
 				var links=[],i;
 				links.push(['kfm_createEmptyFile()',kfm.lang.CreateEmptyFile,'filenew',!kfm_vars.permissions.file.mk]);
 				if(selectedFiles.length>1)links.push(['kfm_renameFiles()',kfm.lang.RenameFile,'edit',!kfm_vars.permissions.file.ed]);
@@ -92,7 +91,7 @@ var KFM=new Class({
 					links.push(['kfm_selectNone()',kfm.lang.SelectNone,'select_none']);
 					links.push(['kfm_selectInvert()',kfm.lang.InvertSelection,'invert_selection']);
 				}
-				kfm_createContextMenu(getMouseAt(getEvent(e,1)),links);
+				kfm_createContextMenu(e.page,links);
 			});
 			right_column.parentResized=kfm_files_panelResized;
 		}
