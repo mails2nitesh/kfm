@@ -187,9 +187,6 @@ function kfm_incrementalFileDisplay(){
 	var b=window.kfm_incrementalFileDisplay_vars,a=b.at,fsdata=b.data.files,wrapper=$('kfm_right_column'),fdata=fsdata[a];
 	if(wrapper.contentMode!='file_icons')return (window.kfm_incrementalFileDisplay_vars=null);
 	var name=fdata.name,ext=name.replace(kfm_regexps.all_up_to_last_dot,''),b,fullfilename=kfm_cwd_name+'/'+name,id=fdata.id;
-//	var nameEl=(new Element('span',{
-//		'class':'filename'
-//	})).setHTML(name);
 	var F=File_getInstance(id);
 	var nameEl=F.getText('filename');
 	var el=new Element('div',{
@@ -208,7 +205,7 @@ function kfm_incrementalFileDisplay(){
 		el.addEvent('mouseover',function(){ // initialise info tooltip
 			if(window.kfm_tooltipInit)$clear(window.kfm_tooltipInit);
 			if(window.drag_wrapper)return; // don't open if currently dragging files
-			window.kfm_tooltipInit=setTimeout('x_kfm_getFileDetails('+id+',kfm_showToolTip)',500);
+			window.kfm_tooltipInit=setTimeout('kfm_showToolTip('+id+')',500);
 		});
 		el.addEvent('mouseout',function(){ // remove info tooltip
 			if(window.kfm_tooltipInit)$clear(window.kfm_tooltipInit);
@@ -323,7 +320,8 @@ function kfm_renameFiles(nameTemplate){
 function kfm_runSearch(){
 	kfm_run_delayed('search','var keywords=$("kfm_search_keywords").value,tags=$("kfm_search_tags").value;if(keywords==""&&tags=="")x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);else x_kfm_search(keywords,tags,kfm_refreshFiles)');
 }
-function kfm_showFileDetails(res){
+function kfm_showFileDetails(id){
+	var res=File_getInstance(id);
 	var fd=$('kfm_file_details_panel'),el=$('kfm_left_column');
 	if(!fd){
 		kfm_addPanel('kfm_left_column','kfm_file_details_panel');
@@ -337,9 +335,10 @@ function kfm_showFileDetails(res){
 	var table=kfm_buildFileDetailsTable(res);
 	kfm.addEl(body,table);
 }
-function kfm_showToolTip(res){
-	if(!res)return;
-	var table=kfm_buildFileDetailsTable(res),icon=$('kfm_file_icon_'+res.id);
+function kfm_showToolTip(id){
+	if(!id)return;
+	var F=File_getInstance(id);
+	var table=kfm_buildFileDetailsTable(F),icon=$('kfm_file_icon_'+id);
 	if(!icon||contextmenu)return;
 	table.id='kfm_tooltip';
 	kfm.addEl(document.body,table);
