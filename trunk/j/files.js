@@ -187,9 +187,11 @@ function kfm_incrementalFileDisplay(){
 	var b=window.kfm_incrementalFileDisplay_vars,a=b.at,fsdata=b.data.files,wrapper=$('kfm_right_column'),fdata=fsdata[a];
 	if(wrapper.contentMode!='file_icons')return (window.kfm_incrementalFileDisplay_vars=null);
 	var name=fdata.name,ext=name.replace(kfm_regexps.all_up_to_last_dot,''),b,fullfilename=kfm_cwd_name+'/'+name,id=fdata.id;
-	var nameEl=(new Element('span',{
-		'class':'filename'
-	})).setHTML(name);
+//	var nameEl=(new Element('span',{
+//		'class':'filename'
+//	})).setHTML(name);
+	var F=File_getInstance(id);
+	var nameEl=F.getText('filename');
 	var el=new Element('div',{
 		'id':'kfm_file_icon_'+id,
 		'class':'kfm_file_icon kfm_icontype_'+ext,

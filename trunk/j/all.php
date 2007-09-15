@@ -14,6 +14,7 @@
 	$js.=file_get_contents('tags.js');
 	$js.=file_get_contents('common.js');
 	$js.=file_get_contents('kaejax_replaces.js');
+	$js.=file_get_contents('file.class.js');
 	$js.=file_get_contents('files.js');
 	$js.=file_get_contents('resize_handler.js');
 	header('Content-type: text/javascript');
