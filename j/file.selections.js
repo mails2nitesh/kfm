@@ -52,7 +52,7 @@ function kfm_file_dragFinish(e){
 	{ // build context menu for "copy/move"
 		var links=[];
 		links.push(['x_kfm_copyFiles(['+selectedFiles.join(',')+'],'+dir_over+',kfm_showMessage);kfm_selectNone()','copy files']);
-		links.push(['x_kfm_moveFiles(['+selectedFiles.join(',')+'],'+dir_over+',function(){kfm_removeFilesFromView(['+selectedFiles.join(',')+'])});kfm_selectNone()','move files',0,!kfm_vars.permissions.file.mv]);
+		links.push(['x_kfm_moveFiles(['+selectedFiles.join(',')+'],'+dir_over+',function(e){if($type(e)=="string")return alert("error: could not move file[s]");kfm_removeFilesFromView(['+selectedFiles.join(',')+'])});kfm_selectNone()','move files',0,!kfm_vars.permissions.file.mv]); // TODO: new string
 		kfm_createContextMenu(e.page,links);
 	}
 }

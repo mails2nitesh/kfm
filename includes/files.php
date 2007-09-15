@@ -195,6 +195,7 @@ function _moveFiles($files,$dir_id){
 		$file=$filedata['name'];
 		if(!kfm_checkAddr($dir.'/'.$file))return;
 		rename($dir.'/'.$file,$to.'/'.$file);
+		if(!file_exists($to.'/'.$file))return 'error: failed to move file'; # TODO: new string
 		$q=$kfmdb->query("update ".$kfm_db_prefix."files set directory=".$dir_id." where id=".$fid);
 	}
 	return kfm_loadFiles($cwd_id);
