@@ -73,7 +73,11 @@ var KFM=new Class({
 			right_column=new Element('div',{
 				'id':'kfm_right_column'
 			});
-			right_column.addEvent('click',function(){if(!window.dragType)kfm_selectNone()});
+			right_column.addEvent('click',function(e){
+				e=new Event(e);
+				if(e.rightClick)return;
+				if(!window.dragType)kfm_selectNone()
+			});
 			right_column.addEvent('mousedown',function(e){
 				e=new Event(e);
 				if(e.rightClick)return;

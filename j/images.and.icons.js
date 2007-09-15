@@ -99,7 +99,9 @@ function kfm_img_startLightbox(id){
 	kfm_resizeHandler_add('kfm_lightboxShader');
 	kfm_resizeHandler_add('kfm_lightboxWrapper');
 }
-function kfm_img_stopLightbox(){
+function kfm_img_stopLightbox(e){
+	e=new Event(e);
+	if(e.rightClick)return;
 	var wrapper=$('kfm_lightboxWrapper');
 	if(wrapper)wrapper.remove();
 	window.kfm_slideshow=window.kfm_slideshow_stopped=null;
