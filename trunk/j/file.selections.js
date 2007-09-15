@@ -191,6 +191,7 @@ function kfm_shiftFileSelectionUD(dir){
 }
 function kfm_toggleSelectedFile(e){
 	e=new Event(e);
+	if(e.rightClick)return;
 	e.stopPropagation();
 	var el=e.target;
 	while(el.tagName!='DIV')el=el.parentNode;

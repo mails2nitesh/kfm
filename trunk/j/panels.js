@@ -116,7 +116,9 @@ function kfm_createFileUploadPanel(){
 					'value':'9999999999'
 				});
 				var submit=newInput('upload','submit',kfm.lang.Upload);
-				if(!window.ie)submit.addEvent('click',function(){
+				if(!window.ie)submit.addEvent('click',function(e){
+					e=new Event(e);
+					if(e.rightClick)return;
 					setTimeout('$("kfm_file").type="text";$("kfm_file").type="file"',1);
 				});
 				var input=newInput('kfm_file','file');
@@ -179,10 +181,14 @@ function kfm_createFileUploadPanel(){
 					degraded_container_id : "kfm_uploadForm",
 					debug:false
 				});
-				b1.addEvent('click',function(){
+				b1.addEvent('click',function(e){
+					e=new Event(e);
+					if(e.rightClick)return;
 					window.swfUpload.browse();
 				});
-				b2.addEvent('click',function(){
+				b2.addEvent('click',function(e){
+					e=new Event(e);
+					if(e.rightClick)return;
 					window.swfUpload.cancelQueue();
 				});
 				wrapper.appendChild(f3);

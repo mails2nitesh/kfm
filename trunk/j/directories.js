@@ -75,7 +75,9 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 		),'kfm_dir_lines_'+(is_last?'lastchild':'child'));
 	cell.style.width='16px';
 	kfm.addCell(r,1,0,el,'kfm_dir_name');
-	el.addEvent('click',function(){
+	el.addEvent('click',function(e){
+		e=new Event(e);
+		if(e.rightClick)return;
 		kfm_changeDirectory(this.id);
 	});
 	el.addEvent('mouseout',function(){
