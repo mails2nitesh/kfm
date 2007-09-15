@@ -57,10 +57,16 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 			'id':'kfm_directory_icon_'+parent,
 			'class':'kfm_directory_link '+(kfm_cwd_name==pdir?'':'kfm_directory_open')
 		}),name_text),
-		{kfm_directoryname:pdir,node_id:parent}
+		{
+			kfm_directoryname:pdir,
+			node_id:parent
+		}
 	).setStyles('cursor:'+(window.ie?'hand':'pointer'));
 	kfm_addContextMenu(el,function(e){
-		var links=[],i,node_id=this.node_id;
+		var el=e.target;
+		while(el&&!el.node_id)el=el.parentNode;
+		if(!el)return;
+		var links=[],i,node_id=el.node_id;
 		links.push(['kfm_renameDirectory("'+node_id+'")',kfm.lang.RenameDir,'',!kfm_vars.permissions.dir.ed]);
 		links.push(['kfm_createDirectory("'+node_id+'")',kfm.lang.CreateSubDir,'folder_new',!kfm_vars.permissions.dir.mk]);
 		if(node_id!=1)links.push(['kfm_deleteDirectory("'+node_id+'")',kfm.lang.DeleteDir,'remove',!kfm_vars.permissions.dir.rm]);
