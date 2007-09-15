@@ -113,8 +113,7 @@ div.kfm_file_icon.selected{background-color:#eee;border-color:#000}
 #kfm_directories .kfm_dir_lines_lastchild a{font-size:0;text-indent:-4000px;display:block;width:16px;height:18px;background:url(folders.gif) -32px -18px no-repeat}
 #kfm_directories .kfm_dir_lines_lastchild a.kfm_dir_node_closed{background:url(folders.gif) -32px 0px no-repeat}
 #kfm_directories .kfm_dir_lines_nochild{width:16px;background:url(folders.gif) 0 0 repeat-y}
-#kfm_directories .kfm_dir_name{background:url(folders.gif) no-repeat -48px 0;text-indent:18px;color:blue;text-decoration:underline;position:relative}
-* html #kfm_directories .kfm_dir_name{text-indent:9px}
+#kfm_directories .kfm_dir_name{background:url(folders.gif) no-repeat -48px 0;color:blue;text-decoration:underline;position:relative;padding-left:18px}
 #kfm_directories .kfm_dir_name.kfm_directory_open{background:url(folders.gif) -48px -18px no-repeat; background-color:#eee}
 #kfm_directories .kfm_dir_name div:hover{color:red}
 #message{top:2px; right:3px; position:absolute; z-index:10000; background-color: #f00; color: #000; font-weight:bold;}

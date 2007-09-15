@@ -177,7 +177,7 @@ require_once($kfm_base_path.'configuration.php');
 			define('DBNAME',$kfm_db_name);
 			if(!file_exists(WORKPATH.DBNAME))$kfmdb_create=true;
 			$dsn=array('phptype'=>'sqlite','database'=>WORKPATH.DBNAME,'mode'=>'0644');
-			$kfmdb=&MDB2::factory($dsn);
+			$kfmdb=&MDB2::connect($dsn);
 			kfm_dieOnError($kfmdb);
 			$kfmdb->setFetchMode(MDB2_FETCHMODE_ASSOC);
 			if($kfmdb_create)include($kfm_base_path.'scripts/db.sqlite.create.php');
