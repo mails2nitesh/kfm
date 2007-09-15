@@ -47,7 +47,10 @@ header('Content-type: text/html; Charset=utf-8');
 		<script type="text/javascript" src="j/mootools.v1.11/mootools.v1.11.js"></script>
 		<?php
 			if(isset($kfm_dev)){
-				$js_files=array('variables.js','notice.js','kfm.js','alerts.js','modal.dialog.js','contextmenu.js','directories.js','file.selections.js','file.text-editing.js','images.and.icons.js','panels.js','tags.js','common.js','kaejax_replaces.js','files.js','resize_handler.js');
+				$js_files=array('variables.js','notice.js','kfm.js','alerts.js','modal.dialog.js',
+					'contextmenu.js','directories.js','file.selections.js','file.text-editing.js',
+					'images.and.icons.js','panels.js','tags.js','common.js','kaejax_replaces.js',
+					'file.class.js','files.js','resize_handler.js');
 				echo '<script type="text/javascript" src="j/'.join("\"></script>\n		<script type=\"text/javascript\" src=\"j/",$js_files).'"></script>'."\n";
 			}
 			else echo '<script type="text/javascript" src="j/all.php"></script>';
