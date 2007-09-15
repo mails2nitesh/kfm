@@ -3,6 +3,7 @@ var kfm_file_bits={
 	contextmenu:function(e){
 		var el=e.target;
 		while(el.parentNode&&!el.kfm_attributes)el=el.parentNode;
+		if(!el.parentNode)return;
 		{ // variables
 			var name=el.kfm_attributes.name,links=[],i,id=el.kfm_attributes.id;
 			var extension=name.replace(/.*\./,'').toLowerCase();
@@ -44,6 +45,9 @@ var kfm_file_bits={
 	mousedown:function(e){
 		e=new Event(e);
 		if(e.rightClick)return;
+		var el=e.target;
+		while(el.parentNode&&!el.kfm_attributes)el=el.parentNode;
+		if(!el.parentNode)return;
 		var id=el.kfm_attributes.id;
 		document.addEvent('mouseup',kfm_file_dragFinish);
 		$clear(window.dragSelectionTrigger);
