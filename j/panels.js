@@ -162,7 +162,7 @@ function kfm_createFileUploadPanel(){
 				$(c).setHTML('&nbsp;');
 				f3.appendChild(t);
 				window.swfUpload=new SWFUpload({
-					upload_target_url:"../../upload.php?kfm_session="+window.session_key, // relative to the flash
+					upload_target_url:"../../upload.php?kfm_session="+window.session_key+"&PHPSESSID="+window.phpsession, // relative to the flash
 					upload_cookies:["kfm_session"],
 					file_size_limit : "102400",	// 100MB
 					file_types : "*.*",
