@@ -68,11 +68,12 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 		e=new Event(e);
 		kfm_createContextMenu(e.page,links);
 	});
-	kfm.addCell(r,0,0,(
+	var cell=kfm.addCell(r,0,0,(
 		has_node_control?
 			newLink('javascript:kfm_dir_openNode('+parent+')','[+]','kfm_dir_node_'+parent,'kfm_dir_node_closed'):
-			(new Element('span',{'id':'kfm_dir_node_'+parent})).setHTML(' ')
+			(new Element('span',{'id':'kfm_dir_node_'+parent})).setHTML('&nbsp;')
 		),'kfm_dir_lines_'+(is_last?'lastchild':'child'));
+	cell.style.width='16px';
 	kfm.addCell(r,1,0,el,'kfm_dir_name');
 	el.addEvent('click',function(){
 		kfm_changeDirectory(this.id);
@@ -185,6 +186,7 @@ function kfm_refreshDirectories(res){
 		$('kfm_directory_icon_1').parentNode.className+=' kfm_directory_open';
 	}
 	var t=new Element('table'),n='kfm_dir_node_'+d;
+	t.setStyle('table-layout','fixed');
 	dirwrapper=$('kfm_directories_subdirs_'+d).empty();
 	kfm.addEl(dirwrapper,t);
 	var dirs=$A(res.directories);
