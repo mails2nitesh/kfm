@@ -112,7 +112,7 @@ function kfm_selectNone(){
 function kfm_selectionCheck(){
 	if(selectedFiles.length==1){
 		$E('#kfm_file_details_panel div.kfm_panel_body').innerHTML='loading';
-		kfm_run_delayed('file_details','if(selectedFiles.length==1)x_kfm_getFileDetails(selectedFiles[0],kfm_showFileDetails);');
+		kfm_run_delayed('file_details','if(selectedFiles.length==1)kfm_showFileDetails(selectedFiles[0]);');
 	}
 	else kfm_run_delayed('file_details','if(!selectedFiles.length)kfm_showFileDetails();');
 }
