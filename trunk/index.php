@@ -31,6 +31,7 @@ header('Content-type: text/html; Charset=utf-8');
 		<script type="text/javascript" src="j/swfuploadr52_0002/swfupload.js"></script>
 		<script type="text/javascript" src="lang/<?php echo $kfm_language; ?>.js"></script>
 		<script type="text/javascript">
+			var phpsession = "<?php echo session_id(); ?>";
 			var session_key="<?php echo $kfm_session->key; ?>";
 			var starttype="<?php echo isset($_GET['type'])?$_GET['type']:''; ?>";
 			var fckroot="<?php echo $kfm_userfiles; ?>";

@@ -9,6 +9,7 @@ function _copyFiles($files,$dir_id){
 	if(!$GLOBALS['kfm_allow_file_create'])return 'error: '.kfm_lang('permissionDeniedCreateFile');
 	global $kfmdb,$kfm_db_prefix;
 	$to=kfm_getDirectoryParents($dir_id);
+	if(!is_writable($to)) return 'error: Directory is not writable'; //TODO new string
 	$copied=0;
 	if(!kfm_checkAddr($to))return 'error: '.kfm_lang('illegalTargetDirectory',$to);
 	foreach($files as $fid){
@@ -185,6 +186,7 @@ function _moveFiles($files,$dir_id){
 	$dirdata=kfm_getDirectoryDbInfo($dir_id);
 	if(!$dirdata)return 'error: '.kfm_lang('noDataForDirectoryID',$dir_id);
 	$to=kfm_getDirectoryParents($dir_id);
+	if(!is_writable($to)) return 'error: Directory is not writable'; //TODO new string
 	if(!kfm_checkAddr($to))return 'error: '.kfm_lang('illegalTargetDirectory',$to);
 	foreach($files as $fid){
 		$filedata=db_fetch_row("select directory,name from ".$kfm_db_prefix."files where id=".$fid);
