@@ -20,6 +20,30 @@ header('Content-type: text/html; Charset=utf-8');
 	<head>
 		<style type="text/css">@import "themes/<?php echo $kfm_theme; ?>/kfm.css";</style>
 		<title>KFM - Kae's File Manager</title>
+		<script type="text/javascript">
+			var kfm_vars={
+				root_folder_name:"<?php echo $kfm_root_folder_name; ?>",
+				show_disabled_contextmenu_links:<?php echo $kfm_show_disabled_contextmenu_links; ?>,
+				use_multiple_file_upload:<?php echo $kfm_use_multiple_file_upload; ?>,
+				permissions:{
+					dir:{
+						ed:<?php echo $kfm_allow_directory_edit; ?>,
+						mk:<?php echo $kfm_allow_directory_create; ?>,
+		   				mv:<?php echo $kfm_allow_directory_move; ?>,
+						rm:<?php echo $kfm_allow_directory_delete; ?>
+					},
+					file:{
+						rm:<?php echo $kfm_allow_file_delete; ?>,
+						ed:<?php echo $kfm_allow_file_edit; ?>,
+		   				mk:<?php echo $kfm_allow_file_create; ?>,
+		   				mv:<?php echo $kfm_allow_file_move; ?>
+					},
+					image:{
+						manip:<?php echo $kfm_allow_image_manipulation; ?>
+					}
+				}
+			};
+		</script>
 		<script type="text/javascript" src="j/mootools.v1.11/mootools.v1.11.js"></script>
 		<?php
 			if(isset($kfm_dev)){
@@ -48,27 +72,6 @@ header('Content-type: text/html; Charset=utf-8');
 			<?php if(isset($_GET['kfm_caller_type']))echo 'window.kfm_caller_type="'.addslashes($_GET['kfm_caller_type']).'";'; ?>
 			var editable_extensions=["<?php echo join('","',$kfm_editable_extensions);?>"];
 			var viewable_extensions=["<?php echo join('","',$kfm_viewable_extensions);?>"];
-			var kfm_vars={
-				show_disabled_contextmenu_links:<?php echo $kfm_show_disabled_contextmenu_links; ?>,
-				use_multiple_file_upload:<?php echo $kfm_use_multiple_file_upload; ?>,
-				permissions:{
-					dir:{
-						ed:<?php echo $kfm_allow_directory_edit; ?>,
-						mk:<?php echo $kfm_allow_directory_create; ?>,
-		   				mv:<?php echo $kfm_allow_directory_move; ?>,
-						rm:<?php echo $kfm_allow_directory_delete; ?>
-					},
-					file:{
-						rm:<?php echo $kfm_allow_file_delete; ?>,
-						ed:<?php echo $kfm_allow_file_edit; ?>,
-		   				mk:<?php echo $kfm_allow_file_create; ?>,
-		   				mv:<?php echo $kfm_allow_file_move; ?>
-					},
-					image:{
-						manip:<?php echo $kfm_allow_image_manipulation; ?>
-					}
-				}
-			};
 		</script>
 	</head>
 	<body>

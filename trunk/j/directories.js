@@ -48,7 +48,7 @@ function kfm_deleteDirectoryCheck(res){
 	}
 }
 function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
-	var r=kfm.addRow(t),c,pdir=parent_addr+name,name=(name==''?'root':name);
+	var r=kfm.addRow(t),c,pdir=parent_addr+name,name=(name==''?kfm_vars.root_folder_name:name);
 	var name_text=(new Element('span',{
 		'id':'directory_name_'+parent
 	})).setHTML('0');
@@ -186,7 +186,7 @@ function kfm_refreshDirectories(res){
 		}),'','',1,0,1),p);
 		kfm_directories[1]={
 			'parent':0,
-			'name':'root',
+			'name':kfm_vars.root_folder_name,
 			'path':'/',
 			'realpath':res.properties.path,
 			'hasChildren':res.directories.length
