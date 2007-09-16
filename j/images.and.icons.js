@@ -15,7 +15,6 @@ function kfm_changeCaption_set(){
 	if(!newCaption||newCaption==$('kfm_file_icon_'+id).kfm_attributes.caption)return;
 	kfm_modal_close();
 	if(kfm.confirm(kfm.lang.NewCaptionIsThisCorrect(newCaption))){
-		kfm_filesCache[id]=null;
 		kfm_log(kfm.lang.Log_ChangeCaption(id,newCaption));
 		x_kfm_changeCaption(id,newCaption,kfm_refreshFiles);
 	}
@@ -112,7 +111,7 @@ function kfm_img_stopLightbox(e){
 }
 function kfm_resizeImage(id){
 	var data=$('kfm_file_icon_'+id).kfm_attributes;
-	var el=kfm_filesCache[id],txt=kfm.lang.CurrentSize(data.width,data.height);
+	var txt=kfm.lang.CurrentSize(data.width,data.height);
 	kfm_prompt(txt+kfm.lang.NewWidth,data.width,function(x){
 		x=parseInt(x);
 		if(!x)return;
@@ -120,10 +119,7 @@ function kfm_resizeImage(id){
 		kfm_prompt(txt+kfm.lang.NewHeight,Math.ceil(data.height*(x/data.width)),function(y){
 			y=parseInt(y);
 			if(!y)return;
-			if(kfm.confirm(txt+kfm.lang.NewHeightConfirmTxt(y))){
-				kfm_filesCache[id]=null;
-				x_kfm_resizeImage(id,x,y,kfm_refreshFiles);
-			}
+			if(kfm.confirm(txt+kfm.lang.NewHeightConfirmTxt(y)))x_kfm_resizeImage(id,x,y,kfm_refreshFiles);
 		});
 	});
 }
@@ -152,10 +148,8 @@ function kfm_returnThumbnail(id,size){
 }
 function kfm_rotateImage(id,direction){
 	var F=File_getInstance(id);
-	kfm_filesCache[id]=null;
 	x_kfm_rotateImage(id,direction,function(id){
-		if(id.toString()===id)return kfm_log(id);
-		F.icon_url='get.php?id='+id+'&width=64&height=64&get_params='+kfm_vars.get_params+'&r'+Math.random();
-		$('kfm_file_icon_'+id).style.backgroundImage='url("'+F.icon_url+'")';
+		if($type(id)=='string')return kfm_log(id);
+		F.setThumbnailBackground($('kfm_file_icon_'+id),true);
 	});
 }
