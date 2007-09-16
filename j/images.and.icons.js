@@ -151,9 +151,11 @@ function kfm_returnThumbnail(id,size){
 	});
 }
 function kfm_rotateImage(id,direction){
+	var F=File_getInstance(id);
 	kfm_filesCache[id]=null;
 	x_kfm_rotateImage(id,direction,function(id){
 		if(id.toString()===id)return kfm_log(id);
-		$('kfm_file_icon_'+id).style.backgroundImage='url(get.php?id='+id+'&width=64&height=64&r'+Math.random()+')';
+		F.icon_url='get.php?id='+id+'&width=64&height=64&get_params='+kfm_vars.get_params+'&r'+Math.random();
+		$('kfm_file_icon_'+id).style.backgroundImage='url("'+F.icon_url+'")';
 	});
 }
