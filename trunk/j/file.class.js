@@ -20,6 +20,29 @@ var File=new Class({
 				});
 			});
 		});
+	},
+	setThumbnailBackground:function(el,reset){
+		if(this.icon_loaded && !reset)el.setStyle('background-image','url("'+this.icon_url+'")');
+		else{
+			var url='get.php?id='+this.id+'&width=64&height=64&get_params='+kfm_vars.get_params+'&r'+Math.random();
+			var img=new Element('img',{
+				src:url,
+				styles:{
+					width:1,
+					height:1
+				}
+			});
+			var id=this.id;
+			img.addEvent('load',function(){
+				var p=this.parentNode;
+				p.setStyle('background-image','url("'+url+'")');
+				var F=File_getInstance(id);
+				F.icon_loaded=1;
+				F.icon_url=url;
+				this.remove();
+			});
+			kfm.addEl(el,img);
+		}
 	}
 });
 var File_Instances=[];
