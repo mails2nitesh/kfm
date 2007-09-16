@@ -136,9 +136,6 @@ $kfm_use_multiple_file_upload=0;
 # seconds between slides in a slideshow
 $kfm_slideshow_delay=4;
 
-# use filenames such as "longf[...].txt" where the filename is very long
-$kfm_shorten_filenames=0;
-
 # allow users to resize/rotate images
 $kfm_allow_image_manipulation=1;
 

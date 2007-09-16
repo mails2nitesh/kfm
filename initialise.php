@@ -56,7 +56,6 @@ require_once($kfm_base_path.'configuration.php');
 	if(!isset($kfm_use_imagemagick))$m[]='missing <code>$kfm_use_imagemagick</code> variable';
 	if(!isset($kfm_slideshow_delay))$m[]='missing <code>$kfm_slideshow_delay</code> variable';
 	if(!isset($kfm_db_port))$m[]='missing <code>$kfm_db_port</code> variable';
-	if(!isset($kfm_shorten_filenames))$m[]='missing <code>$kfm_shorten_filenames</code> variable';
 	if(!isset($kfm_root_folder_name))$m[]='missing <code>$kfm_root_folder_name</code> variable';
 	if(count($m)){
 		echo '<html><body><p>There are errors in your configuration or server. If the messages below describe missing variables, please check the supplied <code>configuration.php.dist</code> for notes on their usage.</p><ul>';
