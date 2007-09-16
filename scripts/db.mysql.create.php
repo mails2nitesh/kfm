@@ -34,14 +34,14 @@
 		`cookie` varchar(32) default NULL,
 		`last_accessed` datetime default NULL,
 		PRIMARY KEY  (`id`)
-	) ENGINE=InnoDB DEFAULT CHARSET=utf8");
+	) DEFAULT CHARSET=utf8");
 	$kfmdb->query("CREATE TABLE ".$kfm_db_prefix."session_vars (
 		`session_id` int(11) default NULL,
 		`varname` text,
 		`varvalue` text,
 		KEY `session_id` (`session_id`),
 		CONSTRAINT `".$kfm_db_prefix."session_vars_ibfk_1` FOREIGN KEY (`session_id`) REFERENCES `".$kfm_db_prefix."session` (`id`)
-	) ENGINE=InnoDB DEFAULT CHARSET=utf8");
+	) DEFAULT CHARSET=utf8");
 	$kfmdb->query("CREATE TABLE ".$kfm_db_prefix."tagged_files(
 		file_id	INTEGER,
 		tag_id	INTEGER,
