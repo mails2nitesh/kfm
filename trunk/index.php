@@ -22,6 +22,7 @@ header('Content-type: text/html; Charset=utf-8');
 		<title>KFM - Kae's File Manager</title>
 		<script type="text/javascript">
 			var kfm_vars={
+				get_params:"<?php echo GET_PARAMS; ?>",
 				root_folder_name:"<?php echo $kfm_root_folder_name; ?>",
 				show_disabled_contextmenu_links:<?php echo $kfm_show_disabled_contextmenu_links; ?>,
 				use_multiple_file_upload:<?php echo $kfm_use_multiple_file_upload; ?>,
