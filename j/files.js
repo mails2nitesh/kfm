@@ -216,20 +216,25 @@ function kfm_incrementalFileDisplay(){
 	{ // file attributes
 		el.kfm_attributes=fdata;
 		if(fdata.width){
-			var url='get.php?id='+id+'&width=64&height=64&get_params='+b.data.get_params+'&r'+Math.random();
-			var img=new Element('img',{
-				src:url,
-				styles:{
-					width:1,
-					height:1
-				}
-			});
-			img.addEvent('load',function(){
-				var p=this.parentNode;
-				p.setStyle('background-image','url("'+url+'")');
-				this.remove();
-			});
-			kfm.addEl(el,img);
+			if(F.icon_loaded)el.setStyle('background-image','url("'+F.icon_url+'")');
+			else{
+				var url='get.php?id='+id+'&width=64&height=64&get_params='+kfm_vars.get_params+'&r'+Math.random();
+				var img=new Element('img',{
+					src:url,
+					styles:{
+						width:1,
+						height:1
+					}
+				});
+				img.addEvent('load',function(){
+					var p=this.parentNode;
+					p.setStyle('background-image','url("'+url+'")');
+					F.icon_loaded=1;
+					F.icon_url=url;
+					this.remove();
+				});
+				kfm.addEl(el,img);
+			}
 		}
 		wrapper.files[a]=el;
 	}

@@ -89,7 +89,9 @@ function _getFileAsArray($filename){
 }
 function _getFileDetails($fid){
 	$file=kfmFile::getInstance($fid);
-	if(!file_exists($file->path))return;
+	if(!is_object($file))return 'error: failed to retrieve File object'; # TODO: New String
+	$fpath=$file->path;
+	if(!file_exists($fpath))return;
 	$details=array(
 		'id'=>$fid,
 		'filename'=>$file->name,
@@ -177,7 +179,7 @@ function _loadFiles($rootid=1){
 	}
 	$root='/'.str_replace($GLOBALS['rootdir'],'',$dir->path);
 	$kfm_session->set('cwd_id',$rootid);
-	return array('reqdir'=>$root,'files'=>$files,'uploads_allowed'=>$GLOBALS['kfm_allow_file_upload'], 'get_params'=>GET_PARAMS); 
+	return array('reqdir'=>$root,'files'=>$files,'uploads_allowed'=>$GLOBALS['kfm_allow_file_upload']); 
 }
 function _moveFiles($files,$dir_id){
 	global $kfmdb,$kfm_db_prefix,$kfm_session;
