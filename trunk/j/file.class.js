@@ -3,8 +3,17 @@ var File=new Class({
 		var el=new Element('span',{
 			'class':varname+' file_'+varname+'_'+this.id
 		});
-		el.appendText($pick(this[varname],''));
+		this.setText(el,varname);
 		return el;
+	},
+	setText:function(el,varname){
+		el.empty();
+		var v=$pick(this[varname],'');
+		if(varname=='filename' && kfm_vars.files.name_length_displayed && kfm_vars.files.name_length_displayed<v.length){
+			el.title=v;
+			v=v.substring(0,kfm_vars.files.name_length_displayed-3)+'...';
+		}
+		el.appendText(v);
 	},
 	initialize:function(id){
 		this.id=id;
@@ -15,8 +24,7 @@ var File=new Class({
 			el.each(function(varvalue,varname){
 				F[varname]=varvalue;
 				$ES('.file_'+varname+'_'+id).each(function(t){
-					t.empty();
-					t.appendText(varvalue);
+					F.setText(t,varname);
 				});
 			});
 		});

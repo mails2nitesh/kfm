@@ -24,6 +24,9 @@ header('Content-type: text/html; Charset=utf-8');
 			var kfm_vars={
 				get_params:"<?php echo GET_PARAMS; ?>",
 				root_folder_name:"<?php echo $kfm_root_folder_name; ?>",
+				files:{
+					name_length_displayed:<?php echo $kfm_files_name_length_displayed; ?>
+				},
 				show_disabled_contextmenu_links:<?php echo $kfm_show_disabled_contextmenu_links; ?>,
 				use_multiple_file_upload:<?php echo $kfm_use_multiple_file_upload; ?>,
 				permissions:{
