@@ -28,7 +28,7 @@ class kfmFile extends kfmObject{
 				return false;
 			}
 			$this->writable=$this->isWritable();
-			$this->ctime=filectime($this->path);
+			$this->ctime=filemtime($this->path);
 			$mimetype=get_mimetype($this->path);
 			$pos=strpos($mimetype,';');
 			$this->mimetype=($pos===false)?$mimetype:substr($mimetype,0,$pos);
