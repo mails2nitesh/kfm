@@ -54,8 +54,7 @@ function kfm_createContextMenu(m,links){
 function kfm_addContextMenu(el,fn){
 	el.addEvent(window.webkit&&!window.webkit420?'mousedown':'contextmenu',function(e){
 		e=new Event(e);
-		if(!e.rightClick)return;
-		fn(e);
+		if(e.type=='contextmenu' || e.rightClick)fn(e);
 	});
 	return el;
 }
