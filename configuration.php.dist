@@ -51,6 +51,9 @@ $kfm_file_handler='fckeditor'; # values allowed: download, fckeditor
 # warning: if you use the '/' method, then you must use the get.php method for $kfm_userfiles_output.
 $kfm_workdirectory = '.files';
 
+# maximum length of filenames displayed. use 0 to turn this off, or enter the number of letters.
+$kfm_files_name_length_displayed=20;
+
 # 1 = users are allowed to delete directories
 # 0 = users are not allowed to delete directories
 $kfm_allow_directory_delete=1;
