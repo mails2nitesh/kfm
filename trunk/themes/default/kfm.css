@@ -1,7 +1,11 @@
 *{font:12px sans-serif}
+h1,h2{font-weight:bold;padding:0}
+h1{font-size:14px;background:#fff;border-bottom:1px solid #666;margin:0}
+h2{font-size:12px;font-style:italic;border:solid #ccc;background:#ddd;border-width:1px 0 1px;margin:5px 0}
 html{height:100%} /* solves a bug in Konqueror */
 body{margin:0;padding:0;height:100%}
 form{padding:0;margin:0}
+strong{font-weight:bold}
 td{vertical-align:top}
 
 #formWrapper{background:url('bitsandpieces/panelheader-bg.png') repeat-x #eee;border-left:1px solid #000}

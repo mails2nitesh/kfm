@@ -1,5 +1,43 @@
 // see license.txt for licensing
 var KFM=new Class({
+	about:function(){
+		var div=new Element('div',{
+			'styles':{
+				'width':400
+			}
+		});
+		var html='<h1>KFM '+kfm_vars.version+'</h1>';
+		{ // sponsors
+			html+='<h2>Sponsors</h2>';
+			html+='KFM is free software. Here are some recent sponsors:<br />';
+			html+='<a href="http://tinyurl.com/2uerfm" style="float:right;display:block;border:1px solid red;background:#fff;text-decoration:none;text-align:center;margin-right:10px" target="_blank">Donate to KFM</a>';
+			html+='<a href="http://webworks.ie/" target="_blank"><strong>webworks.ie</strong></a><br />';
+			html+='<a href="http://www.bluenectar.com.au/" target="_blank">Blue Nectar</a><br />';
+		}
+		{ // developers
+			html+='<h2>Developers</h2>';
+			html+='<a href="http://verens.com/" target="_blank"><strong>Kae Verens</strong></a><br />';
+			html+='<a href="http://www.companytools.nl/cmsms/file-image-manager" target="_blank">Benjamin Ter Kuile</a><br />';
+		}
+		{ // translators
+			html+='<h2>Translators</h2>';
+			html+='bg (Bulgarian): Tondy<br />';
+			html+='da (Danish): Janich Rasmussen<br />';
+			html+='de (German): Just Agens<br />';
+			html+='en (English): Kae Verens<br />';
+			html+='es (Spanish): Ramón Ramos<br />';
+			html+='fi (Finnish): Hannu (hlpilot)<br />';
+			html+='fr (French): Hubert Garrido<br />';
+			html+='ga (Irish): Kae Verens<br />';
+			html+='it (Italian): Stefano Luchetta<br />';
+			html+='nl (Dutch): Roy Lubbers<br />';
+			html+='pl (Polish): Jan Kurek<br />';
+			html+='ro (Romanian): Andrei Suscov<br />';
+			html+='ru (Russian): Andrei Suscov<br />';
+		}
+		div.setHTML(html);
+		kfm_modal_open(div,'about KFM'); // TODO: New String
+	},
 	addCell:function(o,b,c,d,e){
 		var f=o.insertCell(b);
 		if(c)f.colSpan=c;
@@ -43,6 +81,10 @@ var KFM=new Class({
 		}
 		kfm_cwd_name=starttype;
 		$(document.body).setStyle('overflow','hidden');
+		kfm_addContextMenu(document.body,function(e){
+			var links=[['kfm.about()','about KFM']]; // TODO: New String
+			kfm_createContextMenu(e.page,links);
+		});
 		{ // create left column
 			var left_column=kfm_createPanelWrapper('kfm_left_column');
 			kfm_resizeHandler_addMaxHeight('kfm_left_column');
@@ -53,20 +95,15 @@ var KFM=new Class({
 			left_column.panels_unlocked=1;
 			left_column.setStyles('height:'+w.y+'px');
 			kfm_addContextMenu(left_column,function(e){
-				{ // variables
-					var row,cell,cells,rows=0,target=kfm.getParentEl(e.target,'DIV');
+				var links=[],i;
+				var l=left_column.panels_unlocked;
+				links.push(['kfm_togglePanelsUnlocked()',l?kfm.lang.LockPanels:kfm.lang.UnlockPanels,l?'lock':'unlock']);
+				var ps=left_column.panels;
+				for(var i=0;i<ps.length;++i){
+					var p=$(ps[i]);
+					if(!p.visible && !kfm_inArray(ps[i],kfm_hidden_panels))links.push(['kfm_addPanel("kfm_left_column","'+ps[i]+'")',kfm.lang.ShowPanel(p.panel_title),'show_panel']);
 				}
-				{ // add the links
-					var links=[],i;
-					var l=left_column.panels_unlocked;
-					links.push(['kfm_togglePanelsUnlocked()',l?kfm.lang.LockPanels:kfm.lang.UnlockPanels,l?'lock':'unlock']);
-					var ps=left_column.panels;
-					for(var i=0;i<ps.length;++i){
-						var p=$(ps[i]);
-						if(!p.visible && !kfm_inArray(ps[i],kfm_hidden_panels))links.push(['kfm_addPanel("kfm_left_column","'+ps[i]+'")',kfm.lang.ShowPanel(p.panel_title),'show_panel']);
-					}
-					kfm_createContextMenu(e.page,links);
-				}
+				kfm_createContextMenu(e.page,links);
 			});
 		}
 		{ // create right_column
