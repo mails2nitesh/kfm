@@ -12,6 +12,10 @@ class kfmImage extends kfmFile{
 		if(is_object($file) && $file->isImage())parent::kfmFile($file->id);
 		else if(is_numeric($file))parent::kfmFile($file);
 		else return false;
+		if(!$this->exists()){
+			$this->delete();
+			return false;
+		}
 		$this->image_id=$this->getImageId();
 		if($this->getSize()){
 			$this->info=getimagesize($this->path);

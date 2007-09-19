@@ -3,6 +3,7 @@ $fileInstances=array();
 class kfmFile extends kfmObject{
 	var $ctime='';
 	var $directory='';
+	var $exists=0;
 	var $id=-1;
 	var $mimetype='';
 	var $name='';
@@ -22,7 +23,7 @@ class kfmFile extends kfmObject{
 			$dir=kfmDirectory::getInstance($this->parent);
 			$this->directory=$dir->path;
 			$this->path=$dir->path.'/'.$filedata['name'];
-			if(!file_exists($this->path)){
+			if(!$this->exists()){
 				$this->error('File cannot be found');
 				$this->delete();
 				return false;
@@ -42,6 +43,11 @@ class kfmFile extends kfmObject{
 			strpos($addr,'/')===false &&
 			!in_array(preg_replace('/.*\./','',$addr),$GLOBALS['kfm_banned_extensions'])
 			);
+	}
+	function exists(){
+		if($this->exists)return $this->exists;
+		$this->exists=file_exists($this->path);
+		return $this->exists;
 	}
 	function getContent(){
 		return ($this->id==-1)?false:utf8_encode(file_get_contents($this->path));
@@ -64,7 +70,7 @@ class kfmFile extends kfmObject{
 	function getUrl($x=0,$y=0){
 		global $rootdir, $kfm_userfiles_output,$kfm_workdirectory;
 		$cwd=$this->directory.'/'==$rootdir?'':str_replace($rootdir,'',$this->directory);
-		if(!file_exists($this->path))return 'javascript:alert("missing file")';
+		if(!$this->exists())return 'javascript:alert("missing file")';
 		if(preg_replace('/.*(get\.php)$/','$1',$kfm_userfiles_output)=='get.php'){
 			if($kfm_userfiles_output=='get.php')$url=preg_replace('/\/[^\/]*$/','/get.php?id='.$this->id.GET_PARAMS,$_SERVER['REQUEST_URI']);
 			else $url=$kfm_userfiles_output.'?id='.$this->id;
@@ -85,7 +91,7 @@ class kfmFile extends kfmObject{
 		if(!$kfm_allow_file_delete)$this->error(kfm_lang('permissionDeniedDeleteFile'));
 		if(!kfm_cmsHooks_allowedToDeleteFile($this->id))$this->error(kfm_lang('CMSRefusesFileDelete',$this->path));
 		if(!$this->hasErrors()){
-			if(unlink($this->path)||!file_exists($this->path))$this->db->exec("DELETE FROM ".$kfm_db_prefix."files WHERE id=".$this->id);
+			if(unlink($this->path)||!$this->exists())$this->db->exec("DELETE FROM ".$kfm_db_prefix."files WHERE id=".$this->id);
 			else $this->error('unable to delete file '.$this->name);
 		}
 		return !$this->hasErrors();
