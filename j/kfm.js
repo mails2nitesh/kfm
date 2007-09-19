@@ -35,6 +35,10 @@ var KFM=new Class({
 			html+='ro (Romanian): Andrei Suscov<br />';
 			html+='ru (Russian): Andrei Suscov<br />';
 		}
+		{ // bug testers
+			html+='<h2>Bug Testers</h2>';
+			html+='<em>list coming!</em><br />';
+		}
 		div.setHTML(html);
 		kfm_modal_open(div,'about KFM'); // TODO: New String
 	},
