@@ -6,6 +6,14 @@ var File=new Class({
 		this.setText(el,varname);
 		return el;
 	},
+	initialize:function(id,data){
+		this.id=id;
+		if(data){
+			File_Instances[id]=this;
+			File_setData(data,this);
+		}
+		else x_kfm_getFileDetails(id,File_setData);
+	},
 	setText:function(el,varname){
 		el.empty();
 		var v=$pick(this[varname],'');
@@ -14,20 +22,6 @@ var File=new Class({
 			v=v.substring(0,kfm_vars.files.name_length_displayed-3)+'...';
 		}
 		el.appendText(v);
-	},
-	initialize:function(id){
-		this.id=id;
-		x_kfm_getFileDetails(id,function(el){
-			var id=parseInt(el.id);
-			el=$H(el);
-			var F=File_getInstance(id);
-			el.each(function(varvalue,varname){
-				F[varname]=varvalue;
-				$ES('.file_'+varname+'_'+id).each(function(t){
-					F.setText(t,varname);
-				});
-			});
-		});
 	},
 	setThumbnailBackground:function(el,reset){
 		if(this.icon_loaded && !reset)el.setStyle('background-image','url("'+this.icon_url+'")');
@@ -53,9 +47,21 @@ var File=new Class({
 		}
 	}
 });
-var File_Instances=[];
-function File_getInstance(id){
+function File_getInstance(id,data){
 	id=parseInt(id);
-	if(!File_Instances[id])File_Instances[id]=new File(id);
+	if(isNaN(id))return;
+	if(!File_Instances[id] || data)File_Instances[id]=new File(id,data);
 	return File_Instances[id];
 }
+function File_setData(el,F){
+	var id=parseInt(el.id);
+	el=$H(el);
+	if(!F)F=File_Instances[id]={};
+	el.each(function(varvalue,varname){
+		F[varname]=varvalue;
+		$ES('.file_'+varname+'_'+id).each(function(t){
+			F.setText(t,varname);
+		});
+	});
+}
+var File_Instances=[];
