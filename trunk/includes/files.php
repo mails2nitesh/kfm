@@ -93,7 +93,8 @@ function _getFileDetails($fid){
 	$fpath=$file->path;
 	if(!file_exists($fpath))return;
 	$details=array(
-		'id'=>$fid,
+		'id'=>$file->id,
+		'name'=>$file->name,
 		'filename'=>$file->name,
 		'mimetype'=>$file->mimetype,
 		'filesize'=>$file->size2str(),
@@ -103,6 +104,9 @@ function _getFileDetails($fid){
 	if($file->isImage()){
 		$im=kfmImage::getInstance($file);
 		$details['caption']=$im->caption;
+		$details['width']=$im->width;
+		$details['height']=$im->height;
+		$details['thumb_url']=$im->thumb_url;
 	}
 	return $details;
 }
@@ -168,15 +172,7 @@ function _loadFiles($rootid=1){
 	$oFiles=$dir->getFiles();
 	if($dir->hasErrors())return $dir->getErrors();
 	$files=array();
-	foreach($oFiles as $file){
-		$aFile=array('id'=>$file->id,'ctime'=>$file->ctime,'name'=>$file->name,'writable'=>$file->writable);
-		if($file->isImage()){
-			$aFile['width']=$file->width;
-			$aFile['height']=$file->height;
-			$aFile['thumb_url']=$file->thumb_url;
-		}
-		$files[]=$aFile;
-	}
+	foreach($oFiles as $file)$files[]=_getFileDetails($file);
 	$root='/'.str_replace($GLOBALS['rootdir'],'',$dir->path);
 	$kfm_session->set('cwd_id',$rootid);
 	return array('reqdir'=>$root,'files'=>$files,'uploads_allowed'=>$GLOBALS['kfm_allow_file_upload']); 

@@ -92,6 +92,7 @@ class kfmFile extends kfmObject{
 	}
 	function getInstance($id=0){
 		if(!$id)return false;
+		if(is_object($id))$id=$id->id;
 		global $fileInstances;
 		if(!isset($fileInstances[$id]))$fileInstances[$id]=new kfmFile($id);
 		return $fileInstances[$id];
