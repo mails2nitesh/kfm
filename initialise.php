@@ -213,7 +213,7 @@ require_once($kfm_base_path.'configuration.php');
 	$kfm_parameters=array();
 	$rs=db_fetch_all("select * from ".$kfm_db_prefix."parameters");
 	foreach($rs as $r)$kfm_parameters[$r['name']]=$r['value'];
-	if($kfm_parameters['version']!=KFM_VERSION)require($kfm_base_path.'scripts/update.'.KFM_VERSION.'.php');
+	if($kfm_parameters['version']!=KFM_VERSION && file_exists($kfm_base_path.'scripts/update.'.KFM_VERSION.'.php'))require($kfm_base_path.'scripts/update.'.KFM_VERSION.'.php');
 }
 { # JSON
 	if(!function_exists('json_encode')){ # php-json is not installed
