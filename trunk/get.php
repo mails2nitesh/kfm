@@ -56,7 +56,7 @@ else{
 }
 { # headers
 	if(strstr($_SERVER['HTTP_USER_AGENT'],'MSIE'))$name=preg_replace('/\./','%2e',$name,substr_count($name,'.')-1);
-	set_time_limit(0);
+	@set_time_limit(0);
 	header('Cache-Control: max-age=2592000');
 	header('Expires-Active: On');
 	header('Expires: Fri, 1 Jan 2500 01:01:01 GMT');
