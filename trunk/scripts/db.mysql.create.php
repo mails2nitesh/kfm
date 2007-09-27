@@ -7,23 +7,20 @@
 	$kfmdb->query("CREATE TABLE ".$kfm_db_prefix."files(
 		id INTEGER PRIMARY KEY auto_increment,
 		name text,
-		directory integer not null,
-		foreign key (directory) references ".$kfm_db_prefix."directories(id)
+		directory integer not null
 	)DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci");
 	$kfmdb->query("CREATE TABLE ".$kfm_db_prefix."files_images(
 		id INTEGER PRIMARY KEY auto_increment,
 		caption text,
 		file_id integer not null,
 		width integer default 0,
-		height integer default 0,
-		foreign key (file_id) references ".$kfm_db_prefix."files (id)
+		height integer default 0
 	)DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci");
 	$kfmdb->query("CREATE TABLE ".$kfm_db_prefix."files_images_thumbs(
 		id INTEGER PRIMARY KEY auto_increment,
 		image_id integer not null,
 		width integer default 0,
-		height integer default 0,
-		foreign key (image_id) references ".$kfm_db_prefix."files_images (id)
+		height integer default 0
 	)DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci");
 	$kfmdb->query("CREATE TABLE ".$kfm_db_prefix."parameters(
 		name text,
@@ -39,14 +36,11 @@
 		`session_id` int(11) default NULL,
 		`varname` text,
 		`varvalue` text,
-		KEY `session_id` (`session_id`),
-		CONSTRAINT `".$kfm_db_prefix."session_vars_ibfk_1` FOREIGN KEY (`session_id`) REFERENCES `".$kfm_db_prefix."session` (`id`)
+		KEY `session_id` (`session_id`)
 	) DEFAULT CHARSET=utf8");
 	$kfmdb->query("CREATE TABLE ".$kfm_db_prefix."tagged_files(
 		file_id	INTEGER,
-		tag_id	INTEGER,
-		foreign key (file_id) references ".$kfm_db_prefix."files (id),
-		foreign key (tag_id) references ".$kfm_db_prefix."tags (id)
+		tag_id	INTEGER
 	)DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci");
 	$kfmdb->query("CREATE TABLE ".$kfm_db_prefix."tags(
 		id INTEGER PRIMARY KEY auto_increment,

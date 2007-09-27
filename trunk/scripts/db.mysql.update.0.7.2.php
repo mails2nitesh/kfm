@@ -12,8 +12,7 @@
 		id INTEGER PRIMARY KEY auto_increment,
 		image_id integer not null,
 		width integer default 0,
-		height integer default 0,
-		foreign key (image_id) references ".$kfm_db_prefix."files_images (id)
+		height integer default 0
 	)");
 	$kfmdb->query("update ".$kfm_db_prefix."parameters set value='0.7.2' where name='version'");
 ?>
