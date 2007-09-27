@@ -5,9 +5,10 @@ var kfm_file_bits={
 		while(el.parentNode&&!el.kfm_attributes)el=el.parentNode;
 		if(!el.parentNode)return;
 		{ // variables
-			var name=el.kfm_attributes.name,links=[],i,id=el.kfm_attributes.id;
-			var extension=name.replace(/.*\./,'').toLowerCase();
-			var writable=el.kfm_attributes.writable;
+			var links=[],i,id=el.kfm_attributes.id;
+			var F=File_getInstance(id);
+			var extension=F.name.replace(/.*\./,'').toLowerCase();
+			var writable=F.writable;
 		}
 		{ // add the links
 			if(selectedFiles.length>1){

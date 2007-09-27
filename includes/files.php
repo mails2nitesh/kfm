@@ -99,7 +99,8 @@ function _getFileDetails($fid){
 		'mimetype'=>$file->mimetype,
 		'filesize'=>$file->size2str(),
 		'tags'=>$file->getTags(),
-		'ctime'=>$file->ctime
+		'ctime'=>$file->ctime,
+		'writable'=>$file->isWritable()
 	);
 	if($file->isImage()){
 		$im=kfmImage::getInstance($file);
