@@ -2,10 +2,10 @@
 var kfm_file_bits={
 	contextmenu:function(e){
 		var el=e.target;
-		while(el.parentNode&&!el.kfm_attributes)el=el.parentNode;
+		while(el.parentNode&&!el.file_id)el=el.parentNode;
 		if(!el.parentNode)return;
 		{ // variables
-			var links=[],i,id=el.kfm_attributes.id;
+			var links=[],i,id=el.file_id;
 			var F=File_getInstance(id);
 			var extension=F.name.replace(/.*\./,'').toLowerCase();
 			var writable=F.writable;
@@ -15,14 +15,14 @@ var kfm_file_bits={
 				if(!window.ie)links.push(['kfm_downloadSelectedFiles()','download selected files']); // IE can't handle this...
 				links.push(['kfm_deleteSelectedFiles()',kfm.lang.DeleteFile,'remove',!kfm_vars.permissions.file.rm]);
 				var imgs=[];
-				for(var i=0;i<selectedFiles.length;++i)if($('kfm_file_icon_'+selectedFiles[i]).kfm_attributes.width)imgs.push(selectedFiles[i]);
+				for(var i=0;i<selectedFiles.length;++i)if(File_getInstance(selectedFiles[i]).width)imgs.push(selectedFiles[i]);
 				if(imgs.length)links.push(['kfm_img_startLightbox(['+imgs.join(',')+'])','view slideshow']);
 			}
 			else{
 				links.push(['kfm_downloadSelectedFiles('+id+')','download file']);
 				links.push(['kfm_deleteFile('+id+')',kfm.lang.DeleteFile,'remove',!kfm_vars.permissions.file.rm]);
 				links.push(['kfm_renameFile('+id+')',kfm.lang.RenameFile,'edit',!kfm_vars.permissions.file.ed]);
-				if(el.kfm_attributes.width){
+				if(F.width){
 					if(writable){
 						var manip=!(kfm_vars.permissions.file.ed&&kfm_vars.permissions.image.manip);
 						links.push(['kfm_rotateImage('+id+',270)',kfm.lang.RotateClockwise,'rotate_cw',manip]);
@@ -47,9 +47,9 @@ var kfm_file_bits={
 		e=new Event(e);
 		if(e.rightClick)return;
 		var el=e.target;
-		while(el.parentNode&&!el.kfm_attributes)el=el.parentNode;
+		while(el.parentNode&&!el.file_id)el=el.parentNode;
 		if(!el.parentNode)return;
-		var id=el.kfm_attributes.id;
+		var id=el.file_id;
 		document.addEvent('mouseup',kfm_file_dragFinish);
 		$clear(window.dragSelectionTrigger);
 		window.dragTrigger=setTimeout('kfm_file_dragStart('+id+')',100);
@@ -103,7 +103,7 @@ function kfm_buildFileDetailsTable(res){
 }
 function kfm_deleteFile(id){
 	if(!kfm_vars.permissions.file.rm)return kfm.alert(kfm.lang.PermissionDeniedCannotDeleteFile);
-	var filename=$('kfm_file_icon_'+id).kfm_attributes.name;
+	var filename=File_getInstance(id).name;
 	if(kfm.confirm(kfm.lang.DelFileMessage(filename))){
 		x_kfm_rm([id],kfm_removeFilesFromView);
 	}
@@ -112,10 +112,10 @@ function kfm_deleteSelectedFiles(){
 	if(!kfm_vars.permissions.file.rm)return kfm.alert('permission denied: cannot delete files');
 	var names=[],m='';
 	if(selectedFiles.length>10){
-		for(var i=0;i<9;++i)names.push($('kfm_file_icon_'+selectedFiles[i]).kfm_attributes.name);
+		for(var i=0;i<9;++i)names.push(File_getInstance(i).name);
 		m='\n'+kfm.lang.AndNMore(selectedFiles.length-9);
 	}
-	else for(var i=0;i<selectedFiles.length;++i)names.push($('kfm_file_icon_'+selectedFiles[i]).kfm_attributes.name);
+	else for(var i=0;i<selectedFiles.length;++i)names.push(File_getInstance(i).name);
 	if(kfm.confirm(kfm.lang.DelMultipleFilesMessage+names.join('\n')+m))x_kfm_rm(selectedFiles,kfm_removeFilesFromView);
 }
 function kfm_downloadFileFromUrl(filename,msg){
@@ -211,7 +211,7 @@ function kfm_incrementalFileDisplay(){
 		});
 	}
 	{ // file attributes
-		el.kfm_attributes=fdata;
+		el.file_id=id;
 		if(fdata.width)F.setThumbnailBackground(el);
 		wrapper.files[a]=el;
 	}
@@ -279,7 +279,7 @@ function kfm_removeFilesFromView(files){
 	}
 }
 function kfm_renameFile(id){
-	var filename=$('kfm_file_icon_'+id).kfm_attributes.name;
+	var filename=File_getInstance(id).name;
 	kfm_prompt(kfm.lang.RenameFileToWhat(filename),filename,function(newName){
 		if(!newName||newName==filename)return;
 		kfm_log(kfm.lang.RenamedFile(filename,newName));

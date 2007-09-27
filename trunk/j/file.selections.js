@@ -9,16 +9,16 @@ function kfm_addToSelection(id){
 function kfm_chooseFile(e,o){
 	var el=(o?e:new Event(e).target);
 	if(el.tagName=='SPAN')el=el.parentNode;
-	el=el.kfm_attributes;
+	var F=File_getInstance(el.file_id);
 	if(kfm_vars.files.return_id_to_cms){
-		window.opener.SetUrl(el.id);
+		window.opener.SetUrl(F.id);
 		setTimeout('window.close()',1);
 	}
 	else {
-		x_kfm_getFileUrl(el.id,function(url){
+		x_kfm_getFileUrl(F.id,function(url){
 			if(kfm_file_handler=='return'||kfm_file_handler=='fckeditor'){
-				if(!el.width)window.opener.SetUrl(url);
-				else window.opener.SetUrl(url.replace(/([^:]\/)\//g,'$1'),0,0,$('kfm_file_icon_'+el.id).kfm_attributes.caption);
+				if(!F.width)window.opener.SetUrl(url);
+				else window.opener.SetUrl(url.replace(/([^:]\/)\//g,'$1'),0,0,F.caption);
 				setTimeout('window.close()',1);
 			}
 			else if(kfm_file_handler=='download'){
@@ -74,7 +74,7 @@ function kfm_file_dragStart(filename){
 			'opacity':'.7'
 		}
 	});
-	for(var i=0;i<10&&i<selectedFiles.length;++i)kfm.addEl(window.drag_wrapper,[$('kfm_file_icon_'+selectedFiles[i]).kfm_attributes.name,new Element('br')]);
+	for(var i=0;i<10&&i<selectedFiles.length;++i)kfm.addEl(window.drag_wrapper,[File_getInstance(selectedFiles[i]).name,new Element('br')]);
 	if(selectedFiles.length>10)kfm.addEl(
 		window.drag_wrapper,
 		(new Element('i')).setHTML(kfm.lang.AndNMore(selectedFiles.length-10))
@@ -201,7 +201,7 @@ function kfm_toggleSelectedFile(e){
 	e.stopPropagation();
 	var el=e.target;
 	while(el.tagName!='DIV')el=el.parentNode;
-	var id=el.kfm_attributes.id;
+	var id=el.file_id;
 	if(kfm_lastClicked){
 		var el=$('kfm_file_icon_'+kfm_lastClicked);
 		if(el)el.removeClass('last_clicked');
