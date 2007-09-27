@@ -96,7 +96,7 @@ function kfm_textfile_initEditor(res,readonly){
 	r3.appendChild(codeEl);
 	r3.appendChild(changeCheckEl);
 	if(window.CodePress)kfm_textfile_createEditor();
-	else loadJS('j/codepress-0.9.5/codepress.js','cp-script','en-us','kfm_textfile_createEditor();');
+	else loadJS('j/codepress-0.9.6/codepress.js','cp-script','en-us','kfm_textfile_createEditor();');
 }
 function kfm_textfile_keybinding(e){
 	e=new Event(e);
