@@ -3,7 +3,7 @@ function kfm_changeCaption(id){
 	var table=$extend(new Element('table',{
 		'id':'kfm_newCaptionDetails'
 	}),{kfm_caption_for:id});
-	var row=table.insertRow(0),textarea=newInput('kfm_new_caption','textarea',$('kfm_file_icon_'+id).kfm_attributes.caption);
+	var row=table.insertRow(0),textarea=newInput('kfm_new_caption','textarea',File_getInstance(id).caption);
 	textarea.setStyles('height:50px;width:200px');
 	row.insertCell(0).appendChild(newText(kfm.lang.NewCaption));
 	row.insertCell(1).appendChild(textarea);
@@ -12,7 +12,7 @@ function kfm_changeCaption(id){
 }
 function kfm_changeCaption_set(){
 	var id=$('kfm_newCaptionDetails').kfm_caption_for,newCaption=$('kfm_new_caption').value;
-	if(!newCaption||newCaption==$('kfm_file_icon_'+id).kfm_attributes.caption)return;
+	if(!newCaption||newCaption==File_getInstance(id).caption)return;
 	kfm_modal_close();
 	if(kfm.confirm(kfm.lang.NewCaptionIsThisCorrect(newCaption))){
 		kfm_log(kfm.lang.Log_ChangeCaption(id,newCaption));
@@ -31,7 +31,7 @@ function kfm_img_startLightbox(id){
 		document.title='KFM Slideshow: '+window.kfm_slideshow.at;
 		id=window.kfm_slideshow.ids[window.kfm_slideshow.at%window.kfm_slideshow.ids.length];
 	}
-	var el,data=$('kfm_file_icon_'+id).kfm_attributes,ws=window.getSize().size,oldEl=$('kfm_lightboxImage'),wrapper=$('kfm_lightboxWrapper');
+	var el,data=File_getInstance(id),ws=window.getSize().size,oldEl=$('kfm_lightboxImage'),wrapper=$('kfm_lightboxWrapper');
 	if(!wrapper){
 		wrapper=new Element('div',{
 			'id':'kfm_lightboxWrapper',
@@ -110,7 +110,7 @@ function kfm_img_stopLightbox(e){
 	kfm_resizeHandler_remove('kfm_lightboxWrapper');
 }
 function kfm_resizeImage(id){
-	var data=$('kfm_file_icon_'+id).kfm_attributes;
+	var data=File_getInstance(id);
 	var txt=kfm.lang.CurrentSize(data.width,data.height);
 	kfm_prompt(txt+kfm.lang.NewWidth,data.width,function(x){
 		x=parseInt(x);
@@ -136,7 +136,7 @@ function kfm_returnThumbnail(id,size){
 		var x=size.replace(/x.*/,''),y=size.replace(/.*x/,'');
 		x_kfm_getFileUrl(id,x,y,function(url){
 			if(kfm_file_handler=='return'||kfm_file_handler=='fckeditor'){
-				window.opener.SetUrl(url,0,0,$('kfm_file_icon_'+id).kfm_attributes.caption);
+				window.opener.SetUrl(url,0,0,File_getInstance(id).caption);
 				window.close();
 			}
 			else if(kfm_file_handler=='download'){
