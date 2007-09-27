@@ -58,6 +58,7 @@ require_once($kfm_base_path.'configuration.php');
 	if(!isset($kfm_db_port))$m[]='missing <code>$kfm_db_port</code> variable';
 	if(!isset($kfm_root_folder_name))$m[]='missing <code>$kfm_root_folder_name</code> variable';
 	if(!isset($kfm_files_name_length_displayed))$m[]='missing <code>$kfm_files_name_length_displayed</code> variable';
+	if(!isset($kfm_return_file_id_to_cms))$m[]='missing <code>$kfm_return_file_id_to_cms</code> variable';
 	if(count($m)){
 		echo '<html><body><p>There are errors in your configuration or server. If the messages below describe missing variables, please check the supplied <code>configuration.php.dist</code> for notes on their usage.</p><ul>';
 		foreach($m as $a)echo '<li>'.$a.'</li>';

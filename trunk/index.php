@@ -23,7 +23,8 @@ header('Content-type: text/html; Charset=utf-8');
 		<script type="text/javascript">
 			var kfm_vars={
 				files:{
-					name_length_displayed:<?php echo $kfm_files_name_length_displayed; ?>
+					name_length_displayed:<?php echo $kfm_files_name_length_displayed; ?>,
+					return_id_to_cms:<?php echo $kfm_return_file_id_to_cms; ?>
 				},
 				get_params:"<?php echo GET_PARAMS; ?>",
 				permissions:{
