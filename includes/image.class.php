@@ -121,6 +121,25 @@ class kfmImage extends kfmFile{
 			imagedestroy($im);
 		}
 	}
+	function crop($x1, $y1, $width, $height, $newname=false){
+		global $kfm_use_imagemagick,$kfm_allow_image_manipulation;
+		if(!$kfm_allow_image_manipulation)return $this->error('permission denied: cannot manipulate images'); # TODO New String
+		
+		$load='imagecreatefrom'.$this->type;
+		$save='image'.$this->type;
+		$im=$load($this->path);
+		$cropped = imagecreatetruecolor($width, $height);
+		imagecopyresized($cropped, $im, 0, 0, $x1, $y1, $width, $height, $width, $height);
+		imagedestroy($im);
+		if($newname){
+			$save($cropped, dirname($this->path).'/'.$newname, ($this->type=='jpeg'?100:9));
+		}else{
+			if(!$this->isWritable())return $this->error('Image is not writable, so cannot be rotated'); # TODO New String
+			$this->deleteThumbs();
+			$save($cropped,$this->path,($this->type=='jpeg'?100:9));
+		}
+		imagedestroy($cropped);
+	}
 	function setCaption($caption){
 		global $kfm_db_prefix;
 		$this->db->exec("UPDATE ".$kfm_db_prefix."files_images SET caption='".addslashes($caption)."' WHERE file_id=".$this->id);

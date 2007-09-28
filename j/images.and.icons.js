@@ -123,6 +123,41 @@ function kfm_resizeImage(id){
 		});
 	});
 }
+function kfm_cropImage(id){
+	var data=File_getInstance(id);
+	var div=document.createElement('DIV');
+	div.style.position='absolute';
+	div.id='cropperdiv';
+	div.style.top=0;
+	div.style.left=0;
+	div.style.width='100%';
+	div.style.height='100%';
+	div.style.backgroundColor='#ddf';
+	div.onclick=function(){this.style.display='none';}
+
+	var ifr = document.createElement('IFRAME');
+	ifr.src = 'plugins/cropper/croparea.php?id='+id+'&width='+data.width+'&height='+data.height;
+	ifr.style.width = '100%';
+	ifr.style.height = '100%'; //100% - 25px
+	div.appendChild(ifr);
+	document.body.appendChild(div);
+}
+function kfm_cropToOriginal(id,coords,dimensions){
+	var F=File_getInstance(id);
+	document.getElementById('cropperdiv').style.display = 'none';
+	x_kfm_cropToOriginal(id, coords.x1, coords.y1, dimensions.width, dimensions.height, function(id){
+		if($type(id)=='string')return kfm_log(id);
+		F.setThumbnailBackground($('kfm_file_icon_'+id),true);
+	});
+}
+function kfm_cropToNew(id, coords, dimensions){
+	var filename=File_getInstance(id).name;
+	kfm_prompt(kfm.lang.RenameFileToWhat(filename),filename,function(newName){
+		if(!newName||newName==filename)return;
+		document.getElementById('cropperdiv').style.display = 'none';
+		x_kfm_cropToNew(id, coords.x1, coords.y1, dimensions.width, dimensions.height, newName, kfm_refreshFiles);
+	});
+}
 function kfm_returnThumbnail(id,size){
 	if(!size)size='64x64';
 	valid=1;

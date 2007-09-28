@@ -13,7 +13,7 @@ function kfm_contextmenuinit(){
 		if(m.x<l||m.x>l+c.offsetWidth||m.y<t||m.y>t+c.offsetHeight)kfm_closeContextMenu();
 	});
 	kfm_addContextMenu(document,function(e){
-		if(!e.control)e.stop();
+		e.stop();//if(!e.control)e.stop();
 	});
 }
 function kfm_createContextMenu(m,links){
