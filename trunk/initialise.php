@@ -495,5 +495,15 @@ require_once($kfm_base_path.'configuration.php');
 		require_once($kfm_base_path.'includes/images.php');
 		return _rotateImage($filename,$direction);
 	}
+	function kfm_cropToOriginal($fid,$x1, $y1, $width, $height){
+		global $kfm_base_path;
+		require_once($kfm_base_path.'includes/images.php');
+		return _cropToOriginal($fid,$x1, $y1, $width, $height);
+	}
+	function kfm_cropToNew($fid,$x1, $y1, $width, $height, $newname){
+		global $kfm_base_path;
+		require_once($kfm_base_path.'includes/images.php');
+		return _cropToNew($fid,$x1, $y1, $width, $height, $newname);
+	}
 }
 ?>

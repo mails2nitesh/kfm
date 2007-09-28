@@ -28,4 +28,18 @@ function _rotateImage($fid,$direction){
 function _setCaption($fid,$caption){
 	
 }
+function _cropToOriginal($fid, $x1, $y1, $width, $height){
+	$im=kfmImage::getInstance($fid);
+	$im->crop($x1, $y1, $width, $height);
+	if($im->hasErrors())return $im->getErrors();
+	return $fid;
+}
+function _cropToNew($fid, $x1, $y1, $width, $height, $newname){
+	global $kfm_session;
+	$cwd_id=$kfm_session->get('cwd_id');
+	$im=kfmImage::getInstance($fid);
+	$im->crop($x1, $y1, $width, $height, $newname);
+	if($im->hasErrors())return $im->getErrors();
+	return kfm_loadFiles($cwd_id);
+}
 ?>
