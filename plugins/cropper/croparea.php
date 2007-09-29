@@ -7,8 +7,8 @@
 <body style="padding:0;">
 <button type="button" onclick="parent.kfm_cropToOriginal(imageid, coordinates, dimensions);">Crop</button>
 <button type="button" onclick="parent.kfm_cropToNew(imageid, coordinates, dimensions);">Crop to new image</button>
-<button type="button" onclick="parent.getElementById('cropperdiv').style.display='none';">cancel</button>
-<img src="/admin/kfm/get.php?id=<?php print $_GET['id'];?>" alt="Crop image" id="cropImage" width="<?php print $_GET['width'];?>" height="<?php print $_GET['height'];?>" />
+<button type="button" onclick="parent.document.getElementById('cropperdiv').style.display='none';">cancel</button>
+<img src="<?php print dirname(dirname(dirname($_SERVER['PHP_SELF'])));?>/get.php?id=<?php print $_GET['id'];?>" alt="Crop image" id="cropImage" width="<?php print $_GET['width'];?>" height="<?php print $_GET['height'];?>" />
 <script type="text/javascript" language="javascript">
 var imageid=<?php print $_GET['id'];?>;
 var coordinates=null;
