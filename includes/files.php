@@ -38,7 +38,7 @@ function _createEmptyFile($cwd,$filename){
 	return(touch($path.$filename))?kfm_loadFiles($cwd):'error: '.kfm_lang('couldNotCreateFile',$filename);
 }
 function _downloadFileFromUrl($url,$filename){
-	global $kfm_session;
+	global $kfm_session,$kfm_default_upload_permission;
 	$cwd_id=$kfm_session->get('cwd_id');
 	$dir=kfmDirectory::getInstance($cwd_id);
 	$cwd=$dir->getPath();
@@ -46,7 +46,9 @@ function _downloadFileFromUrl($url,$filename){
 	if(substr($url,0,4)!='http')return 'error: url must begin with http';
 	$file=file_get_contents(str_replace(' ','%20',$url));
 	if(!$file)return 'error: could not download file "'.$url.'"';
-	return(file_put_contents($cwd.'/'.$filename,$file))?kfm_loadFiles($cwd_id):'error: could not write file "'.$filename.'"';
+	if(!file_put_contents($cwd.'/'.$filename,$file))return 'error: could not write file "'.$filename.'"'; # TODO: new string
+	chmod($to, octdec('0'.$kfm_default_upload_permission));
+	return kfm_loadFiles($cwd_id);
 }
 function _extractZippedFile($id){
 	global $kfm_session;
