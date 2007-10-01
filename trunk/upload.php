@@ -17,6 +17,7 @@ if($kfm_allow_file_upload){
 			unlink($to);
 		}
 		else{
+			chmod($to, octdec('0'.$kfm_default_upload_permission));
 			$fid=kfm_add_file_to_db($filename,$kfm_session->get('cwd_id'));
 			$file=kfmFile::getInstance($fid);
 			if(function_exists('exif_imagetype')){
