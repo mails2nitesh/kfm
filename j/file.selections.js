@@ -22,8 +22,12 @@ function kfm_chooseFile(e,o){
 				setTimeout('window.close()',1);
 			}
 			else if(kfm_file_handler=='download'){
-				if(/get.php/.test(url))url+='&forcedownload=1';
-				document.location=url;
+				if(!F.width){
+					if(/get.php/.test(url))url+='&forcedownload=1';
+					document.location=url;
+				}else{
+					kfm_img_startLightbox(F.id)
+				}
 			}
 		});
 	}
