@@ -82,9 +82,9 @@ class kfmFile extends kfmObject{
 				$img->setThumbnail($x,$y);
 				return $kfm_userfiles_output.$kfm_workdirectory.'/thumbs/'.$img->thumb_id;
 			}
-			else $url=preg_replace('/([^:])\/\//','$1/',$kfm_userfiles_output.'/'.$cwd.'/'.$this->name); # TODO: check this line - $cwd may be incorrect if the requested file is from a search
+			else $url=$kfm_userfiles_output.'/'.$cwd.'/'.$this->name; # TODO: check this line - $cwd may be incorrect if the requested file is from a search
 		}
-		return str_replace('//','/',$url);
+		return preg_replace('/([^:])\/{2,}/','$1/',$url);
 	}
 	function delete(){
 		global $kfm_db_prefix,$kfm_allow_file_delete;
