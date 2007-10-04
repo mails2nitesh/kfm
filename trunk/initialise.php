@@ -278,6 +278,7 @@ require_once($kfm_base_path.'configuration.php');
 	}
 	{ # check the browser's http headers for preferred languages
 		if($kfm_language==''){
+			if(!isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))$_SERVER['HTTP_ACCEPT_LANGUAGE']='';
 			$langs=explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
 			foreach($langs as $lang)if(in_array($lang,$kfm_available_languages)){
 				$kfm_language=$lang;

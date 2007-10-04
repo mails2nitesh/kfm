@@ -11,7 +11,7 @@ class kfmSession extends kfmObject{
 		}
 		if($key!='' && strlen($key)==32){
 			$res=db_fetch_row("SELECT id FROM ".$this->db_prefix."session WHERE cookie='".$key."'");
-			if(count($res)){
+			if(is_array($res) && count($res)){
 				$create=0;
 				$this->id=$res['id'];
 				$this->isNew=false;
@@ -51,7 +51,7 @@ class kfmSession extends kfmObject{
 		if(isset($this->vars[$name]))return $this->vars[$name];
 		$res=db_fetch_row("SELECT varvalue FROM ".$this->db_prefix."session_vars WHERE session_id=".$this->id." and varname='".addslashes($name)."'");
 		if(count($res)){
-			$ret=json_decode('['.$res['varvalue'].']',true);
+			$ret=json_decode('['.stripslashes($res['varvalue']).']',true);
 			if(count($ret))$ret=$ret[0];
 			else $ret='';
 			$this->vars[$name]=$ret;
