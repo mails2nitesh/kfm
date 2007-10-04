@@ -9,13 +9,6 @@ function kfm_kaejax_handle_client_request(){
 	$unmangled=kfm_decode_unicode_url(str_replace(array('%2B',"\r","\n","\t"),array('+','\r','\n','\t'),$_POST['kaejax']));
 	$obj=json_decode($unmangled);
 	$fs=$obj->c;
-	if(!is_array($fs)){ # something wrong
-		echo "error: unknown data sent from client.\n\n";
-		echo($unmangled);
-		echo "\n--------\n";
-		print_r($obj);
-		exit;
-	}
 	$res=array();
 	foreach($fs as $f)$res[]=call_user_func_array($f->f,$f->v);
 	header('Content-type: text/javascript; Charset=utf-8');
