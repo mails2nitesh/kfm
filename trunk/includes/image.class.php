@@ -125,20 +125,26 @@ class kfmImage extends kfmFile{
 		global $kfm_use_imagemagick,$kfm_allow_image_manipulation;
 		if(!$kfm_allow_image_manipulation)return $this->error('permission denied: cannot manipulate images'); # TODO New String
 		
-		$load='imagecreatefrom'.$this->type;
-		$save='image'.$this->type;
-		$im=$load($this->path);
-		$cropped = imagecreatetruecolor($width, $height);
-		imagecopyresized($cropped, $im, 0, 0, $x1, $y1, $width, $height, $width, $height);
-		imagedestroy($im);
-		if($newname){
-			$save($cropped, dirname($this->path).'/'.$newname, ($this->type=='jpeg'?100:9));
-		}else{
-			if(!$this->isWritable())return $this->error('Image is not writable, so cannot be rotated'); # TODO New String
+		if(!$newname){
 			$this->deleteThumbs();
-			$save($cropped,$this->path,($this->type=='jpeg'?100:9));
+			if(!$this->isWritable())return $this->error('Image is not writable, so cannot be rotated'); # TODO New String
 		}
-		imagedestroy($cropped);
+		if($kfm_use_imagemagick && $newname && !$this->useImageMagick($this->path,'crop '.$width.'x'.$height.'+'.$x1.'+'.$y1, dirname($this->path).'/'.$newname))return;
+		else if($kfm_use_imagemagick && !$this->useImageMagick($this->path,'crop '.$width.'x'.$height.'+'.$x1.'+'.$y1, $this->path))return;
+		{ # else use GD
+			$load='imagecreatefrom'.$this->type;
+			$save='image'.$this->type;
+			$im=$load($this->path);
+			$cropped = imagecreatetruecolor($width, $height);
+			imagecopyresized($cropped, $im, 0, 0, $x1, $y1, $width, $height, $width, $height);
+			imagedestroy($im);
+			if($newname){
+				$save($cropped, dirname($this->path).'/'.$newname, ($this->type=='jpeg'?100:9));
+			}else{
+				$save($cropped,$this->path,($this->type=='jpeg'?100:9));
+			}
+			imagedestroy($cropped);
+		}
 	}
 	function setCaption($caption){
 		global $kfm_db_prefix;

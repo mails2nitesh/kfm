@@ -7,7 +7,7 @@
 <body style="padding:0;">
 <button type="button" onclick="parent.kfm_cropToOriginal(imageid, coordinates, dimensions);">Crop</button>
 <button type="button" onclick="parent.kfm_cropToNew(imageid, coordinates, dimensions);">Crop to new image</button>
-<button type="button" onclick="parent.document.getElementById('cropperdiv').style.display='none';">cancel</button>
+<button type="button" onclick="parent.document.getElementById('cropperdiv').style.display='none';">cancel</button><br />
 <img src="<?php echo preg_replace('#plugins/cropper.*#','',$_SERVER['REQUEST_URI']); ?>/get.php?id=<?php print $_GET['id'];?>" alt="Crop image" id="cropImage" width="<?php print $_GET['width'];?>" height="<?php print $_GET['height'];?>" />
 <script type="text/javascript" language="javascript">
 var imageid=<?php print $_GET['id'];?>;
