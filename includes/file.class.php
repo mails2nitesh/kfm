@@ -128,6 +128,7 @@ class kfmFile extends kfmObject{
 		if(file_exists($newFileAddress))return $this->error(kfm_lang('fileAlreadyExists'));
 		rename($this->path,$newFileAddress);
 		$this->name=$newName;
+		$this->path=$newFileAddress;
 		$this->db->query("UPDATE ".$kfm_db_prefix."files SET name='".addslashes($newName)."' WHERE id=".$this->id);
 	}
 	function setContent($content){
