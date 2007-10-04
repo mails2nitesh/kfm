@@ -67,14 +67,16 @@ class kfmDirectory extends kfmObject{
 		$fileshash=array();
 		if(is_array($filesdb))foreach($filesdb as $r)$fileshash[$r['name']]=$r['id'];
 		$files=array();
-		while(false!==($filename=readdir($this->handle)))if($filename[0]!='.'&&is_file($this->path.$filename)){
-			if(in_array(strtolower($filename),$GLOBALS['kfm_banned_files']))continue;
-			if(!isset($fileshash[$filename]))$fileshash[$filename]=kfm_add_file_to_db($filename,$this->id);
-			$file=kfmFile::getInstance($fileshash[$filename]);
-			if(!$file)continue;
-			if($file->isImage())$file=kfmImage::getInstance($fileshash[$filename]);
-			$files[]=$file;
-			unset($fileshash[$filename]);
+		while(false!==($filename=readdir($this->handle))){
+			if($filename[0]!='.'&&is_file($this->path.$filename)){
+				if(in_array(strtolower($filename),$GLOBALS['kfm_banned_files']))continue;
+				if(!isset($fileshash[$filename]))$fileshash[$filename]=kfm_add_file_to_db($filename,$this->id);
+				$file=kfmFile::getInstance($fileshash[$filename]);
+				if(!$file)continue;
+				if($file->isImage())$file=kfmImage::getInstance($fileshash[$filename]);
+				$files[]=$file;
+				unset($fileshash[$filename]);
+			}
 		}
 		return $files;
 	}
