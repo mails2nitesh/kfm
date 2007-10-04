@@ -61,7 +61,8 @@ div.kfm_panel_header a.kfm_panel_header_d{display:none}
 div.kfm_panel_header a{float:right;text-decoration:none}
 
 .kfm_empty{font-style:italic;color:#666}
-
+.kfm_file_listview{display:block;}
+div.kfm_file_listview.selected{background-color:#eee;border-color:#000}
 .kfm_file_icon{display:block;margin:5px;float:left;min-height:20px;background:url(icons/64x64/mimetypes/unknown.png) no-repeat top center;padding:64px 10px 5px 10px;text-align:center;color:#00f;border:1px solid #fff;-moz-border-radius:10px;width:108px;overflow-x:hidden}
 .kfm_file_icon span.filename{text-decoration:underline}
 .kfm_file_icon.kfm_icontype_bz2{background-image:url(icons/64x64/mimetypes/bz2.png)}
