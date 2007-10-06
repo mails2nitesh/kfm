@@ -1,4 +1,4 @@
-*{font:12px sans-serif}
+*{font-size:12px;font-family:sans-serif}
 h1,h2{font-weight:bold;padding:0}
 h1{font-size:14px;background:#fff;border-bottom:1px solid #666;margin:0}
 h2{font-size:12px;font-style:italic;border:solid #ccc;background:#ddd;border-width:1px 0 1px;margin:5px 0}
@@ -61,8 +61,6 @@ div.kfm_panel_header a.kfm_panel_header_d{display:none}
 div.kfm_panel_header a{float:right;text-decoration:none}
 
 .kfm_empty{font-style:italic;color:#666}
-.kfm_file_listview{display:block;float:left;clear:left}
-div.kfm_file_listview.selected{background-color:#eee;border-color:#000}
 .kfm_file_icon{display:block;margin:5px;float:left;min-height:20px;background:url(icons/64x64/mimetypes/unknown.png) no-repeat top center;padding:64px 10px 5px 10px;text-align:center;color:#00f;border:1px solid #fff;-moz-border-radius:10px;width:108px;overflow-x:hidden}
 .kfm_file_icon span.filename{text-decoration:underline}
 .kfm_file_icon.kfm_icontype_bz2{background-image:url(icons/64x64/mimetypes/bz2.png)}
@@ -105,6 +103,12 @@ div.kfm_file_listview.selected{background-color:#eee;border-color:#000}
 .kfm_file_icon.kfm_icontype_txt{background-image:url(icons/64x64/mimetypes/txt.png)}
 .kfm_file_icon.kfm_icontype_unknown{background-image:url(icons/64x64/mimetypes/unknown.png)}
 .kfm_file_icon.kfm_icontype_zip{background-image:url(icons/64x64/mimetypes/zip.png)}
+#kfm_files_listview_table .listview_headers th{background:#eee;border:solid #999;border-width:0 1px 1px 0;font-weight:bold}
+#kfm_files_listview_table{border-spacing:0}
+#kfm_files_listview_table td{border:solid #ddd;border-width:0 1px 1px 0;padding:0}
+#kfm_files_listview_table .odd{background:#eee}
+#kfm_files_listview_table div.kfm_file_listview{padding:0 5px}
+#kfm_files_listview_table div.kfm_file_listview.selected{background-color:#66f;color:#fff}
 div:hover.kfm_file_icon{background-color:#f0f8ff;border-color:#bababa}
 div.kfm_file_icon.selected{background-color:#eee;border-color:#000}
 
