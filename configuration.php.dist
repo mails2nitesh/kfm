@@ -124,10 +124,6 @@ $kfm_imagemagick_path='/usr/bin/convert';
 # show files in groups of 'n', where 'n' is a number (helps speed up files display - use low numbers for slow machines)
 $kfm_show_files_in_groups_of=10;
 
-# what directory is KFM in? this is very important for CMS's that use KFM's API functions,
-#   but probably not important at all to the casual user.
-$kfm_base_path='';
-
 # should disabled links be shown (but grayed out and unclickable), or completely hidden?
 # you might use this if you want your users to not know what it is that's been disabled, for example.
 $kfm_show_disabled_contextmenu_links=1;
@@ -160,6 +156,6 @@ $kfm_listview = 0;
 $kfm_dont_send_metrics=0;
 
 define('ERROR_LOG_LEVEL',1); # 0=none, 1=errors, 2=1+warnings, 3=2+notices, 4=3+unknown
-require_once($kfm_base_path.'initialise.php');
+require_once(dirname(__FILE__).'/initialise.php');
 
 ?>
