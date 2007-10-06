@@ -1,15 +1,15 @@
 <?php
 # see license.txt for licensing
-if(!isset($kfm_base_path))$kfm_base_path='';
+define('KFM_BASE_PATH',dirname(__FILE__).'/');
 
 { # load classes and helper functions
-	require $kfm_base_path.'includes/lang.php';
-	require $kfm_base_path.'includes/db.php';
-	require $kfm_base_path.'includes/object.class.php';
-	require $kfm_base_path.'includes/session.class.php';
-	require $kfm_base_path.'includes/file.class.php';
-	require $kfm_base_path.'includes/image.class.php';
-	require $kfm_base_path.'includes/directory.class.php';
+	require KFM_BASE_PATH.'includes/lang.php';
+	require KFM_BASE_PATH.'includes/db.php';
+	require KFM_BASE_PATH.'includes/object.class.php';
+	require KFM_BASE_PATH.'includes/session.class.php';
+	require KFM_BASE_PATH.'includes/file.class.php';
+	require KFM_BASE_PATH.'includes/image.class.php';
+	require KFM_BASE_PATH.'includes/directory.class.php';
 }
 function kfm_dieOnError($error){
 	if(!PEAR::isError($error))return;
@@ -30,12 +30,12 @@ if(get_magic_quotes_gpc()){
 	$gpc=array(&$_GET,&$_POST,&$_COOKIE);
 	traverse($gpc);
 }
-set_include_path($kfm_base_path.'includes/pear'.PATH_SEPARATOR.get_include_path());
-if(!file_exists($kfm_base_path.'configuration.php')){
+set_include_path(KFM_BASE_PATH.'includes/pear'.PATH_SEPARATOR.get_include_path());
+if(!file_exists(KFM_BASE_PATH.'configuration.php')){
 	echo '<em>Missing <code>configuration.php</code>!</em><p>If this is a fresh installation of KFM, then please rename <code>configuration.php.dist</code> to <code>configuration.php</code>, and edit it according to your project\'s needs.</p><p>If this is an upgraded version of KFM, please remove the parts of your old <code>config.php</code> which do not exist in <code>configuration.php.dist</code>, then rename it to <code>configuration.php</code>.</p>';
 	exit;
 }
-require_once($kfm_base_path.'configuration.php');
+require_once(KFM_BASE_PATH.'configuration.php');
 
 { # check for fatal errors
 	$m=array();
@@ -71,13 +71,13 @@ require_once($kfm_base_path.'configuration.php');
 
 
 { # API - for programmers only
-	if(file_exists($kfm_base_path.'api/config.php'))include($kfm_base_path.'api/config.php');
-	if(file_exists($kfm_base_path.'api/cms_hooks.php'))include_once($kfm_base_path.'api/cms_hooks.php');
-	else include_once($kfm_base_path.'api/cms_hooks.php.dist');
+	if(file_exists(KFM_BASE_PATH.'api/config.php'))include(KFM_BASE_PATH.'api/config.php');
+	if(file_exists(KFM_BASE_PATH.'api/cms_hooks.php'))include_once(KFM_BASE_PATH.'api/cms_hooks.php');
+	else include_once(KFM_BASE_PATH.'api/cms_hooks.php.dist');
 }
 { # variables
 	if(!isset($kfm_show_files_in_groups_of))$kfm_show_files_in_groups_of=10;
-	define('KFM_VERSION',rtrim(file_get_contents($kfm_base_path.'docs/version.txt')));
+	define('KFM_VERSION',rtrim(file_get_contents(KFM_BASE_PATH.'docs/version.txt')));
 	if(!isset($_SERVER['DOCUMENT_ROOT'])){ # fix for IIS
 		$_SERVER['DOCUMENT_ROOT']=preg_replace('/\/[^\/]*$/','',str_replace('\\','/',$_SERVER['SCRIPT_FILENAME']));
 	}
@@ -151,7 +151,7 @@ require_once($kfm_base_path.'configuration.php');
 			if(!$db_defined){
 				$res=&$kfmdb->query("show tables like '".$kfm_db_prefix_escaped."%'");
 				kfm_dieOnError($res);
-				if(!$res->numRows())include($kfm_base_path.'scripts/db.mysql.create.php');
+				if(!$res->numRows())include(KFM_BASE_PATH.'scripts/db.mysql.create.php');
 				else $db_defined=1;
 			}
 			break;
@@ -174,7 +174,7 @@ require_once($kfm_base_path.'configuration.php');
 			if(!$db_defined){
 				$res=&$kfmdb->query("SELECT tablename from pg_tables where tableowner=current_user AND tablename NOT LIKE E'pg\\\\_%' AND tablename NOT LIKE E'sql\\\\_%' AND tablename LIKE E'".$kfm_db_prefix_escaped."%'");
 				kfm_dieOnError($res);
-				if($res->numRows()<1)include($kfm_base_path.'scripts/db.pgsql.create.php');
+				if($res->numRows()<1)include(KFM_BASE_PATH.'scripts/db.pgsql.create.php');
 				else $db_defined=1;
 			}
 			break;
@@ -188,7 +188,7 @@ require_once($kfm_base_path.'configuration.php');
 			$kfmdb=&MDB2::connect($dsn);
 			kfm_dieOnError($kfmdb);
 			$kfmdb->setFetchMode(MDB2_FETCHMODE_ASSOC);
-			if($kfmdb_create)include($kfm_base_path.'scripts/db.sqlite.create.php');
+			if($kfmdb_create)include(KFM_BASE_PATH.'scripts/db.sqlite.create.php');
 			$db_defined=1;
 			break;
 		}
@@ -198,7 +198,7 @@ require_once($kfm_base_path.'configuration.php');
 			if(!file_exists(WORKPATH.DBNAME))$kfmdb_create=true;
 			$dsn=array('type'=>'sqlitepdo','database'=>WORKPATH.DBNAME,'mode'=>'0644');
 			$kfmdb=new DB($dsn);
-			if($kfmdb_create)include($kfm_base_path.'scripts/db.sqlite.create.php');
+			if($kfmdb_create)include(KFM_BASE_PATH.'scripts/db.sqlite.create.php');
 			$db_defined=1;
 			break;
 		}
@@ -216,12 +216,12 @@ require_once($kfm_base_path.'configuration.php');
 	$kfm_parameters=array();
 	$rs=db_fetch_all("select * from ".$kfm_db_prefix."parameters");
 	foreach($rs as $r)$kfm_parameters[$r['name']]=$r['value'];
-	if($kfm_parameters['version']!=KFM_VERSION && file_exists($kfm_base_path.'scripts/update.'.KFM_VERSION.'.php'))require($kfm_base_path.'scripts/update.'.KFM_VERSION.'.php');
+	if($kfm_parameters['version']!=KFM_VERSION && file_exists(KFM_BASE_PATH.'scripts/update.'.KFM_VERSION.'.php'))require(KFM_BASE_PATH.'scripts/update.'.KFM_VERSION.'.php');
 }
 { # JSON
 	if(!function_exists('json_encode')){ # php-json is not installed
 		require_once('JSON.php');
-		require_once($kfm_base_path.'includes/json.php');
+		require_once(KFM_BASE_PATH.'includes/json.php');
 	}
 }
 { # start session
@@ -242,7 +242,7 @@ require_once($kfm_base_path.'configuration.php');
 			else $err='<em>Incorrect Password. Please try again, or check your <code>configuration.php</code>.</em>';
 		}
 		if(!$kfm_session->get('loggedin')){
-			include($kfm_base_path.'includes/login.php');
+			include(KFM_BASE_PATH.'includes/login.php');
 			exit;
 		}
 	}
@@ -250,9 +250,9 @@ require_once($kfm_base_path.'configuration.php');
 { # languages
 	$kfm_language='';
 	{ # find available languages
-		if($handle=opendir($kfm_base_path.'lang')){
+		if($handle=opendir(KFM_BASE_PATH.'lang')){
 			$files=array();
-			while(false!==($file=readdir($handle)))if(is_file($kfm_base_path.'lang/'.$file))$files[]=$file;
+			while(false!==($file=readdir($handle)))if(is_file(KFM_BASE_PATH.'lang/'.$file))$files[]=$file;
 			closedir($handle);
 			sort($files);
 			$kfm_available_languages=array();
@@ -320,192 +320,155 @@ require_once($kfm_base_path.'configuration.php');
 }
 { # directory functions
 	function kfm_add_directory_to_db($name,$parent){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/directories.php');
+		require_once(KFM_BASE_PATH.'includes/directories.php');
 		return _add_directory_to_db($name,$parent);
 	}
 	function kfm_createDirectory($parent,$name){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/directories.php');
+		require_once(KFM_BASE_PATH.'includes/directories.php');
 		return _createDirectory($parent,$name);
 	}
 	function kfm_deleteDirectory($id,$recursive=0){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/directories.php');
+		require_once(KFM_BASE_PATH.'includes/directories.php');
 		return _deleteDirectory($id,$recursive);
 	}
 	function kfm_getDirectoryDbInfo($id){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/directories.php');
+		require_once(KFM_BASE_PATH.'includes/directories.php');
 		return _getDirectoryDbInfo($id);
 	}
 	function kfm_getDirectoryParents($pid,$type=1){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/directories.php');
+		require_once(KFM_BASE_PATH.'includes/directories.php');
 		return _getDirectoryParents($pid,$type);
 	}
 	function kfm_moveDirectory($from,$to){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/directories.php');
+		require_once(KFM_BASE_PATH.'includes/directories.php');
 		return _moveDirectory($from,$to);
 	}
 	function kfm_renameDirectory($dir,$newname){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/directories.php');
+		require_once(KFM_BASE_PATH.'includes/directories.php');
 		return _renameDirectory($dir,$newname);
 	}
 	function kfm_loadDirectories($root,$oldpid=0){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/directories.php');
+		require_once(KFM_BASE_PATH.'includes/directories.php');
 		return _loadDirectories($root,$oldpid);
 	}
 	function kfm_rmdir($dir){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/directories.php');
+		require_once(KFM_BASE_PATH.'includes/directories.php');
 		return _rmdir($dir);
 	}
 }
 { # file functions
 	function kfm_add_file_to_db($filename,$directory_id){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/files.php');
+		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _add_file_to_db($filename,$directory_id);
 	}
 	function kfm_copyFiles($files,$dir_id){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/files.php');
+		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _copyFiles($files,$dir_id);
 	}
 	function kfm_createEmptyFile($cwd,$filename){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/files.php');
+		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _createEmptyFile($cwd,$filename);
 	}
 	function kfm_downloadFileFromUrl($url,$filename){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/files.php');
+		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _downloadFileFromUrl($url,$filename);
 	}
 	function kfm_extractZippedFile($id){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/files.php');
+		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _extractZippedFile($id);
 	}
 	function kfm_getFileAsArray($filename){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/files.php');
+		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _getFileAsArray($filename);
 	}
 	function kfm_getFileDetails($filename){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/files.php');
+		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _getFileDetails($filename);
 	}
 	function kfm_getTagName($id){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/files.php');
+		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _getTagName($id);
 	}
 	function kfm_getTextFile($filename){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/files.php');
+		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _getTextFile($filename);
 	}
 	function kfm_getFileUrl($fid,$x=0,$y=0){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/files.php');
+		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _getFileUrl($fid,$x,$y);
 	}
 	function kfm_moveFiles($files,$dir_id){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/files.php');
+		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _moveFiles($files,$dir_id);
 	}
 	function kfm_loadFiles($rootid=1){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/files.php');
+		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _loadFiles($rootid);
 	}
 	function kfm_renameFile($filename,$newfilename){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/files.php');
+		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _renameFile($filename,$newfilename);
 	}
 	function kfm_renameFiles($files,$template){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/files.php');
+		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _renameFiles($files,$template);
 	}
 	function kfm_resize_bytes($size){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/files.php');
+		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _resize_bytes($size);
 	}
 	function kfm_rm($files,$no_dir=0){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/files.php');
+		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _rm($files,$no_dir);
 	}
 	function kfm_saveTextFile($filename,$text){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/files.php');
+		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _saveTextFile($filename,$text);
 	}
 	function kfm_search($keywords,$tags){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/files.php');
+		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _search($keywords,$tags);
 	}
 	function kfm_tagAdd($recipients,$tagList){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/files.php');
+		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _tagAdd($recipients,$tagList);
 	}
 	function kfm_tagRemove($recipients,$tagList){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/files.php');
+		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _tagRemove($recipients,$tagList);
 	}
 	function kfm_viewTextFile($fileid){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/files.php');
+		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _viewTextFile($fileid);
 	}
 	function kfm_zip($name,$files){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/files.php');
+		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _zip($name,$files);
 	}
 }
 { # image functions
 	function kfm_changeCaption($filename,$newCaption){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/images.php');
+		require_once(KFM_BASE_PATH.'includes/images.php');
 		return _changeCaption($filename,$newCaption);
 	}
 	function kfm_getThumbnail($fileid,$width,$height){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/images.php');
+		require_once(KFM_BASE_PATH.'includes/images.php');
 		return _getThumbnail($fileid,$width,$height);
 	}
 	function kfm_resizeImage($filename,$width,$height){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/images.php');
+		require_once(KFM_BASE_PATH.'includes/images.php');
 		return _resizeImage($filename,$width,$height);
 	}
 	function kfm_rotateImage($filename,$direction){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/images.php');
+		require_once(KFM_BASE_PATH.'includes/images.php');
 		return _rotateImage($filename,$direction);
 	}
 	function kfm_cropToOriginal($fid,$x1, $y1, $width, $height){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/images.php');
+		require_once(KFM_BASE_PATH.'includes/images.php');
 		return _cropToOriginal($fid,$x1, $y1, $width, $height);
 	}
 	function kfm_cropToNew($fid,$x1, $y1, $width, $height, $newname){
-		global $kfm_base_path;
-		require_once($kfm_base_path.'includes/images.php');
+		require_once(KFM_BASE_PATH.'includes/images.php');
 		return _cropToNew($fid,$x1, $y1, $width, $height, $newname);
 	}
 }

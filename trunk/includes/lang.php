@@ -1,8 +1,8 @@
 <?php
 function kfm_lang($str,$v1='',$v2='',$v3=''){
-	global $kfm_language,$kfm_langStrings,$kfm_base_path;
+	global $kfm_language,$kfm_langStrings;
 	if(!isset($kfm_langStrings)){
-		include $kfm_base_path.'lang/'.$kfm_language.'.php';
+		include KFM_BASE_PATH.'lang/'.$kfm_language.'.php';
 		$GLOBAL['kfm_langStrings']=$kfm_langStrings;
 	}
 	if(!isset($kfm_langStrings[$str]))return "ERROR: UNKNOWN STRING\n".$str;

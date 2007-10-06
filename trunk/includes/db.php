@@ -3,10 +3,9 @@ class DB{
 	var $db=0;
 	var $dbtype='';
 	function DB($dsn=array()){
-		global $kfm_base_path;
 		switch($dsn['type']){
 			case 'sqlitepdo':{
-				require($kfm_base_path.'includes/db.sqlite.pdo.php');
+				require(KFM_BASE_PATH.'includes/db.sqlite.pdo.php');
 				$this->db=new DB_SQLite_PDO($dsn);
 				$db_defined=1;
 				break;

@@ -1,7 +1,7 @@
 <?php
 # see docs/license.txt for licensing
 require_once('initialise.php');
-require_once($kfm_base_path.'includes/kaejax.php');
+require_once(KFM_BASE_PATH.'includes/kaejax.php');
 header('Content-type: text/html; Charset=utf-8');
 
 { # export kaejax stuff
