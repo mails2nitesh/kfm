@@ -187,39 +187,31 @@ function kfm_incrementalFileDisplay(){
 	var name=fdata.name,ext=name.replace(kfm_regexps.all_up_to_last_dot,''),b,fullfilename=kfm_cwd_name+'/'+name,id=fdata.id;
 	var F=File_getInstance(id,fdata);
 	var nameEl=F.getText('name');
-	if(kfm_listview){
-		var el=new Element('div',{
-			'id':'kfm_file_icon_'+id,
-			'class':'kfm_file_listview',
-			'styles':{
-				'cursor':(window.ie?'hand':'pointer')
-			}
-		});
-	}else{
-		var el=new Element('div',{
-			'id':'kfm_file_icon_'+id,
-			'class':'kfm_file_icon kfm_icontype_'+ext,
-			'styles':{
-				'cursor':(window.ie?'hand':'pointer')
-			}
-		});
-	}
+	var el=new Element('div',{
+		'id':'kfm_file_icon_'+id,
+		'class':(kfm_listview?'kfm_file_listview':'kfm_file_icon kfm_icontype_'+ext),
+		'styles':{
+			'cursor':(window.ie?'hand':'pointer')
+		}
+	});
 	var writable=fdata.writable;
 	{ // add events
 		el.addEvent('click',kfm_toggleSelectedFile);
 		el.addEvent('dblclick',kfm_chooseFile);
 		kfm_addContextMenu(el,kfm_file_bits.contextmenu);
 		el.addEvent('mousedown',kfm_file_bits.mousedown);
-		el.addEvent('mouseover',function(){ // initialise info tooltip
-			if(window.kfm_tooltipInit)$clear(window.kfm_tooltipInit);
-			if(window.drag_wrapper)return; // don't open if currently dragging files
-			window.kfm_tooltipInit=setTimeout('kfm_showToolTip('+id+')',500);
-		});
-		el.addEvent('mouseout',function(){ // remove info tooltip
-			if(window.kfm_tooltipInit)$clear(window.kfm_tooltipInit);
-			var o=$('kfm_tooltip');
-			if(o)o.remove();
-		});
+		if(!kfm_listview){
+			el.addEvent('mouseover',function(){ // initialise info tooltip
+				if(window.kfm_tooltipInit)$clear(window.kfm_tooltipInit);
+				if(window.drag_wrapper)return; // don't open if currently dragging files
+				window.kfm_tooltipInit=setTimeout('kfm_showToolTip('+id+')',500);
+			});
+			el.addEvent('mouseout',function(){ // remove info tooltip
+				if(window.kfm_tooltipInit)$clear(window.kfm_tooltipInit);
+				var o=$('kfm_tooltip');
+				if(o)o.remove();
+			});
+		}
 	}
 	{ // file attributes
 		el.file_id=id;
@@ -227,6 +219,20 @@ function kfm_incrementalFileDisplay(){
 		wrapper.files[a]=el;
 	}
 	kfm.addEl(wrapper,el);
+	if(kfm_listview){
+		var listview_table=$('kfm_files_listview_table');
+		var rows=listview_table.rows.length;
+		var row=listview_table.insertRow(rows);
+		row.className=rows%2?'even':'odd';
+		var cell=row.insertCell(0);
+		cell.appendChild(el);
+		row.insertCell(1).appendChild(F.getText('filesize'));
+		row.insertCell(2).appendChild(F.getText('mimetype'));
+		row.insertCell(3).appendChild(F.getText('modified'));
+	}
+	else{
+		wrapper.appendChild(el);
+	}
 	el.appendChild(nameEl);
 	if(a&&$('kfm_file_icon_'+fsdata[a-1].id).offsetLeft>=el.offsetLeft)el.setStyle('clear','left');
 	window.kfm_incrementalFileDisplay_vars.at=a+1;
@@ -277,7 +283,16 @@ function kfm_refreshFiles(res){
 	if(!res.files.length)kfm.addEl(wrapper,(new Element('span',{
 		'class':'kfm_empty'
 	})).setHTML(kfm.lang.DirEmpty(res.reqdir)));
-	else kfm_incrementalFileDisplay();
+	else{
+		if(kfm_listview){
+			var listview_table=new Element('table',{
+				'id':'kfm_files_listview_table'
+			});
+			wrapper.appendChild(listview_table);
+			listview_table.setHTML('<tbody><tr class="listview_headers"><th>Name</th><th>Size</th><th>Type</th><th>Modified</th></tr></tbody>');
+		}
+		kfm_incrementalFileDisplay();
+	}
 }
 function kfm_removeFilesFromView(files){
 	kfm_selectNone();

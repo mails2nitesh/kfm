@@ -41,8 +41,8 @@ $kfm_userfiles_output='/sandbox/UserFiles/';
 # for example, $kfm_hidden_panels='logs,file_details,file_upload,search,directory_properties';
 $kfm_hidden_panels='logs';
 
-# what happens if someone double-clicks a file or presses enter on one?
-$kfm_file_handler='fckeditor'; # values allowed: download, fckeditor
+# what happens if someone double-clicks a file or presses enter on one? use 'return' for FCKeditor
+$kfm_file_handler='return'; # values allowed: download, return
 
 # directory in which KFM keeps its database and generated files
 # if this starts with '/', then the address is absolute. otherwise, it is relative to $kfm_userfiles.

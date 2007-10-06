@@ -21,6 +21,10 @@ var File=new Class({
 			el.title=v;
 			v=v.substring(0,kfm_vars.files.name_length_displayed-3)+'...';
 		}
+		if(varname=='modified' && !v){
+			var v=(new Date(this.ctime*1000)).toGMTString();
+			this.modified=v;
+		}
 		el.appendText(v);
 	},
 	setThumbnailBackground:function(el,reset){
