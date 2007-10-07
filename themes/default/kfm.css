@@ -111,6 +111,7 @@ div.kfm_panel_header a{float:right;text-decoration:none}
 #kfm_files_listview_table td{border:solid #ddd;border-width:0 1px 1px 0;padding:0}
 #kfm_files_listview_table .odd{background:#eee}
 #kfm_files_listview_table div.kfm_file_listview{padding:0 5px;border:0}
+#kfm_files_listview_table div.kfm_file_listview.selected.last_clicked{background-color:#99f;}
 #kfm_files_listview_table div.kfm_file_listview.selected{background-color:#66f;color:#fff}
 div:hover.kfm_file_icon{background-color:#f0f8ff;border-color:#bababa}
 div.kfm_file_icon.selected{background-color:#eee;border-color:#000}
