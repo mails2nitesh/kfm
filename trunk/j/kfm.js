@@ -128,6 +128,7 @@ var KFM=new Class({
 			});
 			kfm_addContextMenu(right_column,function(e){
 				var links=[],i;
+//				links.push(['view mode','view mode',0,0,1]); // TODO: new string
 				links.push(['kfm_createEmptyFile()',kfm.lang.CreateEmptyFile,'filenew',!kfm_vars.permissions.file.mk]);
 				if(selectedFiles.length>1)links.push(['kfm_renameFiles()',kfm.lang.RenameFile,'edit',!kfm_vars.permissions.file.ed]);
 				if(selectedFiles.length>1)links.push(['kfm_zip()','zip up files','',!kfm_vars.permissions.file.mk]); // TODO: new string
