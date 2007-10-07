@@ -253,9 +253,13 @@ function kfm_refreshFiles(res){
 	window.kfm_incrementalFileDisplay_vars={at:0,data:res};
 	var a,b,lowest_name,lowest_index,wrapper=$('kfm_right_column').empty();
 	$extend(wrapper,{contentMode:'file_icons',fileids:[],files:[]});
+	lselect = new Element('div',{'styles':{'float':'right'}}).setHTML('<select id="viewselector" onchange="kfm_listview=parseInt(this.value);x_kfm_loadFiles(kfm_cwd_id, kfm_refreshFiles);"><option value="0" '+(kfm_listview?'':'selected')+'>Icons</option><option value="1" '+(kfm_listview?'selected':'')+'>Listview</option></select>');
+	// This can be improved
 	kfm.addEl(wrapper,(new Element('div',{
-		'class':'kfm_panel_header'
-	})).setHTML(kfm.lang.CurrentWorkingDir(res.reqdir)));
+		'class':'kfm_panel_header',
+		'id':'kfm_panel_header'
+	})).setHTML('<span>'+kfm.lang.CurrentWorkingDir(res.reqdir)+'</span>'));
+	document.getElementById('kfm_panel_header').appendChild(lselect);
 	{ // order files by name
 		for(a=0;a<res.files.length-1;++a){
 			lowest_name=res.files[a].name;
