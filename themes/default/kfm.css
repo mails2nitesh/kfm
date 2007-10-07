@@ -38,11 +38,12 @@ td{vertical-align:top}
 .boxdroptracer{border:1px solid #000;-moz-border-radius:10px;background:#9cf;height:0;width:0;position:absolute;left:0;top:0}
 .last_clicked{border-style:dashed !important;border-color:red !important}
 
-.kfm_contextmenu_iconCell{width:20px;height:20px;background:#efefde}
 .contextmenu{width:auto;margin:0;padding:0;position:absolute;background:#fff;border:1px solid #000}
-.contextmenu tr:hover *{background:#efefde;font-style:italic}
+.contextmenu tr .kfm_contextmenu_nameCell:hover{background-color:#efefde;font-style:italic}
 .contextmenu a{display:block;color:#000;text-decoration:none}
 .contextmenu tr.disabled *{color:#ccc;font-style:italic}
+.contextmenu .kfm_contextmenu_iconCell{width:20px;height:20px}
+.contextmenu .is_submenu .kfm_contextmenu_nameCell{font-style:italic;font-weight:bold;padding-right:16px;background:url(icons/16x16/actions/1rightarrow.png) right center no-repeat}
 
 div.kfm_panel{position:relative;width:240px;background:url(bitsandpieces/panelheader-bg.png) repeat-x}
 div.kfm_panel_body{width:240px;overflow:auto;position:relative}
