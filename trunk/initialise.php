@@ -92,8 +92,6 @@ require_once(KFM_BASE_PATH.'configuration.php');
 	define('RSQUIGG','}');
 	define('KFM_DIR', dirname(__FILE__));
 	if(!defined('GET_PARAMS')) define('GET_PARAMS', '');
-	$kfm_highlight_extensions=array('php'=>'PHP', 'html'=>'HTML', 'xhtml'=>'HTML',
-		'sql'=>'MYSQL', 'js'=>'JAVASCRIPT', 'css'=>'CSS', 'xml'=>'XML');
 	if(!isset($kfm_banned_folders)||!is_array($kfm_banned_folders)) $kfm_banned_folders = array();
 	define('IMAGEMAGICK_PATH',isset($kfm_imagemagick_path)?$kfm_imagemagick_path:'/usr/bin/convert');
 	$cache_directories=array();
@@ -434,10 +432,6 @@ require_once(KFM_BASE_PATH.'configuration.php');
 	function kfm_tagRemove($recipients,$tagList){
 		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _tagRemove($recipients,$tagList);
-	}
-	function kfm_viewTextFile($fileid){
-		require_once(KFM_BASE_PATH.'includes/files.php');
-		return _viewTextFile($fileid);
 	}
 	function kfm_zip($name,$files){
 		require_once(KFM_BASE_PATH.'includes/files.php');
