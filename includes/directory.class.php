@@ -68,8 +68,7 @@ class kfmDirectory extends kfmObject{
 		if(is_array($filesdb))foreach($filesdb as $r)$fileshash[$r['name']]=$r['id'];
 		$files=array();
 		while(false!==($filename=readdir($this->handle))){
-			if($filename[0]!='.'&&is_file($this->path.$filename)){
-				if(in_array(strtolower($filename),$GLOBALS['kfm_banned_files']))continue;
+			if(is_file($this->path.$filename)&&kfmFile::checkName($filename)){
 				if(!isset($fileshash[$filename]))$fileshash[$filename]=kfm_add_file_to_db($filename,$this->id);
 				$file=kfmFile::getInstance($fileshash[$filename]);
 				if(!$file)continue;
@@ -106,15 +105,13 @@ class kfmDirectory extends kfmObject{
 		);
 	}
 	function getSubdirs($oldstyle=false){
-		global $kfm_banned_folders;
 		$this->handle=opendir($this->path);
 		$dirsdb=db_fetch_all("select id,name from ".$this->db_prefix."directories where parent=".$this->id);
 		$dirshash=array();
 		if(is_array($dirsdb))foreach($dirsdb as $r)$dirshash[$r['name']]=$r['id'];
 		$directories=array();
 		while(false!==($file=readdir($this->handle))){
-			if(in_array(strtolower($file), $kfm_banned_folders)) continue;
-			if(is_dir($this->path.$file)&&$file[0]!=='.'){
+			if(is_dir($this->path.$file)&&$this->checkName($file)){
 				if(!isset($dirshash[$file])){
 					$this->addSubdirToDB($file);
 					$dirshash[$file]=$this->db->lastInsertId($this->db_prefix.'directories','id');
@@ -168,6 +165,18 @@ class kfmDirectory extends kfmObject{
 		if(file_exists($this->path))return $this->error(kfm_lang('failedRenameDirectory'));
 		$this->db->query("update ".$this->db_prefix."directories set name='".addslashes($newname)."' where id=".$this->id);
 		$this->name=$newname;
+	}
+	function checkName($file=false){
+		if($file===false)$file=$this->name;
+		if(trim($file)=='')return false;
+		if($file[0]=='.')return false;
+		foreach($GLOBALS['kfm_banned_folders'] as $ban){
+			if(($ban[0]=='/' || $ban[0]=='@')&&preg_match($ban,$file))return false;
+			elseif($ban==strtolower(trim($file)))return false;
+		}
+		if(isset($GLOBALS['kfm_allowed_folders']) && is_array($GLOBALS['kfm_allowed_folders']))
+			foreach($GLOBALS['kfm_allowed_folders'] as $allow)if(!preg_match($allow, $file))return false;
+		return true;
 	}
 }
 ?>
