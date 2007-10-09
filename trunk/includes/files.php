@@ -282,6 +282,7 @@ function _search($keywords,$tags){
 		$fs=db_fetch_all("select id from ".$kfm_db_prefix."files where name like '%".addslashes($keywords)."%'".$constraints." order by name");
 		foreach($fs as $f){
 			$file=kfmFile::getInstance($f['id']);
+			if(!$file->checkName())continue;
 			if($file->isImage())$file=kfmImage::getInstance($f['id']);
 			unset($file->db);
 			unset($file->db);

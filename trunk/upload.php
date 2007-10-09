@@ -9,6 +9,7 @@ if($kfm_allow_file_upload){
 	$toDir=kfmDirectory::getInstance($kfm_session->get('cwd_id'));
 	$to=$toDir->path.'/'.$filename;
 	if(!kfm_checkAddr($to))$errors[]=kfm_lang('bannedFilenameExtension');
+	elseif(!kfmFile::checkName($filename))$errors[]='The filename: '.$filename.' is not allowed';
 	else{
 		move_uploaded_file($tmpname,$to);
 		if(!file_exists($to))$errors[]=kfm_lang('failedToSaveTmpFile',$tmpname,$to);
