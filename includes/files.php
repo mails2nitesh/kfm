@@ -330,28 +330,6 @@ function _tagRemove($recipients,$tagList){
 	if(count($tagList))$kfmdb->exec("delete from ".$kfm_db_prefix."tagged_files where (file_id=".join(' or file_id=',$recipients).") and (tag_id=".join(' or tag_id="',$tagList).")");
 	return _getFileDetails($recipients[0]);
 }
-function _viewTextFile($fileid){
-	global $kfm_viewable_extensions, $kfm_highlight_extensions, $kfm_editable_extensions;
-	$file=kfmFile::getInstance($fileid);
-	$ext=$file->getExtension();
-	$buttons_to_show=1; # boolean addition: 1=Close, 2=Edit
-	if(in_array($ext,$kfm_editable_extensions)&&$file->isWritable())$buttons_to_show+=2;
-	if(in_array($ext,$kfm_viewable_extensions)){
-		$code=file_get_contents($file->path);
-		if(array_key_exists($ext,$kfm_highlight_extensions)){
-			require_once('Text/Highlighter.php');
-			require_once('Text/Highlighter/Renderer/Html.php');
-			$renderer=new Text_Highlighter_Renderer_Html(array('numbers'=>HL_NUMBERS_TABLE,'tabsize'=>4));
-			$hl=&Text_Highlighter::factory($kfm_highlight_extensions[$ext]);
-			$hl->setRenderer($renderer);
-			$code=$hl->highlight($code);
-		}else if($ext=='txt'){
-			$code=nl2br($code);
-		}
-		return array('id'=>$fileid,'content'=>$code,'buttons_to_show'=>$buttons_to_show,'name'=>$file->name);
-	}
-	return 'error: '.kfm_lang('permissionDeniedViewFile');
-}
 function _zip($filename,$files){
 	global $kfm_session;
 	$cwd_id=$kfm_session->get('cwd_id');
