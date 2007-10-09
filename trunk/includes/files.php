@@ -285,7 +285,6 @@ function _search($keywords,$tags){
 			if(!$file->checkName())continue;
 			if($file->isImage())$file=kfmImage::getInstance($f['id']);
 			unset($file->db);
-			unset($file->db);
 			$files[]=$file;
 		}
 	}
