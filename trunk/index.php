@@ -21,6 +21,7 @@ header('Content-type: text/html; Charset=utf-8');
 	<head>
 		<style type="text/css">@import "themes/<?php echo $kfm_theme; ?>/kfm.css";</style>
 		<title>KFM - Kae's File Manager</title>
+		<script type="text/javascript" src="j/mootools.v1.11/mootools.v1.11.js"></script>
 		<script type="text/javascript">
 			var kfm_vars={
 				files:{
@@ -50,14 +51,11 @@ header('Content-type: text/html; Charset=utf-8');
 				use_multiple_file_upload:<?php echo $kfm_use_multiple_file_upload; ?>,
 				version:'<?php echo KFM_VERSION; ?>'
 			};
-			var kfm_widgets=new Array();
-function kfm_addWidget(obj){
-	kfm_widgets[obj.name]=obj;
-	//alert('length: '+kfm_widgets.length+'\nname: '+obj.name+'\nother name: '+kfm_widgets[obj.name].name);
-	//kfm_widgets.push(obj);
-}
+			var kfm_widgets=[];
+			function kfm_addWidget(obj){
+				kfm_widgets.push(obj);
+			}
 		</script>
-		<script type="text/javascript" src="j/mootools.v1.11/mootools.v1.11.js"></script>
 		<?php
 			$h=opendir(KFM_BASE_PATH.'widgets');
 			while(false!==($dir=readdir($h))){

@@ -42,12 +42,10 @@ function kfm_addPanel(wrapper,panel){
 }
 function kfm_createWidgetsPanel(){
 	var widgets=[];
-	kfm_widgets.each(function(el, index){widgets.push(el.display());}); // this is how it should be, but does not work
-	widgets=kfm_widgets['trash'].display(); //this is to temp show the functionality
-	//for(var i=0;i<kfm_widgets.length;i++){
-		//widgets.push(kfm_widgets[i].display());	
-	//}
-	el=kfm_createPanel('Widgets','kfm_widgets_panel', widgets,{'state':1});
+	kfm_widgets.each(function(el){
+		widgets.push(el.display());
+	});
+	el=kfm_createPanel('Widgets','kfm_widgets_panel',widgets,{'state':1});
 	return el;
 }
 function uploadStart(a){

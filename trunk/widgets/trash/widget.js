@@ -1,6 +1,6 @@
-function trash(){
+function Trash(){
 	this.istarget=0;
-	this.name='trash';
+	this.name='Trash';
 	this.display=function(){
 		if(!kfm_vars.permissions.file.rm)return false;
 		el=new Element('img',{
@@ -18,6 +18,5 @@ function trash(){
 	}
 	this.action=function(files){
 	}
-	kfm_addWidget(this);
 }
-trash();
+kfm_addWidget(new Trash());
