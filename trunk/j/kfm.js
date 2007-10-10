@@ -17,7 +17,7 @@ var KFM=new Class({
 		{ // developers
 			html+='<h2>Developers</h2>';
 			html+='<a href="http://verens.com/" target="_blank"><strong>Kae Verens</strong></a><br />';
-			html+='<a href="http://www.companytools.nl/cmsms/file-image-manager" target="_blank">Benjamin Ter Kuile</a><br />';
+			html+='<a href="http://www.companytools.nl/cmsms/file-image-manager" target="_blank">Benjamin ter Kuile</a><br />';
 		}
 		{ // translators
 			html+='<h2>Translators</h2>';

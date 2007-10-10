@@ -42,7 +42,7 @@ function kfm_addPanel(wrapper,panel){
 }
 function kfm_createWidgetsPanel(){
 	var widgets=[];
-	kfm_widgets.each(function(el, index){widgets.push(el.display());});
+	kfm_widgets.each(function(el, index){widgets.push(el.display());}); // this is how it should be, but does not work
 	widgets=kfm_widgets['trash'].display(); //this is to temp show the functionality
 	//for(var i=0;i<kfm_widgets.length;i++){
 		//widgets.push(kfm_widgets[i].display());	
