@@ -111,13 +111,16 @@ function kfm_deleteFile(id){
 }
 function kfm_deleteSelectedFiles(){
 	if(!kfm_vars.permissions.file.rm)return kfm.alert('permission denied: cannot delete files');
+	kfm_deleteFiles(selectedFiles);
+}
+function kfm_deleteFiles(dfiles){
 	var names=[],m='';
-	if(selectedFiles.length>10){
-		for(var i=0;i<9;++i)names.push(File_getInstance(i).name);
-		m='\n'+kfm.lang.AndNMore(selectedFiles.length-9);
+	if(dfiles.length>10){
+		for(var i=0;i<9;++i)names.push(File_getInstance(dfiles[i]).name);
+		m='\n'+kfm.lang.AndNMore(dfiles.length-9);
 	}
-	else for(var i=0;i<selectedFiles.length;++i)names.push(File_getInstance(i).name);
-	if(kfm.confirm(kfm.lang.DelMultipleFilesMessage+names.join('\n')+m))x_kfm_rm(selectedFiles,kfm_removeFilesFromView);
+	else for(var i=0;i<dfiles.length;++i)names.push(File_getInstance(dfiles[i]).name);
+	if(kfm.confirm(kfm.lang.DelMultipleFilesMessage+names.join('\n')+m))x_kfm_rm(dfiles,kfm_removeFilesFromView);
 }
 function kfm_downloadFileFromUrl(filename,msg){
 	if(filename.toString()!==filename)filename='';

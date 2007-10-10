@@ -50,9 +50,22 @@ header('Content-type: text/html; Charset=utf-8');
 				use_multiple_file_upload:<?php echo $kfm_use_multiple_file_upload; ?>,
 				version:'<?php echo KFM_VERSION; ?>'
 			};
+			var kfm_widgets=new Array();
+function kfm_addWidget(obj){
+	kfm_widgets[obj.name]=obj;
+	//alert('length: '+kfm_widgets.length+'\nname: '+obj.name+'\nother name: '+kfm_widgets[obj.name].name);
+	//kfm_widgets.push(obj);
+}
 		</script>
 		<script type="text/javascript" src="j/mootools.v1.11/mootools.v1.11.js"></script>
 		<?php
+			$h=opendir(KFM_BASE_PATH.'widgets');
+			while(false!==($dir=readdir($h))){
+				if($dir[0]!='.'&&is_dir(KFM_BASE_PATH.'widgets/'.$dir)){
+					echo '
+					<script type="text/javascript" src="widgets/'.$dir.'/widget.js"></script>';
+				}
+			}
 			if(isset($kfm_dev)){
 				$js_files=array('variables.js','notice.js','kfm.js','alerts.js','modal.dialog.js',
 					'contextmenu.js','directories.js','file.selections.js','file.text-editing.js',

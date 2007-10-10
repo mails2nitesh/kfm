@@ -31,6 +31,7 @@ function kfm_addPanel(wrapper,panel){
 		(new Element('p')).setHTML(kfm.lang.LoadingKFM),
 		{order:100}
 	);
+	else if(panel=='kfm_widgets_panel')el=kfm_createWidgetsPanel();
 	else{
 		kfm_log(kfm.lang.NoPanel(panel));
 		return;
@@ -38,6 +39,16 @@ function kfm_addPanel(wrapper,panel){
 	if(!wrapper.panels)wrapper.panels=[];
 	wrapper.panels[wrapper.panels.length]=panel;
 	kfm.addEl(wrapper,el);
+}
+function kfm_createWidgetsPanel(){
+	var widgets=[];
+	kfm_widgets.each(function(el, index){widgets.push(el.display());});
+	widgets=kfm_widgets['trash'].display(); //this is to temp show the functionality
+	//for(var i=0;i<kfm_widgets.length;i++){
+		//widgets.push(kfm_widgets[i].display());	
+	//}
+	el=kfm_createPanel('Widgets','kfm_widgets_panel', widgets,{'state':1});
+	return el;
 }
 function uploadStart(a){
 	$('kfm_fileUploadSWFCancel').disabled=null;

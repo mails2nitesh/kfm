@@ -93,6 +93,7 @@ var KFM=new Class({
 			var left_column=kfm_createPanelWrapper('kfm_left_column');
 			kfm_resizeHandler_addMaxHeight('kfm_left_column');
 			kfm_addPanel(left_column,'kfm_directories_panel');
+			kfm_addPanel(left_column,'kfm_widgets_panel');
 			kfm_addPanel(left_column,'kfm_search_panel');
 			kfm_addPanel(left_column,'kfm_directory_properties_panel');
 			if(!kfm_inArray('kfm_logs_panel',kfm_hidden_panels))kfm_addPanel(left_column,'kfm_logs_panel');
