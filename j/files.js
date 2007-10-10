@@ -321,7 +321,10 @@ function kfm_removeFilesFromView(files){
 	var i=0,right_column=$('kfm_right_column');
 	for(var i=0;i<files.length;++i){
 		var el=$('kfm_file_icon_'+files[i]);
-		if(el)el.remove();
+		if(el){
+			if(kfm_listview)el.parentNode.parentNode.remove();
+			else el.remove();
+		}
 		right_column.fileids.remove(files[i]);
 	}
 }
