@@ -6,18 +6,41 @@ function Clipboard(){
 	this.display=function(){
 		el=new Element('div',{
 			'id':'kfm_widget_clipboard_container',
-			'events':{
-				'mouseover':function(){kfm_widgets['clipboard'].istarget=1;},
-				'mouseout':function(){kfm_widgets['clipboard'].istarget=0;}
-			},
 			'class':'widget_drag_target',
 			'styles':{
-				'width':'50px',
-				'height':'50px',
-				'background-color':'blue'
+				'float':'left',
+				'padding':'5px',
+				'width':'70px',
+				'height':'70px',
+				'background-image':'url(\'widgets/clipboard/clipboard_empty.png\')',
+				'background-repeat':'no-repeat',
+				'font-size':'10px'
+			},
+			'events':{
+				'mouseover':function(){
+					if(selectedFiles.length) this.style.backgroundImage='url(\'widgets/clipboard/clipboard_add.png\')';
+				},
+				'mouseout':function(){this.setAppearance();}
 			}
 		});
+		el.files=[];
+		el.folders=[];
+		el.setAppearance=function(){
+			if(this.files.length || this.folders.length){
+				this.style.backgroundImage='url(\'widgets/clipboard/clipboard_full.png\')';
+				var html='';
+				if(this.files.length)html=html+'<br/>'+this.files.length+' files';
+				if(this.folders.length)html=html+'<br/>'+this.folders.length+' folders';
+				this.innerHTML=html;
+			}else this.style.backgroundImage='url(\'widgets/clipboard/clipboard_empty.png\')';
+		}
 		el.action=function(files){
+			for(var i=0;i<files.length;i++){
+				files[i]=parseInt(files[i]); //a bug, difference between one file and a selection
+				if(this.files.indexOf(files[i])<0)this.files.push(files[i]);
+			}
+			this.setAppearance();
+			//if(this.files.length||this.folders.length)$(this).makeDraggable();
 			/*action:
 			 * merge files with kfm_widgets['clipboard'].files
 			 * merge folders ...

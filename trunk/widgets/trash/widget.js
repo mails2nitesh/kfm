@@ -5,11 +5,13 @@ function Trash(){
 		if(!kfm_vars.permissions.file.rm)return false;
 		el=new Element('img',{
 			'src':'widgets/trash/trash.png',
-			'events':{
-				'mouseover':function(){kfm_widgets['trash'].istarget=1;},
-				'mouseout':function(){kfm_widgets['trash'].istarget=0;}
-			},
-			'class':'widget_drag_target'
+			'class':'widget_drag_target',
+			'styles':{
+				'display':'block',
+				'float':'left',
+				'width':'70px',
+				'height':'70px'
+			}
 		});
 		el.action=function(files){
 			kfm_deleteFiles(files);
