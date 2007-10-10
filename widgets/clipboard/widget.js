@@ -1,6 +1,6 @@
-function clipboard(){
+function Clipboard(){
 	this.istarget=0;
-	this.name='clipboard';
+	this.name='Clipboard';
 	this.files=[];
 	this.folders=[];
 	this.display=function(){
@@ -34,4 +34,4 @@ function clipboard(){
 	}
 	return this;
 }
-kfm_addWidget(clipboard());
+kfm_addWidget(new Clipboard());
