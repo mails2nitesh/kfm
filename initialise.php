@@ -36,6 +36,9 @@ if(!file_exists(KFM_BASE_PATH.'configuration.php')){
 	exit;
 }
 require_once(KFM_BASE_PATH.'configuration.php');
+{ # defines
+	define('KFM_DB_PREFIX',$kfm_db_prefix);
+}
 
 { # check for fatal errors
 	$m=array();
@@ -126,7 +129,7 @@ require_once(KFM_BASE_PATH.'configuration.php');
 }
 { # database
 	$db_defined=0;
-	$kfm_db_prefix_escaped=str_replace('_','\\\\_',$kfm_db_prefix);
+	$kfm_db_prefix_escaped=str_replace('_','\\\\_',KFM_DB_PREFIX);
 	$port=($kfm_db_port=='')?'':':'.$kfm_db_port;
 	switch($kfm_db_type){
 		case 'mysql': {
@@ -210,7 +213,7 @@ require_once(KFM_BASE_PATH.'configuration.php');
 }
 { # get kfm parameters and check for updates
 	$kfm_parameters=array();
-	$rs=db_fetch_all("select * from ".$kfm_db_prefix."parameters");
+	$rs=db_fetch_all("select * from ".KFM_DB_PREFIX."parameters");
 	foreach($rs as $r)$kfm_parameters[$r['name']]=$r['value'];
 	if($kfm_parameters['version']!=KFM_VERSION && file_exists(KFM_BASE_PATH.'scripts/update.'.KFM_VERSION.'.php'))require(KFM_BASE_PATH.'scripts/update.'.KFM_VERSION.'.php');
 }
