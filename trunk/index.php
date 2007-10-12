@@ -105,8 +105,8 @@ header('Content-type: text/html; Charset=utf-8');
 				$last_registration=isset($kfm_parameters['last_registration'])?$kfm_parameters['last_registration']:'';
 				if($last_registration!=$today){
 					echo '<img src="http://kfm.verens.com/extras/register.php?version='.urlencode(KFM_VERSION).'&amp;domain_name='.urlencode($_SERVER['SERVER_NAME']).'&amp;db_type='.$kfm_db_type.'" />';
-					$kfmdb->query("delete from ".$kfm_db_prefix."parameters where name='last_registration'");
-					$kfmdb->query("insert into ".$kfm_db_prefix."parameters (name,value) values ('last_registration','".$today."')");
+					$kfmdb->query("delete from ".KFM_DB_PREFIX."parameters where name='last_registration'");
+					$kfmdb->query("insert into ".KFM_DB_PREFIX."parameters (name,value) values ('last_registration','".$today."')");
 					$kfm_parameters['last_registration']=$today;
 				}
 			}

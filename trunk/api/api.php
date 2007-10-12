@@ -7,12 +7,12 @@ function kfm_api_createDirectory($parent,$name){
 	return 0;
 }
 function kfm_api_getDirectoryId($address){
-	global $kfmdb,$kfm_db_prefix;
+	global $kfmdb;
 	$arr=explode('/',$address);
 	$curdir=1;
 	if($arr[count($arr)-1]==''&&count($arr)>1)array_pop($arr);
 	foreach($arr as $n){
-		$r=db_fetch_row("select id from ".$kfm_db_prefix."directories where parent=".$curdir." and name='".addslashes($n)."'");
+		$r=db_fetch_row("select id from ".KFM_DB_PREFIX."directories where parent=".$curdir." and name='".addslashes($n)."'");
 		if(!count($r))return 0;
 		$curdir=$r['id'];
 	}

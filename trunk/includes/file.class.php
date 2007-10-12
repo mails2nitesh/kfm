@@ -13,11 +13,10 @@ class kfmFile extends kfmObject{
 	var $type;
 	var $writable=false;
 	function kfmFile(){
-		global $kfm_db_prefix;
 		if(func_num_args()==1){
 			$this->id=func_get_arg(0);
 			parent::kfmObject();
-			$filedata=db_fetch_row("SELECT id,name,directory FROM ".$kfm_db_prefix."files WHERE id=".$this->id);
+			$filedata=db_fetch_row("SELECT id,name,directory FROM ".KFM_DB_PREFIX."files WHERE id=".$this->id);
 			$this->name=$filedata['name'];
 			$this->parent=$filedata['directory'];
 			$dir=kfmDirectory::getInstance($this->parent);
@@ -87,11 +86,11 @@ class kfmFile extends kfmObject{
 		return preg_replace('/([^:])\/{2,}/','$1/',$url);
 	}
 	function delete(){
-		global $kfm_db_prefix,$kfm_allow_file_delete;
+		global $kfm_allow_file_delete;
 		if(!$kfm_allow_file_delete)$this->error(kfm_lang('permissionDeniedDeleteFile'));
 		if(!kfm_cmsHooks_allowedToDeleteFile($this->id))$this->error(kfm_lang('CMSRefusesFileDelete',$this->path));
 		if(!$this->hasErrors()){
-			if(unlink($this->path)||!$this->exists())$this->db->exec("DELETE FROM ".$kfm_db_prefix."files WHERE id=".$this->id);
+			if(unlink($this->path)||!$this->exists())$this->db->exec("DELETE FROM ".KFM_DB_PREFIX."files WHERE id=".$this->id);
 			else $this->error('unable to delete file '.$this->name);
 		}
 		return !$this->hasErrors();
@@ -108,9 +107,8 @@ class kfmFile extends kfmObject{
 		return $this->size;
 	}
 	function getTags(){
-		global $kfm_db_prefix;
 		$arr=array();
-		$tags=db_fetch_all("select tag_id from ".$kfm_db_prefix."tagged_files where file_id=".$this->id);
+		$tags=db_fetch_all("select tag_id from ".KFM_DB_PREFIX."tagged_files where file_id=".$this->id);
 		foreach($tags as $r)$arr[]=$r['tag_id'];
 		return $arr;
 	}
@@ -121,7 +119,7 @@ class kfmFile extends kfmObject{
 		return (($this->id==-1)||!is_writable($this->path))?false:true;
 	}
 	function rename($newName){
-		global $kfm_allow_file_edit,$kfm_db_prefix;
+		global $kfm_allow_file_edit;
 		if(!$kfm_allow_file_edit)return $this->error(kfm_lang('permissionDeniedEditFile'));
 		if(!kfm_checkAddr($newName))return $this->error(kfm_lang('cannotRenameFromTo',$this->name,$newName));
 		$newFileAddress=$this->directory.$newName;
@@ -129,7 +127,7 @@ class kfmFile extends kfmObject{
 		rename($this->path,$newFileAddress);
 		$this->name=$newName;
 		$this->path=$newFileAddress;
-		$this->db->query("UPDATE ".$kfm_db_prefix."files SET name='".addslashes($newName)."' WHERE id=".$this->id);
+		$this->db->query("UPDATE ".KFM_DB_PREFIX."files SET name='".addslashes($newName)."' WHERE id=".$this->id);
 	}
 	function setContent($content){
 		global $kfm_allow_file_edit;
@@ -138,10 +136,9 @@ class kfmFile extends kfmObject{
 		if(!$result)$this->error(kfm_lang('errorSettingFileContent'));
 	}
 	function setTags($tags){
-		global $kfm_db_prefix;
 		if(!count($tags))return;
-		$this->db->exec("DELETE FROM ".$kfm_db_prefix."tagged_files WHERE file_id=".$this->id);
-		foreach($tags as $tag)$this->db->exec("INSERT INTO ".$kfm_db_prefix."tagged_files (file_id,tag_id) VALUES(".$this->id.",".$tag.")");
+		$this->db->exec("DELETE FROM ".KFM_DB_PREFIX."tagged_files WHERE file_id=".$this->id);
+		foreach($tags as $tag)$this->db->exec("INSERT INTO ".KFM_DB_PREFIX."tagged_files (file_id,tag_id) VALUES(".$this->id.",".$tag.")");
 	}
 	function size2str(){
 		# returns the size in a human-readable way
@@ -154,10 +151,9 @@ class kfmFile extends kfmObject{
 		return $n?round($size/pow(1024,$n),1).' '.$format[$n]:'0 B';
 	}
 	function addToDB($filename, $directory_id){
-		global $kfm_db_prefix;
-		$sql="insert into ".$kfm_db_prefix."files (name,directory) values('".addslashes($filename)."',".$directory_id.")";
+		$sql="insert into ".KFM_DB_PREFIX."files (name,directory) values('".addslashes($filename)."',".$directory_id.")";
 		$q=$this->db->query($sql);
-		return $this->db->lastInsertId($kfm_db_prefix.'files','id');
+		return $this->db->lastInsertId(KFM_DB_PREFIX.'files','id');
 	}
 	function checkName($filename=false){
 		if($filename===false)$filename=$this->name;
