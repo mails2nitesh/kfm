@@ -6,6 +6,7 @@ function Trash(){
 		el=new Element('img',{
 			'src':'widgets/trash/trash.png',
 			'class':'widget_drag_target',
+			'title':this.name,
 			'styles':{
 				'display':'block',
 				'float':'left',

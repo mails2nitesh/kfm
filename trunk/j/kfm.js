@@ -50,6 +50,7 @@ var KFM=new Class({
 		return f;
 	},
 	addEl:function(o,a){
+		if(!o)return;
 		if(!a)return o;
 		if($type(a)!='array')a=[a];
 		for(var i=0;i<a.length;++i){

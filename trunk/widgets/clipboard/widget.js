@@ -7,6 +7,7 @@ function Clipboard(){
 		el=new Element('div',{
 			'id':'kfm_widget_clipboard_container',
 			'class':'widget_drag_target',
+			'title':this.name,
 			'styles':{
 				'float':'left',
 				'padding':'5px',
