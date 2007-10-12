@@ -45,7 +45,7 @@ function kfm_createWidgetsPanel(){
 	kfm_widgets.each(function(el){
 		widgets.push(el.display());
 	});
-	el=kfm_createPanel('Widgets','kfm_widgets_panel',widgets,{'state':1});
+	el=kfm_createPanel('Widgets','kfm_widgets_panel',widgets,{'state':3});
 	return el;
 }
 function uploadStart(a){
