@@ -50,10 +50,23 @@ function Clipboard(){
 			 * +kfm_widgets['clipboard'].folders.length+' folders';
 			 * can be dragged to: directories, trash
 			 */
-		}
-		/* Add contextmenu with functions:
-		 * clear clipboard
-		 */
+		};
+		el.clearContents=function(){
+			alert('todo');
+		};
+		el.pasteContents=function(){
+			alert('todo');
+		};
+		kfm_addContextMenu(el,function(e){
+			e=new Event(e);
+			var el=$('kfm_widget_clipboard_container');
+			var links=[];
+			{ // add the links
+				links.push(['$("kfm_widget_clipboard_container").clearContents()','clear clipboard']); // TODO: new string
+				links.push(['$("kfm_widget_clipboard_container").pasteContents()','paste files']); // TODO: new string
+			}
+			kfm_createContextMenu(e.page,links);
+		});
 		return el;
 	}
 	return this;
