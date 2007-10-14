@@ -36,14 +36,12 @@ function Clipboard(){
 			this.innerHTML=html;
 		}
 		el.action=function(files,folders){
-			alert('action');
 			for(var i=0;i<files.length;i++){
-				files[i]=parseInt(files[i]); //a bug, difference between one file and a selection
-				if(this.files.indexOf(files[i])<0)this.files.push(files[i]);
+				if(!this.files.contains(files[i]))this.files.push(files[i]);
 			}
 			for(var i=0;i<folders.length;i++){
-				folders[i]=parseInt(folders[i]); 
-				if(this.folders.indexOf(folders[i])<0)this.folders.push(folders[i]);
+				folders[i]=parseInt(folders[i]);  // TODO: should not be necessary. selection should be numeric.
+				if(!this.folders.contains(folders[i]))this.folders.push(folders[i]);
 			}
 			this.setAppearance();
 			//if(this.files.length||this.folders.length)$(this).makeDraggable();
@@ -62,7 +60,11 @@ function Clipboard(){
 			this.setAppearance();
 		};
 		el.pasteContents=function(){
-			alert('todo');
+			x_kfm_copyFiles(this.files,kfm_cwd_id,function(m){
+				kfm_showMessage(m);
+				x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);
+			});
+			this.clearContents();
 		};
 		kfm_addContextMenu(el,function(e){
 			e=new Event(e);

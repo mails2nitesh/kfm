@@ -1,7 +1,7 @@
 // see ../license.txt for licensing
 function kfm_addToSelection(id){
 	if(!id)return;
-	selectedFiles.push(id);
+	selectedFiles.push(parseInt(id));
 	$('kfm_file_icon_'+id).className+=' selected';
 	if(kfm_log_level>0)kfm_log(kfm.lang.FileSelected(id));
 	kfm_selectionCheck();
