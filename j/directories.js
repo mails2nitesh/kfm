@@ -139,6 +139,8 @@ function kfm_dir_dragFinish(e){
 	var dir_from=window.drag_wrapper.dir_id;
 	window.drag_wrapper.remove();
 	window.drag_wrapper=null;
+	var q=kfm.getContainer(e.page,$$('.widget_drag_target'));
+	if(q)return q.action([],[dir_from]);
 	dir_to=kfm_directory_over;
 	if(dir_to==0||dir_to==dir_from)return;
 	if(!kfm_vars.permissions.dir.mv)return kfm.alert('permission denied: cannot move directory');
