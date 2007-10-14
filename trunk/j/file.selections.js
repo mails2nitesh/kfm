@@ -54,7 +54,7 @@ function kfm_file_dragFinish(e){
 	document.removeEvent('mousemove',kfm_file_drag);
 	document.removeEvent('mouseup',kfm_file_dragFinish);
 	var q=kfm.getContainer(e.page,$$('.widget_drag_target'));
-	if(q)return q.action(selectedFiles);
+	if(q)return q.action(selectedFiles,[]);
 	if(kfm_directory_over)dir_over=kfm_directory_over;
 	else{ // workaround for Firefox which seems to have trouble with onmouseover for the directories while dragging
 		var a=kfm.getContainer(e.page,$$('div.kfm_directory_link'));

@@ -27,18 +27,23 @@ function Clipboard(){
 		el.files=[];
 		el.folders=[];
 		el.setAppearance=function(){
+			var html='';
 			if(this.files.length || this.folders.length){
 				this.style.backgroundImage='url(\'widgets/clipboard/clipboard_full.png\')';
-				var html='';
 				if(this.files.length)html=html+'<br/>'+this.files.length+' files';
 				if(this.folders.length)html=html+'<br/>'+this.folders.length+' folders';
-				this.innerHTML=html;
 			}else this.style.backgroundImage='url(\'widgets/clipboard/clipboard_empty.png\')';
+			this.innerHTML=html;
 		}
-		el.action=function(files){
+		el.action=function(files,folders){
+			alert('action');
 			for(var i=0;i<files.length;i++){
 				files[i]=parseInt(files[i]); //a bug, difference between one file and a selection
 				if(this.files.indexOf(files[i])<0)this.files.push(files[i]);
+			}
+			for(var i=0;i<folders.length;i++){
+				folders[i]=parseInt(folders[i]); 
+				if(this.folders.indexOf(folders[i])<0)this.folders.push(folders[i]);
 			}
 			this.setAppearance();
 			//if(this.files.length||this.folders.length)$(this).makeDraggable();
@@ -52,7 +57,9 @@ function Clipboard(){
 			 */
 		};
 		el.clearContents=function(){
-			alert('todo');
+			this.files=[];
+			this.folders=[];
+			this.setAppearance();
 		};
 		el.pasteContents=function(){
 			alert('todo');
