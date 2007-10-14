@@ -1,6 +1,6 @@
 function Clipboard(){
 	this.istarget=0;
-	this.name='Clipboard';
+	this.name='Clipboard'; // TODO: new string
 	this.files=[];
 	this.folders=[];
 	this.display=function(){
@@ -30,9 +30,10 @@ function Clipboard(){
 			var html='';
 			if(this.files.length || this.folders.length){
 				this.style.backgroundImage='url(\'widgets/clipboard/clipboard_full.png\')';
-				if(this.files.length)html=html+'<br/>'+this.files.length+' files';
-				if(this.folders.length)html=html+'<br/>'+this.folders.length+' folders';
-			}else this.style.backgroundImage='url(\'widgets/clipboard/clipboard_empty.png\')';
+				if(this.files.length)html+='<br/>'+this.files.length+' files'; // TODO: new string
+				if(this.folders.length)html+='<br/>'+this.folders.length+' folders'; // TODO: new string
+			}
+			else this.style.backgroundImage='url(\'widgets/clipboard/clipboard_empty.png\')';
 			this.innerHTML=html;
 		}
 		el.action=function(files,folders){
@@ -40,7 +41,6 @@ function Clipboard(){
 				if(!this.files.contains(files[i]))this.files.push(files[i]);
 			}
 			for(var i=0;i<folders.length;i++){
-				folders[i]=parseInt(folders[i]);  // TODO: should not be necessary. selection should be numeric.
 				if(!this.folders.contains(folders[i]))this.folders.push(folders[i]);
 			}
 			this.setAppearance();

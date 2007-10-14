@@ -131,6 +131,7 @@ function kfm_dir_drag(e){
 	window.drag_wrapper.setStyles('display:block;left:'+(m.x+16)+'px;top:'+m.y+'px');
 }
 function kfm_dir_dragFinish(e){
+	e=new Event(e);
 	$clear(window.dragTrigger);
 	if(!window.dragType||window.dragType!=3)return;
 	window.dragType=0;
@@ -141,9 +142,9 @@ function kfm_dir_dragFinish(e){
 	window.drag_wrapper=null;
 	var q=kfm.getContainer(e.page,$$('.widget_drag_target'));
 	if(q)return q.action([],[dir_from]);
-	dir_to=kfm_directory_over;
+	dir_to=parseInt(kfm_directory_over);
 	if(dir_to==0||dir_to==dir_from)return;
-	if(!kfm_vars.permissions.dir.mv)return kfm.alert('permission denied: cannot move directory');
+	if(!kfm_vars.permissions.dir.mv)return kfm.alert('permission denied: cannot move directory'); //TODO: new string
 	x_kfm_moveDirectory(dir_from,dir_to,kfm_refreshDirectories);
 	kfm_selectNone();
 }
