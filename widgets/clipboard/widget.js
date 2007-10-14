@@ -60,10 +60,11 @@ function Clipboard(){
 			this.setAppearance();
 		};
 		el.pasteContents=function(){
-			x_kfm_copyFiles(this.files,kfm_cwd_id,function(m){
+			if(this.files.length)x_kfm_copyFiles(this.files,kfm_cwd_id,function(m){
 				kfm_showMessage(m);
 				x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);
 			});
+			if(this.folders.length)kfm.alert('paste of folders is not complete'); //TODO: complete
 			this.clearContents();
 		};
 		kfm_addContextMenu(el,function(e){
@@ -72,7 +73,7 @@ function Clipboard(){
 			var links=[];
 			{ // add the links
 				links.push(['$("kfm_widget_clipboard_container").clearContents()','clear clipboard']); // TODO: new string
-				links.push(['$("kfm_widget_clipboard_container").pasteContents()','paste files']); // TODO: new string
+				links.push(['$("kfm_widget_clipboard_container").pasteContents()','paste clipboard contents']); // TODO: new string
 			}
 			kfm_createContextMenu(e.page,links);
 		});

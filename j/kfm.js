@@ -188,7 +188,9 @@ var KFM=new Class({
 				break;
 			}
 			case 37:{ // left arrow
-				if(cm=='file_icons')kfm_shiftFileSelectionLR(-1);
+				if(cm=='file_icons'){
+					if(!kfm_listview)kfm_shiftFileSelectionLR(-1);
+				}
 				else if(cm=='lightbox'){
 					window.kfm_slideshow_stopped=1;
 					if(window.lightbox_slideshowTimer)clearTimeout(window.lightbox_slideshowTimer);
@@ -200,11 +202,16 @@ var KFM=new Class({
 				break;
 			}
 			case 38:{ // up arrow
-				if(cm=='file_icons')kfm_shiftFileSelectionUD(-1);
+				if(cm=='file_icons'){
+					if(kfm_listview)kfm_shiftFileSelectionLR(-1);
+					else kfm_shiftFileSelectionUD(-1);
+				}
 				break;
 			}
 			case 39:{ // right arrow
-				if(cm=='file_icons')kfm_shiftFileSelectionLR(1);
+				if(cm=='file_icons'){
+					if(!kfm_listview)kfm_shiftFileSelectionLR(1);
+				}
 				else if(cm=='lightbox'){
 					window.kfm_slideshow_stopped=1;
 					if(window.lightbox_slideshowTimer)clearTimeout(window.lightbox_slideshowTimer);
@@ -215,7 +222,10 @@ var KFM=new Class({
 				break;
 			}
 			case 40:{ // down arrow
-				if(cm=='file_icons')kfm_shiftFileSelectionUD(1);
+				if(cm=='file_icons'){
+					if(kfm_listview)kfm_shiftFileSelectionLR(1);
+					else kfm_shiftFileSelectionUD(1);
+				}
 				break;
 			}
 			case 46:{ // delete
