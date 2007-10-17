@@ -6,7 +6,7 @@ function Clipboard(){
 	this.display=function(){
 		el=new Element('div',{
 			'id':'kfm_widget_clipboard_container',
-			'class':'widget_drag_target',
+			'class':'widget_clipboard',
 			'title':this.name,
 			'styles':{
 				'float':'left',
@@ -134,3 +134,7 @@ function Clipboard(){
 	return this;
 }
 kfm_addWidget(new Clipboard());
+kdnd_add_drop_action('kfm_file','widget_clipboard',function(e){
+	if(!selectedFiles.length)kfm_addToSelection(e.sourceElement.id.replace(/.*_/,''));
+	e.targetElement.action(selectedFiles,[]);
+});
