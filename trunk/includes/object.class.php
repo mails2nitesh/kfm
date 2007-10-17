@@ -1,4 +1,17 @@
 <?php
+function kfm_isError($level=3){
+	global $kfm_errors;
+	foreach($kfm_errors as $error) if($error->level<=$level)return true;
+	return false;
+}
+function kfm_getErrors($level=3){
+	global $kfm_errors;
+	$str='error:';
+	foreach($kfm_errors as $error) if($error->level<=$level)$str.='\n - '.$error->message;
+	return $str;
+	/* For now a string is returned, but more info is available. 
+	 * A function kfm_display_errors(res.errors) should handle the extra available  information in the future*/
+}
 class kfmObject{
 	var $error_array = array();
 	function __construct(){
@@ -10,8 +23,18 @@ class kfmObject{
 		$this->db_prefix=KFM_DB_PREFIX;
 		$this->db_type=&$kfm_db_type;
 	}
-	function error($message){
+	function error($message, $level=3){
+		global $kfm_errors;
+		$trace=debug_backtrace();
+		$info=array_pop($trace);
+		$error=array(
+			'message'=>$message, 
+			'level'=>$level,
+			'function'=>$info['function'],
+			'class'=>$info['class'],
+			'file'=>$info['file']);
 		$this->error_array[] = $message;
+		$kfm_errors[]=$error;
 		return false;
 	}
 	function hasErrors(){

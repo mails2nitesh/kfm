@@ -98,6 +98,8 @@ require_once(KFM_BASE_PATH.'configuration.php');
 	if(!isset($kfm_banned_folders)||!is_array($kfm_banned_folders)) $kfm_banned_folders = array();
 	define('IMAGEMAGICK_PATH',isset($kfm_imagemagick_path)?$kfm_imagemagick_path:'/usr/bin/convert');
 	$cache_directories=array();
+	$kfm_errors=array();
+	$kfm_warings=array();
 }
 { # work directory
 	if($kfm_workdirectory[0]=='/'){
