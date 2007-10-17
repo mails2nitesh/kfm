@@ -1,6 +1,7 @@
 // see ../license.txt for licensing
 function kfm_addToSelection(id){
-	if(!id)return;
+	id=parseInt(id);
+	if(!id || selectedFiles.contains(id))return;
 	selectedFiles.push(parseInt(id));
 	$('kfm_file_icon_'+id).className+=' selected';
 	if(kfm_log_level>0)kfm_log(kfm.lang.FileSelected(id));
@@ -31,62 +32,6 @@ function kfm_chooseFile(e,o){
 			}
 		});
 	}
-}
-function kfm_file_drag(e){
-	if(!window.dragType||window.dragType!=1)return;
-	clearSelections();
-	e=new Event(e);
-	var m=e.page;
-	var w=drag_wrapper.offsetWidth,h=drag_wrapper.offsetHeight,ws=window.getSize().size;
-	var x=(w+m.x>ws.x-16)?ws.x-w:m.x+16;
-	var y=(h+m.y>ws.y)?ws.y-h:m.y;
-	if(x<0)x=0;
-	if(y<0)y=0;
-	window.drag_wrapper.setStyles('display:block;left:'+x+'px;top:'+y+'px');
-}
-function kfm_file_dragFinish(e){
-	e=new Event(e);
-	$clear(window.dragTrigger);
-	if(!window.dragType||window.dragType!=1)return;
-	window.dragType=0;
-	window.drag_wrapper.remove();
-	window.drag_wrapper=null;
-	document.removeEvent('mousemove',kfm_file_drag);
-	document.removeEvent('mouseup',kfm_file_dragFinish);
-	var q=kfm.getContainer(e.page,$$('.widget_drag_target'));
-	if(q)return q.action(selectedFiles,[]);
-	if(kfm_directory_over)dir_over=kfm_directory_over;
-	else{ // workaround for Firefox which seems to have trouble with onmouseover for the directories while dragging
-		var a=kfm.getContainer(e.page,$$('div.kfm_directory_link'));
-		dir_over=a?a.node_id:'.';
-	}
-	if(dir_over=='.'||dir_over==kfm_cwd_id)return;
-	{ // build context menu for "copy/move"
-		var links=[];
-		links.push(['x_kfm_copyFiles(['+selectedFiles.join(',')+'],'+dir_over+',kfm_showMessage);kfm_selectNone()','copy files']);
-		links.push(['x_kfm_moveFiles(['+selectedFiles.join(',')+'],'+dir_over+',function(e){if($type(e)=="string")return alert("error: could not move file[s]");kfm_removeFilesFromView(['+selectedFiles.join(',')+'])});kfm_selectNone()','move files',0,!kfm_vars.permissions.file.mv]); // TODO: new string
-		kfm_createContextMenu(e.page,links);
-	}
-}
-function kfm_file_dragStart(filename){
-	if(!kfm_isFileSelected(filename))kfm_addToSelection(filename);
-	if(!selectedFiles.length)return;
-	window.dragType=1;
-	var w=window.getSize().size;
-	window.drag_wrapper=new Element('div',{
-		'id':'kfm_drag_wrapper',
-		styles:{
-			'display':'none',
-			'opacity':'.7'
-		}
-	});
-	for(var i=0;i<10&&i<selectedFiles.length;++i)kfm.addEl(window.drag_wrapper,[File_getInstance(selectedFiles[i]).name,new Element('br')]);
-	if(selectedFiles.length>10)kfm.addEl(
-		window.drag_wrapper,
-		(new Element('i')).setHTML(kfm.lang.AndNMore(selectedFiles.length-10))
-	);
-	kfm.addEl(document.body,window.drag_wrapper);
-	document.addEvent('mousemove',kfm_file_drag);
 }
 function kfm_isFileSelected(filename){
 	return kfm_inArray(filename,selectedFiles);

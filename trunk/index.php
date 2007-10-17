@@ -57,6 +57,14 @@ header('Content-type: text/html; Charset=utf-8');
 			}
 		</script>
 		<?php
+			if(isset($kfm_dev)){
+				$js_files=array('variables.js','notice.js','kfm.js','alerts.js','modal.dialog.js',
+					'contextmenu.js','directories.js','file.selections.js','file.text-editing.js',
+					'images.and.icons.js','kdnd.js','panels.js','tags.js','common.js',
+					'kaejax_replaces.js','file.class.js','files.js','resize_handler.js');
+				echo '<script type="text/javascript" src="j/'.join("\"></script>\n		<script type=\"text/javascript\" src=\"j/",$js_files).'"></script>'."\n";
+			}
+			else echo '<script type="text/javascript" src="j/all.php"></script>';
 			$h=opendir(KFM_BASE_PATH.'widgets');
 			while(false!==($dir=readdir($h))){
 				if($dir[0]!='.'&&is_dir(KFM_BASE_PATH.'widgets/'.$dir)){
@@ -64,14 +72,6 @@ header('Content-type: text/html; Charset=utf-8');
 					<script type="text/javascript" src="widgets/'.$dir.'/widget.js"></script>';
 				}
 			}
-			if(isset($kfm_dev)){
-				$js_files=array('variables.js','notice.js','kfm.js','alerts.js','modal.dialog.js',
-					'contextmenu.js','directories.js','file.selections.js','file.text-editing.js',
-					'images.and.icons.js','panels.js','tags.js','common.js','kaejax_replaces.js',
-					'file.class.js','files.js','resize_handler.js');
-				echo '<script type="text/javascript" src="j/'.join("\"></script>\n		<script type=\"text/javascript\" src=\"j/",$js_files).'"></script>'."\n";
-			}
-			else echo '<script type="text/javascript" src="j/all.php"></script>';
 		?>
 		<script type="text/javascript" src="j/swfuploadr52_0002/swfupload.js"></script>
 		<script type="text/javascript" src="lang/<?php echo $kfm_language; ?>.js"></script>
