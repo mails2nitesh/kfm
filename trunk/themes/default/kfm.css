@@ -11,6 +11,11 @@ td{vertical-align:top}
 .viewselector{
 	float:right;
 }
+
+#kdnd_drag_wrapper{
+	border:1px solid #ccc;background:#eee
+}
+
 #formWrapper{background:url('bitsandpieces/panelheader-bg.png') repeat-x #eee;border-left:1px solid #000}
 #formWrapper h2.prompt{background:url(bitsandpieces/panelheader.png) right -23px no-repeat;padding:0 5px;position:relative;font-size:12px;line-height:23px;height:23px;margin:0;}
 #formWrapper input,#formwrapper textarea{min-width:200px}

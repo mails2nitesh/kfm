@@ -93,17 +93,6 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 	el.addEvent('mouseover',function(){
 		if(!kfm_directory_over)kfm_directory_over=parseInt(this.node_id);
 	});
-	if(parent!=1)el.addEvent('mousedown',(function(id){
-		return function(e){
-			e=new Event(e);
-			if(e.rightClick)return;
-			document.addEvent('mouseup',kfm_dir_dragFinish);
-			$clear(window.dragTrigger);
-			window.dragTrigger=setTimeout(function(){
-				kfm_dir_dragStart(id);
-			},100);
-		};
-	})(parent));
 	{ // fix name width
 		var reqHeight=name_text.offsetHeight;
 		name_text.innerHTML='. '+name;
@@ -121,50 +110,18 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 		kfm.addCell(r,0,0,' ',is_last?0:'kfm_dir_lines_nochild');
 		kfm.addCell(r,1).id='kfm_directories_subdirs_'+parent;
 	}
+	kdnd_makeDraggable('kfm_dir_name');
+	kdnd_add_drop_action('kfm_dir_name','kfm_dir_name',kfm_dir_dropHandler);
 	return t;
 }
-function kfm_dir_drag(e){
-	if(!window.dragType||window.dragType!=3)return;
-	e=new Event(e);
-	var m=e.page;
-	clearSelections();
-	window.drag_wrapper.setStyles('display:block;left:'+(m.x+16)+'px;top:'+m.y+'px');
-}
-function kfm_dir_dragFinish(e){
-	e=new Event(e);
-	$clear(window.dragTrigger);
-	if(!window.dragType||window.dragType!=3)return;
-	window.dragType=0;
-	document.removeEvent('mousemove',kfm_dir_drag);
-	document.removeEvent('mouseup',kfm_dir_dragFinish);
-	var dir_from=window.drag_wrapper.dir_id;
-	window.drag_wrapper.remove();
-	window.drag_wrapper=null;
-	var q=kfm.getContainer(e.page,$$('.widget_drag_target'));
-	if(q)return q.action([],[dir_from]);
-	dir_to=parseInt(kfm_directory_over);
+function kfm_dir_dropHandler(e){
+	var dir_from=parseInt($E('.kfm_directory_link',e.sourceElement).node_id);
+	if(dir_from==1)return;
+	var dir_to=parseInt($E('.kfm_directory_link',e.targetElement).node_id);
 	if(dir_to==0||dir_to==dir_from)return;
 	if(!kfm_vars.permissions.dir.mv)return kfm.alert('permission denied: cannot move directory'); //TODO: new string
 	x_kfm_moveDirectory(dir_from,dir_to,kfm_refreshDirectories);
 	kfm_selectNone();
-}
-function kfm_dir_dragStart(pid){
-	window.dragType=3;
-	var w=window.getSize().size;
-	window.drag_wrapper=$extend(
-		new Element('div',{
-			'id':'kfm_drag_wrapper',
-			'class':'directory',
-			'styles':{
-				'display':'none',
-				'opacity':'.7'
-			}
-		}),
-		{dir_id:pid}
-	);
-	window.drag_wrapper.appendText($('kfm_directory_icon_'+pid).kfm_directoryname);
-	kfm.addEl(document.body,window.drag_wrapper);
-	document.addEvent('mousemove',kfm_dir_drag);
 }
 function kfm_dir_openNode(dir){
 	var node=$('kfm_dir_node_'+dir);
