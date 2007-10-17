@@ -159,7 +159,7 @@ var KFM=new Class({
 		return ret;
 	},
 	getContainer:function(p,c){
-		for(i=0;i<c.length;++i){
+		for(var i=0;i<c.length;++i){
 			var a=c[i],x=getOffset(a,'Left'),y=getOffset(a,'Top');
 			if(x<p.x&&y<p.y&&x+a.offsetWidth>p.x&&y+a.offsetHeight>p.y)return a;
 		}
