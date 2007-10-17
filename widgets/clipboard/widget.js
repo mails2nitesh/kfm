@@ -138,3 +138,7 @@ kdnd_add_drop_action('kfm_file','widget_clipboard',function(e){
 	if(!selectedFiles.length)kfm_addToSelection(e.sourceElement.id.replace(/.*_/,''));
 	e.targetElement.action(selectedFiles,[]);
 });
+kdnd_add_drop_action('kfm_dir_name','widget_clipboard',function(e){
+	var dir_from=parseInt($E('.kfm_directory_link',e.sourceElement).node_id);
+	e.targetElement.action([],[dir_from]);
+});
