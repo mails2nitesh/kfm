@@ -58,8 +58,9 @@ else $errors[]=kfm_lang('permissionDeniedUpload');
 	<head>
 		<script type="text/javascript">
 <?php
-$js=isset($_POST['js'])?$js:'';
-if(isset($_POST['onload']))echo $_POST['onload'];
+$js=isset($_REQUEST['js'])?$js:'';
+if(isset($_REQUEST['onload']))echo $_REQUEST['onload'];
+else if(isset($_REQUEST['onupload']))echo $_REQUEST['onupload'];
 else if(count($errors))echo 'alert("'.addslashes(join("\n",$errors)).'")';
 else echo 'parent.x_kfm_loadFiles('.$kfm_session->get('cwd_id').',parent.kfm_refreshFiles);parent.kfm_dir_openNode('.$kfm_session->get('cwd_id').');'.$js;
 ?>
