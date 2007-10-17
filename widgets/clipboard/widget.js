@@ -77,68 +77,20 @@ function Clipboard(){
 			}
 			kfm_createContextMenu(e.page,links);
 		});
-		el.addEvent('mousedown',function(e){
-			e=new Event(e);
-			if(e.rightClick)return;
-			document.addEvent('mouseup',$('kfm_widget_clipboard_container').dragFinish);
-			$clear(window.dragSelectionTrigger);
-			window.dragTrigger=setTimeout("$('kfm_widget_clipboard_container').dragStart()",100);
-		});
-		el.drag=function(e){
-			if(!window.dragType||window.dragType!=3)return;
-			clearSelections();
-			e=new Event(e);
-			var m=e.page;
-			var w=drag_wrapper.offsetWidth,h=drag_wrapper.offsetHeight,ws=window.getSize().size;
-			var x=(w+m.x>ws.x-16)?ws.x-w:m.x+16;
-			var y=(h+m.y>ws.y)?ws.y-h:m.y;
-			if(x<0)x=0;
-			if(y<0)y=0;
-			window.drag_wrapper.setStyles('display:block;left:'+x+'px;top:'+y+'px');
-		};
-		el.dragFinish=function(e){
-			e=new Event(e);
-			var el=$('kfm_widget_clipboard_container');
-			$clear(window.dragTrigger);
-			if(!window.dragType||window.dragType!=3)return;
-			window.dragType=0;
-			window.drag_wrapper.remove();
-			window.drag_wrapper=null;
-			document.removeEvent('mousemove',el.drag);
-			document.removeEvent('mouseup',el.dragFinish);
-			var q=kfm.getContainer(e.page,$ES('#kfm_right_column'));
-			if(q)el.pasteContents();
-		};
-		el.dragStart=function(e){
-			var el=$('kfm_widget_clipboard_container');
-			if(!el.files.length && !el.folders.length)return;
-			window.dragType=3;
-			var w=window.getSize().size;
-			window.drag_wrapper=new Element('div',{
-				'id':'kfm_drag_wrapper',
-				styles:{
-					'display':'none',
-					'opacity':'.7'
-				}
-			});
-			for(var i=0;i<10&&i<el.files.length;++i)kfm.addEl(window.drag_wrapper,[File_getInstance(el.files[i]).name,new Element('br')]);
-			if(el.files.length>10)kfm.addEl(
-				window.drag_wrapper,
-				(new Element('i')).setHTML(kfm.lang.AndNMore(el.files.length-10))
-			);
-			document.body.appendChild(window.drag_wrapper);
-			document.addEvent('mousemove',el.drag);
-		};
+		setTimeout("kdnd_makeDraggable('widget_clipboard');",1);
 		return el;
 	}
 	return this;
 }
 kfm_addWidget(new Clipboard());
-kdnd_add_drop_action('kfm_file','widget_clipboard',function(e){
+kdnd_addDropHandler('widget_clipboard','#kfm_right_column',function(e){
+	e.sourceElement.pasteContents();
+});
+kdnd_addDropHandler('kfm_file','.widget_clipboard',function(e){
 	if(!selectedFiles.length)kfm_addToSelection(e.sourceElement.id.replace(/.*_/,''));
 	e.targetElement.action(selectedFiles,[]);
 });
-kdnd_add_drop_action('kfm_dir_name','widget_clipboard',function(e){
+kdnd_addDropHandler('kfm_dir_name','.widget_clipboard',function(e){
 	var dir_from=parseInt($E('.kfm_directory_link',e.sourceElement).node_id);
 	e.targetElement.action([],[dir_from]);
 });

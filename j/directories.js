@@ -111,13 +111,14 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 		kfm.addCell(r,1).id='kfm_directories_subdirs_'+parent;
 	}
 	kdnd_makeDraggable('kfm_dir_name');
-	kdnd_add_drop_action('kfm_dir_name','kfm_dir_name',kfm_dir_dropHandler);
+	kdnd_addDropHandler('kfm_dir_name','.kfm_dir_name',kfm_dir_dropHandler);
 	return t;
 }
 function kfm_dir_dropHandler(e){
 	var dir_from=parseInt($E('.kfm_directory_link',e.sourceElement).node_id);
 	if(dir_from==1)return;
 	var dir_to=parseInt($E('.kfm_directory_link',e.targetElement).node_id);
+	alert(dir_to);
 	if(dir_to==0||dir_to==dir_from)return;
 	if(!kfm_vars.permissions.dir.mv)return kfm.alert('permission denied: cannot move directory'); //TODO: new string
 	x_kfm_moveDirectory(dir_from,dir_to,kfm_refreshDirectories);

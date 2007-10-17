@@ -1,6 +1,6 @@
-function kdnd_add_drop_action(source_class,target_class,func){
+function kdnd_addDropHandler(source_class,target_selector,func){
 	if(!kdnd_targets[source_class])kdnd_targets[source_class]={};
-	kdnd_targets[source_class][target_class]=func;
+	kdnd_targets[source_class][target_selector]=func;
 }
 function kdnd_makeDraggable(source_class){
 	if($type(source_class)=='array'){
@@ -48,7 +48,7 @@ function kdnd_dragFinish(e,notest){
 	if(!notest){ // check for targets and run functions if found
 		var a,b,t=$H(kdnd_targets[window.kdnd_drag_class]),els,m=e.page,el;
 		t.each(function(fn,a){
-			els=$$('.'+a);
+			els=$ES(a);
 			for(b=0;b<els.length;++b){
 				el=els[b];
 				if(getOffset(el,'Left')<=m.x&&m.x<getOffset(el,'Left')+el.offsetWidth&&getOffset(el,'Top')<=m.y&&m.y<getOffset(el,'Top')+el.offsetHeight){

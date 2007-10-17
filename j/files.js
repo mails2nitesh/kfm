@@ -250,7 +250,7 @@ function kfm_incrementalFileDisplay(){
 		else window.kfm_incrementalFileDisplay_loader=setTimeout('kfm_incrementalFileDisplay()',1);
 	}
 	kdnd_makeDraggable('kfm_file');
-	kdnd_add_drop_action('kfm_file','kfm_directory_link',function(e){
+	kdnd_addDropHandler('kfm_file','.kfm_directory_link',function(e){
 		dir_over=e.targetElement.node_id;
 		var links=[];
 		links.push(['x_kfm_copyFiles(['+selectedFiles.join(',')+'],'+dir_over+',kfm_showMessage);kfm_selectNone()','copy files']);
