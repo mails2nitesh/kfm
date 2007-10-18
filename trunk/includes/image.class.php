@@ -56,8 +56,8 @@ class kfmImage extends kfmFile{
 		if(!$kfm_use_imagemagick || $this->useImageMagick($this->path,'resize '.$thumb_width.'x'.$thumb_height,$file))$this->createResizedCopy($file,$thumb_width,$thumb_height);
 		return $id;
 	}
-	function delete(){
-		parent::delete();
+	function delete($call_parent=true){
+		if($call_parent)parent::delete();
 		$this->deleteThumbs();
 		$this->db->exec('DELETE FROM '.KFM_DB_PREFIX.'files_images WHERE file_id='.$this->id);
 		return !$this->hasErrors();
@@ -65,7 +65,7 @@ class kfmImage extends kfmFile{
 	function deleteThumbs(){
 		$rs=db_fetch_all("SELECT id FROM ".KFM_DB_PREFIX."files_images_thumbs WHERE image_id=".$this->id);
 		foreach($rs as $r){
-			$icons=glob(WORKPATH.'thumbnails/'.$r['id'].'.*');
+			$icons=glob(WORKPATH.'thumbs/'.$r['id'].'*');
 			foreach($icons as $f)unlink($f);
 		}
 		$this->db->exec("DELETE FROM ".KFM_DB_PREFIX."files_images_thumbs WHERE image_id=".$this->id);

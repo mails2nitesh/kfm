@@ -87,13 +87,16 @@ class kfmFile extends kfmObject{
 	}
 	function delete(){
 		global $kfm_allow_file_delete;
-		if(!$kfm_allow_file_delete)$this->error(kfm_lang('permissionDeniedDeleteFile'));
-		if(!kfm_cmsHooks_allowedToDeleteFile($this->id))$this->error(kfm_lang('CMSRefusesFileDelete',$this->path));
-		if(!$this->hasErrors()){
-			if(unlink($this->path)||!$this->exists())$this->db->exec("DELETE FROM ".KFM_DB_PREFIX."files WHERE id=".$this->id);
-			else $this->error('unable to delete file '.$this->name);
+		if(!$kfm_allow_file_delete)return $this->error(kfm_lang('permissionDeniedDeleteFile'));
+		if(!kfm_cmsHooks_allowedToDeleteFile($this->id))return $this->error(kfm_lang('CMSRefusesFileDelete',$this->path));
+		if(unlink($this->path)||!$this->exists())$this->db->exec("DELETE FROM ".KFM_DB_PREFIX."files WHERE id=".$this->id);
+		else return $this->error('unable to delete file '.$this->name);
+		if($this->isImage()&&get_class($this)=='kfmFile'){
+			$img=new kfmImage($this->id);
+			$img->delete(false);
+			if($img->hasErrors())return false;
 		}
-		return !$this->hasErrors();
+		return true;
 	}
 	function getInstance($id=0){
 		if(!$id)return false;
