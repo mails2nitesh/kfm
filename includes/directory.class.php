@@ -44,21 +44,18 @@ class kfmDirectory extends kfmObject{
 	}
 	function delete(){
 		if(!$GLOBALS['kfm_allow_directory_delete'])return $this->error(kfm_lang('permissionDeniedDeleteDirectory'));
-		$q=$this->db->query("select id from ".$this->db_prefix."files where directory=".$this->id);
 		$files=$this->getFiles();
 		foreach($files as $f){
-			$f->delete();
-			if($f->hasErrors())$this->addErrors($f);
+			if(!$f->delete())return false;
 		}
 		$subdirs=$this->getSubdirs();
 		foreach($subdirs as $subdir){
-			$subdir->delete();
-			if($subdir->hasErrors())$this->addErrors($subdir);
+			if(!$subdir->delete())return false;
 		}
 		rmdir($this->path);
-		if(is_dir($this->path))$this->error('failed to delete directory '.$this->path);
-		if(!$this->hasErrors())$this->db->exec("delete from ".$this->db_prefix."directories where id=".$this->id);
-		else return false;
+		if(is_dir($this->path))return $this->error('failed to delete directory '.$this->path);
+		$this->db->exec("delete from ".$this->db_prefix."directories where id=".$this->id);
+		return true;
 	}
 	function getFiles(){
 		$this->handle=opendir($this->path);

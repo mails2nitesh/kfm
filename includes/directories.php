@@ -73,6 +73,13 @@ function _renameDirectory($fid,$newname){
 	return _loadDirectories($dir->pid);
 }
 function _rmdir($pid){
+	/* this function should be...
+	 * $dir = new kfmDirectory($pid);
+	 * $dir->delete();
+	 * return array('errors'=>kfm_getErrors());
+	 * or
+	 * if(!$dir->delete())return array('errors'=>kfm_getErrors());
+	 */
 	global $kfmdb;
 	{ # remove db entries
 		$files=db_fetch_all("select id from ".KFM_DB_PREFIX."files where directory=".$pid);
@@ -86,4 +93,16 @@ function _rmdir($pid){
 	_recursivelyRemoveDirectory(_getDirectoryParents($pid));
 	$kfmdb->exec("delete from ".KFM_DB_PREFIX."directories where id=".$pid);
 }
+function kfm_rmMixed($files=array(), $directories=array()){
+	$filecount=0;
+	$dircount=0;
+	foreach($files as $fid){
+		$file=new kfmFile($fid);
+		if($file->delete())$filecount++;
+	}
+	foreach($directories as $did){
+		$dir=new kfmDirectory($did);
+		if($dir->delete())$dircount++;
+	}
+}	
 ?>
