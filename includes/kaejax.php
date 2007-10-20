@@ -10,9 +10,9 @@ function kfm_kaejax_handle_client_request(){
 	$obj=json_decode($unmangled);
 	$fs=$obj->c;
 	$ret=array();
-	$ret['errors']=kfm_getErrors();
 	$ret['results']=array();
 	foreach($fs as $f)$ret['results'][]=call_user_func_array($f->f,$f->v);
+	$ret['errors']=kfm_getErrors();
 	header('Content-type: text/javascript; Charset=utf-8');
 	echo json_encode($ret);
 	exit;

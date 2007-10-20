@@ -38,6 +38,7 @@ var KFM=new Class({
 		{ // bug testers
 			html+='<h2>Bug Testers</h2>';
 			html+='<em>list coming!</em><br />';
+			html+='<button onclick="kfm.showErrors([{\'message\':\'error1\'},{\'message\':\'error 2\'}]);">errors</button>';
 		}
 		div.setHTML(html);
 		kfm_modal_open(div,'about KFM'); // TODO: New String
@@ -68,6 +69,25 @@ var KFM=new Class({
 		window.inPrompt=1;
 		alert(txt);
 		setTimeout('window.inPrompt=0',1);
+	},
+	showErrors:function(errors){
+		var div=new Element('div',{
+			'styles':{
+				'width':400
+			}
+		});
+		var html='';
+		for(var i=0;i<errors.length;i++){
+			html+='<span>'+errors[i].message+'</span><br/>';
+			/* Add tooltip or do something with:
+			 *errors[i].level
+			 *errors[i].function
+			 *errors[i].class
+			 *errors[i].file
+			 */
+		}
+		div.setHTML(html);
+		kfm_modal_open(div,'Errors'); // TODO: New String
 	},
 	build:function(){
 		var form_panel,form,right_column,directories,logs,logHeight=64,w=window.getSize().size,j,i;
