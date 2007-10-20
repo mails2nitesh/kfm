@@ -9,10 +9,12 @@ function kfm_kaejax_handle_client_request(){
 	$unmangled=kfm_decode_unicode_url(str_replace(array('%2B',"\r","\n","\t"),array('+','\r','\n','\t'),$_POST['kaejax']));
 	$obj=json_decode($unmangled);
 	$fs=$obj->c;
-	$res=array();
-	foreach($fs as $f)$res[]=call_user_func_array($f->f,$f->v);
+	$ret=array();
+	$ret['errors']=kfm_getErrors();
+	$ret['results']=array();
+	foreach($fs as $f)$ret['results'][]=call_user_func_array($f->f,$f->v);
 	header('Content-type: text/javascript; Charset=utf-8');
-	echo json_encode($res);
+	echo json_encode($ret);
 	exit;
 }
 function kfm_kaejax_get_one_stub($func_name){

@@ -42,18 +42,19 @@ function kfm_kaejax_sendRequests(uri){
 		}
 		var r=x.responseText;
 		if(r.substring(0,5)=='error'){
-			return alert(r);
+			return kfm.alert(r);
 		}
 		var v=eval('('+unescape(r)+')');
-		var f,p;
-		for(var i=0;i<t.c.length;++i){
+		var f,p,i;
+		if(v.errors!='')kfm.alert(v.errors);
+		for(i=0;i<t.c.length;++i){
 			f=callbacks[i];
 			p=[];
 			if($type(f)=='array'){
 				p=f;
 				f=f[0];
 			}
-			f(v[i],p);
+			f(v.results[i],p);
 		}
 	};
 	x.send(post_data);

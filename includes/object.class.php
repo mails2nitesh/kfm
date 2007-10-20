@@ -8,6 +8,7 @@ function kfm_getErrors($level=3){
 	global $kfm_errors;
 	$str='error:';
 	foreach($kfm_errors as $error) if($error->level<=$level)$str.='\n - '.$error->message;
+	if($str=='error:')return '';
 	return $str;
 	/* For now a string is returned, but more info is available. 
 	 * A function kfm_display_errors(res.errors) should handle the extra available  information in the future*/
