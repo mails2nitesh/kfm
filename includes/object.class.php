@@ -7,13 +7,16 @@ function kfm_isError($level=3){
 function kfm_getErrors($level=3){
 	global $kfm_errors;
 	return $kfm_errors;
-	$str='error:';
-	foreach($kfm_errors as $error) if($error->level<=$level)$str.='\n - '.$error->message;
-	if($str=='error:')return '';
-	return $str;
-	/* For now a string is returned, but more info is available. 
-	 * A function kfm_display_errors(res.errors) should handle the extra available  information in the future*/
 }
+function kfm_addMessage($message){
+	global $kfm_messages;
+	$kfm_messages[]=array('message'=>$message);
+}
+function kfm_getMessages(){
+	global $kfm_messages;
+	return $kfm_messages;
+}
+#TODO move the above functions to a separate functions file.
 class kfmObject{
 	var $error_array = array();
 	function __construct(){

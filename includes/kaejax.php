@@ -13,6 +13,7 @@ function kfm_kaejax_handle_client_request(){
 	$ret['results']=array();
 	foreach($fs as $f)$ret['results'][]=call_user_func_array($f->f,$f->v);
 	$ret['errors']=kfm_getErrors();
+	$ret['messages']=kfm_getMessages();
 	header('Content-type: text/javascript; Charset=utf-8');
 	echo json_encode($ret);
 	exit;

@@ -99,7 +99,7 @@ require_once(KFM_BASE_PATH.'configuration.php');
 	define('IMAGEMAGICK_PATH',isset($kfm_imagemagick_path)?$kfm_imagemagick_path:'/usr/bin/convert');
 	$cache_directories=array();
 	$kfm_errors=array();
-	$kfm_warings=array();
+	$kfm_messages=array();
 }
 { # work directory
 	if($kfm_workdirectory[0]=='/'){

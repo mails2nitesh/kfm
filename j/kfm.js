@@ -38,7 +38,6 @@ var KFM=new Class({
 		{ // bug testers
 			html+='<h2>Bug Testers</h2>';
 			html+='<em>list coming!</em><br />';
-			html+='<button onclick="kfm.showErrors([{\'message\':\'error1\'},{\'message\':\'error 2\'}]);">errors</button>';
 		}
 		div.setHTML(html);
 		kfm_modal_open(div,'about KFM'); // TODO: New String
@@ -88,6 +87,13 @@ var KFM=new Class({
 		}
 		div.setHTML(html);
 		kfm_modal_open(div,'Errors'); // TODO: New String
+	},
+	showMessages:function(messages){
+		var message='';
+		for(var i=0;i<messages.length;i++){
+			message+=messages[i].message+'<hr>';
+		}
+		new Notice(message);
 	},
 	build:function(){
 		var form_panel,form,right_column,directories,logs,logHeight=64,w=window.getSize().size,j,i;
