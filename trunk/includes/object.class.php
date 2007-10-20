@@ -6,6 +6,7 @@ function kfm_isError($level=3){
 }
 function kfm_getErrors($level=3){
 	global $kfm_errors;
+	return $kfm_errors;
 	$str='error:';
 	foreach($kfm_errors as $error) if($error->level<=$level)$str.='\n - '.$error->message;
 	if($str=='error:')return '';
@@ -27,7 +28,15 @@ class kfmObject{
 	function error($message, $level=3){
 		global $kfm_errors;
 		$trace=debug_backtrace();
-		$info=array_pop($trace);
+		$previous_level=array_shift($trace);
+		//Select the info of the top level class
+		foreach($trace as $errorlevel){
+			if(!isset($errorlevel['class'])){
+				$info=$previous_level;
+				break;
+			}
+			$previous_level=$errorlevel;
+		}
 		$error=array(
 			'message'=>$message, 
 			'level'=>$level,
