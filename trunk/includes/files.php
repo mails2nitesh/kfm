@@ -28,7 +28,7 @@ function _copyFiles($files,$dir_id){
 		$newFile->setTags($oldFile->getTags());
 		++$copied;
 	}
-	return kfm_lang('filesCopied',$copied);
+	kfm_addMessage(kfm_lang('filesCopied',$copied));
 }
 function _createEmptyFile($cwd,$filename){
 	global $kfm_session;

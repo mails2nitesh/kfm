@@ -47,6 +47,7 @@ function kfm_kaejax_sendRequests(uri){
 		var v=eval('('+unescape(r)+')');
 		var f,p,i;
 		if(v.errors.length)kfm.showErrors(v.errors);
+		if(v.messages.length)kfm.showMessages(v.messages);
 		for(i=0;i<t.c.length;++i){
 			f=callbacks[i];
 			p=[];
