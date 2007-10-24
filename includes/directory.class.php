@@ -13,7 +13,7 @@ class kfmDirectory extends kfmObject{
 	function __construct($id=1){
 		$this->kfmDirectory($id);
 	}
-	function addSubdirToDB($name){
+	function addSubdirToDb($name){
 		$sql="INSERT INTO ".$this->db_prefix."directories (name,parent) VALUES('".addslashes($name)."',".$this->id.")";
 		return $this->db->exec($sql);
 	}
@@ -40,7 +40,7 @@ class kfmDirectory extends kfmObject{
 			$this->error(kfm_lang('failedCreateDirectoryCheck',$name));
 			return false;
 		}
-		return $this->addSubdirToDB($name);
+		return $this->addSubdirToDb($name);
 	}
 	function delete(){
 		if(!$GLOBALS['kfm_allow_directory_delete'])return $this->error(kfm_lang('permissionDeniedDeleteDirectory'));
@@ -66,7 +66,7 @@ class kfmDirectory extends kfmObject{
 		$files=array();
 		while(false!==($filename=readdir($this->handle))){
 			if(is_file($this->path.$filename)&&kfmFile::checkName($filename)){
-				if(!isset($fileshash[$filename]))$fileshash[$filename]=kfm_add_file_to_db($filename,$this->id);
+				if(!isset($fileshash[$filename]))$fileshash[$filename]=kfmFile::addToDb($filename,$this->id);
 				$file=kfmFile::getInstance($fileshash[$filename]);
 				if(!$file)continue;
 				if($file->isImage())$file=kfmImage::getInstance($fileshash[$filename]);
@@ -110,7 +110,7 @@ class kfmDirectory extends kfmObject{
 		while(false!==($file=readdir($this->handle))){
 			if(is_dir($this->path.$file)&&$this->checkName($file)){
 				if(!isset($dirshash[$file])){
-					$this->addSubdirToDB($file);
+					$this->addSubdirToDb($file);
 					$dirshash[$file]=$this->db->lastInsertId($this->db_prefix.'directories','id');
 				}
 				$directories[]=kfmDirectory::getInstance($dirshash[$file]);
@@ -142,7 +142,7 @@ class kfmDirectory extends kfmObject{
 			if(!$newParent->isWritable())return $this->error(kfm_lang('isNotWritable',$newParent->path));
 		}
 		{ # do the move and check that it was successful
-			rename($this->path,$newParent->path.$this->name);
+			rename($this->path,$newParent->path.'/'.$this->name);
 			if(!file_exists($newParent->path.$this->name))return $this->error(kfm_lang('couldNotMoveDirectory',$this->path,$newParent->path.$this->name));
 		}
 		{ # update database and kfmDirectory object
@@ -180,7 +180,7 @@ class kfmDirectory extends kfmObject{
 		if(is_numeric($file))$file=kfmFile::getInstance($file);
 		if(!$this->isWritable()) return $this->error($file->name.' could not be created. The directory is not writable'); //TODO new string
 		copy($file->path,$this->path.'/'.$file->name);
-		$id=$file->addToDB($file->name,$this->id);
+		$id=$file->addToDb($file->name,$this->id);
 		if($file->isImage()){
 			$file=kfmImage::getInstance($file->id);
 			$newFile=kfmImage::getInstance($id);

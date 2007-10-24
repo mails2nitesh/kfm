@@ -56,8 +56,9 @@ class kfmImage extends kfmFile{
 		if(!$kfm_use_imagemagick || $this->useImageMagick($this->path,'resize '.$thumb_width.'x'.$thumb_height,$file))$this->createResizedCopy($file,$thumb_width,$thumb_height);
 		return $id;
 	}
-	function delete($call_parent=true){
-		if($call_parent)parent::delete();
+	function delete(){
+		if(!$GLOBALS['kfm_allow_file_delete'])return $this->error(kfm_lang('permissionDeniedDeleteFile'));
+		if(!parent::delete())return false;
 		$this->deleteThumbs();
 		$this->db->exec('DELETE FROM '.KFM_DB_PREFIX.'files_images WHERE file_id='.$this->id);
 		return !$this->hasErrors();
