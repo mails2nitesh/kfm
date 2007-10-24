@@ -37,6 +37,7 @@ function kfm_isFileSelected(filename){
 	return kfm_inArray(filename,selectedFiles);
 }
 function kfm_removeFromSelection(id){
+	if(!id)return;
 	var i;
 	for(i=0;i<selectedFiles.length;++i){
 		if(selectedFiles[i]==id){
@@ -87,7 +88,7 @@ function kfm_selection_drag(e){
 function kfm_selection_dragFinish(e){
 	e=new Event(e);
 	$clear(window.dragSelectionTrigger);
-	if(!window.dragType||window.dragType!=2||!window.drag_wrapper)return;
+	if(!window.kdnd_dragging)return;
 	var right_column=$('kfm_right_column'),p1=e.page,p2=window.drag_wrapper.orig,offset=right_column.scrollTop;
 	var x1=p1.x>p2.x?p2.x:p1.x,x2=p2.x>p1.x?p2.x:p1.x,y1=p1.y>p2.y?p2.y:p1.y,y2=p2.y>p1.y?p2.y:p1.y;
 	setTimeout('window.dragType=0;',1); // pause needed for IE
