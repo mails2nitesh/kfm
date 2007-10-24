@@ -92,11 +92,6 @@ class kfmFile extends kfmObject{
 		if(!$this->writable)return $this->error('File '.$this->name.' cannot be removed. (not writable)');# TODO:new string
 		if(unlink($this->path)||!$this->exists())$this->db->exec("DELETE FROM ".KFM_DB_PREFIX."files WHERE id=".$this->id);
 		else return $this->error('unable to delete file '.$this->name);
-		if($this->isImage()&&get_class($this)=='kfmFile'){
-			$img=new kfmImage($this->id);
-			$img->delete(false);
-			if($img->hasErrors())return false;
-		}
 		return true;
 	}
 	function move($dir_id){
@@ -108,10 +103,11 @@ class kfmFile extends kfmObject{
 		$q=$kfmdb->query("update ".KFM_DB_PREFIX."files set directory=".$dir_id." where id=".$this->id);
 	}
 	function getInstance($id=0){
+		global $fileInstances;
 		if(!$id)return false;
 		if(is_object($id))$id=$id->id;
-		global $fileInstances;
 		if(!isset($fileInstances[$id]))$fileInstances[$id]=new kfmFile($id);
+		if($fileInstances[$id]->isImage())return kfmImage::getInstance($id);
 		return $fileInstances[$id];
 	}
 	function getSize(){
@@ -162,10 +158,11 @@ class kfmFile extends kfmObject{
 		$n=floor(log($size)/log(1024));
 		return $n?round($size/pow(1024,$n),1).' '.$format[$n]:'0 B';
 	}
-	function addToDB($filename, $directory_id){
+	function addToDb($filename, $directory_id){
+		global $kfmdb;
 		$sql="insert into ".KFM_DB_PREFIX."files (name,directory) values('".addslashes($filename)."',".$directory_id.")";
-		$q=$this->db->query($sql);
-		return $this->db->lastInsertId(KFM_DB_PREFIX.'files','id');
+		$q=$kfmdb->query($sql);
+		return $kfmdb->lastInsertId(KFM_DB_PREFIX.'files','id');
 	}
 	function checkName($filename=false){
 		if($filename===false)$filename=$this->name;

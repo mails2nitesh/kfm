@@ -8,11 +8,8 @@ function _createDirectory($parent,$name){
 	return kfm_loadDirectories($parent);
 }
 function _deleteDirectory($id,$recursive=0){
-	global $kfm_allow_directory_delete;
-	if(!$kfm_allow_directory_delete)return 'error: '.kfm_lang('permissionDeniedDeleteDirectory');
 	$dir=kfmDirectory::getInstance($id);
 	$dir->delete();
-	if($dir->hasErrors()) return $dir->getErrors();
 	return kfm_loadDirectories($dir->pid,$id);
 }
 function _getDirectoryDbInfo($id){
@@ -51,47 +48,15 @@ function _moveDirectory($from,$to){
 	if($dir->hasErrors()) return $dir->getErrors();
 	return _loadDirectories(1);
 }
-function _recursivelyRemoveDirectory($dir){
-	if($handle=opendir($dir)){
-		while(false!==($item=readdir($handle))){
-			if($item!='.'&&$item!='..'){
-				$uri=$dir.'/'.$item;
-				if(is_dir($uri))_recursivelyRemoveDirectory($uri);
-				else unlink($uri);
-			}
-		}
-		closedir($handle);
-		rmdir($dir);
-	}
-}
 function _renameDirectory($fid,$newname){
 	global $kfm_allow_directory_edit;
 	if(!$kfm_allow_directory_edit)return 'error: '.kfm_lang('permissionDeniedEditDirectory');
 	$dir=kfmDirectory::getInstance($fid);
 	$dir->rename($newname);
-	if($dir->hasErrors())return $dir->getErrors();
 	return _loadDirectories($dir->pid);
 }
 function _rmdir($pid){
-	/* this function should be...
-	 * $dir = new kfmDirectory($pid);
-	 * $dir->delete();
-	 * return array('errors'=>kfm_getErrors());
-	 * or
-	 * if(!$dir->delete())return array('errors'=>kfm_getErrors());
-	 */
-	global $kfmdb;
-	{ # remove db entries
-		$files=db_fetch_all("select id from ".KFM_DB_PREFIX."files where directory=".$pid);
-		foreach($files as $r){
-			$f=kfmFile::getInstance($r['id']);
-			$f->delete();
-		}
-		$dirs=db_fetch_all("select id from ".KFM_DB_PREFIX."directories where parent=".$pid);
-		foreach($dirs as $r)_rmdir($r['id']);
-	}
-	_recursivelyRemoveDirectory(_getDirectoryParents($pid));
-	$kfmdb->exec("delete from ".KFM_DB_PREFIX."directories where id=".$pid);
+	return _deleteDirectory($pid);
 }
 function kfm_rmMixed($files=array(), $directories=array()){
 	$filecount=0;
