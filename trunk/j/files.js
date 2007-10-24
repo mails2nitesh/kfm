@@ -284,7 +284,15 @@ function kfm_refreshFiles(res){
 				x_kfm_loadFiles(kfm_cwd_id, kfm_refreshFiles);
 			}
 		}
-	}).setHTML('<option value="0" '+(kfm_listview?'':'selected')+'>Icons</option><option value="1" '+(kfm_listview?'selected':'')+'>Listview</option>');
+	});
+	lselect.appendChild((new Element('option',{
+		'selected':!kfm_listview,
+		'value':0
+	})).appendText('Icons')); // TODO: new strign
+	lselect.appendChild((new Element('option',{
+		'selected':kfm_listview,
+		'value':1
+	})).appendText('Listview')); // TODO: new string
 	var header=new Element('div',{
 		'class':'kfm_panel_header',
 		'id':'kfm_panel_header'
