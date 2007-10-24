@@ -337,7 +337,7 @@ function kfm_refreshFiles(res){
 }
 function kfm_removeFilesFromView(files){
 	kfm_selectNone();
-	if(files.toString()===files)return kfm_log(files);
+	if($type(files)!='array')return;
 	var i=0,right_column=$('kfm_right_column');
 	for(var i=0;i<files.length;++i){
 		var el=$('kfm_file_icon_'+files[i]);

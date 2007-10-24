@@ -6,27 +6,31 @@ function _add_file_to_db($filename,$directory_id){
 	return $kfmdb->lastInsertId(KFM_DB_PREFIX.'files','id');
 }
 function _copyFiles($files,$dir_id){
-	if(!$GLOBALS['kfm_allow_file_create'])return 'error: '.kfm_lang('permissionDeniedCreateFile');
-	global $kfmdb;
-	$to=kfm_getDirectoryParents($dir_id);
-	if(!is_writable($to)) return 'error: Directory is not writable'; //TODO new string
+	//if(!$GLOBALS['kfm_allow_file_create'])return 'error: '.kfm_lang('permissionDeniedCreateFile');
+	//global $kfmdb;
+	//$to=kfm_getDirectoryParents($dir_id);
+	//if(!is_writable($to)) return 'error: Directory is not writable'; //TODO new string
 	$copied=0;
-	if(!kfm_checkAddr($to))return 'error: '.kfm_lang('illegalTargetDirectory',$to);
+	//if(!kfm_checkAddr($to))return 'error: '.kfm_lang('illegalTargetDirectory',$to);
+	$dir=kfmDirectory::getInstance($dir_id);
 	foreach($files as $fid){
-		$oldFile=kfmFile::getInstance($fid);
-		if(!$oldFile)return 'error: '.kfm_lang('noDataForFileID',$fid);
-		$filename=$oldFile->name;
-		if(!kfm_checkAddr($oldFile->path))return;
-		copy($oldFile->path,$to.'/'.$filename);
-		$id=kfm_add_file_to_db($filename,$dir_id);
-		if($oldFile->isImage()){
-			$oldFile=kfmImage::getInstance($fid);
-			$newFile=kfmImage::getInstance($id);
-			$newFile->setCaption($oldFile->caption);
-		}
-		else $newFile=kfmFile::getInstance($id);
-		$newFile->setTags($oldFile->getTags());
-		++$copied;
+		//$oldFile=kfmFile::getInstance($fid);
+		$file=kfmFile::getInstance($fid);
+		if(!$file)continue;
+		if($dir->addFile($file))$copied++;
+		//if(!$oldFile)return 'error: '.kfm_lang('noDataForFileID',$fid);
+		//$filename=$oldFile->name;
+		//if(!kfm_checkAddr($oldFile->path))return;
+		//copy($oldFile->path,$to.'/'.$filename);
+		//$id=kfm_add_file_to_db($filename,$dir_id);
+		//if($oldFile->isImage()){
+		//	$oldFile=kfmImage::getInstance($fid);
+		//	$newFile=kfmImage::getInstance($id);
+		//	$newFile->setCaption($oldFile->caption);
+		//}
+		//else $newFile=kfmFile::getInstance($id);
+		//$newFile->setTags($oldFile->getTags());
+		//++$copied;
 	}
 	kfm_addMessage(kfm_lang('filesCopied',$copied));
 }
@@ -183,13 +187,18 @@ function _loadFiles($rootid=1){
 function _moveFiles($files,$dir_id){
 	global $kfmdb,$kfm_session;
 	$cwd_id=$kfm_session->get('cwd_id');
+	/*
 	if(!$GLOBALS['kfm_allow_file_move'])return 'error: '.kfm_lang('permissionsDeniedMoveFile');
 	$dirdata=kfm_getDirectoryDbInfo($dir_id);
 	if(!$dirdata)return 'error: '.kfm_lang('noDataForDirectoryID',$dir_id);
 	$to=kfm_getDirectoryParents($dir_id);
 	if(!is_writable($to)) return 'error: Directory is not writable'; //TODO new string
-	if(!kfm_checkAddr($to))return 'error: '.kfm_lang('illegalTargetDirectory',$to);
+	if(!kfm_checkAddr($to))return 'error: '.kfm_lang('illegalTargetDirectory',$to);*/
 	foreach($files as $fid){
+		$file=kfmFile::getInstance($fid);
+		if(!$file)continue;
+		$file->move($dir_id);
+		/*
 		$filedata=db_fetch_row("select directory,name from ".KFM_DB_PREFIX."files where id=".$fid);
 		if(!$filedata)return 'error: '.kfm_lang('noDataForFileID',$file);
 		$dir=kfm_getDirectoryParents($filedata['directory']);
@@ -198,6 +207,7 @@ function _moveFiles($files,$dir_id){
 		rename($dir.'/'.$file,$to.'/'.$file);
 		if(!file_exists($to.'/'.$file))return 'error: failed to move file'; # TODO: new string
 		$q=$kfmdb->query("update ".KFM_DB_PREFIX."files set directory=".$dir_id." where id=".$fid);
+		*/
 	}
 	return kfm_loadFiles($cwd_id);
 }

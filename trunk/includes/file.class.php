@@ -99,6 +99,14 @@ class kfmFile extends kfmObject{
 		}
 		return true;
 	}
+	function move($dir_id){
+		global $kfmdb;
+		if(!$this->writable)return $this->error($this->name.' can not be moved. File is not writable');# TODO new string
+		$dir=kfmDirectory::getInstance($dir_id);
+		if(!$dir)return $this->error('Target directory cannot be initialized');
+		if(!rename($this->path,$dir->path.'/'.$this->name))return $this->error($this->name.' can not be moved');
+		$q=$kfmdb->query("update ".KFM_DB_PREFIX."files set directory=".$dir_id." where id=".$this->id);
+	}
 	function getInstance($id=0){
 		if(!$id)return false;
 		if(is_object($id))$id=$id->id;
