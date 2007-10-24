@@ -175,5 +175,20 @@ class kfmDirectory extends kfmObject{
 			foreach($GLOBALS['kfm_allowed_folders'] as $allow)if(!preg_match($allow, $file))return false;
 		return true;
 	}
+	function addFile($file){
+		if(!$GLOBALS['kfm_allow_file_create'])return $this->error(kfm_lang('permissionDeniedCreateFile'));
+		if(is_numeric($file))$file=kfmFile::getInstance($file);
+		if(!$this->isWritable()) return $this->error($file->name.' could not be created. The directory is not writable'); //TODO new string
+		copy($file->path,$this->path.'/'.$file->name);
+		$id=$file->addToDB($file->name,$this->id);
+		if($file->isImage()){
+			$file=kfmImage::getInstance($file->id);
+			$newFile=kfmImage::getInstance($id);
+			$newFile->setCaption($file->caption);
+		}
+		else $newFile=kfmFile::getInstance($id);
+		$newFile->setTags($file->getTags());
+		return true;
+	}
 }
 ?>

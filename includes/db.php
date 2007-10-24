@@ -48,6 +48,7 @@ function db_fetch_row($query){
 		return $kfmdb->fetchRow($query);
 	}
 	$q=$kfmdb->query($query);
+	if(PEAR::isError($q))die('alert("'.$q->getMessage().'\n'.$query.'")');
 	return $q->fetchRow();
 }
 ?>
