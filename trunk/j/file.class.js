@@ -4,10 +4,13 @@ var File=new Class({
 			'class':varname+' file_'+varname+'_'+this.id
 		});
 		this.setText(el,varname);
+		if(!this.textInstances[varname])this.textInstances[varname]=[];
+		this.textInstances[varname].push(el);
 		return el;
 	},
 	initialize:function(id,data){
 		this.id=id;
+		this.textInstances=[];
 		if(data){
 			File_Instances[id]=this;
 			File_setData(data,this);
@@ -63,7 +66,7 @@ function File_setData(el,F){
 	if(!F)F=File_Instances[id]={};
 	el.each(function(varvalue,varname){
 		F[varname]=varvalue;
-		$ES('.file_'+varname+'_'+id).each(function(t){
+		if(F.textInstances[varname])F.textInstances[varname].each(function(t){
 			F.setText(t,varname);
 		});
 	});
