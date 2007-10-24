@@ -97,7 +97,7 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 		var reqHeight=name_text.offsetHeight;
 		name_text.innerHTML='. '+name;
 		el=name_text;
-		el.style.position='absolute';
+		el.setStyle('display','block');
 		if(reqHeight&&el.offsetHeight>reqHeight){
 			el.title=name;
 			kfm_shrinkName(name,el,el,'offsetHeight',reqHeight,'');

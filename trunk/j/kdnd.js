@@ -87,12 +87,16 @@ function kdnd_dragStart(el,source_class){
 	window.kdnd_drag_class=source_class;
 	window.kdnd_source_el=el;
 	var content=el.dragDisplay?el.dragDisplay():el.cloneNode(true);
+	var styles=window.ie?{
+		'display':'none'
+	}:
+	{
+		'display':'none',
+		'opacity':.7
+	};
 	window.kdnd_drag_wrapper=new Element('div',{
 		'id':'kdnd_drag_wrapper',
-		'styles':{
-			'display':'none',
-			'opacity':.7
-		}
+		'styles':styles
 	});
 	window.kdnd_drag_wrapper.appendChild(content);
 	document.body.appendChild(window.kdnd_drag_wrapper);
