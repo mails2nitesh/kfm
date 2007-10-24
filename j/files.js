@@ -208,7 +208,6 @@ function kfm_incrementalFileDisplay(){
 		el.addEvent('dblclick',kfm_chooseFile);
 		kfm_addContextMenu(el,kfm_file_bits.contextmenu);
 		el.dragDisplay=kfm_file_bits.dragDisplay;
-//		el.addEvent('mousedown',kfm_file_bits.mousedown);
 		if(!kfm_listview){
 			el.addEvent('mouseover',function(){ // initialise info tooltip
 				if(window.kfm_tooltipInit)$clear(window.kfm_tooltipInit);
@@ -249,7 +248,9 @@ function kfm_incrementalFileDisplay(){
 		if((a+1)%kfm_show_files_in_groups_of)kfm_incrementalFileDisplay();
 		else window.kfm_incrementalFileDisplay_loader=setTimeout('kfm_incrementalFileDisplay()',1);
 	}
-	kdnd_makeDraggable('kfm_file');
+	else kdnd_makeDraggable('kfm_file');
+}
+function kfm_refreshFiles(res){
 	kdnd_addDropHandler('kfm_file','.kfm_directory_link',function(e){
 		dir_over=e.targetElement.node_id;
 		var links=[];
@@ -257,8 +258,6 @@ function kfm_incrementalFileDisplay(){
 		links.push(['x_kfm_moveFiles(['+selectedFiles.join(',')+'],'+dir_over+',function(e){if($type(e)=="string")return alert("error: could not move file[s]");kfm_removeFilesFromView(['+selectedFiles.join(',')+'])});kfm_selectNone()','move files',0,!kfm_vars.permissions.file.mv]); // TODO: new string
 		kfm_createContextMenu(e.page,links);
 	});
-}
-function kfm_refreshFiles(res){
 	if(window.kfm_incrementalFileDisplay_loader){
 		$clear(window.kfm_incrementalFileDisplay_loader);
 		window.kfm_incrementalFileDisplay_vars=null;
