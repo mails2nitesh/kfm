@@ -190,64 +190,63 @@ function kfm_isFileInCWD(id){
 	return false;
 }
 function kfm_incrementalFileDisplay(){
-	var b=window.kfm_incrementalFileDisplay_vars,a=b.at,fsdata=b.data.files,wrapper=$('kfm_right_column'),fdata=fsdata[a];
-	if(wrapper.contentMode!='file_icons')return (window.kfm_incrementalFileDisplay_vars=null);
-	var name=fdata.name,ext=name.replace(kfm_regexps.all_up_to_last_dot,''),b,fullfilename=kfm_cwd_name+'/'+name,id=fdata.id;
-	var F=File_getInstance(id,fdata);
-	var nameEl=F.getText('name');
-	var el=new Element('div',{
-		'id':'kfm_file_icon_'+id,
+	var b=window.kfm_incrementalFileDisplay_vars,fsdata=b.data.files,wrapper=$('kfm_right_column');
+	var icon=new Element('div',{
 		'class':'kfm_file '+(kfm_listview?'kfm_file_listview':'kfm_file_icon kfm_icontype_'+ext),
 		'styles':{
 			'cursor':(window.ie?'hand':'pointer')
 		}
 	});
-	var writable=fdata.writable;
-	{ // add events
+	do{
+		var a=b.at,fdata=fsdata[a];
+		if(wrapper.contentMode!='file_icons')return (window.kfm_incrementalFileDisplay_vars=null);
+		var name=fdata.name,ext=name.replace(kfm_regexps.all_up_to_last_dot,''),b,fullfilename=kfm_cwd_name+'/'+name,id=fdata.id;
+		var F=File_getInstance(id,fdata);
+		var nameEl=F.getText('name');
+		var el=icon.cloneNode(true);
 		el.addEvent('click',kfm_toggleSelectedFile);
 		el.addEvent('dblclick',kfm_chooseFile);
 		kfm_addContextMenu(el,kfm_file_bits.contextmenu);
 		el.dragDisplay=kfm_file_bits.dragDisplay;
-		if(!kfm_listview){
-			el.addEvent('mouseover',function(){ // initialise info tooltip
-				if(window.kfm_tooltipInit)$clear(window.kfm_tooltipInit);
-				if(window.drag_wrapper)return; // don't open if currently dragging files
-				window.kfm_tooltipInit=setTimeout('kfm_showToolTip('+id+')',500);
-			});
-			el.addEvent('mouseout',function(){ // remove info tooltip
-				if(window.kfm_tooltipInit)$clear(window.kfm_tooltipInit);
-				var o=$('kfm_tooltip');
-				if(o)o.remove();
-			});
+		el.id='kfm_file_icon_'+id;
+		var writable=fdata.writable;
+		{ // add events
+			if(!kfm_listview){
+				el.addEvent('mouseover',function(){ // initialise info tooltip
+					if(window.kfm_tooltipInit)$clear(window.kfm_tooltipInit);
+					if(window.drag_wrapper)return; // don't open if currently dragging files
+					window.kfm_tooltipInit=setTimeout('kfm_showToolTip('+id+')',500);
+				});
+				el.addEvent('mouseout',function(){ // remove info tooltip
+					if(window.kfm_tooltipInit)$clear(window.kfm_tooltipInit);
+					var o=$('kfm_tooltip');
+					if(o)o.remove();
+				});
+			}
 		}
-	}
-	{ // file attributes
-		el.file_id=id;
-		if(!kfm_listview && fdata.width)F.setThumbnailBackground(el);
-		wrapper.files[a]=el;
-	}
-	kfm.addEl(wrapper,el);
-	if(kfm_listview){
-		var listview_table=$('kfm_files_listview_table');
-		var rows=listview_table.rows.length;
-		var row=listview_table.insertRow(rows);
-		row.className=rows%2?'even':'odd';
-		var cell=row.insertCell(0);
-		cell.appendChild(el);
-		row.insertCell(1).appendChild(F.getText('filesize'));
-		row.insertCell(2).appendChild(F.getText('mimetype'));
-		row.insertCell(3).appendChild(F.getText('modified'));
-	}
-	else{
-		wrapper.appendChild(el);
-	}
-	el.appendChild(nameEl);
-	if(a&&$('kfm_file_icon_'+fsdata[a-1].id).offsetLeft>=el.offsetLeft)el.setStyle('clear','left');
-	window.kfm_incrementalFileDisplay_vars.at=a+1;
-	if(a+1<fsdata.length){
-		if((a+1)%kfm_show_files_in_groups_of)kfm_incrementalFileDisplay();
-		else window.kfm_incrementalFileDisplay_loader=setTimeout('kfm_incrementalFileDisplay()',1);
-	}
+		{ // file attributes
+			el.file_id=id;
+			if(!kfm_listview && fdata.width)F.setThumbnailBackground(el);
+			wrapper.files[a]=el;
+		}
+		kfm.addEl(wrapper,el);
+		if(kfm_listview){
+			var listview_table=$('kfm_files_listview_table');
+			var rows=listview_table.rows.length;
+			var row=listview_table.insertRow(rows);
+			row.className=rows%2?'even':'odd';
+			var cell=row.insertCell(0);
+			cell.appendChild(el);
+			row.insertCell(1).appendChild(F.getText('filesize'));
+			row.insertCell(2).appendChild(F.getText('mimetype'));
+			row.insertCell(3).appendChild(F.getText('modified'));
+		}
+		else wrapper.appendChild(el);
+		el.appendChild(nameEl);
+		if(a&&$('kfm_file_icon_'+fsdata[a-1].id).offsetLeft>=el.offsetLeft)el.setStyle('clear','left');
+		window.kfm_incrementalFileDisplay_vars.at=a+1;
+	}while(a+1<fsdata.length && (a+1)%kfm_show_files_in_groups_of);
+	if(a+1<fsdata.length)window.kfm_incrementalFileDisplay_loader=setTimeout('kfm_incrementalFileDisplay()',1);
 	else kdnd_makeDraggable('kfm_file');
 }
 function kfm_refreshFiles(res){
