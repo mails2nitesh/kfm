@@ -299,6 +299,7 @@ function kfm_refreshFiles(res){
 	wrapper.appendChild(lselect);
 	wrapper.appendChild(header);
 	{ // order files by name
+		if(!res.files)res.files=[];
 		for(a=0;a<res.files.length-1;++a){
 			lowest_name=res.files[a].name;
 			lowest_index=a;
