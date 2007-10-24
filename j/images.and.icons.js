@@ -45,7 +45,7 @@ function kfm_img_startLightbox(id){
 			}
 		});
 		wrapper.addEvent('click',kfm_img_stopLightbox);
-		kfm.addEl(document.body,wrapper);
+		document.body.appendChild(wrapper);
 		wrapper.focus();
 	}
 	if(!$('kfm_lightboxShader')){
@@ -58,7 +58,7 @@ function kfm_img_startLightbox(id){
 				'opacity':'.7'
 			}
 		});
-		kfm.addEl(wrapper,el);
+		wrapper.appendChild(el);
 	}
 	if(oldEl)oldEl.remove();
 	var w=data.width,h=data.height,url='get.php?id='+id,r=0;
@@ -94,7 +94,7 @@ function kfm_img_startLightbox(id){
 			window.lightbox_slideshowTimer=setTimeout('kfm_img_startLightbox()',kfm_slideshow_delay);
 		});
 	}
-	kfm.addEl(wrapper,el);
+	wrapper.appendChild(el);
 	kfm_resizeHandler_add('kfm_lightboxShader');
 	kfm_resizeHandler_add('kfm_lightboxWrapper');
 }

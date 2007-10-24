@@ -21,7 +21,7 @@ function kfm_createEmptyFile(filename,msg){
 }
 function kfm_leftColumn_disable(){
 	var left_column=$('kfm_left_column');
-	kfm.addEl(document.body,new Element('div',{
+	document.body.appendChild(new Element('div',{
 		'id':'kfm_left_column_hider',
 		'styles':{
 			'position':'absolute',
@@ -69,7 +69,7 @@ function kfm_textfile_initEditor(res,readonly){
 	var right_column=$('kfm_right_column').empty();
 	right_column.addEvent('keyup',kfm_textfile_keybinding);
 	right_column.contentMode='codepress';
-	kfm.addEl(right_column,t);
+	right_column.appendChild(t);
 	var r2=kfm.addRow(t),c=0;
 	kfm.addCell(r2,c++,1,res.name);
 	if(!readonly){ /* show option to save edits */

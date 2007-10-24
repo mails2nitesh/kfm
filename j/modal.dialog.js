@@ -23,7 +23,7 @@ function kfm_modal_open(form,title,actions){
 				'height':a.y
 			}
 		});
-		kfm.addEl(body,shader);
+		body.appendChild(shader);
 	}
 	{ // wrapper
 		var wrapper=new Element('div',{
@@ -38,14 +38,15 @@ function kfm_modal_open(form,title,actions){
 			'padding':0,
 			'clear':'left'
 		});
-		kfm.addEl(wrapper,[h2,form]);
+		wrapper.appendChild(h2);
+		wrapper.appendChild(form);
 		{ // link row
 			var row=new Element('div');
 			var link=new Element('a',{
 				'href':'javascript:kfm_modal_close()'
 			}).appendText('Cancel'); // TODO: new string
 			link.className='button';
-			kfm.addEl(row,link);
+			row.appendChild(link);
 			if(actions&&actions.length)for(i=0;i<actions.length;++i){
 				var v=actions[i];
 				link=new Element('a',{
@@ -55,9 +56,9 @@ function kfm_modal_open(form,title,actions){
 					}
 				}).appendText(v[0]);
 				link.className='button';
-				kfm.addEl(row,link);
+				row.appendChild(link);
 			}
-			kfm.addEl(wrapper,row);
+			wrapper.appendChild(row);
 		}
 		row.setStyles({
 			'background':'#eee',
@@ -66,7 +67,7 @@ function kfm_modal_open(form,title,actions){
 			'padding':'2px',
 			'z-index':'3'
 		});
-		kfm.addEl(body,wrapper);
+		body.appendChild(wrapper);
 		wrapper.style.width=(form.offsetWidth+10)+'px';
 		var w=wrapper.offsetWidth;
 		if(w<200||w>a.x*.9){

@@ -182,7 +182,7 @@ function newSelectbox(name,keys,vals,s,f){
 		if(keys[i]==s){
 			s2=i;
 		}
-		kfm.addEl(el2,el3);
+		el2.appendChild(el3);
 	}
 	el2.selectedIndex=s2;
 	if(f){

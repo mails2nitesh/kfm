@@ -43,7 +43,7 @@ var KFM=new Class({
 		kfm_modal_open(div,'about KFM'); // TODO: New String
 	},
 	addCell:function(o,b,c,d,e){
-		var f=o.insertCell(b);
+		var f=$(o.insertCell(b));
 		if(c)f.colSpan=c;
 		if(d)kfm.addEl(f,d);
 		if(e)f.className=e;

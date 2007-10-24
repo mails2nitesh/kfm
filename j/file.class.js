@@ -66,7 +66,8 @@ function File_setData(el,F){
 	if(!F)F=File_Instances[id]={};
 	el.each(function(varvalue,varname){
 		F[varname]=varvalue;
-		if(F.textInstances[varname])F.textInstances[varname].each(function(t){
+		if(!F.textInstances[varname])return;
+		F.textInstances[varname].each(function(t){
 			F.setText(t,varname);
 		});
 	});

@@ -43,12 +43,12 @@ function kfm_createContextMenu(m,links){
 			kfm.addCell(row,1,0,link,'kfm_contextmenu_nameCell');
 		};
 		window.contextmenu_loading=setTimeout('window.contextmenu_loading=null',1);
-		kfm.addEl(document.body,contextmenu);
+		document.body.appendChild(contextmenu);
 	}
 	else{
 		var col=kfm.addCell(kfm.addRow(contextmenu));
 		col.colSpan=2;
-		kfm.addEl(col,new Element('hr'));
+		col.appendChild(new Element('hr'));
 	}
 	var rows=contextmenu.rows.length;
 	for(var i=0;i<links.length;++i)if(links[i][1])contextmenu.addLink(links[i][0],links[i][1],links[i][2],links[i][3],links[i][4]);
