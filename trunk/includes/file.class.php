@@ -89,8 +89,8 @@ class kfmFile extends kfmObject{
 		global $kfm_allow_file_delete;
 		if(!$kfm_allow_file_delete)return $this->error(kfm_lang('permissionDeniedDeleteFile'));
 		if(!kfm_cmsHooks_allowedToDeleteFile($this->id))return $this->error(kfm_lang('CMSRefusesFileDelete',$this->path));
-		if(!$this->writable)return $this->error('File '.$this->name.' cannot be removed. (not writable)');# TODO:new string
-		if(unlink($this->path)||!$this->exists())$this->db->exec("DELETE FROM ".KFM_DB_PREFIX."files WHERE id=".$this->id);
+		if($this->exists() && !$this->writable)return $this->error('File '.$this->name.' cannot be removed. (not writable)');# TODO:new string
+		if(!$this->exists() || unlink($this->path))$this->db->exec("DELETE FROM ".KFM_DB_PREFIX."files WHERE id=".$this->id);
 		else return $this->error('unable to delete file '.$this->name);
 		return true;
 	}
