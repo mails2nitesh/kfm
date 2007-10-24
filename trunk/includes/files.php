@@ -222,6 +222,7 @@ function _saveTextFile($fid,$text){
 }
 function _search($keywords,$tags){
 	global $kfmdb;
+	$files=array();
 	$valid_files=array();
 	if($tags){
 		$arr=explode(',',$tags);
@@ -244,7 +245,6 @@ function _search($keywords,$tags){
 	if(($tags&&count($valid_files))||$keywords){ # keywords
 		$constraints='';
 		if(count($valid_files))$constraints=' and (id='.join(' or id=',$valid_files).')';
-		$files=array();
 		$fs=db_fetch_all("select id from ".KFM_DB_PREFIX."files where name like '%".addslashes($keywords)."%'".$constraints." order by name");
 		foreach($fs as $f){
 			$file=kfmFile::getInstance($f['id']);
