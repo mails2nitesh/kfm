@@ -118,7 +118,6 @@ function kfm_dir_dropHandler(e){
 	var dir_from=parseInt($E('.kfm_directory_link',e.sourceElement).node_id);
 	if(dir_from==1)return;
 	var dir_to=parseInt($E('.kfm_directory_link',e.targetElement).node_id);
-	alert(dir_to);
 	if(dir_to==0||dir_to==dir_from)return;
 	if(!kfm_vars.permissions.dir.mv)return kfm.alert('permission denied: cannot move directory'); //TODO: new string
 	x_kfm_moveDirectory(dir_from,dir_to,kfm_refreshDirectories);
