@@ -3,7 +3,7 @@
  * 	Dutch language file.
  *
  * File Author:
- * 	Roy Lubbers (roy@lbsnet.nl)
+ * 	Roy Lubbers (roy@cns-it.nl)
  */
 
 kfm.lang=
@@ -267,6 +267,6 @@ WhatFilenameDoYouWantToUse: "Welke bestandsnaam wilt u gebruiken?"
 
 ,
 // New in 1.0
-ZipUpFiles: "zip up files",
-Cancel: "cancel"
+ZipUpFiles: "bestanden inpakken",
+Cancel: "annuleren"
 }
