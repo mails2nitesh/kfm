@@ -95,8 +95,8 @@ class kfmImage extends kfmFile{
 	}
 	function resize($new_width, $new_height=-1){
 		global $kfm_use_imagemagick,$kfm_allow_image_manipulation;
-		if(!$kfm_allow_image_manipulation)$this->error('permission denied: cannot manipulate images'); # TODO New String
-		if(!$this->isWritable())$this->error('image is not writable'); # TODO New String
+		if(!$kfm_allow_image_manipulation)$this->error(kfm_lang('permissionDeniedManipImage'));
+		if(!$this->isWritable())$this->error(kfm_lang('imageNotWritable'));
 		if($this->hasErrors())return false;
 		$this->deleteThumbs();
 		if($new_height==-1)$new_height=$this->height*$new_width/$this->width;
@@ -105,8 +105,8 @@ class kfmImage extends kfmFile{
 	}
 	function rotate($direction){
 		global $kfm_use_imagemagick,$kfm_allow_image_manipulation;
-		if(!$kfm_allow_image_manipulation)$this->error('permission denied: cannot manipulate images'); # TODO New String
-		if(!$this->isWritable())$this->error('image is not writable'); # TODO New String
+		if(!$kfm_allow_image_manipulation)$this->error(kfm_lang('permissionDeniedManipImage'));
+		if(!$this->isWritable())$this->error(kfm_lang('imageNotWritable'));
 		if($this->hasErrors())return false;
 		$this->deleteThumbs();
 		if($kfm_use_imagemagick && !$this->useImageMagick($this->path,'rotate -'.$direction,$this->path))return;
@@ -121,11 +121,11 @@ class kfmImage extends kfmFile{
 	}
 	function crop($x1, $y1, $width, $height, $newname=false){
 		global $kfm_use_imagemagick,$kfm_allow_image_manipulation;
-		if(!$kfm_allow_image_manipulation)return $this->error('permission denied: cannot manipulate images'); # TODO New String
+		if(!$kfm_allow_image_manipulation)return $this->error(kfm_lang('permissionDeniedManipImage'));
 		
 		if(!$newname){
 			$this->deleteThumbs();
-			if(!$this->isWritable())return $this->error('image is not writable'); # TODO New String
+			if(!$this->isWritable())return $this->error(kfm_lang('imageNotWritable'));
 		}
 		if($kfm_use_imagemagick && $newname && !$this->useImageMagick($this->path,'crop '.$width.'x'.$height.'+'.$x1.'+'.$y1, dirname($this->path).'/'.$newname))return;
 		else if($kfm_use_imagemagick && !$this->useImageMagick($this->path,'crop '.$width.'x'.$height.'+'.$x1.'+'.$y1, $this->path))return;

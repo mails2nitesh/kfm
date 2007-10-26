@@ -89,17 +89,17 @@ class kfmFile extends kfmObject{
 		global $kfm_allow_file_delete;
 		if(!$kfm_allow_file_delete)return $this->error(kfm_lang('permissionDeniedDeleteFile'));
 		if(!kfm_cmsHooks_allowedToDeleteFile($this->id))return $this->error(kfm_lang('CMSRefusesFileDelete',$this->path));
-		if($this->exists() && !$this->writable)return $this->error('File '.$this->name.' cannot be removed. (not writable)');# TODO:new string
+		if($this->exists() && !$this->writable)return $this->error(kfm_lang('fileNotMovableUnwritable',$this->name));
 		if(!$this->exists() || unlink($this->path))$this->db->exec("DELETE FROM ".KFM_DB_PREFIX."files WHERE id=".$this->id);
-		else return $this->error('unable to delete file '.$this->name);
+		else return $this->error(kfm_lang('failedDeleteFile',$this->name));
 		return true;
 	}
 	function move($dir_id){
 		global $kfmdb;
-		if(!$this->writable)return $this->error($this->name.' can not be moved. File is not writable');# TODO new string
+		if(!$this->writable)return $this->error(kfm_lang('fileNotMovableUnwritable',$this->name));
 		$dir=kfmDirectory::getInstance($dir_id);
-		if(!$dir)return $this->error('Target directory cannot be initialized');
-		if(!rename($this->path,$dir->path.'/'.$this->name))return $this->error($this->name.' can not be moved');
+		if(!$dir)return $this->error(kfm_lang('failedGetDirectoryObject'));
+		if(!rename($this->path,$dir->path.'/'.$this->name))return $this->error(kfm_lang('failedMoveFile',$this->name));
 		$q=$kfmdb->query("update ".KFM_DB_PREFIX."files set directory=".$dir_id." where id=".$this->id);
 	}
 	function getInstance($id=0){

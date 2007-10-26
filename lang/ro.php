@@ -48,6 +48,18 @@ $kfm_langStrings=array(
 	"permissionDeniedMoveFile"     => "acces interzis: imposibil de mutat fişierul",
 	"permissionDeniedRename"       => "acces interzis: imposibil de schimbat numele ai \"%1\"",
 	"permissionDeniedViewFile"     => "acces interzis: imposibil de a vedea fişier",
-	"searchResults"                => "rezultatele căutării"
+	"searchResults"                => "rezultatele căutării",
+	# 1.2
+	"fileNotCreatedDirUnwritable"    => "\"%1\" could not be created. The directory is not writable",
+	"fileNotDeletedUnwritable"       => "\"%1\" cannot be removed. (file not writable)",
+	"fileNotMovableUnwritable"       => "\"%1\" cannot be moved. (file not writable)",
+	"permissionDeniedManipImage"     => "permission denied: cannot manipulate images",
+	"imageNotWritable"               => "image is not writable",
+	"failedGetFileObject"            => "failed to retrieve File object",
+	"failedGetDirectoryObject"       => "failed to retrieve Directory object",
+	"failedDeleteFile"               => "failed to delete file \"%1\"",
+	"failedMoveFile"                 => "failed to move file \"%1\"",
+	"failedWriteToFile"              => "failed write to file \"%1\"",
+	"failedDownloadFromUrl"        => "failed to download from URL \"%1\""
 );
 ?>

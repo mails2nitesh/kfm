@@ -44,7 +44,7 @@ function kfm_modal_open(form,title,actions){
 			var row=new Element('div');
 			var link=new Element('a',{
 				'href':'javascript:kfm_modal_close()'
-			}).appendText('Cancel'); // TODO: new string
+			}).appendText(kfm.lang.Cancel);
 			link.className='button';
 			row.appendChild(link);
 			if(actions&&actions.length)for(i=0;i<actions.length;++i){
