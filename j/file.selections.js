@@ -88,7 +88,7 @@ function kfm_selection_drag(e){
 function kfm_selection_dragFinish(e){
 	e=new Event(e);
 	$clear(window.dragSelectionTrigger);
-	if(!window.kdnd_dragging)return;
+	if(!window.drag_wrapper)return;
 	var right_column=$('kfm_right_column'),p1=e.page,p2=window.drag_wrapper.orig,offset=right_column.scrollTop;
 	var x1=p1.x>p2.x?p2.x:p1.x,x2=p2.x>p1.x?p2.x:p1.x,y1=p1.y>p2.y?p2.y:p1.y,y2=p2.y>p1.y?p2.y:p1.y;
 	setTimeout('window.dragType=0;',1); // pause needed for IE
