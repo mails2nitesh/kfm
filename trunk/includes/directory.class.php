@@ -178,7 +178,7 @@ class kfmDirectory extends kfmObject{
 	function addFile($file){
 		if(!$GLOBALS['kfm_allow_file_create'])return $this->error(kfm_lang('permissionDeniedCreateFile'));
 		if(is_numeric($file))$file=kfmFile::getInstance($file);
-		if(!$this->isWritable()) return $this->error($file->name.' could not be created. The directory is not writable'); //TODO new string
+		if(!$this->isWritable())return $this->error(kfm_lang('fileNotCreatedDirUnwritable',$file->name));
 		copy($file->path,$this->path.'/'.$file->name);
 		$id=$file->addToDb($file->name,$this->id);
 		if($file->isImage()){

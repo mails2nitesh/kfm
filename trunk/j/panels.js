@@ -160,7 +160,7 @@ function kfm_createFileUploadPanel(){
 				var b2=new Element('input',{
 					'id':'kfm_fileUploadSWFCancel',
 					'type':'button',
-					'value':'Cancel', // TODO: New String
+					'value':kfm.lang.Cancel,
 					'disabled':'disabled'
 				});
 				c.appendChild(b2);

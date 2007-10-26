@@ -48,6 +48,18 @@ $kfm_langStrings=array(
 	"permissionDeniedMoveFile"     => "доступ запрещен: невозможно перенести файл",
 	"permissionDeniedRename"       => "доступ запрещен: невозможно переименовать \"%1\"",
 	"permissionDeniedViewFile"     => "доступ запрещен: невозможно просмотреть файл",
-	"searchResults"                => "результаты поиска"
+	"searchResults"                => "результаты поиска",
+	# 1.2
+	"fileNotCreatedDirUnwritable"    => "\"%1\" could not be created. The directory is not writable",
+	"fileNotDeletedUnwritable"       => "\"%1\" cannot be removed. (file not writable)",
+	"fileNotMovableUnwritable"       => "\"%1\" cannot be moved. (file not writable)",
+	"permissionDeniedManipImage"     => "permission denied: cannot manipulate images",
+	"imageNotWritable"               => "image is not writable",
+	"failedGetFileObject"            => "failed to retrieve File object",
+	"failedGetDirectoryObject"       => "failed to retrieve Directory object",
+	"failedDeleteFile"               => "failed to delete file \"%1\"",
+	"failedMoveFile"                 => "failed to move file \"%1\"",
+	"failedWriteToFile"              => "failed write to file \"%1\"",
+	"failedDownloadFromUrl"        => "failed to download from URL \"%1\""
 );
 ?>

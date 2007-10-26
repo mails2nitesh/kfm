@@ -21,11 +21,11 @@ function _downloadFileFromUrl($url,$filename){
 	$cwd_id=$kfm_session->get('cwd_id');
 	$dir=kfmDirectory::getInstance($cwd_id);
 	$cwd=$dir->getPath();
-	if(!kfm_checkAddr($cwd.'/'.$filename))return 'error: filename not allowed';
-	if(substr($url,0,4)!='http')return 'error: url must begin with http';
+	if(!kfm_checkAddr($cwd.'/'.$filename))return 'error: filename not allowed'; #TODO: new string
+	if(substr($url,0,4)!='http')return 'error: url must begin with http'; #TODO: new string
 	$file=file_get_contents(str_replace(' ','%20',$url));
-	if(!$file)return 'error: could not download file "'.$url.'"';
-	if(!file_put_contents($cwd.'/'.$filename,$file))return 'error: could not write file "'.$filename.'"'; # TODO: new string
+	if(!$file)return kfm_lang('failedDownloadFromUrl');
+	if(!file_put_contents($cwd.'/'.$filename,$file))return kfm_lang('failedWriteToFile',$filename);
 	chmod($to, octdec('0'.$kfm_default_upload_permission));
 	return kfm_loadFiles($cwd_id);
 }
@@ -42,13 +42,13 @@ function _extractZippedFile($id){
 		if(!$res){
 			for($i=3;$i<count($arr)-2;++$i){
 				$filename=preg_replace('/.* /','',$arr[$i]);
-				if(!kfm_checkAddr($filename))return 'error: zip contains a banned filename';
+				if(!kfm_checkAddr($filename))return 'error: zip contains a banned filename'; #TODO: new string
 			}
 			exec('unzip -o "'.$dir.$file->name.'" -x -d "'.$dir.'"',$arr,$res);
 		}
 	}
 	if($res){ # try PHP unzip command
-		return 'error: unzip failed';
+		return 'error: unzip failed'; #TODO: new string
 		$zip=zip_open($dir.$file->name);
 		while($zip_entry=zip_read($zip)){
 			$entry=zip_entry_open($zip,$zip_entry);
@@ -70,7 +70,7 @@ function _getFileAsArray($filename){
 }
 function _getFileDetails($fid){
 	$file=kfmFile::getInstance($fid);
-	if(!is_object($file))return 'error: failed to retrieve File object'; # TODO: New String
+	if(!is_object($file))return kfm_lang('failedGetFileObject');
 	$fpath=$file->path;
 	if(!file_exists($fpath))return;
 	$details=array(
@@ -99,7 +99,7 @@ function _getTagName($id){
 	global $kfmdb;
 	$r=db_fetch_row("select name from ".KFM_DB_PREFIX."tags where id=".$id);
 	if(count($r))return array($id,$r['name']);
-	return array($id,'UNKNOWN TAG '.$id);
+	return array($id,'UNKNOWN TAG '.$id); #TODO: new string
 }
 function _getTextFile($fid){
 	$file=kfmFile::getInstance($fid);
@@ -206,7 +206,7 @@ function _rm($id){
 			$file=kfmFile::getInstance($fid);
 			if($file->delete())$counter++;
 		}
-		if($counter>1)kfm_addMessage($counter.' files deleted');
+		if($counter>1)kfm_addMessage($counter.' files deleted'); #TODO: new string
 	}
 	else{
 		$file=kfmFile::getInstance($id);
@@ -218,7 +218,7 @@ function _saveTextFile($fid,$text){
 	if(!$GLOBALS['kfm_allow_file_edit'])return 'error: '.kfm_lang('permissionDeniedEditFile');
 	$f=kfmFile::getInstance($fid);
 	$f->setContent($text);
-	return $f->hasErrors()?$f->getErrors():'file saved';
+	return $f->hasErrors()?$f->getErrors():'file saved'; #TODO: new string
 }
 function _search($keywords,$tags){
 	global $kfmdb;
