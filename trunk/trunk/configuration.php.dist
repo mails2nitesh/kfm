@@ -44,6 +44,9 @@ $kfm_hidden_panels='logs';
 # what happens if someone double-clicks a file or presses enter on one? use 'return' for FCKeditor
 $kfm_file_handler='return'; # values allowed: download, return
 
+# if 'return' is chosen above, do you want to allow multiple file returns?
+$kfm_allow_multiple_file_returns=true;
+
 # directory in which KFM keeps its database and generated files
 # if this starts with '/', then the address is absolute. otherwise, it is relative to $kfm_userfiles.
 # $kfm_workdirectory='.files';
