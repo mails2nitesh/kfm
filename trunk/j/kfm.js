@@ -204,8 +204,7 @@ var KFM=new Class({
 		switch(key){
 			case 13:{ // enter
 				if(!selectedFiles.length||window.inPrompt||cm!='file_icons')return;
-				if(selectedFiles.length>1)return kfm_log(kfm.lang.NotMoreThanOneFile);
-				kfm_chooseFile($('kfm_file_icon_'+selectedFiles[0]),1);
+				kfm_chooseFile();
 				break;
 			}
 			case 27:{ // escape

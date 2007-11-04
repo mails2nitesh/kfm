@@ -8,7 +8,7 @@ header('Content-type: text/html; Charset=utf-8');
 { # export kaejax stuff
 	kfm_kaejax_export(
 		'kfm_changeCaption','kfm_copyFiles','kfm_createDirectory','kfm_createEmptyFile','kfm_deleteDirectory','kfm_downloadFileFromUrl',
-		'kfm_extractZippedFile','kfm_getFileDetails','kfm_getFileUrl','kfm_getTagName','kfm_getTextFile','kfm_getThumbnail','kfm_loadDirectories',
+		'kfm_extractZippedFile','kfm_getFileDetails','kfm_getFileUrl','kfm_getFileUrls','kfm_getTagName','kfm_getTextFile','kfm_getThumbnail','kfm_loadDirectories',
 		'kfm_loadFiles','kfm_moveDirectory','kfm_moveFiles','kfm_renameDirectory','kfm_renameFile','kfm_renameFiles','kfm_resizeImage','kfm_rm',
 		'kfm_rotateImage','kfm_cropToOriginal','kfm_cropToNew','kfm_saveTextFile','kfm_search','kfm_tagAdd','kfm_tagRemove','kfm_zip'
 	);
@@ -26,21 +26,22 @@ header('Content-type: text/html; Charset=utf-8');
 			var kfm_vars={
 				files:{
 					name_length_displayed:<?php echo $kfm_files_name_length_displayed; ?>,
-					return_id_to_cms:<?php echo $kfm_return_file_id_to_cms; ?>
+					return_id_to_cms:<?php echo $kfm_return_file_id_to_cms?'true':'false'; ?>,
+					allow_multiple_returns:<?php echo $kfm_allow_multiple_file_returns?'true':'false'; ?>
 				},
 				get_params:"<?php echo GET_PARAMS; ?>",
 				permissions:{
 					dir:{
 						ed:<?php echo $kfm_allow_directory_edit; ?>,
 						mk:<?php echo $kfm_allow_directory_create; ?>,
-		   				mv:<?php echo $kfm_allow_directory_move; ?>,
+						mv:<?php echo $kfm_allow_directory_move; ?>,
 						rm:<?php echo $kfm_allow_directory_delete; ?>
 					},
 					file:{
 						rm:<?php echo $kfm_allow_file_delete; ?>,
 						ed:<?php echo $kfm_allow_file_edit; ?>,
-		   				mk:<?php echo $kfm_allow_file_create; ?>,
-		   				mv:<?php echo $kfm_allow_file_move; ?>
+						mk:<?php echo $kfm_allow_file_create; ?>,
+						mv:<?php echo $kfm_allow_file_move; ?>
 					},
 					image:{
 						manip:<?php echo $kfm_allow_image_manipulation; ?>

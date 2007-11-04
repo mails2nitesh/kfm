@@ -95,6 +95,11 @@ function _getFileUrl($fid,$x=0,$y=0){
 	$file=kfmFile::getInstance($fid);
 	return $file->getUrl($x,$y);
 }
+function _getFileUrls($fArr){
+	$rArr=array();
+	foreach($fArr as $f)$rArr[]=_getFileUrl($f);
+	return $rArr;
+}
 function _getTagName($id){
 	global $kfmdb;
 	$r=db_fetch_row("select name from ".KFM_DB_PREFIX."tags where id=".$id);
