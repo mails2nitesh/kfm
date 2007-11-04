@@ -64,6 +64,7 @@ require_once(KFM_BASE_PATH.'configuration.php');
 	if(!isset($kfm_default_upload_permission))$m[]='missing <code>$kfm_default_upload_permission</code> variable';
 	if(!isset($kfm_return_file_id_to_cms))$m[]='missing <code>$kfm_return_file_id_to_cms</code> variable';
 	if(!isset($kfm_listview))$m[]='missing <code>$kfm_listview</code> variable';
+	if(!isset($kfm_allow_multiple_file_returns))$m[]='missing <code>$kfm_allow_multiple_file_returns</code> variable';
 	if(count($m)){
 		echo '<html><body><p>There are errors in your configuration or server. If the messages below describe missing variables, please check the supplied <code>configuration.php.dist</code> for notes on their usage.</p><ul>';
 		foreach($m as $a)echo '<li>'.$a.'</li>';
@@ -386,6 +387,14 @@ require_once(KFM_BASE_PATH.'configuration.php');
 		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _getFileDetails($filename);
 	}
+	function kfm_getFileUrl($fid,$x=0,$y=0){
+		require_once(KFM_BASE_PATH.'includes/files.php');
+		return _getFileUrl($fid,$x,$y);
+	}
+	function kfm_getFileUrls($farr){
+		require_once(KFM_BASE_PATH.'includes/files.php');
+		return _getFileUrls($farr);
+	}
 	function kfm_getTagName($id){
 		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _getTagName($id);
@@ -393,10 +402,6 @@ require_once(KFM_BASE_PATH.'configuration.php');
 	function kfm_getTextFile($filename){
 		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _getTextFile($filename);
-	}
-	function kfm_getFileUrl($fid,$x=0,$y=0){
-		require_once(KFM_BASE_PATH.'includes/files.php');
-		return _getFileUrl($fid,$x,$y);
 	}
 	function kfm_moveFiles($files,$dir_id){
 		require_once(KFM_BASE_PATH.'includes/files.php');

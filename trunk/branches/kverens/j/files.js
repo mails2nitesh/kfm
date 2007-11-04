@@ -154,7 +154,11 @@ function kfm_incrementalFileDisplay(){
 		},
 		'events':{
 			'click':kfm_toggleSelectedFile,
-			'dblclick':kfm_chooseFile
+			'dblclick':function(e){
+				kfm_selectNone();
+				kfm_addToSelection((new Event(e)).target);
+				kfm_chooseFile();
+			}
 		}
 	});
 	if(!kfm_listview){
