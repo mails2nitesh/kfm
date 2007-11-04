@@ -29,7 +29,10 @@ function kfm_chooseFile(){
 				return;
 			}
 			if(selectedFiles.length==1 && File_getInstance(selectedFiles[i]).width)window.opener.SetUrl(urls[0].replace(/([^:]\/)\//g,'$1'),0,0,File_getInstance(selectedFiles[i]).caption);
-			else window.opener.SetUrl('"'+urls.join('","')+'"');
+			else{
+				if(selectedFiles.length==1)window.opener.SetUrl(urls[0]);
+				else window.opener.SetUrl('"'+urls.join('","')+'"');
+			}
 			setTimeout('window.close()',1);
 		});
 	}
