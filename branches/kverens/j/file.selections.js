@@ -7,29 +7,30 @@ function kfm_addToSelection(id){
 	if(kfm_log_level>0)kfm_log(kfm.lang.FileSelected(id));
 	kfm_selectionCheck();
 }
-function kfm_chooseFile(e,o){
-	var el=(o?e:new Event(e).target);
-	if(el.tagName=='SPAN')el=el.parentNode;
-	var F=File_getInstance(el.file_id);
+function kfm_chooseFile(){
+	if(selectedFiles.length>1 && !kfm_vars.files.allow_multiple_returns)return kfm.alert(kfm.lang.NotMoreThanOneFile);
 	if(kfm_vars.files.return_id_to_cms){
-		window.opener.SetUrl(F.id);
+		window.opener.SetUrl(selectedFiles.join(','));
 		setTimeout('window.close()',1);
 	}
 	else {
-		x_kfm_getFileUrl(F.id,function(url){
-			if(kfm_file_handler=='return'||kfm_file_handler=='fckeditor'){
-				if(!F.width)window.opener.SetUrl(url);
-				else window.opener.SetUrl(url.replace(/([^:]\/)\//g,'$1'),0,0,F.caption);
-				setTimeout('window.close()',1);
-			}
-			else if(kfm_file_handler=='download'){
-				if(!F.width){
-					if(/get.php/.test(url))url+='&forcedownload=1';
-					document.location=url;
-				}else{
-					kfm_img_startLightbox(F.id)
+		x_kfm_getFileUrls(selectedFiles,function(urls){
+			if(kfm_file_handler=='download'){
+				var allImages=1;
+				for(var i=0;i<selectedFiles.length;++i)if(!File_getInstance(selectedFiles[i]).width)allImages=0;
+				if(!allImages){
+					for(var i=0;i<urls.length;++i){
+						var url=urls[i];
+						if(/get.php/.test(url))url+='&forcedownload=1';
+						document.location=url;
+					}
 				}
+				else kfm_img_startLightbox(selectedFiles)
+				return;
 			}
+			if(selectedFiles.length==1 && File_getInstance(selectedFiles[i]).width)window.opener.SetUrl(urls[0].replace(/([^:]\/)\//g,'$1'),0,0,File_getInstance(selectedFiles[i]).caption);
+			else window.opener.SetUrl('"'+urls.join('","')+'"');
+			setTimeout('window.close()',1);
 		});
 	}
 }
