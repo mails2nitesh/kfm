@@ -28,7 +28,7 @@ function kfm_chooseFile(){
 				else kfm_img_startLightbox(selectedFiles)
 				return;
 			}
-			if(selectedFiles.length==1 && File_getInstance(selectedFiles[i]).width)window.opener.SetUrl(urls[0].replace(/([^:]\/)\//g,'$1'),0,0,File_getInstance(selectedFiles[i]).caption);
+			if(selectedFiles.length==1&&File_getInstance(selectedFiles[0]).width)window.opener.SetUrl(urls[0].replace(/([^:]\/)\//g,'$1'),0,0,File_getInstance(selectedFiles[0]).caption);
 			else{
 				if(selectedFiles.length==1)window.opener.SetUrl(urls[0]);
 				else window.opener.SetUrl('"'+urls.join('","')+'"');
