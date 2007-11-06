@@ -61,6 +61,11 @@ function kfm_buildFileDetailsTable(res){
 		var d=(new Date(res.ctime*1000)).toGMTString();
 		kfm.addEl(kfm.addCell(r,1),d);
 	}
+	if(res.width) {
+		r=kfm.addRow(table);
+		kfm.addCell(r,0,0,(new Element('strong')).setHTML('image dimensions')); // TODO: new string
+		kfm.addCell(r,1,0,res.width+" x "+res.height);      
+	}
 	return table;
 }
 function kfm_deleteFile(id){
