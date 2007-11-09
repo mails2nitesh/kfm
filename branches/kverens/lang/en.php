@@ -60,6 +60,14 @@ $kfm_langStrings=array(
 	"failedDeleteFile"               => "error: failed to delete file \"%1\"",
 	"failedMoveFile"                 => "error: failed to move file \"%1\"",
 	"failedWriteToFile"              => "error: failed write to file \"%1\"",
-	"failedDownloadFromUrl"        => "error: failed to download from URL \"%1\""
+	"failedDownloadFromUrl"          => "error: failed to download from URL \"%1\""
+	,
+	"file saved"                     => "file saved",
+	"files deleted"                  => "%1 files deleted",
+	"errorZipContainsBannedFilename" => "error: zip contains a banned filename",
+	"error: filename not allowed"    => "error: filename not allowed",
+	"error: url must begin with http"=> "error: url must begin with http",
+	"UNKNOWN TAG"                    => "UNKNOWN TAG \"%1\"",
+	"error: unzip failed"            => "error: unzip failed"
 );
 ?>
