@@ -40,7 +40,7 @@ var KFM=new Class({
 			html+='<em>list coming!</em><br />';
 		}
 		div.setHTML(html);
-		kfm_modal_open(div,'about KFM'); // TODO: New String
+		kfm_modal_open(div,kfm.lang.AboutKfm);
 	},
 	addCell:function(o,b,c,d,e){
 		var f=$(o.insertCell(b));
@@ -86,7 +86,7 @@ var KFM=new Class({
 			 */
 		}
 		div.setHTML(html);
-		kfm_modal_open(div,'Errors'); // TODO: New String
+		kfm_modal_open(div,kfm.lang.Errors);
 	},
 	showMessages:function(messages){
 		var message='';
@@ -113,7 +113,7 @@ var KFM=new Class({
 		kfm_cwd_name=starttype;
 		$(document.body).setStyle('overflow','hidden');
 		kfm_addContextMenu(document.body,function(e){
-			var links=[['kfm.about()','about KFM']]; // TODO: New String
+			var links=[['kfm.about()',kfm.lang.AboutKfm]];
 			kfm_createContextMenu(e.page,links);
 		});
 		{ // create left column
@@ -156,10 +156,9 @@ var KFM=new Class({
 			});
 			kfm_addContextMenu(right_column,function(e){
 				var links=[],i;
-//				links.push(['view mode','view mode',0,0,1]); // TODO: new string
 				links.push(['kfm_createEmptyFile()',kfm.lang.CreateEmptyFile,'filenew',!kfm_vars.permissions.file.mk]);
 				if(selectedFiles.length>1)links.push(['kfm_renameFiles()',kfm.lang.RenameFile,'edit',!kfm_vars.permissions.file.ed]);
-				if(selectedFiles.length>1)links.push(['kfm_zip()','zip up files','',!kfm_vars.permissions.file.mk]); // TODO: new string
+				if(selectedFiles.length>1)links.push(['kfm_zip()',kfm.lang.ZipUpFiles,'',!kfm_vars.permissions.file.mk]);
 				if(selectedFiles.length!=$('kfm_right_column').fileids.length)links.push(['kfm_selectAll()',kfm.lang.SelectAll,'ark_selectall']);
 				if(selectedFiles.length){ // select none, invert selection
 					links.push(['kfm_selectNone()',kfm.lang.SelectNone,'select_none']);
@@ -312,7 +311,7 @@ function kfm_prompt(txt,val,fn){
 	var row=table.insertRow(0),inp=newInput('kfm_prompt',0,val);
 	row.insertCell(0).innerHTML=txt.replace(/\n/g,'<br />');
 	row.insertCell(1).appendChild(inp);
-	kfm_modal_open(table,'prompt',[['Ok',function(){ // TODO: new string
+	kfm_modal_open(table,'prompt',[[kfm.lang.Ok,function(){
 		var v=$('kfm_prompt').value;
 		kfm_modal_close();
 		window.inPrompt=0;

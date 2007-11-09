@@ -57,13 +57,13 @@ function kfm_buildFileDetailsTable(res){
 	}
 	if(res.ctime){ // last change time
 		r=kfm.addRow(table);
-		kfm.addEl(kfm.addCell(r,0),(new Element('strong')).setHTML('last modified')); // TODO: new string
+		kfm.addEl(kfm.addCell(r,0),(new Element('strong')).setHTML(kfm.lang.LastModified));
 		var d=(new Date(res.ctime*1000)).toGMTString();
 		kfm.addEl(kfm.addCell(r,1),d);
 	}
 	if(res.width) {
 		r=kfm.addRow(table);
-		kfm.addCell(r,0,0,(new Element('strong')).setHTML('image dimensions')); // TODO: new string
+		kfm.addCell(r,0,0,(new Element('strong')).setHTML(kfm.lang.ImageDimensions));
 		kfm.addCell(r,1,0,res.width+" x "+res.height);      
 	}
 	return table;
@@ -263,8 +263,8 @@ function kfm_refreshFiles(res){
 	kdnd_addDropHandler('kfm_file','.kfm_directory_link',function(e){
 		dir_over=e.targetElement.node_id;
 		var links=[];
-		links.push(['x_kfm_copyFiles(['+selectedFiles.join(',')+'],'+dir_over+',kfm_showMessage);kfm_selectNone()','copy files']);
-		links.push(['x_kfm_moveFiles(['+selectedFiles.join(',')+'],'+dir_over+',function(e){if($type(e)=="string")return alert("error: could not move file[s]");kfm_removeFilesFromView(['+selectedFiles.join(',')+'])});kfm_selectNone()','move files',0,!kfm_vars.permissions.file.mv]); // TODO: new string
+		links.push(['x_kfm_copyFiles(['+selectedFiles.join(',')+'],'+dir_over+',kfm_showMessage);kfm_selectNone()',kfm.lang.CopyFiles]);
+		links.push(['x_kfm_moveFiles(['+selectedFiles.join(',')+'],'+dir_over+',function(e){if($type(e)=="string")return alert(kfm.lang.CouldNotMoveFiles);kfm_removeFilesFromView(['+selectedFiles.join(',')+'])});kfm_selectNone()',kfm.lang.MoveFiles,0,!kfm_vars.permissions.file.mv]);
 		kfm_createContextMenu(e.page,links);
 	});
 	if(window.kfm_incrementalFileDisplay_loader){
@@ -296,11 +296,11 @@ function kfm_refreshFiles(res){
 	lselect.appendChild((new Element('option',{
 		'selected':!kfm_listview,
 		'value':0
-	})).appendText('Icons')); // TODO: new strign
+	})).appendText(kfm.lang.Icons));
 	lselect.appendChild((new Element('option',{
 		'selected':kfm_listview,
 		'value':1
-	})).appendText('Listview')); // TODO: new string
+	})).appendText(kfm.lang.ListView));
 	var header=new Element('div',{
 		'class':'kfm_panel_header',
 		'id':'kfm_panel_header'

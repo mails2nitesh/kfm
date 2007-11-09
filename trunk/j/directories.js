@@ -69,7 +69,7 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 		links.push(['kfm_renameDirectory("'+node_id+'")',kfm.lang.RenameDir,'',!kfm_vars.permissions.dir.ed]);
 		links.push(['kfm_createDirectory("'+node_id+'")',kfm.lang.CreateSubDir,'folder_new',!kfm_vars.permissions.dir.mk]);
 		if(node_id!=1)links.push(['kfm_deleteDirectory("'+node_id+'")',kfm.lang.DeleteDir,'remove',!kfm_vars.permissions.dir.rm]);
-		if(kfm_return_directory)links.push(['setTimeout("window.close()",1);window.opener.SetUrl("'+kfm_directories[node_id].realpath+'/");','send to CMS']); // TODO: New String
+		if(kfm_return_directory)links.push(['setTimeout("window.close()",1);window.opener.SetUrl("'+kfm_directories[node_id].realpath+'/");',kfm.lang.SendToCms]);
 		e=new Event(e);
 		kfm_createContextMenu(e.page,links);
 	});
@@ -118,7 +118,7 @@ function kfm_dir_dropHandler(e){
 	if(dir_from==1)return;
 	var dir_to=parseInt($E('.kfm_directory_link',e.targetElement).node_id);
 	if(dir_to==0||dir_to==dir_from)return;
-	if(!kfm_vars.permissions.dir.mv)return kfm.alert('permission denied: cannot move directory'); //TODO: new string
+	if(!kfm_vars.permissions.dir.mv)return kfm.alert(kfm.lang.CannotMoveDirectory);
 	x_kfm_moveDirectory(dir_from,dir_to,kfm_refreshDirectories);
 	kfm_selectNone();
 }
