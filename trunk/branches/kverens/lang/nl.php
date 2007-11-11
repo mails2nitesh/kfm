@@ -50,24 +50,24 @@ $kfm_langStrings=array(
 	"permissionDeniedViewFile"     => "toegang geweigerd: kan bestand niet bekijken",
 	"searchResults"                => "zoekresultaten",
 	# 1.2
-	"fileNotCreatedDirUnwritable"    => "\"%1\" could not be created. The directory is not writable",
-	"fileNotDeletedUnwritable"       => "\"%1\" cannot be removed. (file not writable)",
-	"fileNotMovableUnwritable"       => "\"%1\" cannot be moved. (file not writable)",
-	"permissionDeniedManipImage"     => "permission denied: cannot manipulate images",
-	"imageNotWritable"               => "image is not writable",
-	"failedGetFileObject"            => "failed to retrieve File object",
-	"failedGetDirectoryObject"       => "failed to retrieve Directory object",
-	"failedDeleteFile"               => "failed to delete file \"%1\"",
-	"failedMoveFile"                 => "failed to move file \"%1\"",
-	"failedWriteToFile"              => "failed write to file \"%1\"",
-	"failedDownloadFromUrl"        => "failed to download from URL \"%1\""
+	"fileNotCreatedDirUnwritable"    => "\"%1\" kan niet worden gemaakt. Kan niet schrijven in map.",
+	"fileNotDeletedUnwritable"       => "\"%1\" kan niet worden verwijdert. (bestand is niet schrijfbaar)",
+	"fileNotMovableUnwritable"       => "\"%1\" kan niet worden verplaatst. (bestand is niet schrijfbaar)",
+	"permissionDeniedManipImage"     => "toegang geweigerd: kan afbeeldingen niet manipuleren",
+	"imageNotWritable"               => "afbeelding is niet schrijfbaar",
+	"failedGetFileObject"            => "ophalen van bestandsobject is mislukt",
+	"failedGetDirectoryObject"       => "ophalen van mapobject is mislukt",
+	"failedDeleteFile"               => "verwijderen bestand \"%1\" is mislukt",
+	"failedMoveFile"                 => "verplaatsen bestand \"%1\" is mislukt",
+	"failedWriteToFile"              => "schrijven naar bestand \"%1\" is mislukt",
+	"failedDownloadFromUrl"        => "downloaden van URL \"%1\" is mislukt"
 	,
-	"file saved"                     => "file saved",
-	"files deleted"                  => "%1 files deleted",
-	"errorZipContainsBannedFilename" => "error: zip contains a banned filename",
-	"error: filename not allowed"    => "error: filename not allowed",
-	"error: url must begin with http"=> "error: url must begin with http",
-	"UNKNOWN TAG"                    => "UNKNOWN TAG \"%1\"",
-	"error: unzip failed"            => "error: unzip failed"
+	"file saved"                     => "bestand opgeslagen",
+	"files deleted"                  => "%1 bestanden verwijderd",
+	"errorZipContainsBannedFilename" => "fout: zip bevat een ongeldige bestandsnaam",
+	"error: filename not allowed"    => "fout: bestandsnaam niet toegestaan",
+	"error: url must begin with http"=> "fout: url moet beginnen met http",
+	"UNKNOWN TAG"                    => "ONBEKEND TAG \"%1\"",
+	"error: unzip failed"            => "fout: uitpakken is mislukt"
 );
 ?>

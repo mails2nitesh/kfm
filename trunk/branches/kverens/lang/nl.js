@@ -270,16 +270,16 @@ WhatFilenameDoYouWantToUse: "Welke bestandsnaam wilt u gebruiken?"
 ZipUpFiles: "bestanden inpakken",
 Cancel: "annuleren"
 	, // new in 1.2
-	Icons                   : "icons", // used to select mode of file view
-	ListView                : "list-view", // used to select mode of file view
-	SendToCms               : "send to CMS", // close KFM and return the selected files to the CMS
-	CannotMoveDirectory     : "permission denied: cannot move directory",
-	LastModified            : "last modified", // part of File Details
-	ImageDimensions         : "image dimensions", // part of File Details
-	CouldNotMoveFiles       : "error: could not move file[s]",
-	CopyFiles               : "copy files", // when dragging files to a directory, two choices appear - "copy files" and "move files"
-	MoveFiles               : "move files",
-	AboutKfm                : "about KFM",
-	Errors                  : "Errors",
+	Icons                   : "iconen", // used to select mode of file view
+	ListView                : "lijstweergave", // used to select mode of file view
+	SendToCms               : "verzenden CMS", // close KFM and return the selected files to the CMS
+	CannotMoveDirectory     : "toegang geweigerd: kan map niet verplaatsen",
+	LastModified            : "laatst aangepast", // part of File Details
+	ImageDimensions         : "afbeelingdimenties", // part of File Details
+	CouldNotMoveFiles       : "fout: kan bestand[en] niet verplaatsen",
+	CopyFiles               : "bestanden kopieren", // when dragging files to a directory, two choices appear - "copy files" and "move files"
+	MoveFiles               : "bestanden verplaatsen",
+	AboutKfm                : "over KFM",
+	Errors                  : "Fouten",
 	Ok                      : "OK" // as in "OK / Cancel"
 }

@@ -276,16 +276,16 @@ WhatFilenameDoYouWantToUse: "Care numele de fişier doriţi să utilizaţi?"
 ZipUpFiles: "adăuga fişieri în arhivă",
 Cancel: "cancel"
 	, // new in 1.2
-	Icons                   : "icons", // used to select mode of file view
-	ListView                : "list-view", // used to select mode of file view
-	SendToCms               : "send to CMS", // close KFM and return the selected files to the CMS
-	CannotMoveDirectory     : "permission denied: cannot move directory",
-	LastModified            : "last modified", // part of File Details
-	ImageDimensions         : "image dimensions", // part of File Details
-	CouldNotMoveFiles       : "error: could not move file[s]",
-	CopyFiles               : "copy files", // when dragging files to a directory, two choices appear - "copy files" and "move files"
-	MoveFiles               : "move files",
-	AboutKfm                : "about KFM",
-	Errors                  : "Errors",
+	Icons                   : "iconiţe", // used to select mode of file view
+	ListView                : "lista", // used to select mode of file view
+	SendToCms               : "trimite la CMS", // close KFM and return the selected files to the CMS
+	CannotMoveDirectory     : "acces interzis: imposibil de mutat mapă",
+	LastModified            : "ultima dată schimbării", // part of File Details
+	ImageDimensions         : "dimensiunile imaginii", // part of File Details
+	CouldNotMoveFiles       : "eroare: imposibil de mutat fişier[e]",
+	CopyFiles               : "copia fişierele", // when dragging files to a directory, two choices appear - "copy files" and "move files"
+	MoveFiles               : "muta fişierele",
+	AboutKfm                : "despre KFM",
+	Errors                  : "Eroare",
 	Ok                      : "OK" // as in "OK / Cancel"
 }
