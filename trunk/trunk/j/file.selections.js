@@ -2,7 +2,7 @@
 function kfm_addToSelection(id){
 	id=parseInt(id);
 	if(!id || selectedFiles.contains(id))return;
-	selectedFiles.push(parseInt(id));
+	selectedFiles.push(id);
 	$('kfm_file_icon_'+id).className+=' selected';
 	if(kfm_log_level>0)kfm_log(kfm.lang.FileSelected(id));
 	kfm_selectionCheck();

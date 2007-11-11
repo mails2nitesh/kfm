@@ -160,8 +160,12 @@ function kfm_incrementalFileDisplay(){
 		'events':{
 			'click':kfm_toggleSelectedFile,
 			'dblclick':function(e){
+				e=new Event(e);
+				var el=e.target;
+				while(!el.file_id && el)el=el.parentNode;
+				if(!el)return;
 				kfm_selectNone();
-				kfm_addToSelection((new Event(e)).target);
+				kfm_addToSelection(el.file_id);
 				kfm_chooseFile();
 			}
 		}
