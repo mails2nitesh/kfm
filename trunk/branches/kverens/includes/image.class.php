@@ -145,7 +145,7 @@ class kfmImage extends kfmFile{
 		}
 	}
 	function setCaption($caption){
-		$this->db->exec("UPDATE ".KFM_DB_PREFIX."files_images SET caption='".addslashes($caption)."' WHERE file_id=".$this->id);
+		$this->db->exec("UPDATE ".KFM_DB_PREFIX."files_images SET caption='".sql_escape($caption)."' WHERE file_id=".$this->id);
 		$this->caption=$caption;
 	}
 	function setThumbnail($width=64,$height=64){

@@ -135,7 +135,7 @@ class kfmFile extends kfmObject{
 		rename($this->path,$newFileAddress);
 		$this->name=$newName;
 		$this->path=$newFileAddress;
-		$this->db->query("UPDATE ".KFM_DB_PREFIX."files SET name='".addslashes($newName)."' WHERE id=".$this->id);
+		$this->db->query("UPDATE ".KFM_DB_PREFIX."files SET name='".sql_escape($newName)."' WHERE id=".$this->id);
 	}
 	function setContent($content){
 		global $kfm_allow_file_edit;
@@ -160,7 +160,7 @@ class kfmFile extends kfmObject{
 	}
 	function addToDb($filename, $directory_id){
 		global $kfmdb;
-		$sql="insert into ".KFM_DB_PREFIX."files (name,directory) values('".addslashes($filename)."',".$directory_id.")";
+		$sql="insert into ".KFM_DB_PREFIX."files (name,directory) values('".sql_escape($filename)."',".$directory_id.")";
 		$q=$kfmdb->query($sql);
 		return $kfmdb->lastInsertId(KFM_DB_PREFIX.'files','id');
 	}

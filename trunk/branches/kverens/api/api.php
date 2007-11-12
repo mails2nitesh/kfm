@@ -12,7 +12,7 @@ function kfm_api_getDirectoryId($address){
 	$curdir=1;
 	if($arr[count($arr)-1]==''&&count($arr)>1)array_pop($arr);
 	foreach($arr as $n){
-		$r=db_fetch_row("select id from ".KFM_DB_PREFIX."directories where parent=".$curdir." and name='".addslashes($n)."'");
+		$r=db_fetch_row("select id from ".KFM_DB_PREFIX."directories where parent=".$curdir." and name='".sql_escape($n)."'");
 		if(!count($r))return 0;
 		$curdir=$r['id'];
 	}
