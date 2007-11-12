@@ -14,7 +14,7 @@ class kfmDirectory extends kfmObject{
 		$this->kfmDirectory($id);
 	}
 	function addSubdirToDb($name){
-		$sql="INSERT INTO ".$this->db_prefix."directories (name,parent) VALUES('".addslashes($name)."',".$this->id.")";
+		$sql="INSERT INTO ".$this->db_prefix."directories (name,parent) VALUES('".sql_escape($name)."',".$this->id.")";
 		return $this->db->exec($sql);
 	}
 	function checkAddr($addr){
@@ -160,7 +160,7 @@ class kfmDirectory extends kfmObject{
 		if(file_exists($parent->path.$newname))return $this->error(kfm_lang('aDirectoryNamedAlreadyExists',$newname));
 		rename($this->path,$parent->path.$newname);
 		if(file_exists($this->path))return $this->error(kfm_lang('failedRenameDirectory'));
-		$this->db->query("update ".$this->db_prefix."directories set name='".addslashes($newname)."' where id=".$this->id);
+		$this->db->query("update ".$this->db_prefix."directories set name='".sql_escape($newname)."' where id=".$this->id);
 		$this->name=$newname;
 	}
 	function checkName($file=false){
