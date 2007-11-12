@@ -41,15 +41,15 @@ class kfmSession extends kfmObject{
 	function set($name='',$value=''){
 		if(isset($this->vars[$name])&&$this->vars[$name]==$value)return;
 		$this->vars[$name]=$value;
-		$this->db->query("DELETE FROM ".$this->db_prefix."session_vars WHERE session_id=".$this->id." and varname='".addslashes($name)."'");
-		$this->db->query("INSERT INTO ".$this->db_prefix."session_vars (session_id,varname,varvalue) VALUES (".$this->id.",'".addslashes($name)."','".addslashes(json_encode($value))."')");
+		$this->db->query("DELETE FROM ".$this->db_prefix."session_vars WHERE session_id=".$this->id." and varname='".sql_escape($name)."'");
+		$this->db->query("INSERT INTO ".$this->db_prefix."session_vars (session_id,varname,varvalue) VALUES (".$this->id.",'".sql_escape($name)."','".sql_escape(json_encode($value))."')");
 	}
 	function setMultiple($vars){
 		foreach($vars as $key=>$val)$this->set($key,$val);
 	}
 	function get($name){
 		if(isset($this->vars[$name]))return $this->vars[$name];
-		$res=db_fetch_row("SELECT varvalue FROM ".$this->db_prefix."session_vars WHERE session_id=".$this->id." and varname='".addslashes($name)."'");
+		$res=db_fetch_row("SELECT varvalue FROM ".$this->db_prefix."session_vars WHERE session_id=".$this->id." and varname='".sql_escape($name)."'");
 		if(count($res)){
 			$ret=json_decode('['.stripslashes($res['varvalue']).']',true);
 			if(count($ret))$ret=$ret[0];

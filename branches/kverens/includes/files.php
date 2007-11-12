@@ -235,7 +235,7 @@ function _search($keywords,$tags){
 		foreach($arr as $tag){
 			$tag=ltrim(rtrim($tag));
 			if($tag){
-				$r=db_fetch_row("select id from ".KFM_DB_PREFIX."tags where name='".addslashes($tag)."'");
+				$r=db_fetch_row("select id from ".KFM_DB_PREFIX."tags where name='".sql_escape($tag)."'");
 				if(count($r)){
 					if(count($valid_files))$constraints=' and (file_id='.join(' or file_id=',$valid_files).')';
 					$rs2=db_fetch_all("select file_id from ".KFM_DB_PREFIX."tagged_files where tag_id=".$r['id'].$constraints);
@@ -251,7 +251,7 @@ function _search($keywords,$tags){
 	if(($tags&&count($valid_files))||$keywords){ # keywords
 		$constraints='';
 		if(count($valid_files))$constraints=' and (id='.join(' or id=',$valid_files).')';
-		$fs=db_fetch_all("select id from ".KFM_DB_PREFIX."files where name like '%".addslashes($keywords)."%'".$constraints." order by name");
+		$fs=db_fetch_all("select id from ".KFM_DB_PREFIX."files where name like '%".sql_escape($keywords)."%'".$constraints." order by name");
 		foreach($fs as $f){
 			$file=kfmFile::getInstance($f['id']);
 			if(!$file->checkName())continue;
@@ -272,13 +272,13 @@ function _tagAdd($recipients,$tagList){
 		if($v)$tagList[]=$v;
 	}
 	if(count($tagList))foreach($tagList as $tag){
-		$r=db_fetch_row("select id from ".KFM_DB_PREFIX."tags where name='".addslashes($tag)."'");
+		$r=db_fetch_row("select id from ".KFM_DB_PREFIX."tags where name='".sql_escape($tag)."'");
 		if(count($r)){
 			$tag_id=$r['id'];
 			$kfmdb->query("delete from ".KFM_DB_PREFIX."tagged_files where tag_id=".$tag_id." and (file_id=".join(' or file_id=',$recipients).")");
 		}
 		else{
-			$q=$kfmdb->query("insert into ".KFM_DB_PREFIX."tags (name) values('".addslashes($tag)."')");
+			$q=$kfmdb->query("insert into ".KFM_DB_PREFIX."tags (name) values('".sql_escape($tag)."')");
 			$tag_id=$kfmdb->lastInsertId(KFM_DB_PREFIX.'tags','id');
 		}
 		foreach($recipients as $file_id)$kfmdb->query("insert into ".KFM_DB_PREFIX."tagged_files (tag_id,file_id) values(".$tag_id.",".$file_id.")");
@@ -294,7 +294,7 @@ function _tagRemove($recipients,$tagList){
 	foreach($arr as $tag){
 		$tag=ltrim(rtrim($tag));
 		if($tag){
-			$r=db_fetch_row("select id from ".KFM_DB_PREFIX."tags where name='".addslashes($tag)."'");
+			$r=db_fetch_row("select id from ".KFM_DB_PREFIX."tags where name='".sql_escape($tag)."'");
 			if(count($r))$tagList[]=$r['id'];
 		}
 	}

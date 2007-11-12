@@ -11,6 +11,12 @@ define('KFM_BASE_PATH',dirname(__FILE__).'/');
 	require KFM_BASE_PATH.'includes/image.class.php';
 	require KFM_BASE_PATH.'includes/directory.class.php';
 }
+function sql_escape($sql){
+	global $kfm_db_type;
+	$sql=addslashes($sql);
+	if($kfm_db_type=='sqlite'||$kfm_db_type=='sqlitepdo')$sql=str_replace("\\'","''",$sql);
+	return $sql;
+}
 function kfm_dieOnError($error){
 	if(!PEAR::isError($error))return;
 	echo '<strong>Error</strong><br />'.$error->getMessage().'<br />'.$error->userinfo.'<hr />';
