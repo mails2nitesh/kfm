@@ -365,10 +365,6 @@ require_once(KFM_BASE_PATH.'configuration.php');
 	}
 }
 { # file functions
-	function kfm_add_file_to_db($filename,$directory_id){
-		require_once(KFM_BASE_PATH.'includes/files.php');
-		return _add_file_to_db($filename,$directory_id);
-	}
 	function kfm_copyFiles($files,$dir_id){
 		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _copyFiles($files,$dir_id);

@@ -158,7 +158,7 @@ class kfmFile extends kfmObject{
 		$n=floor(log($size)/log(1024));
 		return $n?round($size/pow(1024,$n),1).' '.$format[$n]:'0 B';
 	}
-	function addToDb($filename, $directory_id){
+	function addToDb($filename,$directory_id){
 		global $kfmdb;
 		$sql="insert into ".KFM_DB_PREFIX."files (name,directory) values('".sql_escape($filename)."',".$directory_id.")";
 		$q=$kfmdb->query($sql);
