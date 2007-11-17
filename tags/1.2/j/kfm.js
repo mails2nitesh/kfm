@@ -22,6 +22,7 @@ var KFM=new Class({
 		{ // translators
 			html+='<h2>Translators</h2>';
 			html+='bg (Bulgarian): Tondy<br />';
+			html+='cz (Czech): Petr Kamenik<br />';
 			html+='da (Danish): Janich Rasmussen<br />';
 			html+='de (German): Just Agens<br />';
 			html+='en (English): Kae Verens<br />';
