@@ -71,6 +71,7 @@ require_once(KFM_BASE_PATH.'configuration.php');
 	if(!isset($kfm_return_file_id_to_cms))$m[]='missing <code>$kfm_return_file_id_to_cms</code> variable';
 	if(!isset($kfm_listview))$m[]='missing <code>$kfm_listview</code> variable';
 	if(!isset($kfm_allow_multiple_file_returns))$m[]='missing <code>$kfm_allow_multiple_file_returns</code> variable';
+	if(!isset($kfm_userfiles_address))$m[]='missing <code>$kfm_userfiles_address</code> variable. this variable replaces the old <code>$kfm_userfiles</code> variable. <strong>Please read the examples carefully.</strong>';
 	if(count($m)){
 		echo '<html><body><p>There are errors in your configuration or server. If the messages below describe missing variables, please check the supplied <code>configuration.php.dist</code> for notes on their usage.</p><ul>';
 		foreach($m as $a)echo '<li>'.$a.'</li>';
@@ -91,7 +92,7 @@ require_once(KFM_BASE_PATH.'configuration.php');
 	if(!isset($_SERVER['DOCUMENT_ROOT'])){ # fix for IIS
 		$_SERVER['DOCUMENT_ROOT']=preg_replace('/\/[^\/]*$/','',str_replace('\\','/',$_SERVER['SCRIPT_FILENAME']));
 	}
-	$rootdir=$_SERVER['DOCUMENT_ROOT'].$kfm_userfiles.'/';
+	$rootdir=strpos($kfm_userfiles_address,'./')===0?KFM_BASE_PATH.$kfm_userfiles_address:$kfm_userfiles_address.'/';
 	if(!is_dir($rootdir))mkdir($rootdir,0755);
 	if(!is_dir($rootdir)){
 		echo 'error: "'.htmlspecialchars($rootdir).'" could not be created';

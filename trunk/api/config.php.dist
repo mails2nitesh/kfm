@@ -20,8 +20,8 @@ if(!isset($_SESSION['system_auth'])||!isset($_SESSION['system_auth']['user']))ex
 		if(!isset($c[$k]))$c[$k]=$v;
 	}
 }
-$kfm_userfiles='/uploads/'.$_SESSION['system_auth']['user']->uid;
-$kfm_userfiles_output=$kfm_userfiles.'/';
+$kfm_userfiles_address='./uploads/'.$_SESSION['system_auth']['user']->uid;
+$kfm_userfiles_output=$kfm_userfiles_address.'/';
 $kfm_db_host=$c['db.config.host'];
 KFM_DB_PREFIX="kfm_".$_SESSION['system_auth']['user']->uid.'_';
 $kfm_db_name=$c['db.config.dbname'];

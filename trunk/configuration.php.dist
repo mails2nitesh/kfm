@@ -19,16 +19,18 @@ $kfm_db_username='username';
 $kfm_db_password='password';
 $kfm_db_port=''; # leave blank if using default port
 
-# where are the files located on the hard-drive, relative to the website's root directory?
-# In the default example, the user-files are at http://kfm.verens.com/sandbox/UserFiles/
-# Note that this is the actual file-system location of the files.
-# This value must begin and end in '/'.
-$kfm_userfiles='/sandbox/UserFiles/';
+# where on the machine are the files located? if the first two characters are './', then the
+#   files are relative to the directory that KFM is in.
+# Here are some examples:
+# $kfm_userfiles_address='/home/kae/userfiles'; # absolute address in Linux
+# $kfm_userfiles_address='D:/Files';            # absolute address in Windows
+# $kfm_userfiles_address='./uploads';           # relative address
+$kfm_userfiles_address='/home/kae/Desktop/userfiles';
 
-# what should be added to the server's root URL to find the URL of the user files?
-# Note that this is usually the same as $kfm_userfiles, but could be different in the case
-#   that the server uses mod_rewrite or personal web-sites, etc
-# Use the value 'get.php' if you want to use the KFM file handler script to manager file downloads.
+# where shoudl a browser look to find the files?
+# Note that this is usually the same as $kfm_userfiles_address (if it is relative), but could be different
+#   in the case that the server uses mod_rewrite or personal web-sites, etc
+# Use the value 'get.php' if you want to use the KFM file handler script to manage file downloads.
 # If you are not using get.php, this value must end in '/'.
 # Examples:
 #   $kfm_userfiles_output='http://thisdomain.com/files/';
@@ -36,7 +38,7 @@ $kfm_userfiles='/sandbox/UserFiles/';
 #   $kfm_userfiles_output='http://thisdomain.com/kfm/get.php';
 #   $kfm_userfiles_output='/kfm/get.php';
 $kfm_userfiles_output='/sandbox/UserFiles/';
-
+#
 # if you want to hide any panels, add them here as a comma-delimited string
 # for example, $kfm_hidden_panels='logs,file_details,file_upload,search,directory_properties';
 $kfm_hidden_panels='logs';
@@ -48,7 +50,7 @@ $kfm_file_handler='return'; # values allowed: download, return
 $kfm_allow_multiple_file_returns=true;
 
 # directory in which KFM keeps its database and generated files
-# if this starts with '/', then the address is absolute. otherwise, it is relative to $kfm_userfiles.
+# if this starts with '/', then the address is absolute. otherwise, it is relative to $kfm_userfiles_address.
 # $kfm_workdirectory='.files';
 # $kfm_workdirectory='/home/kae/files_cache';
 # warning: if you use the '/' method, then you must use the get.php method for $kfm_userfiles_output.
