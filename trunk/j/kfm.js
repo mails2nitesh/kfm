@@ -166,7 +166,7 @@ var KFM=new Class({
 				}
 				kfm_createContextMenu(e.page,links);
 			});
-			right_column.parentResized=kfm_files_panelResized;
+			right_column.parentResized=kfm_files_reflowIcons;
 		}
 		{ // draw areas to screen and load files and directory info
 			kfm.addEl($(document.body).empty(),[left_column,right_column]);
