@@ -110,14 +110,46 @@ function _getTagName($id){
 function _getTextFile($fid){
 	$file=kfmFile::getInstance($fid);
 	if(!kfm_checkAddr($file->name))return;
+	$ext=$file->getExtension();
 	if(!$file->isWritable())return 'error: '.kfm_lang('isNotWritable',$file->name);
-	{# determine language for Codepress
-		$language='generic';
-		$langs=array('html'=>'html','tpl'=>'html','php'=>'php','css'=>'css',
-			'js'=>'js','j'=>'java','pl'=>'perl','ruby'=>'ruby','sql'=>'sql',
-			'tex'=>'tex','txt'=>'text');
-		$ext=$file->getExtension();
-		foreach($langs as $key=>$lang)if($key==$ext)$language=$lang;
+	/**
+	 * determine language for Codepress
+	 */
+	switch($ext){
+		case 'html':
+		case 'tpl':
+			$language='html';
+			break;
+		case 'php':
+			$language = 'php';
+			break;
+		case 'css':
+			$language = 'css';
+			break;
+		case 'js':
+			$language = 'javascript';
+			break;
+		case 'j':
+			$language = 'java';
+			break;
+		case 'pl':
+			$language = 'perl';
+			break;
+		case 'ruby':
+			$language = 'ruby';
+			break;
+		case 'sql':
+			$language = 'sql';
+			break;
+		case 'tex':
+			$language = 'tex';
+			break;
+		case 'txt':
+			$language = 'text';
+			break;
+		default:
+			$language = 'generic';
+			break;
 	}
 	return array('content'=>$file->getContent(),'name'=>$file->name,'id'=>$file->id,'language'=>$language);
 }
