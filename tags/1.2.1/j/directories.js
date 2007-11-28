@@ -125,14 +125,14 @@ function kfm_dir_dropHandler(e){
 function kfm_dir_openNode(dir){
 	var node=$('kfm_dir_node_'+dir);
 	node.className='kfm_dir_node_opened';
-	node.href=node.href.replace(/open/,'close');
+	if(node.href)node.href=node.href.replace(/open/,'close');
 	$('kfm_directories_subdirs_'+dir).empty().appendText(kfm.lang.Loading);
 	x_kfm_loadDirectories(dir,kfm_refreshDirectories);
 }
 function kfm_dir_closeNode(dir){
 	var node=$('kfm_dir_node_'+dir);
 	node.className='kfm_dir_node_closed';
-	node.href=node.href.replace(/close/,'open');
+	if(node.href)node.href=node.href.replace(/close/,'open');
 	$('kfm_directories_subdirs_'+dir).empty();
 }
 function kfm_refreshDirectories(res){
