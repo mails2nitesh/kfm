@@ -72,6 +72,7 @@ require_once(KFM_BASE_PATH.'configuration.php');
 	if(!isset($kfm_listview))$m[]='missing <code>$kfm_listview</code> variable';
 	if(!isset($kfm_allow_multiple_file_returns))$m[]='missing <code>$kfm_allow_multiple_file_returns</code> variable';
 	if(!isset($kfm_userfiles_address))$m[]='missing <code>$kfm_userfiles_address</code> variable. this variable replaces the old <code>$kfm_userfiles</code> variable. <strong>Please read the examples carefully.</strong>';
+	if(!isset($kfm_banned_files))$m[]='missing <code>$kfm_banned_files</code> variable';
 	if(count($m)){
 		echo '<html><body><p>There are errors in your configuration or server. If the messages below describe missing variables, please check the supplied <code>configuration.php.dist</code> for notes on their usage.</p><ul>';
 		foreach($m as $a)echo '<li>'.$a.'</li>';
