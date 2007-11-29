@@ -3,12 +3,15 @@ function kfm_resizeHandler(){
 	var w=window.getSize().size;
 	for(var i=0;i<kfm_resizeHandler_maxHeights.length;++i)if($(kfm_resizeHandler_maxHeights[i]))$(kfm_resizeHandler_maxHeights[i]).setStyle('height',w.y);
 	for(var i=0;i<kfm_resizeHandler_maxWidths.length;++i)if($(kfm_resizeHandler_maxWidths[i]))$(kfm_resizeHandler_maxWidths[i]).setStyle('width',w.x);
-	if($('kfm_codepressTableCell')){
-		var el=$('kfm_codepressTableCell'),iframe=$E('iframe',el);
-		iframe.style.height=0;
-		iframe.style.width=0;
-		iframe.style.height=(el.offsetHeight-10)+'px';
-		iframe.style.width=(el.offsetWidth-10)+'px';
+	var el=$('kfm_codepressTableCell');
+	if(el){
+		var iframe=$E('iframe',el);
+		if(iframe){
+			iframe.style.height=0;
+			iframe.style.width=0;
+			iframe.style.height=(el.offsetHeight-10)+'px';
+			iframe.style.width=(el.offsetWidth-10)+'px';
+		}
 	}
 	kfm_refreshPanels('kfm_left_column');
 	var els=$ES('body *');
