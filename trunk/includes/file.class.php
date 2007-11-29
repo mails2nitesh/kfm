@@ -14,7 +14,7 @@ class kfmFile extends kfmObject{
 	var $writable=false;
 	function kfmFile(){
 		if(func_num_args()==1){
-			$this->id=func_get_arg(0);
+			$this->id=(int)func_get_arg(0);
 			parent::kfmObject();
 			$filedata=db_fetch_row("SELECT id,name,directory FROM ".KFM_DB_PREFIX."files WHERE id=".$this->id);
 			$this->name=$filedata['name'];
