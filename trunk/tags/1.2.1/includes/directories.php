@@ -62,7 +62,7 @@ function kfm_rmMixed($files=array(), $directories=array()){
 	$filecount=0;
 	$dircount=0;
 	foreach($files as $fid){
-		$file=new kfmFile($fid);
+		$file=kfmFile::getInstance($fid);
 		if($file->delete())$filecount++;
 	}
 	foreach($directories as $did){
