@@ -19,7 +19,7 @@ function kfm_api_getDirectoryId($address){
 	return $curdir;
 }
 function kfm_api_removeFile($id){
-	$f=new kfmFile($id);
+	$f=kfmFile::getInstance($id);
 	$p=$f->parent;
 	$f->delete();
 	return kfm_loadFiles($p);
