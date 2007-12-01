@@ -166,8 +166,7 @@ class kfmFile extends kfmObject{
 	}
 	function checkName($filename=false){
 		if($filename===false)$filename=$this->name;
-		if(trim($filename)=='')return false;
-		if($filename[0]=='.')return false;
+		if($filename=='' || trim($filename)!=$filename || $filename[0]=='.')return false;
 		
 		foreach($GLOBALS['kfm_banned_files'] as $ban){
 			if(($ban[0]=='/' || $ban[0]=='@')&&preg_match($ban,$filename))return false;
