@@ -50,15 +50,6 @@ function Clipboard(){
 				if(!this.folders.contains(folders[i]))this.folders.push(folders[i]);
 			}
 			this.setAppearance();
-			//if(this.files.length||this.folders.length)$(this).makeDraggable();
-			/*action:
-			 * merge files with kfm_widgets['clipboard'].files
-			 * merge folders ...
-			 * if files and folders are not empty, make draggable (change icon)
-			 * $('kfm_widget_clipboard_container').innerHTML=kfm_widgets['clipboard'].files.length+' files<br/>'+
-			 * +kfm_widgets['clipboard'].folders.length+' folders';
-			 * can be dragged to: directories, trash
-			 */
 		};
 		el.clearContents=function(){
 			this.files=[];
