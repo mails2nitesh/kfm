@@ -236,6 +236,7 @@ function kfm_incrementalFileDisplay(){
 		var el=icon.cloneNode(true);
 		el.cloneEvents(icon);
 		el.id='kfm_file_icon_'+id;
+        el.className = 'kfm_file '+(kfm_listview?'kfm_file_listview':'kfm_file_icon kfm_icontype_'+ext);
 		el.dragDisplay=kfm_file_bits.dragDisplay;
 		var writable=fdata.writable;
 		{ // file attributes
