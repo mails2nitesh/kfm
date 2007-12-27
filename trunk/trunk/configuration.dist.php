@@ -9,7 +9,7 @@ $kfm_username='';
 $kfm_password='';
 
 # what type of database to use
-$kfm_db_type='mysql'; # values allowed: mysql, pgsql, sqlite, sqlitepdo
+$kfm_db_type='sqlitepdo'; # values allowed: mysql, pgsql, sqlite, sqlitepdo
 
 # the following options should only be filled if you are not using sqlite/sqlitepdo as the database
 $kfm_db_prefix='kfm_';
@@ -27,7 +27,7 @@ $kfm_db_port=''; # leave blank if using default port
 # $kfm_userfiles_address='./uploads';           # relative address
 $kfm_userfiles_address='/home/kae/Desktop/userfiles';
 
-# where shoudl a browser look to find the files?
+# where should a browser look to find the files?
 # Note that this is usually the same as $kfm_userfiles_address (if it is relative), but could be different
 #   in the case that the server uses mod_rewrite or personal web-sites, etc
 # Use the value 'get.php' if you want to use the KFM file handler script to manage file downloads.
@@ -37,8 +37,8 @@ $kfm_userfiles_address='/home/kae/Desktop/userfiles';
 #   $kfm_userfiles_output='/files/';
 #   $kfm_userfiles_output='http://thisdomain.com/kfm/get.php';
 #   $kfm_userfiles_output='/kfm/get.php';
-$kfm_userfiles_output='/sandbox/UserFiles/';
-#
+$kfm_userfiles_output='/userfiles/';
+
 # if you want to hide any panels, add them here as a comma-delimited string
 # for example, $kfm_hidden_panels='logs,file_details,file_upload,search,directory_properties';
 $kfm_hidden_panels='logs';
@@ -167,8 +167,3 @@ $kfm_show_files_in_groups_of=10;
 # we would like to keep track of installations, to see how many there are, and what versions are in use.
 # if you do not want us to have this information, then set the following variable to '1'.
 $kfm_dont_send_metrics=0;
-
-define('ERROR_LOG_LEVEL',1); # 0=none, 1=errors, 2=1+warnings, 3=2+notices, 4=3+unknown
-require_once(dirname(__FILE__).'/initialise.php');
-
-?>

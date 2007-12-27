@@ -38,9 +38,10 @@ if(get_magic_quotes_gpc()){
 }
 set_include_path(KFM_BASE_PATH.'includes/pear'.PATH_SEPARATOR.get_include_path());
 if(!file_exists(KFM_BASE_PATH.'configuration.php')){
-	echo '<em>Missing <code>configuration.php</code>!</em><p>If this is a fresh installation of KFM, then please rename <code>configuration.php.dist</code> to <code>configuration.php</code>, and edit it according to your project\'s needs.</p><p>If this is an upgraded version of KFM, please remove the parts of your old <code>config.php</code> which do not exist in <code>configuration.php.dist</code>, then rename it to <code>configuration.php</code>.</p>';
+	echo '<em>Missing <code>configuration.php</code>!</em><p>If this is a fresh installation of KFM, then please copy <code>configuration.dist.php</code> to <code>configuration.php</code>, remove the settings you don\'t want to change, and edit the rest to your needs.</p><p>For examples of configuration, please visit http://kfm.verens.com/configuration</p>';
 	exit;
 }
+require_once(KFM_BASE_PATH.'configuration.dist.php');
 require_once(KFM_BASE_PATH.'configuration.php');
 { # defines
 	define('KFM_DB_PREFIX',$kfm_db_prefix);
