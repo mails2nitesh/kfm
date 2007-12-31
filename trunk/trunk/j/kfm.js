@@ -114,6 +114,7 @@ var KFM=new Class({
 		$(document.body).setStyle('overflow','hidden');
 		kfm_addContextMenu(document.body,function(e){
 			var links=[['kfm.about()',kfm.lang.AboutKfm]];
+			var links=[{title:'About KFM', doFunction:function(){kfm.about();}}];
 			kfm_createContextMenu(e.page,links);
 		});
 		{ // create left column
@@ -129,11 +130,19 @@ var KFM=new Class({
 			kfm_addContextMenu(left_column,function(e){
 				var links=[],i;
 				var l=left_column.panels_unlocked;
-				links.push(['kfm_togglePanelsUnlocked()',l?kfm.lang.LockPanels:kfm.lang.UnlockPanels,l?'lock':'unlock']);
+				//links.push(['kfm_togglePanelsUnlocked()',l?kfm.lang.LockPanels:kfm.lang.UnlockPanels,l?'lock':'unlock']);
+				links.push({title:l?'lock':'unlock', doFunction:function(){
+						kfm_togglePanelsUnlocked();
+					}
+				});
 				var ps=left_column.panels;
 				for(var i=0;i<ps.length;++i){
 					var p=$(ps[i]);
-					if(!p.visible && !kfm_inArray(ps[i],kfm_hidden_panels))links.push(['kfm_addPanel("kfm_left_column","'+ps[i]+'")',kfm.lang.ShowPanel(p.panel_title),'show_panel']);
+					//if(!p.visible && !kfm_inArray(ps[i],kfm_hidden_panels))links.push(['kfm_addPanel("kfm_left_column","'+ps[i]+'")',kfm.lang.ShowPanel(p.panel_title),'show_panel']);
+					if(!p.visible && !kfm_inArray(ps[i],kfm_hidden_panels))links.push({title:'Show panel '+p.panel_title, doFunction:function(){
+							kfm_addPanel("kfm_left_column",ps[i]);
+						}
+					});
 				}
 				kfm_createContextMenu(e.page,links);
 			});

@@ -26,7 +26,7 @@ function kfm_createContextMenu(m,links){
 				'top':m.y
 			}
 		});
-		window.contextmenu.addLink=function(href,text,icon,disabled,isSubMenu){
+		window.contextmenu.addLink=function(href,text,icon,disabled,isSubMenu, obj){
 			if(disabled && !kfm_vars.show_disabled_contextmenu_links)return;
 			var row=kfm.addRow(this);
 			if(disabled){
@@ -38,8 +38,19 @@ function kfm_createContextMenu(m,links){
 				row.addClass('is_submenu');
 			}
 			else if(href=='kfm_0')link=text;
-			else link=newLink('javascript:kfm_closeContextMenu();'+href,text);
-			kfm.addCell(row,0,0,(icon?new Element('img',{src:'themes/'+kfm_theme+'/icons/'+icon+'.png'}):''),'kfm_contextmenu_iconCell');
+			else{
+				if(typeof(href)=="object"){
+					link=newLink('#',href.title);
+					link.doFunction=href.doFunction;
+					link.doParameter=href.doParameter;
+					link.addEvent("click",function(){
+						kfm_closeContextMenu();
+						href.doFunction(href.doParameter);
+					});
+				}else link=newLink('javascript:kfm_closeContextMenu();'+href,text);
+			}
+			if(typeof(href)=="object") kfm.addCell(row,0,0,'','kfm_contextmenu_iconCell kfm_plugin_'+href.name+'_contexticon kfm_plugin_'+href.name+'_'+kfm_theme+'_contexticon');
+			else kfm.addCell(row,0,0,'','kfm_contextmenu_iconCell');
 			kfm.addCell(row,1,0,link,'kfm_contextmenu_nameCell');
 		};
 		window.contextmenu_loading=setTimeout('window.contextmenu_loading=null',1);
@@ -51,7 +62,12 @@ function kfm_createContextMenu(m,links){
 		col.appendChild(new Element('hr'));
 	}
 	var rows=contextmenu.rows.length;
-	for(var i=0;i<links.length;++i)if(links[i][1])contextmenu.addLink(links[i][0],links[i][1],links[i][2],links[i][3],links[i][4]);
+	for(var i=0;i<links.length;++i){
+		//if(links[i][1])contextmenu.addLink(links[i][0],links[i][1],links[i][2],links[i][3],links[i][4]);
+		if(typeof(links[i])=="object")contextmenu.addLink(links[i]);
+		else if(links[i][1])contextmenu.addLink(links[i][0],links[i][1],links[i][2],links[i][3],links[i][4]);
+	}
+	//for(var i=0;i<links.length;++i) contextmenu.addLink(links[i]);
 	var w=contextmenu.offsetWidth,h=contextmenu.offsetHeight,ws=window.getSize().size;
 	if(h+m.y>ws.y)contextmenu.style.top=(ws.y-h)+'px';
 	if(w+m.x>ws.x)contextmenu.style.left=(m.x-w)+'px';
