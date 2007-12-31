@@ -77,6 +77,9 @@ if (isset($kfm_dev)) {
     echo '<script type="text/javascript" src="j/'.join("\"></script>\n		<script type=\"text/javascript\" src=\"j/", $js_files).'"></script>'."\n";
 }
 else echo '<script type="text/javascript" src="j/all.php"></script>';
+echo '
+<script type="text/javascript" src="j/hooks.js"></script>
+<script type="text/javascript" src="lang/'.$kfm_language.'.js"></script>';
 $h=opendir(KFM_BASE_PATH.'widgets');
 while (false!==($dir=readdir($h))) {
     if ($dir[0]!='.'&&is_dir(KFM_BASE_PATH.'widgets/'.$dir)) {
@@ -84,6 +87,15 @@ while (false!==($dir=readdir($h))) {
         <script type="text/javascript" src="widgets/'.$dir.'/widget.js"></script>';
     }
 }
+			/* add plugins */
+			$h=opendir(KFM_BASE_PATH.'plugins');
+			while(false!==($plugin=readdir($h))){
+				if($plugin[0]=='.')continue;
+				if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.js'))echo '
+					<script type="text/javascript" src="plugins/'.$plugin.'/plugin.js"></script>';
+				if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.css'))echo '
+					<link rel="stylesheet" href="plugins/'.$plugin.'/plugin.css" />';
+			}
 ?>
         <script type="text/javascript" src="j/swfuploadr52_0002/swfupload.js"></script>
         <script type="text/javascript" src="lang/<?php echo $kfm_language; ?>.js"></script>

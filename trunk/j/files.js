@@ -194,6 +194,14 @@ function kfm_incrementalFileDisplay(){
 			var writable=F.writable;
 		}
 		{ // add the links
+			var linkObjects=kfm_getLinks(extension,selectedFiles.length,writable);
+			for(var ilink=0;ilink<linkObjects.length;ilink++){
+				if(selectedFiles.length>1){
+					linkObjects[ilink].doParameter=selectedFiles;
+				}else{
+					linkObjects[ilink].doParameter=[id];
+				}
+			}
 			if(selectedFiles.length>1){
 				if(!window.ie)links.push(['kfm_downloadSelectedFiles()','download selected files']); // IE can't handle this...
 				links.push(['kfm_deleteSelectedFiles()',kfm.lang.DeleteFile,'remove',!kfm_vars.permissions.file.rm]);
@@ -224,7 +232,8 @@ function kfm_incrementalFileDisplay(){
 			}
 			links.push(['kfm_tagAdd('+id+')',kfm.lang.AddTagsToFiles,'add_tags',!kfm_vars.permissions.file.ed]);
 			links.push(['kfm_tagRemove('+id+')',kfm.lang.RemoveTagsFromFiles,'',!kfm_vars.permissions.file.ed]);
-			kfm_createContextMenu(e.page,links);
+			//kfm_createContextMenu(e.page,links);
+			kfm_createContextMenu(e.page,linkObjects);
 		}
 	});
 	do{
@@ -236,7 +245,6 @@ function kfm_incrementalFileDisplay(){
 		var el=icon.cloneNode(true);
 		el.cloneEvents(icon);
 		el.id='kfm_file_icon_'+id;
-        el.className = 'kfm_file '+(kfm_listview?'kfm_file_listview':'kfm_file_icon kfm_icontype_'+ext);
 		el.dragDisplay=kfm_file_bits.dragDisplay;
 		var writable=fdata.writable;
 		{ // file attributes
