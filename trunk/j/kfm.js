@@ -96,6 +96,27 @@ var KFM=new Class({
 		new Notice(message);
 	},
 	build:function(){
+kfm_addHook({},{mode:2,"extensions":"all", "category":"edit", writable:2, title:"download file", doFunction:function(files){
+		if(files.length==1)kfm_downloadSelectedFiles(files[0]);
+		else kfm_downloadSelectedFiles();
+	}
+});
+kfm_addHook({name:"remove", mode:0,extensions:"all", writable:1,title:kfm.lang.DeleteFile, doFunction:function(files){
+		kfm_deleteFile(files[0]);
+	},
+	displayCheck:function(){
+		if(!kfm_vars.permissions.file.rm)return 2;//inactive
+		return 1; // active
+	}
+});
+kfm_addHook({name:"rename", mode:0,extensions:"all", writable:1,title:kfm.lang.RenameFile, doFunction:function(files){
+		kfm_renameFile(files[0]);
+	},
+	displayCheck:function(){
+		if(!kfm_vars.permissions.file.ed)return 2;//inactive
+		return 1; // active
+	}
+});
 		var form_panel,form,right_column,directories,logs,logHeight=64,w=window.getSize().size,j,i;
 		{ // extend language objects
 			for(var j in kfm.lang){
