@@ -203,7 +203,7 @@ function kfm_incrementalFileDisplay(){
                 }
             }
             if(selectedFiles.length>1){
-                if(!window.ie)links.push(['kfm_downloadSelectedFiles()','download selected files']); // IE can't handle this...
+                //if(!window.ie)links.push(['kfm_downloadSelectedFiles()','download selected files']); // IE can't handle this...
                 links.push(['kfm_deleteSelectedFiles()',kfm.lang.DeleteFile,'remove',!kfm_vars.permissions.file.rm]);
                 var imgs=[];
                 for(var i=0;i<selectedFiles.length;++i)if(File_getInstance(selectedFiles[i]).width)imgs.push(selectedFiles[i]);

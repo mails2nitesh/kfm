@@ -96,9 +96,16 @@ var KFM=new Class({
 		new Notice(message);
 	},
 	build:function(){
-kfm_addHook({},{mode:2,"extensions":"all", "category":"edit", writable:2, title:"download file", doFunction:function(files){
-		if(files.length==1)kfm_downloadSelectedFiles(files[0]);
-		else kfm_downloadSelectedFiles();
+kfm_addHook({},{name:"download", mode:0,"extensions":"all", writable:2, title:"download file", doFunction:function(files){
+		kfm_downloadSelectedFiles(files[0]);
+	}
+});
+kfm_addHook({name:"download", mode:1,"extensions":"all", writable:2, title:"download selected files", doFunction:function(files){
+		kfm_downloadSelectedFiles();
+	},
+	displayCheck:function(files){
+		if(window.ie)return 0; // don't display for ie
+		return 1; //default
 	}
 });
 kfm_addHook({name:"remove", mode:0,extensions:"all", writable:1,title:kfm.lang.DeleteFile, doFunction:function(files){
