@@ -31,6 +31,7 @@ if(!empty($_POST['kaejax']))kfm_kaejax_handle_client_request();
 <html>
     <head>
         <style type="text/css">@import "themes/<?php echo $kfm_theme; ?>/kfm.css";</style>
+		  <link rel="stylesheet" href="themes/<?php echo $kfm_theme; ?>/hooks.css" />
         <title>KFM - Kae's File Manager</title>
         <script type="text/javascript" src="j/mootools.v1.11/mootools.v1.11.js"></script>
         <script type="text/javascript">

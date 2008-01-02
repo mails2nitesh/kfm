@@ -39,7 +39,14 @@ function kfm_createContextMenu(m,links){
             }
             else if(href=='kfm_0')link=text;
             else{
-                if(typeof(href)=="object"){
+					if(typeof(href)=="object"){
+						var display=1; // default, display
+						if(href.displayCheck) display=href.displayCheck(href.doParameter);
+						if(!display)return;
+						if(display==2)row.className+=' disabled';
+
+						if(!href.name && href.title)href.name=href.title; // make name title if not exists
+						if(!href.name) href.name='default'; // make name default if not exists
                     link=newLink('#',href.title);
                     link.doFunction=href.doFunction;
                     link.doParameter=href.doParameter;

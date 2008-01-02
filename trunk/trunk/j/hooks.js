@@ -83,7 +83,8 @@ function kfm_getLinks(ext,multiple,writable){
 	 **/
 	var HooksArray="";//initialize
 	var hookObjects=[];
-	if(multiple){
+	if(multiple>1){
+		ext="noextension";//extension dependensie for multiple files not supported yet
 		if(writable)HooksArray="HooksMultipleWritable";
 		else HooksArray="HooksMultipleReadonly";
 	}else{
@@ -108,7 +109,7 @@ function kfm_getLinks(ext,multiple,writable){
 		for(var i=0;i<HookCategories[category].length;i++) 
 			if(typeof(HookCategories[category][i])=="object")hookObjects.push(HookCategories[category][i]);
 	}
-
+	alert(dump(hookObjects));
 	return hookObjects;
 }
 /*end core section*/
