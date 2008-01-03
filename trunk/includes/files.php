@@ -191,8 +191,7 @@ function _rm($id){
 function _saveTextFile($fid,$text){
 	if(!$GLOBALS['kfm_allow_file_edit'])return 'error: '.kfm_lang('permissionDeniedEditFile');
 	$f=kfmFile::getInstance($fid);
-	$f->setContent($text);
-	return $f->hasErrors()?$f->getErrors():kfm_lang('file saved');
+	if($f->setContent($text))kfm_addMessage(kfm_lang('file saved'));
 }
 function _search($keywords,$tags){
 	global $kfmdb;

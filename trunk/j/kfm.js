@@ -108,8 +108,9 @@ kfm_addHook({name:"download", mode:1,"extensions":"all", writable:2, title:"down
 		return 1; //default
 	}
 });
-kfm_addHook({name:"remove", mode:0,extensions:"all", writable:1,title:kfm.lang.DeleteFile, doFunction:function(files){
-		kfm_deleteFile(files[0]);
+kfm_addHook({name:"remove", mode:2,extensions:"all", writable:1,title:kfm.lang.DeleteFile, doFunction:function(files){
+		if(files.length>1)kfm_deleteSelectedFiles();
+		else kfm_deleteFile(files[0]);
 	},
 	displayCheck:function(){
 		if(!kfm_vars.permissions.file.rm)return 2;//inactive
@@ -371,6 +372,28 @@ function kfm_shrinkName(name,wrapper,text,size,maxsize,extension){
 	var html='<span class="filename">'+name.substring(0,position+(prefix?0:-1))+'</span><span style="color:red;text-decoration:none">[...]</span>';
 	if(extension)html+='<span class="filename">'+extension+'</span>';
 	text.innerHTML=html;
+}
+function kfm_pluginIframeShow(url){
+		var div=document.createElement('DIV');
+		div.style.position='absolute';
+		div.id='plugin_iframe_div';
+		div.style.top=0;
+		div.style.left=0;
+		div.style.width='100%';
+		div.style.height='100%';
+		div.style.backgroundColor='#ddf';
+		div.onclick=function(){this.style.display='none';}
+	
+		var ifr = document.createElement('IFRAME');
+		ifr.src = url;
+		ifr.style.width = '100%';
+		ifr.style.height = '100%'; //100% - 25px
+		div.appendChild(ifr);
+		document.body.appendChild(div);
+}
+function kfm_pluginIframeHide(){
+	var ifd=document.getElementById('plugin_iframe_div');
+	if(ifd) ifd.style.display='none';
 }
 var kfm_regexps={
 	all_up_to_last_dot:/.*\./,

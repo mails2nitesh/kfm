@@ -141,7 +141,8 @@ class kfmFile extends kfmObject{
 		global $kfm_allow_file_edit;
 		if(!$kfm_allow_file_edit)return $this->error(kfm_lang('permissionDeniedEditFile'));
 		$result=file_put_contents($this->path,utf8_decode($content));
-		if(!$result)$this->error(kfm_lang('errorSettingFileContent'));
+		if(!$result)return $this->error(kfm_lang('errorSettingFileContent'));
+		return true;
 	}
 	function setTags($tags){
 		if(!count($tags))return;
