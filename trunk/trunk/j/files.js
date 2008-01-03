@@ -216,7 +216,7 @@ function kfm_incrementalFileDisplay(){
                         links.push(['kfm_rotateImage('+id+',270)',kfm.lang.RotateClockwise,'rotate_cw',manip]);
                         links.push(['kfm_rotateImage('+id+',90)',kfm.lang.RotateAntiClockwise,'rotate_ccw',manip]);
                         links.push(['kfm_resizeImage('+id+')',kfm.lang.ResizeImage,'resize_image',manip]);
-                        links.push(['kfm_cropImage('+id+')','crop', '', manip]);
+                        //links.push(['kfm_cropImage('+id+')','crop', '', manip]);
                     }
                     links.push(['kfm_img_startLightbox('+id+')',kfm.lang.ViewImage]);
                     links.push(['kfm_returnThumbnail('+id+')',kfm.lang.ReturnThumbnailToOpener]);
