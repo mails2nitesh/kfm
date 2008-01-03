@@ -10,12 +10,14 @@ function plugin_cropper(){
 	this.crop_to_new=function(fid){
 		var data=File_getInstance(fid);
 		var url='plugins/cropper/croparea.php?id='+fid+'&width='+data.width+'&height='+data.height;
-		this.openCropper(fid,url);
+		kfm_pluginIframeShow(url);
+		//this.openCropper(fid,url);
 	}
 	this.crop_image=function(fid){
 		var data=File_getInstance(fid);
 		var url='plugins/cropper/croparea.php?id='+fid+'&width='+data.width+'&height='+data.height+'&options=both';
-		this.openCropper(fid,url);
+		kfm_pluginIframeShow(url);
+		//this.openCropper(fid,url);
 	}
 	this.doFunction=function(fid){
 		alert('This is the default function which should have been overwritten');
@@ -41,7 +43,7 @@ function plugin_cropper(){
 }
 	function kfm_cropToOriginal(id,coords,dimensions){
 		var F=File_getInstance(id);
-		document.getElementById('cropperdiv').style.display = 'none';
+		kfm_pluginIframeHide();
 		x_kfm_cropToOriginal(id, coords.x1, coords.y1, dimensions.width, dimensions.height, function(id){
 			if($type(id)=='string')return kfm_log(id);
 			F.setThumbnailBackground($('kfm_file_icon_'+id),true);
@@ -51,7 +53,7 @@ function plugin_cropper(){
 		var filename=File_getInstance(id).name;
 		kfm_prompt(kfm.lang.RenameFileToWhat(filename),filename,function(newName){
 			if(!newName||newName==filename)return;
-			document.getElementById('cropperdiv').style.display = 'none';
+			kfm_pluginIframeHide();
 			x_kfm_cropToNew(id, coords.x1, coords.y1, dimensions.width, dimensions.height, newName, kfm_refreshFiles);
 		});
 	}

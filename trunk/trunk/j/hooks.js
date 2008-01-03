@@ -109,7 +109,7 @@ function kfm_getLinks(ext,multiple,writable){
 		for(var i=0;i<HookCategories[category].length;i++) 
 			if(typeof(HookCategories[category][i])=="object")hookObjects.push(HookCategories[category][i]);
 	}
-	alert(dump(hookObjects));
+	//alert(dump(hookObjects));
 	return hookObjects;
 }
 /*end core section*/
