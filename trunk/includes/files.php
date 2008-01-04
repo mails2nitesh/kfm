@@ -180,7 +180,7 @@ function _rm($id){
 			$file=kfmFile::getInstance($fid);
 			if($file->delete())$counter++;
 		}
-		if($counter>1)kfm_addMessage(kfm_lang(' files deleted',$counter));
+		if($counter>1)kfm_addMessage(kfm_lang('files deleted',$counter));
 	}
 	else{
 		$file=kfmFile::getInstance($id);
