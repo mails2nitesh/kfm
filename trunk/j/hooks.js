@@ -67,16 +67,15 @@ function kfm_addHookExtension(HooksArray, ext){
 function kfm_addHookCategory(HookArray,ext, newCategory){
 	/*Add a hook category and make sure the order defined in the HookCategories is maintained*/
 	eval(HookArray+'.'+ext+'.'+newCategory+'=[];');
-	/*
-	var tempHooks=eval(HookArray+"['"+ext+"']"); // copy the old array into a temp var
+	var tempHooks=eval(HookArray+'.'+ext); // copy the old array into a temp var
 	eval(HookArray+'.'+ext+'={};'); // empty the old array
 	for(var i in HookCategories){ // loop and add the new category in the right place
-		if(typeof(i)=='function')continue;
 		//var category=HookCategories[i];
-		var category=i;
-		if(typeof(tempHooks[category])!="undefined")eval(HookArray+'["'+ext+'"]["'+category+'"]=tempHooks["'+ext+'"]["'+category+'"];');
-		else if(category==newCategory)eval(HookArray+'["'+ext+'"]["'+category+'"]=[];');
-	}*/
+		var category=HookCategories[i];
+		if(typeof(category)=='function')continue;
+		if(typeof(eval('tempHooks.'+category))!="undefined")eval(HookArray+'.'+ext+'.'+category+'=tempHooks.'+category+';');
+		else if(category==newCategory)eval(HookArray+'.'+ext+'.'+category+'=[];');
+	}
 }
 function kfm_getLinks(ext,multiple,writable){
 	/* initial return function 

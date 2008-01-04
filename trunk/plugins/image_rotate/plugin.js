@@ -3,6 +3,7 @@ function plugin_image_rotate(){
 	this.title='rotate',
 	this.mode=0;//single files
 	this.writable=1;//writable files
+	this.category='edit';
 	this.extensions=['jpg','png','gif'];
 	this.doFunction=function(){}
 }
