@@ -57,7 +57,7 @@ function kfm_createContextMenu(m,links){
                 }else link=newLink('javascript:kfm_closeContextMenu();'+href,text);
             }
             if(typeof(href)=="object") kfm.addCell(row,0,0,'','kfm_contextmenu_iconCell kfm_plugin_'+href.name+'_contexticon kfm_plugin_'+href.name+'_'+kfm_theme+'_contexticon');
-            else kfm.addCell(row,0,0,'','kfm_contextmenu_iconCell');
+            else kfm.addCell(row,0,0,(icon?new Element('img',{src:'themes/'+kfm_theme+'/icons/'+icon+'.png'}):''),'kfm_contextmenu_iconCell');
             kfm.addCell(row,1,0,link,'kfm_contextmenu_nameCell');
         };
         window.contextmenu_loading=setTimeout('window.contextmenu_loading=null',1);

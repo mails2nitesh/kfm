@@ -213,8 +213,8 @@ function kfm_incrementalFileDisplay(){
                 if(F.width){
                     if(writable){
                         var manip=!(kfm_vars.permissions.file.ed&&kfm_vars.permissions.image.manip);
-                        links.push(['kfm_rotateImage('+id+',270)',kfm.lang.RotateClockwise,'rotate_cw',manip]);
-                        links.push(['kfm_rotateImage('+id+',90)',kfm.lang.RotateAntiClockwise,'rotate_ccw',manip]);
+                        //links.push(['kfm_rotateImage('+id+',270)',kfm.lang.RotateClockwise,'rotate_cw',manip]);
+                        //links.push(['kfm_rotateImage('+id+',90)',kfm.lang.RotateAntiClockwise,'rotate_ccw',manip]);
                         links.push(['kfm_resizeImage('+id+')',kfm.lang.ResizeImage,'resize_image',manip]);
                         //links.push(['kfm_cropImage('+id+')','crop', '', manip]);
                     }
