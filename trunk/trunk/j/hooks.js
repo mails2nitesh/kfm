@@ -19,6 +19,7 @@ function kfm_addHook(objoriginal, properties){
 		}
 		if(typeof properties.mode!="undefined")obj.mode=properties.mode;
 		if(typeof(properties.title)!="undefined")obj.title=properties.title;
+		if(typeof(properties.name)!="undefined")obj.name=properties.name;
 		if(typeof properties.category!="undefined")obj.category=properties.category;
 		if(typeof properties.writable!="undefined")obj.writable=properties.writable;
 		if(typeof properties.extensions!="undefined")obj.extensions=properties.extensions;

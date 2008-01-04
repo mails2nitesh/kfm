@@ -181,10 +181,3 @@ function kfm_returnThumbnail(id,size){
 		});
 	});
 }
-function kfm_rotateImage(id,direction){
-	var F=File_getInstance(id);
-	x_kfm_rotateImage(id,direction,function(id){
-		if($type(id)=='string')return kfm_log(id);
-		F.setThumbnailBackground($('kfm_file_icon_'+id),true);
-	});
-}
