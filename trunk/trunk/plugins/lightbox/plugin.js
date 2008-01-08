@@ -2,11 +2,12 @@ function plugin_lightbox(){
 	this.name='lightbox';
 	this.title='view slideshow';
 	this.category='view';
-	this.extensions='all'; // for now extensions for multiple files is not yet supported
-	this.workextensions=['jpg','png','gif','svg'];
+	//this.extensions='all'; // for now extensions for multiple files is not yet supported
+	this.extensions=['jpg','png','gif','svg'];
 	this.mode=1;//multiple files
 	this.writable=2;//all
 	this.doFunction=function(files){
+		/*
 		var imgs=[];
 		for(var i=0;i<files.length;i++){
 	      var F=File_getInstance(files[i]);
@@ -18,7 +19,10 @@ function plugin_lightbox(){
 		}
 		if(!imgs.length>0)return;
 		kfm_img_startLightbox(imgs);
+		*/
+		kfm_img_startLightbox(files);
 	}
+	/*
 	this.displayCheck=function(files){
 		for(var i=0;i<files.length;i++){
          var F=File_getInstance(files[i]);
@@ -26,7 +30,7 @@ function plugin_lightbox(){
 			for(var j=0;j<this.workextensions.length;j++)if(ext==this.workextensions[j])return 1; //slideshow option
 		}
 		return 2; //no images in selection=>inactive
-	}
+	}*/
 }
 kfm_addHook(new plugin_lightbox());
 function kfm_img_startLightbox(id){

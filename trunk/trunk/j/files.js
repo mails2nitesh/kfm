@@ -196,14 +196,16 @@ function kfm_incrementalFileDisplay(){
             var writable=F.writable;
         }
         { // add the links
-            var linkObjects=kfm_getLinks(extension,selectedFiles.length,writable);
+            if(selectedFiles.length>1)var linkObjects=kfm_getLinks(selectedFiles);
+				else var linkObjects=kfm_getLinks([id]);
+				/*
             for(var ilink=0;ilink<linkObjects.length;ilink++){
                 if(selectedFiles.length>1){
                     linkObjects[ilink].doParameter=selectedFiles;
                 }else{
                     linkObjects[ilink].doParameter=[id];
                 }
-            }
+            }*/
             if(selectedFiles.length>1){
                 //if(!window.ie)links.push(['kfm_downloadSelectedFiles()','download selected files']); // IE can't handle this...
                 //links.push(['kfm_deleteSelectedFiles()',kfm.lang.DeleteFile,'remove',!kfm_vars.permissions.file.rm]);
