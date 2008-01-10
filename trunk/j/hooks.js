@@ -5,9 +5,9 @@ var HookCategories=["main", "view", "edit", "return"];
 
 /* initialize arrays */
 var HooksSingleReadonly={};
-var HooksMultipleReadonly={};
+//var HooksMultipleReadonly={};
 var HooksSingleWritable={};
-var HooksMultipleWritable={};
+//var HooksMultipleWritable={};
 var HooksMultiple={};
 function kfm_addHook(objoriginal, properties){
 	var obj=objoriginal;
