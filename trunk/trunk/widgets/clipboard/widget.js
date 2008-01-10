@@ -101,3 +101,8 @@ kdnd_addDropHandler('widget_clipboard','.kfm_dir_name',function(e){
 		kfm_createContextMenu(e.page,links);
 	e.sourceElement.clearContents();
 });
+kdnd_addDropHandler('widget_clipboard','.widget_trash',function(e){
+	if(!e.sourceElement.files.length)return;
+	e.targetElement.action(e.sourceElement.files);
+	e.sourceElement.clearContents();
+});
