@@ -83,7 +83,7 @@ class kfmFile extends kfmObject{
 			}
 			else $url=$kfm_userfiles_output.'/'.$cwd.'/'.$this->name; # TODO: check this line - $cwd may be incorrect if the requested file is from a search
 		}
-		return preg_replace('/([^:])\/{2,}/','$1/',$url);
+		return preg_replace('/([^:]?)\/{2,}/','$1/',$url);
 	}
 	function delete(){
 		global $kfm_allow_file_delete;
