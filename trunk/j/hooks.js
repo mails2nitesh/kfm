@@ -3,6 +3,7 @@
 /* define the order of the categories */
 var HookCategories=["main", "view", "edit", "return"];
 
+var kfm_imageExtensions=['jpg','png','gif'];
 /* initialize arrays */
 var HooksSingleReadonly={};
 //var HooksMultipleReadonly={};
@@ -27,6 +28,20 @@ function kfm_addHook(objoriginal, properties){
 	if(typeof(obj.name)=="undefined"&&typeof(obj.title)!="undefined")obj.name=obj.title; // make sure the plugin has a name
 	if(typeof(obj.category)=="undefined")obj.category=HookCategories[0]; // Without category, place in the top category
 	if(!obj.extensions)obj.extensions="all";
+
+	if(!kfm_vars.permissions.file.ed && obj.category=='edit')return;
+	if(!kfm_vars.permissions.image.manip && obj.category=='edit'){
+		if(obj.extensions=='all')return;
+		for(var i=0; i<obj.extensions.length; i++){
+			for(var j=0; j<kfm_imageExtensions; j++){
+				if(obj.extensions[i]==kfm_imageExtensions[j]){
+					obj.extensions.splice(i,1);
+					return;
+				}
+			}
+		}
+	}
+
 	if(obj.mode==0 || obj.mode==2){
 		/*single file*/
 		if(obj.writable==1 || obj.writable==2)kfm_addHookToArray(obj,"HooksSingleWritable");
