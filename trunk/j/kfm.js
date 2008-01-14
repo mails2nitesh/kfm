@@ -374,7 +374,7 @@ function kfm_shrinkName(name,wrapper,text,size,maxsize,extension){
 	text.innerHTML=html;
 }
 function kfm_pluginIframeShow(url){
-		var div,ifr;
+		var div,ifr, header;
 		div=document.getElementById('plugin_iframe_div');
 		if(!div){
 			if(!url) return alert('No active plugin');
@@ -386,7 +386,15 @@ function kfm_pluginIframeShow(url){
 			div.style.width='100%';
 			div.style.height='100%';
 			div.style.backgroundColor='#ddf';
-			div.onclick=function(){this.style.display='none';}
+
+			header=document.createElement('DIV');
+			header.id='plugin_iframe_header';
+			header.style.width='100%';
+			header.style.height='25px';
+			header.style.color='#FFFFFF';
+			header.style.backgroundColor='black';
+
+			div.appendChild(header);
 		
 			ifr = document.createElement('IFRAME');
 			ifr.src = url;
@@ -395,11 +403,30 @@ function kfm_pluginIframeShow(url){
 			ifr.id='plugin_iframe_element';
 			div.appendChild(ifr);
 			document.body.appendChild(div);
+			kfm_pluginIframeButton('close');
 		}else ifr=document.getElementById('plugin_iframe_element');
 		if(url){
 			ifr.src=url;
 		}
 		div.style.display='block';
+}
+function kfm_pluginIframeButton(code,text){
+	var btncode;
+	var hdr=document.getElementById('plugin_iframe_header');
+	if(!hdr)return;
+	var btn=document.createElement('IMG');
+	if(code=='close'){
+		if(!text)btn.innerHTML='Close';	
+		btncode='parent.kfm_pluginIframeHide()';
+	}else{
+		btncode=code;
+	}
+	if(text)btn.innerHTML=text;
+	btn.onclick=function(){
+		eval(btncode);
+	}
+	btn.src='themes/'+kfm_theme+'/icons/remove.png';
+	hdr.appendChild(btn);
 }
 function kfm_pluginIframeHide(){
 	var ifd=document.getElementById('plugin_iframe_div');
