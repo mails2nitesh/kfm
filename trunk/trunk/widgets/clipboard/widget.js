@@ -68,11 +68,12 @@ function Clipboard(){
 			e=new Event(e);
 			var el=$('kfm_widget_clipboard_container');
 			var links=[];
+			var plugins=kfm_getLinks(el.files);
 			{ // add the links
-				links.push(['$("kfm_widget_clipboard_container").clearContents()','clear clipboard']); // TODO: new string
-				links.push(['$("kfm_widget_clipboard_container").pasteContents()','paste clipboard contents']); // TODO: new string
+				plugins.push(['$("kfm_widget_clipboard_container").clearContents()','clear clipboard']); // TODO: new string
+				plugins.push(['$("kfm_widget_clipboard_container").pasteContents()','paste clipboard contents']); // TODO: new string
 			}
-			kfm_createContextMenu(e.page,links);
+			kfm_createContextMenu(e.page,plugins);
 		});
 		setTimeout("kdnd_makeDraggable('widget_clipboard');",1);
 		return el;
