@@ -1,5 +1,8 @@
 <?php
 $fileInstances=array();
+/**
+ * Base file class
+ */
 class kfmFile extends kfmObject{
 	var $ctime='';
 	var $directory='';
@@ -36,6 +39,7 @@ class kfmFile extends kfmObject{
 		}
 	}
 	function checkAddr($addr){
+		# depricated, use checkName instead
 		return (
 			strpos($addr,'..')===false&&
 			strpos($addr,'.')!==0&&
@@ -43,19 +47,27 @@ class kfmFile extends kfmObject{
 			!in_array(preg_replace('/.*\./','',$addr),$GLOBALS['kfm_banned_extensions'])
 			);
 	}
+	/**
+	 * Checks if the file exists
+	 * @return bool
+	 * */
 	function exists(){
 		if($this->exists)return $this->exists;
 		$this->exists=file_exists($this->path);
 		return $this->exists;
 	}
+	/**
+	 * Returns the file contents or false on error
+	 */
 	function getContent(){
 		return ($this->id==-1)?false:utf8_encode(file_get_contents($this->path));
 	}
+	/**
+	 * Function that returns the extension of the file.
+	 * if a parameter is given, the extension of that parameters is returned
+	 * returns false on error.
+	 */
 	function getExtension(){
-		/* Function that returns the extension of the file.
-		 * if a parameter is given, the extension of that parameters is returned
-		 * returns false on error.
-		 */
 		if(func_num_args()==1){
 			$filename=func_get_arg(0);
 		}else{
@@ -66,6 +78,9 @@ class kfmFile extends kfmObject{
 		if($dotext === false) return false;
 		return strtolower(substr($dotext,1));
 	}
+	/**
+	 * Returns the url of the file as specified by the configuration
+	 */
 	function getUrl($x=0,$y=0){
 		global $rootdir, $kfm_userfiles_output,$kfm_workdirectory;
 		$cwd=$this->directory.'/'==$rootdir?'':str_replace($rootdir,'',$this->directory);
@@ -85,6 +100,11 @@ class kfmFile extends kfmObject{
 		}
 		return preg_replace('/([^:])\/{2,}/','$1/',$url);
 	}
+
+	/**
+	 * Deletes the file
+	 * @return bool true opon success, false on error
+	 */
 	function delete(){
 		global $kfm_allow_file_delete;
 		if(!$kfm_allow_file_delete)return $this->error(kfm_lang('permissionDeniedDeleteFile'));
@@ -94,6 +114,11 @@ class kfmFile extends kfmObject{
 		else return $this->error(kfm_lang('failedDeleteFile',$this->name));
 		return true;
 	}
+
+	/**
+	 * Moves the file
+	 * @param int $new_directoryparent_id
+	 */
 	function move($dir_id){
 		global $kfmdb;
 		if(!$this->writable)return $this->error(kfm_lang('fileNotMovableUnwritable',$this->name));
@@ -102,6 +127,12 @@ class kfmFile extends kfmObject{
 		if(!rename($this->path,$dir->path.'/'.$this->name))return $this->error(kfm_lang('failedMoveFile',$this->name));
 		$q=$kfmdb->query("update ".KFM_DB_PREFIX."files set directory=".$dir_id." where id=".$this->id);
 	}
+
+	/**
+	 * Returns the file instance. This is preferred above new kfmFile($id)
+	 * @param int $file_id
+	 * @return Object file or image
+	 */
 	function getInstance($id=0){
 		global $fileInstances;
 		if(!$id)return false;
@@ -110,22 +141,46 @@ class kfmFile extends kfmObject{
 		if($fileInstances[$id]->isImage())return kfmImage::getInstance($id);
 		return $fileInstances[$id];
 	}
+
+	/**
+	 * retunrs the file size
+	 */
 	function getSize(){
 		if(!$this->size)$this->size=filesize($this->path);
 		return $this->size;
 	}
+
+	/**
+	 * Get the tags of the file
+	 * @return Array
+	 */
 	function getTags(){
 		$arr=array();
 		$tags=db_fetch_all("select tag_id from ".KFM_DB_PREFIX."tagged_files where file_id=".$this->id);
 		foreach($tags as $r)$arr[]=$r['tag_id'];
 		return $arr;
 	}
+
+	/**
+	 * Check of file is an image
+	 * @return bool
+	 */
 	function isImage(){
 		return in_array($this->getExtension(),array('jpg', 'jpeg', 'gif', 'png', 'bmp'));
 	}
+
+	/**
+	 * Check if the file is writable
+	 * @return bool true when writable, false if not
+	 */
 	function isWritable(){
 		return (($this->id==-1)||!is_writable($this->path))?false:true;
 	}
+
+	/**
+	 * Rename the file
+	 * @param string $newName new file name
+	 */
 	function rename($newName){
 		global $kfm_allow_file_edit;
 		if(!$kfm_allow_file_edit)return $this->error(kfm_lang('permissionDeniedEditFile'));
@@ -137,6 +192,11 @@ class kfmFile extends kfmObject{
 		$this->path=$newFileAddress;
 		$this->db->query("UPDATE ".KFM_DB_PREFIX."files SET name='".sql_escape($newName)."' WHERE id=".$this->id);
 	}
+
+	/**
+	 * Write content to the file
+	 * @param mixed $content
+	 */
 	function setContent($content){
 		global $kfm_allow_file_edit;
 		if(!$kfm_allow_file_edit)return $this->error(kfm_lang('permissionDeniedEditFile'));
@@ -144,15 +204,23 @@ class kfmFile extends kfmObject{
 		if(!$result)return $this->error(kfm_lang('errorSettingFileContent'));
 		return true;
 	}
+
+	/**
+	 * Set tags of the file
+	 * @param array $tags
+	 */
 	function setTags($tags){
 		if(!count($tags))return;
 		$this->db->exec("DELETE FROM ".KFM_DB_PREFIX."tagged_files WHERE file_id=".$this->id);
 		foreach($tags as $tag)$this->db->exec("INSERT INTO ".KFM_DB_PREFIX."tagged_files (file_id,tag_id) VALUES(".$this->id.",".$tag.")");
 	}
+
+	/**
+	 * Get the filezise in a human-readable way
+	 * @param int $size optional
+	 * @return string $size
+	 */
 	function size2str(){
-		# returns the size in a human-readable way
-		# expects input size in bytes
-	 	# if no input parameter is given, the size of the file object is returned 
 		$size=func_num_args()?func_get_arg(0):$this->getSize();
 		if(!$size)return '0';
 		$format=array("B","KB","MB","GB","TB","PB","EB","ZB","YB");
@@ -165,6 +233,10 @@ class kfmFile extends kfmObject{
 		$q=$kfmdb->query($sql);
 		return $kfmdb->lastInsertId(KFM_DB_PREFIX.'files','id');
 	}
+	/**
+	 * Check if the filename is authorized by the system according to the configuration
+	 * @return bool $authorized true when authorized, false if not
+	 */
 	function checkName($filename=false){
 		if($filename===false)$filename=$this->name;
 		if($filename=='' || trim($filename)!=$filename || $filename[0]=='.')return false;

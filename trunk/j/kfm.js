@@ -386,6 +386,7 @@ function kfm_pluginIframeShow(url){
 			div.style.width='100%';
 			div.style.height='100%';
 			div.style.backgroundColor='#ddf';
+			div.style.padding=0;
 
 			header=document.createElement('DIV');
 			header.id='plugin_iframe_header';
@@ -394,6 +395,12 @@ function kfm_pluginIframeShow(url){
 			header.style.color='#FFFFFF';
 			header.style.backgroundColor='black';
 
+			headermsg=document.createElement('DIV');
+			headermsg.id='plugin_iframe_message';
+			headermsg.style.float='right';
+			headermsg.style.width='auto';
+			//header.appendChild(headermsg); maybe for later
+
 			div.appendChild(header);
 		
 			ifr = document.createElement('IFRAME');
@@ -401,6 +408,8 @@ function kfm_pluginIframeShow(url){
 			ifr.style.width = '100%';
 			ifr.style.height = '100%'; //100% - 25px
 			ifr.id='plugin_iframe_element';
+			ifr.style.border=0;
+
 			div.appendChild(ifr);
 			document.body.appendChild(div);
 			kfm_pluginIframeButton('close');
@@ -431,6 +440,14 @@ function kfm_pluginIframeButton(code,text){
 function kfm_pluginIframeHide(){
 	var ifd=document.getElementById('plugin_iframe_div');
 	if(ifd) ifd.style.display='none';
+}
+function kfm_pluginIframeMessage(message){
+	/* not tested yet, should not be needed*/
+	var msgdiv=document.getElementById('plugin_iframe_message');
+	if(!msgdiv)return;
+	msgdiv.innerHTML=message;
+	msgdiv.style.display='block';
+	setTimeOut('document.getElementById("plugin_iframe_message").style.display="none";',3000);
 }
 var kfm_regexps={
 	all_up_to_last_dot:/.*\./,
