@@ -138,19 +138,19 @@ function kfm_dir_closeNode(dir){
 function kfm_refreshDirectories(res){
 	if(res.toString()===res)return kfm_log(res);
 	var d=res.parent;
-	if(d==1){ // root node
+	if(d==kfm_vars.root_folder_id){ // root node
 		var p=$('kfm_directories');
 		p.parentNode.replaceChild(kfm_dir_addLink(new Element('table',{
 			'id':'kfm_directories'
-		}),'','',1,0,1),p);
-		kfm_directories[1]={
+		}),'','',1,0,kfm_vars.root_folder_id),p);
+		kfm_directories[kfm_vars.root_folder_id]={
 			'parent':0,
 			'name':kfm_vars.root_folder_name,
 			'path':'/',
 			'realpath':res.properties.path,
 			'hasChildren':res.directories.length
 		}
-		$('kfm_directory_icon_1').parentNode.className+=' kfm_directory_open';
+		$('kfm_directory_icon_'+kfm_vars.root_folder_id).parentNode.className+=' kfm_directory_open';
 	}
 	var t=new Element('table'),n='kfm_dir_node_'+d;
 	t.setStyle('table-layout','fixed');
