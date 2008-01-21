@@ -373,9 +373,14 @@ function kfm_shrinkName(name,wrapper,text,size,maxsize,extension){
 	if(extension)html+='<span class="filename">'+extension+'</span>';
 	text.innerHTML=html;
 }
+/* Start kfm plugin iframe functions */
 function kfm_pluginIframeShow(url){
 		var div,ifr, header;
 		div=document.getElementById('plugin_iframe_div');
+		if(div && url){ // Remove div if url is set
+			div.parentNode.removeChild(div);
+			div=false;
+		}
 		if(!div){
 			if(!url) return alert('No active plugin');
 			div=document.createElement('DIV');
@@ -420,21 +425,21 @@ function kfm_pluginIframeShow(url){
 		div.style.display='block';
 }
 function kfm_pluginIframeButton(code,text){
-	var btncode;
+	var btncode,btn;
 	var hdr=document.getElementById('plugin_iframe_header');
 	if(!hdr)return;
-	var btn=document.createElement('IMG');
 	if(code=='close'){
+		btn=document.createElement('IMG');
 		if(!text)btn.innerHTML='Close';	
+		btn.src='themes/'+kfm_theme+'/icons/remove.png';
 		btncode='parent.kfm_pluginIframeHide()';
 	}else{
+		btn=document.createElement('SPAN');
+		btn.className='kfm_plugin_iframe_button';
 		btncode=code;
 	}
 	if(text)btn.innerHTML=text;
-	btn.onclick=function(){
-		eval(btncode);
-	}
-	btn.src='themes/'+kfm_theme+'/icons/remove.png';
+	btn.onclick=eval('function(){'+btncode+'}');
 	hdr.appendChild(btn);
 }
 function kfm_pluginIframeHide(){
@@ -449,6 +454,13 @@ function kfm_pluginIframeMessage(message){
 	msgdiv.style.display='block';
 	setTimeOut('document.getElementById("plugin_iframe_message").style.display="none";',3000);
 }
+function kfm_pluginIframeVar(varname){
+	var ifr=document.getElementById('plugin_iframe_element');
+	if(!ifr) return null;
+	var ifrvar=eval('ifr.contentWindow.'+varname);
+	return ifrvar;
+}
+/* End kfm plugin iframe functions */
 var kfm_regexps={
 	all_up_to_last_dot:/.*\./,
 	all_up_to_last_slash:/.*\//,

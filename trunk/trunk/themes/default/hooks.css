@@ -13,3 +13,14 @@
 	background-image:url(icons/remove.png);
 	background-repeat:no-repeat;
 }
+.kfm_plugin_iframe_button{
+	margin-left:10px;
+	cursor:pointer;
+	border-style:outset;
+	border-color:#eee;
+	border-width:2px;
+}
+.kfm_plugin_iframe_button:hover{
+	background-color:white;
+	color:black;
+}
