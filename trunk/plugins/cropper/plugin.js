@@ -11,18 +11,23 @@ function plugin_cropper(){
 		var data=File_getInstance(fid);
 		var url='plugins/cropper/croparea.php?id='+fid+'&width='+data.width+'&height='+data.height;
 		kfm_pluginIframeShow(url);
+		kfm_pluginIframeButton('kfm_cropToNew('+fid+',kfm_pluginIframeVar("coordinates"),kfm_pluginIframeVar("dimensions"))','Crop to new file');
 		//this.openCropper(fid,url);
 	}
 	this.crop_image=function(fid){
 		var data=File_getInstance(fid);
 		var url='plugins/cropper/croparea.php?id='+fid+'&width='+data.width+'&height='+data.height+'&options=both';
-		kfm_pluginIframeShow(url);
+		var ifr=kfm_pluginIframeShow(url);
+		kfm_pluginIframeButton('kfm_cropToOriginal('+fid+',kfm_pluginIframeVar("coordinates"),kfm_pluginIframeVar("dimensions"))','Crop');
+		kfm_pluginIframeButton('kfm_cropToNew('+fid+',kfm_pluginIframeVar("coordinates"),kfm_pluginIframeVar("dimensions"))','Crop to new file');
 		//this.openCropper(fid,url);
 	}
 	this.doFunction=function(fid){
 		alert('This is the default function which should have been overwritten');
 	}
 	this.openCropper=function(fid, url){
+		alert('The openCropper function is not longer supported');
+		return;
 		var div=document.createElement('DIV');
 		div.style.position='absolute';
 		div.id='cropperdiv';
@@ -42,6 +47,7 @@ function plugin_cropper(){
 	}
 }
 	function kfm_cropToOriginal(id,coords,dimensions){
+		if(!coords || !dimensions)return;
 		var F=File_getInstance(id);
 		kfm_pluginIframeHide();
 		x_kfm_cropToOriginal(id, coords.x1, coords.y1, dimensions.width, dimensions.height, function(id){
@@ -50,6 +56,7 @@ function plugin_cropper(){
 		});
 	}
 	function kfm_cropToNew(id, coords, dimensions){
+		if(!coords || !dimensions)return;
 		var filename=File_getInstance(id).name;
 		kfm_prompt(kfm.lang.RenameFileToWhat(filename),filename,function(newName){
 			if(!newName||newName==filename)return;
