@@ -60,6 +60,7 @@ if(!empty($_POST['kaejax']))kfm_kaejax_handle_client_request();
                     }
                 },
                 root_folder_name:"<?php echo $kfm_root_folder_name; ?>",
+                root_folder_id:"<?php echo $kfm_root_folder_id; ?>",
                 show_disabled_contextmenu_links:<?php echo $kfm_show_disabled_contextmenu_links; ?>,
                 use_multiple_file_upload:<?php echo $kfm_use_multiple_file_upload; ?>,
                 version:'<?php echo KFM_VERSION; ?>'

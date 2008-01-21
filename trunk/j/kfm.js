@@ -208,8 +208,8 @@ kfm_addHook({name:"rename", mode:0,extensions:"all", writable:1,title:kfm.lang.R
 		}
 		{ // draw areas to screen and load files and directory info
 			kfm.addEl($(document.body).empty(),[left_column,right_column]);
-			x_kfm_loadFiles(1,kfm_refreshFiles);
-			x_kfm_loadDirectories(1,kfm_refreshDirectories);
+			x_kfm_loadFiles(kfm_vars.root_folder_id,kfm_refreshFiles);
+			x_kfm_loadDirectories(kfm_vars.root_folder_id,kfm_refreshDirectories);
 		}
 		document.addEvent('keyup',kfm.keyup);
 		window.addEvent('resize',kfm_resizeHandler);
