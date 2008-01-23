@@ -216,13 +216,13 @@ function kfm_incrementalFileDisplay(){
             else{
                 if(F.width){
                     if(writable){
-                        var manip=!(kfm_vars.permissions.file.ed&&kfm_vars.permissions.image.manip);
+                        //var manip=!(kfm_vars.permissions.file.ed&&kfm_vars.permissions.image.manip);
                         //links.push(['kfm_rotateImage('+id+',270)',kfm.lang.RotateClockwise,'rotate_cw',manip]);
                         //links.push(['kfm_rotateImage('+id+',90)',kfm.lang.RotateAntiClockwise,'rotate_ccw',manip]);
-                        links.push(['kfm_resizeImage('+id+')',kfm.lang.ResizeImage,'resize_image',manip]);
+                        //links.push(['kfm_resizeImage('+id+')',kfm.lang.ResizeImage,'resize_image',manip]);
                         //links.push(['kfm_cropImage('+id+')','crop', '', manip]);
                     }
-                    links.push(['kfm_img_startLightbox('+id+')',kfm.lang.ViewImage]);
+                   // links.push(['kfm_img_startLightbox('+id+')',kfm.lang.ViewImage]);
                     links.push(['kfm_returnThumbnail('+id+')',kfm.lang.ReturnThumbnailToOpener]);
                     links.push(['kfm_changeCaption('+id+')',kfm.lang.ChangeCaption,'edit',!kfm_vars.permissions.file.ed]);
                 }

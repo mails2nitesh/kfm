@@ -93,6 +93,8 @@ while (false!==($dir=readdir($h))) {
 			$h=opendir(KFM_BASE_PATH.'plugins');
 			while(false!==($plugin=readdir($h))){
 				if($plugin[0]=='.')continue;
+			
+				if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.php')) include(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.php');
 				if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.js'))echo '
 					<script type="text/javascript" src="plugins/'.$plugin.'/plugin.js"></script>';
 				if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.css'))echo '

@@ -96,35 +96,23 @@ var KFM=new Class({
 		new Notice(message);
 	},
 	build:function(){
-kfm_addHook({},{name:"download", mode:0,"extensions":"all", writable:2, title:"download file", doFunction:function(files){
-		kfm_downloadSelectedFiles(files[0]);
-	}
-});
-kfm_addHook({name:"download", mode:1,"extensions":"all", writable:2, title:"download selected files", doFunction:function(files){
-		kfm_downloadSelectedFiles();
-	},
-	displayCheck:function(files){
-		if(window.ie)return 0; // don't display for ie
-		return 1; //default
-	}
-});
-kfm_addHook({name:"remove", mode:2,extensions:"all", writable:1,title:kfm.lang.DeleteFile, doFunction:function(files){
-		if(files.length>1)kfm_deleteSelectedFiles();
-		else kfm_deleteFile(files[0]);
-	},
-	displayCheck:function(){
-		if(!kfm_vars.permissions.file.rm)return 2;//inactive
-		return 1; // active
-	}
-});
-kfm_addHook({name:"rename", mode:0,extensions:"all", writable:1,title:kfm.lang.RenameFile, doFunction:function(files){
-		kfm_renameFile(files[0]);
-	},
-	displayCheck:function(){
-		if(!kfm_vars.permissions.file.ed)return 2;//inactive
-		return 1; // active
-	}
-});
+		kfm_addHook({name:"download", mode:0,"extensions":"all", writable:2, title:"download file", doFunction:function(files){
+				kfm_downloadSelectedFiles(files[0]);
+			}
+		});
+		if(!window.ie)kfm_addHook({name:"download", mode:1,"extensions":"all", writable:2, title:"download selected files", doFunction:function(files){
+				kfm_downloadSelectedFiles();
+			}
+		});
+		if(kfm_vars.permissions.file.rm)kfm_addHook({name:"remove", mode:2,extensions:"all", writable:1,title:kfm.lang.DeleteFile, doFunction:function(files){
+				if(files.length>1)kfm_deleteSelectedFiles();
+				else kfm_deleteFile(files[0]);
+			}
+		});
+		if(kfm_vars.permissions.file.ed)kfm_addHook({name:"rename", mode:0,extensions:"all", writable:1,title:kfm.lang.RenameFile, doFunction:function(files){
+				kfm_renameFile(files[0]);
+			}
+		});
 		var form_panel,form,right_column,directories,logs,logHeight=64,w=window.getSize().size,j,i;
 		{ // extend language objects
 			for(var j in kfm.lang){
