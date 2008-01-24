@@ -18,7 +18,9 @@ function kfm_img_startLightbox(id){
 		if(id.length>1){
 			window.kfm_slideshow={ids:id,at:0};
 			id=0;
-		}else id=id[0];
+		}else{
+			id=id[0];
+		}
 	}
 	if(!id){
 		window.kfm_slideshow.at++;

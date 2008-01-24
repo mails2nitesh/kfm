@@ -223,7 +223,7 @@ function kfm_incrementalFileDisplay(){
                         //links.push(['kfm_cropImage('+id+')','crop', '', manip]);
                     }
                    // links.push(['kfm_img_startLightbox('+id+')',kfm.lang.ViewImage]);
-                    links.push(['kfm_returnThumbnail('+id+')',kfm.lang.ReturnThumbnailToOpener]);
+                    //links.push(['kfm_returnThumbnail('+id+')',kfm.lang.ReturnThumbnailToOpener]);
                     links.push(['kfm_changeCaption('+id+')',kfm.lang.ChangeCaption,'edit',!kfm_vars.permissions.file.ed]);
                 }
                 //if(kfm_inArray(extension,['zip']))links.push(['kfm_extractZippedFile("'+id+'")',kfm.lang.ExtractZippedFile,'extract_zip',!kfm_vars.permissions.file.mk]);
