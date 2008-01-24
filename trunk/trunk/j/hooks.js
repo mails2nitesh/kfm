@@ -84,6 +84,10 @@ function kfm_addHookExtension(HooksArray, ext){
 function kfm_addHookCategory(HookArray,ext, newCategory){
 	/*Add a hook category and make sure the order defined in the HookCategories is maintained*/
 	eval(HookArray+'.'+ext+'.'+newCategory+'=[];');
+
+	/*Sorting according to the HookCategories */
+	//Not working yet
+	/*
 	var tempHooks=eval(HookArray+'.'+ext); // copy the old array into a temp var
 	eval(HookArray+'.'+ext+'={};'); // empty the old array
 	for(var i in HookCategories){ // loop and add the new category in the right place
@@ -93,6 +97,7 @@ function kfm_addHookCategory(HookArray,ext, newCategory){
 		if(typeof(eval('tempHooks.'+category))!="undefined")eval(HookArray+'.'+ext+'.'+category+'=tempHooks.'+category+';');
 		else if(category==newCategory)eval(HookArray+'.'+ext+'.'+category+'=[];');
 	}
+	*/
 }
 function kfm_getLinks(files){
 	/* initial return function 
@@ -120,20 +125,22 @@ function kfm_getLinks(files){
 			index=cPlugins.length-1;
 			cPlugins[index].doParameter=[];
 		}
+	
+		/* Then add the file id to the doParameter */
+		cPlugins[index].doParameter.push(fid);
 		
-		
-		/* Make sure a file is only added once */
+		/* Make sure a file is only added once, maybe not required */
+		/*
 		var addFile=true;
 		for(var j=0;j<cPlugins[index].doParameter.length;j++) if(cPlugins[index].doParameter[j]==fid)addFile=false;
 		if(addFile)cPlugins[index].doParameter.push(fid);
+		*/
 	}
 	if(files.length>1){
-		//ext="noextension";//extension dependensie for multiple files not supported yet
-		//if(writable)HooksArray="HooksMultipleWritable";
-		//else HooksArray="HooksMultipleReadonly";
 		for(var i=0; i<files.length; i++){
 			var F=File_getInstance(files[i]);
          var extension=F.name.replace(/.*\./,'').toLowerCase();
+			/*
 			for(var category in HooksMultiple.all){ //loop over categories
 				if(typeof(category)=="function")continue; // mootools fix
 				var plugins=eval("HooksMultiple.all."+category);
@@ -145,6 +152,23 @@ function kfm_getLinks(files){
 						)
 						addPlugin(plugin,F.id);
 					if(	!F.writable && 
+							(plugin.writable==0 || plugin.writable==2) && 
+							((typeof(plugin.extensions)=="string" && plugin.extensions=="all") || plugin.extensions.indexOf(extension)!=-1)
+						)
+						addPlugin(plugin,F.id);
+				}
+			}*/
+			for(var k=0;k<HookCategories.length; k++){
+				if(eval('HooksMultiple.all.'+HookCategories[k]))plugins=eval('HooksMultiple.all.'+HookCategories[k]);
+				else plugins=[];
+				for(var j=0; j<plugins.length; j++){ // loop over plugins
+					var plugin=plugins[j];
+					if(	F.writable && 
+							(plugin.writable==1 || plugin.writable==2) && 
+							((typeof(plugin.extensions)=="string" && plugin.extensions=="all") || plugin.extensions.indexOf(extension)!=-1)
+						)
+						addPlugin(plugin,F.id);
+					else if(	!F.writable && 
 							(plugin.writable==0 || plugin.writable==2) && 
 							((typeof(plugin.extensions)=="string" && plugin.extensions=="all") || plugin.extensions.indexOf(extension)!=-1)
 						)
@@ -162,6 +186,7 @@ function kfm_getLinks(files){
 	else HooksArray="HooksSingleReadonly";
 
 	/*Add the links for all extensions */
+	/*
 	if(eval('typeof('+HooksArray+'.all)!="undefined"')){
 		var HookCategories=eval(HooksArray+'.all');
 		for(category in HookCategories){
@@ -183,7 +208,16 @@ function kfm_getLinks(files){
 				hookObjects[hookObjects.length-1].doParameter=[F.id];
 			}
 	}
-	//alert(dump(hookObjects));
+	*/
+	for(var j=0;j<HookCategories.length;j++){
+		category=HookCategories[j];
+		/* extend should be concat, but mootools thinks otherwise*/
+		if(typeof(eval(HooksArray+'.all.'+category))!='undefined')hookObjects.extend(eval(HooksArray+'.all.'+category));
+		if(typeof(eval(HooksArray+'.'+ext+'.'+category))!='undefined')hookObjects.extend(eval(HooksArray+'.'+ext+'.'+category));
+	}
+	hookObjects.forEach(function(item, index){
+		item.doParameter=[F.id];
+	});
 	return hookObjects;
 }
 /*end core section*/
