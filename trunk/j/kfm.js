@@ -196,8 +196,11 @@ var KFM=new Class({
 		}
 		{ // draw areas to screen and load files and directory info
 			kfm.addEl($(document.body).empty(),[left_column,right_column]);
-			x_kfm_loadFiles(kfm_vars.root_folder_id,kfm_refreshFiles);
+			x_kfm_loadFiles(kfm_vars.startupfolder_id,kfm_refreshFiles);
 			x_kfm_loadDirectories(kfm_vars.root_folder_id,kfm_refreshDirectories);
+			for(var ist=0;ist<kfm_vars.startup_sequence.length;ist++){
+				x_kfm_loadDirectories(kfm_vars.startup_sequence[ist],kfm_refreshDirectories);
+			}
 		}
 		document.addEvent('keyup',kfm.keyup);
 		window.addEvent('resize',kfm_resizeHandler);
