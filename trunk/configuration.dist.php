@@ -119,6 +119,11 @@ $kfm_banned_extensions=array('asp','cfm','cgi','php','php3','php4','phtm','pl','
 // for regular expressions, use eithe '/' or '@' as the delimiter
 $kfm_banned_files=array('thumbs.db','/^\./');
 
+// you can use regular expressions in this one.
+// for exact matches, use lowercase.
+// for regular expressions, use eithe '/' or '@' as the delimiter
+$kfm_banned_folders=array('/^\./');
+
 // this array tells KFM what extensions indicate files which may be edited online.
 $kfm_editable_extensions=array('css','html','js','txt','xhtml','xml');
 

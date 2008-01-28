@@ -165,14 +165,19 @@ class kfmDirectory extends kfmObject{
 	}
 	function checkName($file=false){
 		if($file===false)$file=$this->name;
-		if(trim($file)=='')return false;
-		if($file[0]=='.')return false;
+		if(trim($file)==''|| trim($file)!=$file)return false;
 		foreach($GLOBALS['kfm_banned_folders'] as $ban){
 			if(($ban[0]=='/' || $ban[0]=='@')&&preg_match($ban,$file))return false;
 			elseif($ban==strtolower(trim($file)))return false;
 		}
-		if(isset($GLOBALS['kfm_allowed_folders']) && is_array($GLOBALS['kfm_allowed_folders']))
-			foreach($GLOBALS['kfm_allowed_folders'] as $allow)if(!preg_match($allow, $file))return false;
+		if(isset($GLOBALS['kfm_allowed_folders']) && is_array($GLOBALS['kfm_allowed_folders'])){
+			foreach($GLOBALS['kfm_allowed_folders'] as $allow){
+				if($allow[0]=='/' || $allow[0]=='@'){
+					if(preg_match($allow, $file))return true;
+				}else if($allow==strtolower($file)) return true;
+			}
+			return false;
+		}
 		return true;
 	}
 	function addFile($file){

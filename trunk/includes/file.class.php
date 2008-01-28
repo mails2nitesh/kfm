@@ -239,15 +239,21 @@ class kfmFile extends kfmObject{
 	 */
 	function checkName($filename=false){
 		if($filename===false)$filename=$this->name;
-		if($filename=='' || trim($filename)!=$filename || $filename[0]=='.')return false;
+		if($filename=='' || trim($filename)!=$filename)return false;
 		
 		foreach($GLOBALS['kfm_banned_files'] as $ban){
 			if(($ban[0]=='/' || $ban[0]=='@')&&preg_match($ban,$filename))return false;
-			elseif($ban==strtolower(trim($filename)))return false;
+			elseif($ban==strtolower($filename))return false;
 		}
-		if(isset($GLOBALS['kfm_allowed_files']) && is_array($GLOBALS['kfm_allowed_files']))
-			foreach($GLOBALS['kfm_allowed_files'] as $allow)if(!preg_match($allow, $filename))return false;
 
+		if(isset($GLOBALS['kfm_allowed_files']) && is_array($GLOBALS['kfm_allowed_files'])){
+			foreach($GLOBALS['kfm_allowed_files'] as $allow){
+				if($allow[0]=='/' || $allow[0]=='@'){
+					if(preg_match($allow, $file))return true;
+				}else if($allow==strtolower($file)) return true;
+			}
+			return false;
+		}
 		return true;
 	}
 }
