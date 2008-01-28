@@ -12,6 +12,29 @@
 error_reporting(E_ALL);
 require_once 'initialise.php';
 require_once KFM_BASE_PATH.'includes/kaejax.php';
+/* Startup settings */
+$startup_sequence='[]';
+if($kfm_root_folder_id!=1){
+	$root_dir=kfmDirectory::getInstance($kfm_root_folder_id);
+	if(!$root_dir) die ('Error: Root directory cannot be found in the database.');
+	print_r($root_dir);
+}
+	if($kfm_startupfolder_id!=$kfm_root_folder_id){
+		$startupdir=kfmDirectory::getInstance($kfm_startupfolder_id);
+		if(!$startupdir){
+			$kfm_startupfolder_id=$kfm_root_folder_id;
+		}
+		else{
+			$startup_sequence=$startupdir->id.']';
+			$parent=kfmDirectory::getInstance($startupdir->pid);
+			while($parent->id!=$kfm_root_folder_id){
+				if($parent->id==0)die ('Error: Startup folder is not in the directory structure');
+				$startup_sequence=$parent->id.','.$startup_sequence;
+				$parent=kfmDirectory::getInstance($parent->pid);
+			}
+			$startup_sequence='['.$startup_sequence;
+		}
+	}
 header('Content-type: text/html; Charset=utf-8');
 
 // { export kaejax stuff
@@ -60,7 +83,9 @@ if(!empty($_POST['kaejax']))kfm_kaejax_handle_client_request();
                     }
                 },
                 root_folder_name:"<?php echo $kfm_root_folder_name; ?>",
-                root_folder_id:"<?php echo $kfm_root_folder_id; ?>",
+                root_folder_id:<?php echo $kfm_root_folder_id; ?>,
+					 startupfolder_id:<?php echo $kfm_startupfolder_id; ?>,
+					 startup_sequence:<? echo $startup_sequence; ?>,
                 show_disabled_contextmenu_links:<?php echo $kfm_show_disabled_contextmenu_links; ?>,
                 use_multiple_file_upload:<?php echo $kfm_use_multiple_file_upload; ?>,
                 version:'<?php echo KFM_VERSION; ?>'

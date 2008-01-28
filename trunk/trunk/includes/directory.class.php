@@ -6,6 +6,7 @@ class kfmDirectory extends kfmObject{
 		parent::__construct();
 		$this->id=$id;
 		$res=db_fetch_row("SELECT * FROM ".$this->db_prefix."directories WHERE id=".$this->id);
+		if(!$res)return $this->id=0;
 		$this->name=$res['name'];
 		$this->pid=$res['parent'];
 		$this->path=$this->getPath();
@@ -78,7 +79,11 @@ class kfmDirectory extends kfmObject{
 	}
 	function getInstance($id=1){
 		global $kfmDirectoryInstances;
-		if(!isset($kfmDirectoryInstances[$id]))$kfmDirectoryInstances[$id]=new kfmDirectory($id);
+		if(!isset($kfmDirectoryInstances[$id])){
+			$dir=new kfmDirectory($id);
+			if($dir->id==0)return false;
+			$kfmDirectoryInstances[$id]=$dir;
+		}
 		return $kfmDirectoryInstances[$id];
 	}
 	function getPath(){
