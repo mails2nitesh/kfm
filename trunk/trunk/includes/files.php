@@ -13,7 +13,8 @@ function _createEmptyFile($cwd,$filename){
 	global $kfm_session;
 	$dir=kfmDirectory::getInstance($cwd);
 	$path=$dir->path;
-	if(!kfm_checkAddr($path.$filename))return 'error: '.kfm_lang('illegalFileName',$filename);
+	//if(!kfm_checkAddr($path.$filename))return 'error: '.kfm_lang('illegalFileName',$filename);
+	if(!kfmFile::checkName($filename))return 'error: '.kfm_lang('illegalFileName',$filename);
 	return(touch($path.$filename))?kfm_loadFiles($cwd):'error: '.kfm_lang('couldNotCreateFile',$filename);
 }
 function _downloadFileFromUrl($url,$filename){
@@ -21,7 +22,8 @@ function _downloadFileFromUrl($url,$filename){
 	$cwd_id=$kfm_session->get('cwd_id');
 	$dir=kfmDirectory::getInstance($cwd_id);
 	$cwd=$dir->getPath();
-	if(!kfm_checkAddr($cwd.'/'.$filename))return kfm_lang('error: filename not allowed');
+	//if(!kfm_checkAddr($cwd.'/'.$filename))return kfm_lang('error: filename not allowed');
+	if(!kfmFile::checkName($filename))return kfm_lang('error: filename not allowed');
 	if(substr($url,0,4)!='http')return kfm_lang('error: url must begin with http');
 	$file=file_get_contents(str_replace(' ','%20',$url));
 	if(!$file)return kfm_lang('failedDownloadFromUrl');
@@ -42,7 +44,8 @@ function _extractZippedFile($id){
 		if(!$res){
 			for($i=3;$i<count($arr)-2;++$i){
 				$filename=preg_replace('/.* /','',$arr[$i]);
-				if(!kfm_checkAddr($filename))return kfm_lang('errorZipContainsBannedFilename');
+				//if(!kfm_checkAddr($filename))return kfm_lang('errorZipContainsBannedFilename');
+				if(!kfmFile::checkName($filename))return kfm_lang('errorZipContainsBannedFilename');
 			}
 			exec('unzip -o "'.$dir.$file->name.'" -x -d "'.$dir.'"',$arr,$res);
 		}
@@ -276,7 +279,8 @@ function _zip($filename,$files){
 	$cwd=$dir->path;
 	if(!$GLOBALS['kfm_allow_file_create'])return 'error: '.kfm_lang('permissionDeniedCreateFile');
 	global $rootdir;
-	if(!kfm_checkAddr($cwd.'/'.$filename))return 'error: '.kfm_lang('illegalFileName',$filename);
+	//if(!kfm_checkAddr($cwd.'/'.$filename))return 'error: '.kfm_lang('illegalFileName',$filename);
+	if(!kfmFile::checkName($filename))return 'error: '.kfm_lang('illegalFileName',$filename);
 	$arr=array();
 	foreach($files as $f){
 		$file=kfmFile::getInstance($f);

@@ -1,4 +1,9 @@
 <?php
+function kfm_error($message,$level=3){
+	global $kfm_errors;
+	$kfm_errors[]=array('message'=>$message,'level'=>$level);
+	return false;
+}
 function kfm_isError($level=3){
 	global $kfm_errors;
 	foreach($kfm_errors as $error) if($error->level<=$level)return true;
