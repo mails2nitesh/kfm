@@ -48,7 +48,7 @@
 		foreign key(tag_id) references ".KFM_DB_PREFIX."tags(id)
 	)");
 
-	$kfmdb->query("insert into ".KFM_DB_PREFIX."parameters values('version','1.1.2')");
-	$kfmdb->query("insert into ".KFM_DB_PREFIX."directories values(1,'',0)");
+	$kfmdb->query("insert into ".KFM_DB_PREFIX."parameters values('version','1.3')");
+	$kfmdb->query("insert into ".KFM_DB_PREFIX."directories values(1,'root',0)");
 	$db_defined=1;
 ?>

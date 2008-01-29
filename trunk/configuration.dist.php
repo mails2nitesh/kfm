@@ -170,7 +170,8 @@ $kfm_slideshow_delay=4;
 $kfm_allow_image_manipulation=1;
 
 // set root folder name
-$kfm_root_folder_name='root';
+// Set to foldername to use actual folder name or root when $kfm_user_root_folder is not set
+$kfm_root_folder_name='foldername';
 
 // if you are using a CMS and want to return the file's DB id instead of the URL, set this
 $kfm_return_file_id_to_cms=0;
