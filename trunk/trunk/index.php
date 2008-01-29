@@ -57,7 +57,9 @@ if(!empty($_POST['kaejax']))kfm_kaejax_handle_client_request();
 		  <link rel="stylesheet" href="themes/<?php echo $kfm_theme; ?>/hooks.css" />
         <title>KFM - Kae's File Manager</title>
         <script type="text/javascript" src="j/mootools.v1.11/mootools.v1.11.js"></script>
+        <script type="text/javascript" src="j/jquery/jquery-1.2.2.pack.js"></script>
         <script type="text/javascript">
+				var $j = jQuery.noConflict();
             var kfm_vars={
                 files:{
                     name_length_displayed:<?php echo $kfm_files_name_length_displayed; ?>,
