@@ -1,5 +1,11 @@
 // see ../license.txt for licensing
 function kfm_changeCaption(id){
+	kfm_prompt(kfm.lang.ChangeCaption,File_getInstance(id).caption,function(newCaption){
+		x_kfm_changeCaption(id,newCaption,function(res){
+			File_getInstance(id).caption=newCaption;
+		});
+	});
+	/*
 	var table=$extend(new Element('table',{
 		'id':'kfm_newCaptionDetails'
 	}),{kfm_caption_for:id});
@@ -9,6 +15,7 @@ function kfm_changeCaption(id){
 	row.insertCell(1).appendChild(textarea);
 	kfm_modal_open(table,kfm.lang.ChangeCaption,[[kfm.lang.ChangeCaption,kfm_changeCaption_set]]);
 	$('kfm_new_caption').focus();
+	*/
 }
 function kfm_changeCaption_set(){
 	var id=$('kfm_newCaptionDetails').kfm_caption_for,newCaption=$('kfm_new_caption').value;
