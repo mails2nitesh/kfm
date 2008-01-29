@@ -13,7 +13,36 @@ error_reporting(E_ALL);
 require_once 'initialise.php';
 require_once KFM_BASE_PATH.'includes/kaejax.php';
 /* Startup settings */
+$kfm_root_dir=kfmDirectory::getInstance(1);
+if($kfm_user_root_folder){
+	$dirs=explode(DIRECTORY_SEPARATOR,trim($kfm_user_root_folder,' '.DIRECTORY_SEPARATOR));
+	$subdir=$kfm_root_dir;
+	foreach($dirs as $dirname){
+		$subdir=$subdir->getSubdir($dirname);
+		if(!$subdir) die ('Error: Root directory cannot be found in the database.');
+		$kfm_root_folder_id=$subdir->id;
+	}
+	$user_root_dir=$subdir;
+}else{
+	$user_root_dir=$kfm_root_dir;
+}
+$kfm_root_folder_id=$user_root_dir->id;
+if($kfm_root_folder_name=='foldername')$kfm_root_folder_name=$user_root_dir->name;
+$kfm_startupfolder_id=$user_root_dir->id;
 $startup_sequence='[]';
+if($kfm_startup_folder){
+	$dirs=explode(DIRECTORY_SEPARATOR,trim($kfm_startup_folder,' '.DIRECTORY_SEPARATOR));
+	$subdir=$user_root_dir;
+	$startup_sequence_array=array();
+	foreach($dirs as $dirname){
+		$subdir=$subdir->getSubdir($dirname);
+		if(!$subdir)break;
+		$startup_sequence_array[]=$subdir->id;
+		$kfm_startupfolder_id=$subdir->id;
+	}
+	$startup_sequence='['.implode(',',$startup_sequence_array).']';
+}
+/*
 if($kfm_root_folder_id!=1){
 	$root_dir=kfmDirectory::getInstance($kfm_root_folder_id);
 	if(!$root_dir) die ('Error: Root directory cannot be found in the database.');
@@ -35,6 +64,7 @@ if($kfm_root_folder_id!=1){
 			$startup_sequence='['.$startup_sequence;
 		}
 	}
+*/
 header('Content-type: text/html; Charset=utf-8');
 
 // { export kaejax stuff
