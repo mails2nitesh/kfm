@@ -135,6 +135,11 @@ class kfmDirectory extends kfmObject{
 			$this->error('Directory could not be opened');
 		}
 	}
+	function getSubdir($dirname){
+		$res=db_fetch_row('select id from '.$this->db_prefix.'directories where name="'.$dirname.'" and parent='.$this->id);
+		if($res)return kfmDirectory::getInstance($res['id']);
+		return false;
+	}
 	function isWritable(){
 		return is_writable($this->path);	
 	}
