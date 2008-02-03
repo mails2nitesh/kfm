@@ -127,8 +127,8 @@ class kfmImage extends kfmFile{
 			$this->deleteThumbs();
 			if(!$this->isWritable())return $this->error(kfm_lang('imageNotWritable'));
 		}
-		if($kfm_use_imagemagick && $newname && !$this->useImageMagick($this->path,'crop '.$width.'x'.$height.'+'.$x1.'+'.$y1, dirname($this->path).'/'.$newname))return;
-		else if($kfm_use_imagemagick && !$this->useImageMagick($this->path,'crop '.$width.'x'.$height.'+'.$x1.'+'.$y1, $this->path))return;
+		if($kfm_use_imagemagick && $newname && !$this->useImageMagick($this->path,'crop '.$width.'x'.$height.'+'.$x1.'+'.$y1.' +repage', dirname($this->path).'/'.$newname))return;
+		else if($kfm_use_imagemagick && !$this->useImageMagick($this->path,'crop '.$width.'x'.$height.'+'.$x1.'+'.$y1.' +repage', $this->path))return;
 		{ # else use GD
 			$load='imagecreatefrom'.$this->type;
 			$save='image'.$this->type;
