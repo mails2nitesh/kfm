@@ -377,7 +377,13 @@ function kfm_removeFilesFromView(files){
     for(var i=0;i<files.length;++i){
         var el=$('kfm_file_icon_'+files[i]);
         if(el){
-            if(kfm_listview)el.parentNode.parentNode.remove();
+            if(kfm_listview){
+							el.parentNode.parentNode.remove();
+							var trows=$ES('#kfm_files_listview_table tr');
+							for(var i=1;i<trows.length;++i){
+								trows[i].className=i%2?'odd':'even';
+							}
+						}
             else el.remove();
         }
         right_column.fileids.remove(files[i]);

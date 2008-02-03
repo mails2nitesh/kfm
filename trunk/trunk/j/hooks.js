@@ -213,7 +213,11 @@ function kfm_getLinks(files){
 		category=HookCategories[j];
 		/* extend should be concat, but mootools thinks otherwise*/
 		if(typeof(eval(HooksArray+'.all.'+category))!='undefined')hookObjects.extend(eval(HooksArray+'.all.'+category));
-		if(typeof(eval(HooksArray+'.'+ext+'.'+category))!='undefined')hookObjects.extend(eval(HooksArray+'.'+ext+'.'+category));
+		try{
+			if(typeof(eval(HooksArray+'.'+ext+'.'+category))!='undefined')hookObjects.extend(eval(HooksArray+'.'+ext+'.'+category));
+		}
+		catch(e){ // unknown extension
+		}
 	}
 	hookObjects.forEach(function(item, index){
 		item.doParameter=[F.id];
