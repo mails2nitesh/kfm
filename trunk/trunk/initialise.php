@@ -414,9 +414,9 @@ require_once(KFM_BASE_PATH.'configuration.php');
 		require_once(KFM_BASE_PATH.'includes/files.php');
 		return _moveFiles($files,$dir_id);
 	}
-	function kfm_loadFiles($rootid=1){
+	function kfm_loadFiles($rootid=1,$setParent=false){
 		require_once(KFM_BASE_PATH.'includes/files.php');
-		return _loadFiles($rootid);
+		return _loadFiles($rootid,$setParent);
 	}
 	function kfm_renameFile($filename,$newfilename){
 		require_once(KFM_BASE_PATH.'includes/files.php');
