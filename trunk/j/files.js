@@ -313,7 +313,7 @@ function kfm_refreshFiles(res){
         'events':{
             'change':function(){
                 kfm_listview=parseInt(this.value);
-                x_kfm_loadFiles(kfm_cwd_id, kfm_refreshFiles);
+                x_kfm_loadFiles(kfm_cwd_id,true,kfm_refreshFiles);
             }
         }
     });

@@ -124,8 +124,9 @@ function _getTextFile($fid){
 	}
 	return array('content'=>$file->getContent(),'name'=>$file->name,'id'=>$file->id,'language'=>$language);
 }
-function _loadFiles($rootid=1){
+function _loadFiles($rootid=1,$setParent=false){
 	global $kfm_session;
+	if(!$rootid)$rootid=1;
 	$dir=kfmDirectory::getInstance($rootid);
 	$oFiles=$dir->getFiles();
 	if($dir->hasErrors())return $dir->getErrors();
@@ -133,7 +134,9 @@ function _loadFiles($rootid=1){
 	foreach($oFiles as $file)$files[]=_getFileDetails($file);
 	$root='/'.str_replace($GLOBALS['rootdir'],'',$dir->path);
 	$kfm_session->set('cwd_id',$rootid);
-	return array('reqdir'=>$root,'files'=>$files,'uploads_allowed'=>$GLOBALS['kfm_allow_file_upload']); 
+	$ret=array('reqdir'=>$root,'files'=>$files,'uploads_allowed'=>$GLOBALS['kfm_allow_file_upload']); 
+	if($setParent)$ret['parent']=$rootid;
+	return $ret;
 }
 function _moveFiles($files,$dir_id){
 	global $kfmdb,$kfm_session;
