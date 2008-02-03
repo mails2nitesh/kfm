@@ -1,6 +1,6 @@
 function plugin_return_thumbnail(){
-	this.name='return_thumbnail',
-	this.title=kfm.lang.ReturnThumbnailToOpener,
+	this.name='return_thumbnail';
+	this.title=kfm.lang.ReturnThumbnailToOpener;
 	this.mode=0;//single files
 	this.writable=2;//writable files
 	this.category='return';

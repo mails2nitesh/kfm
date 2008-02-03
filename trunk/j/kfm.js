@@ -20,24 +20,24 @@ var KFM=new Class({
 			html+='<a href="http://www.companytools.nl/cmsms/kfm" target="_blank">Benjamin ter Kuile</a><br />';
 		}
 		{ // translators
-			html+='<h2>Translators</h2>';
+			html+='<h2>Translators</h2><table><tr><td>';
 			html+='bg (Bulgarian): Tondy<br />';
 			html+='da (Danish): Janich Rasmussen<br />';
 			html+='de (German): Just Agens<br />';
 			html+='en (English): Kae Verens<br />';
 			html+='es (Spanish): Ramón Ramos<br />';
 			html+='fi (Finnish): Hannu (hlpilot)<br />';
-			html+='fr (French): Hubert Garrido<br />';
+			html+='fr (French): Hubert Garrido</td><td>';
 			html+='ga (Irish): Kae Verens<br />';
 			html+='it (Italian): Stefano Luchetta<br />';
 			html+='nl (Dutch): Roy Lubbers<br />';
 			html+='pl (Polish): Jan Kurek<br />';
 			html+='ro (Romanian): Andrei Suscov<br />';
-			html+='ru (Russian): Andrei Suscov<br />';
+			html+='ru (Russian): Andrei Suscov</td></tr></table>';
 		}
 		{ // bug testers
 			html+='<h2>Bug Testers</h2>';
-			html+='<em>list coming!</em><br />';
+			html+='To many to mention! To report a bug, please <a href="http://mantis.verens.com/">go here</a>.';
 		}
 		div.setHTML(html);
 		kfm_modal_open(div,kfm.lang.AboutKfm);

@@ -78,10 +78,7 @@ function kfm_createContextMenu(m,links){
     if(w+m.x>ws.x)contextmenu.style.left=(m.x-w)+'px';
 }
 function kfm_addContextMenu(el,fn){
-    if(window.webkit)el.oncontextmenu=function(e){
-        fn(new Event(e));
-    }
-    else el.addEvent(window.webkit&&!window.webkit420?'mousedown':'contextmenu',function(e){
+    el.addEvent(window.webkit&&!window.webkit420?'mousedown':'contextmenu',function(e){
         e=new Event(e);
         if(e.type=='contextmenu' || e.rightClick)fn(e);
     });

@@ -35,6 +35,7 @@ class kfmObject{
 	}
 	function error($message, $level=3){
 		global $kfm_errors;
+		$info=array('function'=>'','class'=>'','file'=>'');
 		$trace=debug_backtrace();
 		$previous_level=array_shift($trace);
 		//Select the info of the top level class
