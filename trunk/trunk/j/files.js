@@ -265,7 +265,7 @@ function kfm_incrementalFileDisplay(){
         }
         kfm.addEl(wrapper,el);
         if(kfm_listview){
-            var listview_table=$('kfm_files_listview_table');
+            var listview_table=$j('#kfm_files_listview_table tbody').get(0);
             var rows=listview_table.rows.length;
             var row=listview_table.insertRow(rows);
             row.className=rows%2?'even':'odd';
@@ -280,6 +280,12 @@ function kfm_incrementalFileDisplay(){
         if(a&&$('kfm_file_icon_'+fsdata[a-1].id).offsetLeft>=el.offsetLeft)el.setStyle('clear','left');
         window.kfm_incrementalFileDisplay_vars.at=a+1;
     }while(a+1<fsdata.length && (a+1)%kfm_show_files_in_groups_of);
+	$j('#kfm_files_listview_table').tablesorter({
+		sortList:[[0,0]],
+		headers:{
+			0:{sorter:'kfmobject'}
+		}
+	});
     if(a+1<fsdata.length)window.kfm_incrementalFileDisplay_loader=setTimeout('kfm_incrementalFileDisplay()',1);
     else kdnd_makeDraggable('kfm_file');
 }
@@ -365,7 +371,7 @@ function kfm_refreshFiles(res){
                 'id':'kfm_files_listview_table'
             });
             wrapper.appendChild(listview_table);
-            listview_table.setHTML('<tbody><tr class="listview_headers"><th>Name</th><th>Size</th><th>Type</th><th>Modified</th></tr></tbody>');
+            listview_table.setHTML('<thead><tr class="listview_headers"><th>Name</th><th>Size</th><th>Type</th><th>Modified</th></tr></thead><tbody></tbody>');
         }
         kfm_incrementalFileDisplay();
     }

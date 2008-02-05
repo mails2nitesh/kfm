@@ -42,29 +42,6 @@ if($kfm_startup_folder){
 	}
 	$startup_sequence='['.implode(',',$startup_sequence_array).']';
 }
-/*
-if($kfm_root_folder_id!=1){
-	$root_dir=kfmDirectory::getInstance($kfm_root_folder_id);
-	if(!$root_dir) die ('Error: Root directory cannot be found in the database.');
-	print_r($root_dir);
-}
-	if($kfm_startupfolder_id!=$kfm_root_folder_id){
-		$startupdir=kfmDirectory::getInstance($kfm_startupfolder_id);
-		if(!$startupdir){
-			$kfm_startupfolder_id=$kfm_root_folder_id;
-		}
-		else{
-			$startup_sequence=$startupdir->id.']';
-			$parent=kfmDirectory::getInstance($startupdir->pid);
-			while($parent->id!=$kfm_root_folder_id){
-				if($parent->id==0)die ('Error: Startup folder is not in the directory structure');
-				$startup_sequence=$parent->id.','.$startup_sequence;
-				$parent=kfmDirectory::getInstance($parent->pid);
-			}
-			$startup_sequence='['.$startup_sequence;
-		}
-	}
-*/
 header('Content-type: text/html; Charset=utf-8');
 
 // { export kaejax stuff
@@ -85,11 +62,26 @@ if(!empty($_POST['kaejax']))kfm_kaejax_handle_client_request();
     <head>
         <style type="text/css">@import "themes/<?php echo $kfm_theme; ?>/kfm.css";</style>
 		  <link rel="stylesheet" href="themes/<?php echo $kfm_theme; ?>/hooks.css" />
+		  <link rel="stylesheet" href="themes/<?php echo $kfm_theme; ?>/prompt.css" />
         <title>KFM - Kae's File Manager</title>
         <script type="text/javascript" src="j/mootools.v1.11/mootools.v1.11.js"></script>
         <script type="text/javascript" src="j/jquery/jquery-1.2.2.pack.js"></script>
+		  <script type="text/javascript" src="j/jquery/jBox/jBox-1.1.js"></script>
+		  <link rel="stylesheet" href="j/jquery/jBox/jBox.css" />
+		  <script type="text/javascript" src="j/jquery/jquery.impromptu.js"></script>
+		  <script type="text/javascript" src="j/jquery/jquery.tablesorter.pack.js"></script>
         <script type="text/javascript">
 				var $j = jQuery.noConflict();
+				$j.tablesorter.addParser({ 
+					id: 'kfmobject', 
+					is: function(s) { 
+						return false; 
+					}, 
+					format: function(s) {
+						return $j(s).text().toLowerCase();
+					}, 
+					type: 'text' 
+				}); 
             var kfm_vars={
                 files:{
                     name_length_displayed:<?php echo $kfm_files_name_length_displayed; ?>,
