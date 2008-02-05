@@ -366,54 +366,33 @@ function kfm_shrinkName(name,wrapper,text,size,maxsize,extension){
 }
 /* Start kfm plugin iframe functions */
 function kfm_pluginIframeShow(url){
-		var div,ifr, header;
-		div=document.getElementById('plugin_iframe_div');
-		if(div && url){ // Remove div if url is set
-			div.parentNode.removeChild(div);
-			div=false;
-		}
-		if(!div){
-			if(!url) return alert('No active plugin');
-			div=document.createElement('DIV');
-			div.style.position='absolute';
-			div.id='plugin_iframe_div';
-			div.style.top=0;
-			div.style.left=0;
-			div.style.width='100%';
-			div.style.height='100%';
-			div.style.backgroundColor='#ddf';
-			div.style.padding=0;
-
-			header=document.createElement('DIV');
-			header.id='plugin_iframe_header';
-			header.style.width='100%';
-			header.style.height='25px';
-			header.style.color='#FFFFFF';
-			header.style.backgroundColor='black';
-
-			headermsg=document.createElement('DIV');
-			headermsg.id='plugin_iframe_message';
-			headermsg.style.float='right';
-			headermsg.style.width='auto';
-			//header.appendChild(headermsg); maybe for later
-
-			div.appendChild(header);
-		
-			ifr = document.createElement('IFRAME');
-			ifr.src = url;
-			ifr.style.width = '100%';
-			ifr.style.height = '100%'; //100% - 25px
-			ifr.id='plugin_iframe_element';
-			ifr.style.border=0;
-
-			div.appendChild(ifr);
-			document.body.appendChild(div);
-			kfm_pluginIframeButton('close');
-		}else ifr=document.getElementById('plugin_iframe_element');
 		if(url){
-			ifr.src=url;
+			$j('#plugin_iframe_div').remove();
+			var jDiv=$j('<div id="plugin_iframe_div"></div>').css({
+				'display':'none',
+				'position':'absolute',
+				'left':0,
+				'top':0,
+				'width':'100%',
+				'height':'100%',
+				'backgroundColor':'black'
+			});
+			$j(jDiv).append($j('<div id="plugin_iframe_header"></div>').css({
+				'width':'100%',
+				'height':'25px',
+				'color':'white',
+				'backgroundColor':'black',
+			}));
+			$j(jDiv).appendTo('body');
+			kfm_pluginIframeButton('close');
+			$j('#plugin_iframe_div').slideDown('normal',function(){
+				$j(this).append(
+					'<iframe id="plugin_iframe_element" src="'+url+'" style="width:100%;height:100%;"></iframe>'
+				);
+			});
+		}else{
+			$j('#plugin_iframe_div').slideDown('normal');
 		}
-		div.style.display='block';
 }
 function kfm_pluginIframeButton(code,text){
 	var btncode,btn;
@@ -434,8 +413,9 @@ function kfm_pluginIframeButton(code,text){
 	hdr.appendChild(btn);
 }
 function kfm_pluginIframeHide(){
-	var ifd=document.getElementById('plugin_iframe_div');
-	if(ifd) ifd.style.display='none';
+	$j('#plugin_iframe_div').slideUp('normal');
+	//var ifd=document.getElementById('plugin_iframe_div');
+	//if(ifd) ifd.style.display='none';
 }
 function kfm_pluginIframeMessage(message){
 	/* not tested yet, should not be needed*/

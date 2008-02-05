@@ -64,6 +64,7 @@ function uploadCancel(a){
 function uploadComplete(a){
 	++window.swfUpload.kfm_file_at;
 	uploadProgress({'size':1},0);
+	alert(dump(a));
 }
 function uploadQueueComplete(a){
 	x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);
