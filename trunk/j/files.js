@@ -81,8 +81,8 @@ function kfm_deleteSelectedFiles(){
 }
 function kfm_deleteFiles(files){
     var names=[],m='';
-	 var dfiles=[]; // break reference system
-	 for(var j=0;j<files.length;j++)dfiles.push(files[j]);//breaking reference to selectedFiles
+     var dfiles=[]; // break reference system
+     for(var j=0;j<files.length;j++)dfiles.push(files[j]);//breaking reference to selectedFiles
     if(dfiles.length>10){
         for(var i=0;i<9;++i)names.push(File_getInstance(dfiles[i]).name);
         m='\n'+kfm.lang.AndNMore(dfiles.length-9);
@@ -197,53 +197,11 @@ function kfm_incrementalFileDisplay(){
         }
         { // add the links
             if(selectedFiles.length>1)var linkObjects=kfm_getLinks(selectedFiles);
-				else var linkObjects=kfm_getLinks([id]);
-				/*
-            for(var ilink=0;ilink<linkObjects.length;ilink++){
-                if(selectedFiles.length>1){
-                    linkObjects[ilink].doParameter=selectedFiles;
-                }else{
-                    linkObjects[ilink].doParameter=[id];
-                }
-            }*/
-            if(selectedFiles.length>1){
-                //if(!window.ie)links.push(['kfm_downloadSelectedFiles()','download selected files']); // IE can't handle this...
-                //links.push(['kfm_deleteSelectedFiles()',kfm.lang.DeleteFile,'remove',!kfm_vars.permissions.file.rm]);
-                //var imgs=[];
-                //for(var i=0;i<selectedFiles.length;++i)if(File_getInstance(selectedFiles[i]).width)imgs.push(selectedFiles[i]);
-                //if(imgs.length)links.push(['kfm_img_startLightbox(['+imgs.join(',')+'])','view slideshow']);
-            }
-            else{
-                if(F.width){
-                    if(writable){
-                        //var manip=!(kfm_vars.permissions.file.ed&&kfm_vars.permissions.image.manip);
-                        //links.push(['kfm_rotateImage('+id+',270)',kfm.lang.RotateClockwise,'rotate_cw',manip]);
-                        //links.push(['kfm_rotateImage('+id+',90)',kfm.lang.RotateAntiClockwise,'rotate_ccw',manip]);
-                        //links.push(['kfm_resizeImage('+id+')',kfm.lang.ResizeImage,'resize_image',manip]);
-                        //links.push(['kfm_cropImage('+id+')','crop', '', manip]);
-                    }
-                   // links.push(['kfm_img_startLightbox('+id+')',kfm.lang.ViewImage]);
-                    //links.push(['kfm_returnThumbnail('+id+')',kfm.lang.ReturnThumbnailToOpener]);
-                    links.push(['kfm_changeCaption('+id+')',kfm.lang.ChangeCaption,'edit',!kfm_vars.permissions.file.ed]);
-                }
-                //if(kfm_inArray(extension,['zip']))links.push(['kfm_extractZippedFile("'+id+'")',kfm.lang.ExtractZippedFile,'extract_zip',!kfm_vars.permissions.file.mk]);
-                if(kfm_inArray(extension,viewable_extensions)){
-                    //links.push(['x_kfm_getTextFile("'+id+'",function(res){kfm_textfile_initEditor(res,'+((writable&&kfm_inArray(extension,editable_extensions))?'false':'true')+');})',kfm.lang.EditTextFile,'edit',!kfm_vars.permissions.file.ed]);
-                }
-            }
+            else var linkObjects=kfm_getLinks([id]);
+            if(selectedFiles.length<=1 && F.width)links.push(['kfm_changeCaption('+id+')',kfm.lang.ChangeCaption,'edit',!kfm_vars.permissions.file.ed]);
             links.push(['kfm_tagAdd('+id+')',kfm.lang.AddTagsToFiles,'add_tags',!kfm_vars.permissions.file.ed]);
             links.push(['kfm_tagRemove('+id+')',kfm.lang.RemoveTagsFromFiles,'',!kfm_vars.permissions.file.ed]);
-            //kfm_createContextMenu(e.page,links);
-            for(var i=0;i<links.length;++i){
-                /* linkObjects.push({
-                    "extensions":["*"],
-                    "icon":links[i][2],
-                    "writable":links[i][3],
-                    "title":links[i][1],
-                    "doFunction":links[i][0]
-                }); */
-                linkObjects.push(links[i]);
-            }
+            for(var i=0;i<links.length;++i)linkObjects.push(links[i]);
             kfm_createContextMenu(e.page,linkObjects);
         }
     });
@@ -271,21 +229,35 @@ function kfm_incrementalFileDisplay(){
             row.className=rows%2?'even':'odd';
             var cell=row.insertCell(0);
             cell.appendChild(el);
-            row.insertCell(1).appendChild(F.getText('filesize'));
+						{ // file size
+							cell=row.insertCell(1);
+							var hidden=document.createElement('span');
+							hidden.style.display='none';
+							hidden.appendChild(document.createTextNode(F.filesize_raw));
+							cell.appendChild(hidden);
+							cell.appendChild(F.getText('filesize'));
+						}
             row.insertCell(2).appendChild(F.getText('mimetype'));
-            row.insertCell(3).appendChild(F.getText('modified'));
+						{ // modified time
+							cell=row.insertCell(1);
+							var hidden=document.createElement('span');
+							hidden.style.display='none';
+							hidden.appendChild(document.createTextNode(F.ctime));
+							cell.appendChild(hidden);
+							cell.appendChild(F.getText('modified'));
+						}
         }
         else wrapper.appendChild(el);
         el.appendChild(nameEl);
         if(a&&$('kfm_file_icon_'+fsdata[a-1].id).offsetLeft>=el.offsetLeft)el.setStyle('clear','left');
         window.kfm_incrementalFileDisplay_vars.at=a+1;
     }while(a+1<fsdata.length && (a+1)%kfm_show_files_in_groups_of);
-	$j('#kfm_files_listview_table').tablesorter({
-		sortList:[[0,0]],
-		headers:{
-			0:{sorter:'kfmobject'}
-		}
-	});
+    $j('#kfm_files_listview_table').tablesorter({
+        sortList:[[0,0]],
+        headers:{
+            0:{sorter:'kfmobject'}
+        }
+    });
     if(a+1<fsdata.length)window.kfm_incrementalFileDisplay_loader=setTimeout('kfm_incrementalFileDisplay()',1);
     else kdnd_makeDraggable('kfm_file');
 }
@@ -384,12 +356,12 @@ function kfm_removeFilesFromView(files){
         var el=$('kfm_file_icon_'+files[i]);
         if(el){
             if(kfm_listview){
-							el.parentNode.parentNode.remove();
-							var trows=$ES('#kfm_files_listview_table tr');
-							for(var i=1;i<trows.length;++i){
-								trows[i].className=i%2?'odd':'even';
-							}
-						}
+                    		el.parentNode.parentNode.remove();
+                    		var trows=$ES('#kfm_files_listview_table tr');
+                    		for(var i=1;i<trows.length;++i){
+                    			trows[i].className=i%2?'odd':'even';
+                    		}
+                    	}
             else el.remove();
         }
         right_column.fileids.remove(files[i]);
