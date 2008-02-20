@@ -167,7 +167,7 @@ function kfm_createFileUploadPanel(){
 					},
 					upload_success_handler:function(a,sdata){
 						++window.swfUpload.kfm_file_at;
-						if(sdata!='OK')alert("error uploading file:\n\n"+sdata); // TODO: new string
+						if(sdata!='OK')new Notice("error uploading file:\n\n"+sdata); // TODO: new string
 						setTimeout("window.swfUpload.startUpload()",1);
 					},
 					upload_complete_handler:function(a){
