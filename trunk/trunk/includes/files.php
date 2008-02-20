@@ -83,6 +83,7 @@ function _getFileDetails($fid){
 		'filename'=>$file->name,
 		'mimetype'=>$file->mimetype,
 		'filesize'=>$file->size2str(),
+		'filesize_raw'=>$file->getSize(),
 		'tags'=>$file->getTags(),
 		'ctime'=>$file->ctime,
 		'writable'=>$file->isWritable()
