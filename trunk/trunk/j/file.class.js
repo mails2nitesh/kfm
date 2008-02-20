@@ -25,7 +25,7 @@ var File=new Class({
 			v=v.substring(0,kfm_vars.files.name_length_displayed-3)+'...';
 		}
 		if(varname=='modified' && !v){
-			var v=(new Date(this.ctime*1000)).toGMTString();
+			var v=(new Date(this.ctime*1000)).toGMTString().replace(/ GMT$/,'');
 			this.modified=v;
 		}
 		el.appendText(v);
