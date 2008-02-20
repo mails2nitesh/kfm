@@ -61,6 +61,11 @@ if ($kfm_allow_file_upload) {
         }
     }
 } else $errors[]=kfm_lang('permissionDeniedUpload');
+if(isset($_REQUEST['swf']) && $_REQUEST['swf']==1){
+	if(count($errors))echo join("\n",$errors);
+	else echo 'OK';
+	exit;
+}
 ?>
 <html>
     <head>

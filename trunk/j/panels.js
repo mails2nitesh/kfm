@@ -48,32 +48,6 @@ function kfm_createWidgetsPanel(){
 	el=kfm_createPanel('Widgets','kfm_widgets_panel',widgets,{'state':3});
 	return el;
 }
-function uploadStart(a){
-	$('kfm_fileUploadSWFCancel').disabled=null;
-	window.swfUpload.kfm_file_at=0;
-	uploadProgress({'size':1},0);
-}
-function uploadProgress(file,bytes_uploaded){
-	var percent=Math.ceil((bytes_uploaded/file.size)*100);
-	$('kfm_uploadProgress').setHTML('file '+window.swfUpload.kfm_file_at+' :'+percent+'%');
-}
-function uploadCancel(a){
-	$('kfm_uploadProgress').setHTML('&nbsp;');
-	$('kfm_fileUploadSWFCancel').disabled='disabled';
-}
-function uploadComplete(a){
-	++window.swfUpload.kfm_file_at;
-	uploadProgress({'size':1},0);
-	alert(dump(a));
-}
-function uploadQueueComplete(a){
-	x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);
-	$('kfm_uploadProgress').setHTML('&nbsp;');
-	$('kfm_fileUploadSWFCancel').disabled='disabled';
-}
-function uploadError(a){
-	alert(a);
-}
 function kfm_createFileUploadPanel(){
 	{ // create form
 		var kfm_uploadPanel_checkForZip=function(e){
@@ -146,10 +120,11 @@ function kfm_createFileUploadPanel(){
 				wrapper.appendChild(f1);
 			}
 			if(kfm_vars.use_multiple_file_upload){ // load multi-upload thing if possible
-				var f3=newForm('upload.php','POST','multipart/form-data','kfm_iframe');
+/*				var f3=newForm('upload.php','POST','multipart/form-data','kfm_iframe');
 				f3.style.display='none';
-				f3.id='kfm_uploadFormSwf';
+				f3.id='kfm_uploadFormSwf'; */
 				var t=new Element('table');
+				t.id='kfm_uploadFormSwf';
 				var r=t.insertRow(0);
 				var c=r.insertCell(0);
 				var b1=new Element('input',{
@@ -170,38 +145,56 @@ function kfm_createFileUploadPanel(){
 				c.colSpan=2;
 				c.id='kfm_uploadProgress';
 				$(c).setHTML('&nbsp;');
-				f3.appendChild(t);
+				wrapper.appendChild(t);
 				window.swfUpload=new SWFUpload({
-					upload_target_url:"../../upload.php?kfm_session="+window.session_key+"&PHPSESSID="+window.phpsession, // relative to the flash
+					upload_url:"../../upload.php?swf=1&kfm_session="+window.session_key+"&PHPSESSID="+window.phpsession, // relative to the flash
 					upload_cookies:["kfm_session"],
-					file_size_limit : "102400",	// 100MB
-					file_types : "*.*",
-					file_types_description : "All Files",
-					file_upload_limit : "0",
-					file_queue_limit : "0",
-					begin_upload_on_queue : true,
-					file_queued_handler : uploadStart,
-					file_progress_handler : uploadProgress,
-					file_cancelled_handler : uploadCancel,
-					file_complete_handler : uploadComplete,
-					queue_complete_handler : uploadQueueComplete,
-					error_handler : uploadError,
-					flash_url : "j/swfuploadr52_0002/swfupload.swf",
+					flash_url : "j/swfupload-2.1.0b/swfupload_f9.swf",
+					file_size_limit : "9999999999",
+					file_dialog_complete_handler:function(a){
+						$('kfm_fileUploadSWFCancel').disabled=null;
+						this.kfm_file_at=0;
+						this.settings.upload_progress_handler({'size':1},0);
+						this.startUpload();
+					},
+					upload_progress_handler:function(file,bytes_uploaded){
+						var percent=Math.ceil((bytes_uploaded/file.size)*100);
+						$('kfm_uploadProgress').setHTML('file '+window.swfUpload.kfm_file_at+' :'+percent+'%');
+					},
+					file_cancelled_handler:function(a){
+						$('kfm_uploadProgress').setHTML('&nbsp;');
+						$('kfm_fileUploadSWFCancel').disabled='disabled';
+					},
+					upload_success_handler:function(a,sdata){
+						++window.swfUpload.kfm_file_at;
+						if(sdata!='OK')alert("error uploading file:\n\n"+sdata); // TODO: new string
+						setTimeout("window.swfUpload.startUpload()",1);
+					},
+					upload_complete_handler:function(a){
+						x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);
+						$('kfm_uploadProgress').setHTML('&nbsp;');
+						$('kfm_fileUploadSWFCancel').disabled='disabled';
+					},
+					swfupload_loaded_handler:function(){
+						$('kfm_uploadForm').remove();
+					},
+					error_handler:function(a){
+						alert(a);
+					},
 					ui_container_id : "kfm_uploadFormSwf",
 					degraded_container_id : "kfm_uploadForm",
-					debug:false
+					debug:true
 				});
 				b1.addEvent('click',function(e){
 					e=new Event(e);
 					if(e.rightClick)return;
-					window.swfUpload.browse();
+					window.swfUpload.selectFiles();
 				});
 				b2.addEvent('click',function(e){
 					e=new Event(e);
 					if(e.rightClick)return;
-					window.swfUpload.cancelQueue();
+					window.swfUpload.cancelUpload();
 				});
-				wrapper.appendChild(f3);
 			}
 		}
 		{ // copy from URL
