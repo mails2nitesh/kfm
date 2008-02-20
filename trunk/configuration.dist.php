@@ -189,3 +189,7 @@ $kfm_show_files_in_groups_of=10;
 // we would like to keep track of installations, to see how many there are, and what versions are in use.
 // if you do not want us to have this information, then set the following variable to '1'.
 $kfm_dont_send_metrics=0;
+
+// hours to offset server time by.
+// for example, if the server is in GMT, and you are in Northern Territory, Australia, then the value to use is 9.5
+$kfm_server_hours_offset=1;
