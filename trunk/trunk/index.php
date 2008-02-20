@@ -148,7 +148,7 @@ while (false!==($dir=readdir($h))) {
 					<link rel="stylesheet" href="plugins/'.$plugin.'/plugin.css" />';
 			}
 ?>
-        <script type="text/javascript" src="j/swfuploadr52_0002/swfupload.js"></script>
+        <script type="text/javascript" src="j/swfupload-2.1.0b/swfupload.js"></script>
         <script type="text/javascript" src="lang/<?php echo $kfm_language; ?>.js"></script>
         <script type="text/javascript">
             var phpsession = "<?php echo session_id(); ?>";
