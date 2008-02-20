@@ -66,8 +66,6 @@ if(!empty($_POST['kaejax']))kfm_kaejax_handle_client_request();
         <title>KFM - Kae's File Manager</title>
         <script type="text/javascript" src="j/mootools.v1.11/mootools.v1.11.js"></script>
         <script type="text/javascript" src="j/jquery/jquery-1.2.2.pack.js"></script>
-		  <script type="text/javascript" src="j/jquery/jBox/jBox-1.1.js"></script>
-		  <link rel="stylesheet" href="j/jquery/jBox/jBox.css" />
 		  <script type="text/javascript" src="j/jquery/jquery.impromptu.js"></script>
 		  <script type="text/javascript" src="j/jquery/jquery.tablesorter.pack.js"></script>
         <script type="text/javascript">
