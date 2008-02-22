@@ -67,6 +67,9 @@ if(!empty($_POST['kaejax']))kfm_kaejax_handle_client_request();
         <script type="text/javascript" src="j/mootools.v1.11/mootools.v1.11.js"></script>
         <script type="text/javascript" src="j/jquery/jquery-1.2.2.pack.js"></script>
 		  <script type="text/javascript" src="j/jquery/jquery.impromptu.js"></script>
+		  <script type="text/javascript" src="j/jquery/jquery.iutil.pack.js"></script>
+		  <script type="text/javascript" src="j/jquery/jquery.idrag.js"></script>
+		  <script type="text/javascript" src="j/jquery/jquery.grid.columnSizing.js"></script>
 		  <script type="text/javascript" src="j/jquery/jquery.tablesorter.pack.js"></script>
         <script type="text/javascript">
 				var $j = jQuery.noConflict();

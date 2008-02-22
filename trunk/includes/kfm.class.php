@@ -3,18 +3,26 @@
  * Base kfm class
  */
 class kfmBase extends kfmObject{
-	var $config=array();
+	var $settings=array();
 
 	/**
-	 * config function, returns a configuration parameter if one config is given, 
+	 * setting function, returns a configuration parameter if one config is given, 
 	 * sets a config parameter if two parameters are given
-	 * @param $config
+	 * @param $name
 	 * @param $value optional
 	 * 
 	 * @return $value
 	 */
-	function config($config,$value='novaluegiven'){
-		
+	function setting($name,$value='novaluegiven'){
+		if($value=='novaluegiven'){
+			if(!isset($this->settings[$name]))return $this->error('Setting '.$name.' does not exists');
+			return $this->settings[$name];
+		}
+		$this->settings[$name]=$value;
+	}
+
+	function defaultSetting($name, $value){
+		if(!isset($this->settings[$name]))$this->settings[$name]=$value;
 	}
 
 	/**

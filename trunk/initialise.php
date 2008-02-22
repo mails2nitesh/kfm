@@ -6,6 +6,7 @@ define('KFM_BASE_PATH',dirname(__FILE__).'/');
 	require KFM_BASE_PATH.'includes/lang.php';
 	require KFM_BASE_PATH.'includes/db.php';
 	require KFM_BASE_PATH.'includes/object.class.php';
+	require KFM_BASE_PATH.'includes/kfm.class.php';
 	require KFM_BASE_PATH.'includes/session.class.php';
 	require KFM_BASE_PATH.'includes/file.class.php';
 	require KFM_BASE_PATH.'includes/image.class.php';
@@ -90,6 +91,8 @@ require_once(KFM_BASE_PATH.'configuration.php');
 	else include_once(KFM_BASE_PATH.'api/cms_hooks.php.dist');
 }
 { # variables
+$kfm->defaultSetting('date_format','%d-%m-%Y');
+$kfm->defaultSetting('time_format','%T');
 	if(!isset($kfm_show_files_in_groups_of))$kfm_show_files_in_groups_of=10;
 	if(!isset($kfm_user_root_folder))$kfm_user_root_folder=false;
 	if(!isset($kfm_startup_folder))$kfm_startup_folder=false;
