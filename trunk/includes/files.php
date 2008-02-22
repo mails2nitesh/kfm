@@ -86,7 +86,8 @@ function _getFileDetails($fid){
 		'filesize_raw'=>$file->getSize(),
 		'tags'=>$file->getTags(),
 		'ctime'=>$file->ctime,
-		'writable'=>$file->isWritable()
+		'writable'=>$file->isWritable(),
+		'ext'=>$file->getExtension()
 	);
 	if($file->isImage()){
 		$details['caption']=$file->caption;
