@@ -8,42 +8,19 @@ function plugin_cropper(){
 	this.writable=0; // non writable default
 
 	this.crop_to_new=function(fid){
-		var data=File_getInstance(fid);
+		var data=File_getInstance(fid[0]);
 		var url='plugins/cropper/croparea.php?id='+fid+'&width='+data.width+'&height='+data.height;
 		kfm_pluginIframeShow(url);
 		kfm_pluginIframeButton('kfm_cropToNew('+fid+',kfm_pluginIframeVar("coordinates"),kfm_pluginIframeVar("dimensions"))','Crop to new file');
 		//this.openCropper(fid,url);
 	}
 	this.crop_image=function(fid){
-		var data=File_getInstance(fid);
+		var data=File_getInstance(fid[0]);
 		var url='plugins/cropper/croparea.php?id='+fid+'&width='+data.width+'&height='+data.height+'&options=both';
 		var ifr=kfm_pluginIframeShow(url);
 		kfm_pluginIframeButton('kfm_cropToOriginal('+fid+',kfm_pluginIframeVar("coordinates"),kfm_pluginIframeVar("dimensions"))','Crop');
 		kfm_pluginIframeButton('kfm_cropToNew('+fid+',kfm_pluginIframeVar("coordinates"),kfm_pluginIframeVar("dimensions"))','Crop to new file');
 		//this.openCropper(fid,url);
-	}
-	this.doFunction=function(fid){
-		alert('This is the default function which should have been overwritten');
-	}
-	this.openCropper=function(fid, url){
-		alert('The openCropper function is not longer supported');
-		return;
-		var div=document.createElement('DIV');
-		div.style.position='absolute';
-		div.id='cropperdiv';
-		div.style.top=0;
-		div.style.left=0;
-		div.style.width='100%';
-		div.style.height='100%';
-		div.style.backgroundColor='#ddf';
-		div.onclick=function(){this.style.display='none';}
-	
-		var ifr = document.createElement('IFRAME');
-		ifr.src = url;
-		ifr.style.width = '100%';
-		ifr.style.height = '100%'; //100% - 25px
-		div.appendChild(ifr);
-		document.body.appendChild(div);		
 	}
 }
 	function kfm_cropToOriginal(id,coords,dimensions){
@@ -64,7 +41,6 @@ function plugin_cropper(){
 			x_kfm_cropToNew(id, coords.x1, coords.y1, dimensions.width, dimensions.height, newName, kfm_refreshFiles);
 		});
 	}
-/* end plugin defenition */
 
 /* add plugins to the hook system */
 kfm_addHook(new plugin_cropper(),
@@ -74,14 +50,6 @@ kfm_addHook(new plugin_cropper(),
 	{mode:0,"extensions":["jpg","png","gif"], "category":"edit", "writable":0, title:"Crop to new image", doFunction:"crop_to_new"}
 );
 
-/* end add plugins to the hook sytem */
-
-/*
-alert(dump(HooksMultipleWritable));
-alert(dump(HooksMultipleReadonly));
-alert(dump(HooksSingleWritable));
-alert(dump(HooksSingleReadonly));
-*/
 
 /** Temporary dump function, dumps no functions to avoid prototype functions */
 function dump(arr,level) {
