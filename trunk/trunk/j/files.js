@@ -253,13 +253,16 @@ function kfm_incrementalFileDisplay(){
         if(a&&$('kfm_file_icon_'+fsdata[a-1].id).offsetLeft>=el.offsetLeft)el.setStyle('clear','left');
         window.kfm_incrementalFileDisplay_vars.at=a+1;
     }while(a+1<fsdata.length && (a+1)%kfm_show_files_in_groups_of);
-    $j('#kfm_files_listview_table').tablesorter({
-        sortList:[[0,0]],
-        headers:{
-            0:{sorter:'kfmobject'}
-        },
-		  widgets:['zebra']
-    });
+	 if(kfm_listview){
+		 $j('#kfm_files_listview_table').columnSizing().end();
+	    $j('#kfm_files_listview_table').tablesorter({
+	        sortList:[[0,0]],
+	        headers:{
+	            0:{sorter:'kfmobject'}
+	        },
+			  widgets:['zebra']
+	    });
+	 }
     if(a+1<fsdata.length)window.kfm_incrementalFileDisplay_loader=setTimeout('kfm_incrementalFileDisplay()',1);
     else kdnd_makeDraggable('kfm_file');
 }

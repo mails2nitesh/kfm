@@ -86,6 +86,7 @@ function _getFileDetails($fid){
 		'filesize_raw'=>$file->getSize(),
 		'tags'=>$file->getTags(),
 		'ctime'=>$file->ctime,
+		'modified'=>$file->modified,
 		'writable'=>$file->isWritable(),
 		'ext'=>$file->getExtension()
 	);
