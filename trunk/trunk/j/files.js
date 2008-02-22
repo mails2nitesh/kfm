@@ -227,6 +227,7 @@ function kfm_incrementalFileDisplay(){
             var rows=listview_table.rows.length;
             var row=listview_table.insertRow(rows);
             row.className=rows%2?'even':'odd';
+				row.fileid=F.id;
             var cell=row.insertCell(0);
             cell.appendChild(el);
 						{ // file size
