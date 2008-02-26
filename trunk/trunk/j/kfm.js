@@ -399,18 +399,12 @@ function kfm_pluginIframeButton(code,text){
 	var hdr=document.getElementById('plugin_iframe_header');
 	if(!hdr)return;
 	if(code=='close'){
-		btn=document.createElement('IMG');
-		if(!text)btn.innerHTML='Close';	
-		btn.src='themes/'+kfm_theme+'/icons/remove.png';
-		btncode='parent.kfm_pluginIframeHide()';
+		btn=$j('<img src="themes/'+kfm_theme+'/icons/remove.png"/>').click(function(){parent.kfm_pluginIframeHide();});
 	}else{
-		btn=document.createElement('SPAN');
-		btn.className='kfm_plugin_iframe_button';
-		btncode=code;
+		btn=$j('<span class="kfm_plugin_iframe_button"></span>').click(function(){eval(code);});
 	}
-	if(text)btn.innerHTML=text;
-	btn.onclick=eval('function(){'+btncode+'}');
-	hdr.appendChild(btn);
+	if(text)$j(btn).text(text);
+	$j(btn).appendTo(hdr);
 }
 function kfm_pluginIframeHide(){
 	$j('#plugin_iframe_div').slideUp('normal');
