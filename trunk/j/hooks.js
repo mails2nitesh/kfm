@@ -1,7 +1,7 @@
 /* begin core section */
 
 /* define the order of the categories */
-var HookCategories=["main", "view", "edit", "return"];
+var HookCategories=["main", "view", "edit", "returning"];
 
 var kfm_imageExtensions=['jpg','png','gif'];
 /* initialize arrays */
