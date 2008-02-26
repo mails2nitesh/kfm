@@ -17,7 +17,7 @@ var KFM=new Class({
 		{ // developers
 			html+='<h2>Developers</h2>';
 			html+='<a href="http://verens.com/" target="_blank"><strong>Kae Verens</strong></a><br />';
-			html+='<a href="http://www.companytools.nl/cmsms/kfm" target="_blank">Benjamin ter Kuile</a><br />';
+			html+='<a href="http://www.companytools.nl/kfm" target="_blank">Benjamin ter Kuile</a><br />';
 		}
 		{ // translators
 			html+='<h2>Translators</h2><table><tr><td>';
@@ -377,13 +377,13 @@ function kfm_pluginIframeShow(url){
 				'height':'100%',
 				'backgroundColor':'black'
 			});
+			$j(jDiv).appendTo('body');
 			$j(jDiv).append($j('<div id="plugin_iframe_header"></div>').css({
 				'width':'100%',
 				'height':'25px',
 				'color':'white',
-				'backgroundColor':'black',
+				'backgroundColor':'black'
 			}));
-			$j(jDiv).appendTo('body');
 			kfm_pluginIframeButton('close');
 			$j('#plugin_iframe_div').slideDown('normal',function(){
 				$j(this).append(
