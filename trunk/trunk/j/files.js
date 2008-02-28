@@ -155,7 +155,7 @@ function kfm_isFileInCWD(id){
 function kfm_incrementalFileDisplay(){
     var b=window.kfm_incrementalFileDisplay_vars,fsdata=b.data.files,wrapper=$('kfm_right_column');
     var icon=new Element('div',{
-        'class':'kfm_file '+(kfm_listview?'kfm_file_listview':'kfm_file_icon kfm_icontype_'+ext),
+        'class':'kfm_file '+(kfm_listview?'kfm_file_listview':'kfm_file_icon'),
         'styles':{
             'cursor':(window.ie?'hand':'pointer')
         },
@@ -208,11 +208,12 @@ function kfm_incrementalFileDisplay(){
     do{
         var a=b.at,fdata=fsdata[a];
         if(wrapper.contentMode!='file_icons')return (window.kfm_incrementalFileDisplay_vars=null);
-        var name=fdata.name,ext=name.replace(kfm_regexps.all_up_to_last_dot,''),b,fullfilename=kfm_cwd_name+'/'+name,id=fdata.id;
+        var name=fdata.name,ext=fdata.ext,b,fullfilename=kfm_cwd_name+'/'+name,id=fdata.id;
         var F=File_getInstance(id,fdata);
         var nameEl=F.getText('name');
         var el=icon.cloneNode(true);
         el.cloneEvents(icon);
+		  $j(el).addClass('kfm_icontype_'+ext);
         el.id='kfm_file_icon_'+id;
         el.dragDisplay=kfm_file_bits.dragDisplay;
         var writable=fdata.writable;
@@ -254,7 +255,7 @@ function kfm_incrementalFileDisplay(){
         window.kfm_incrementalFileDisplay_vars.at=a+1;
     }while(a+1<fsdata.length && (a+1)%kfm_show_files_in_groups_of);
 	 if(kfm_listview){
-		 $j('#kfm_files_listview_table').columnSizing().end();
+		 $j('#kfm_files_listview_table').columnSizing();
 	    $j('#kfm_files_listview_table').tablesorter({
 	        sortList:[[0,0]],
 	        headers:{
