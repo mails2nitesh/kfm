@@ -29,6 +29,7 @@ var KFM=new Class({
 			html+='fi (Finnish): Hannu (hlpilot)<br />';
 			html+='fr (French): Hubert Garrido</td><td>';
 			html+='ga (Irish): Kae Verens<br />';
+			html+='hu (Hungarian): Ujj-Mészáros István<br />';
 			html+='it (Italian): Stefano Luchetta<br />';
 			html+='nl (Dutch): Roy Lubbers<br />';
 			html+='pl (Polish): Jan Kurek<br />';
