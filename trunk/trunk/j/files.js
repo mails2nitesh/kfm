@@ -352,7 +352,8 @@ function kfm_refreshFiles(res){
                 'id':'kfm_files_listview_table'
             });
             wrapper.appendChild(listview_table);
-            listview_table.setHTML('<thead><tr class="listview_headers"><th>Name</th><th style="width:122px">Modified</th><th style="width:72px">Size</th><th style="width:72px">Type</th></tr></thead><tbody></tbody>');
+            listview_table.setHTML('<thead><tr class="listview_headers"><th>Name</th><th style="width:142px">Modified</th><th style="width:72px">Size</th><th style="width:72px">Type</th></tr></thead><tbody></tbody>');
+				$j(listview_table).css('width','99%');
         }
         kfm_incrementalFileDisplay();
     }
