@@ -115,7 +115,8 @@ div.kfm_panel_header a{float:right;text-decoration:none}
 .kfm_file_icon.kfm_icontype_xls{background-image:url(icons/64x64/mimetypes/xls.png)}
 .kfm_file_icon.kfm_icontype_html{background-image:url(icons/64x64/mimetypes/html.png)}
 .kfm_file_icon.kfm_icontype_htm{background-image:url(icons/64x64/mimetypes/html.png)}
-#kfm_files_listview_table .listview_headers th{background-image:url(tableicons/bg.gif);background-repeat:no-repeat;background-position:center right;background-color:#eee;border:solid #999;border-width:0 1px 1px 0;font-weight:bold}
+.kfm_file_icon.kfm_icontype_php{background-image:url(icons/64x64/mimetypes/php.png)}
+#kfm_files_listview_table .listview_headers th{background-image:url(tableicons/bg.gif);background-repeat:no-repeat;background-position:center right;background-color:#eee;border:solid #999;border-width:0 1px 1px 0;font-weight:bold;}
 #kfm_files_listview_table th.headerSortDown{background-image:url(tableicons/desc.gif)}
 #kfm_files_listview_table th.headerSortUp{background-image:url(tableicons/asc.gif)}
 #kfm_files_listview_table{border-spacing:0}

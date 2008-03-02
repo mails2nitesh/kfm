@@ -30,6 +30,7 @@ function kfm_addHook(objoriginal, properties){
 	if(!kfm_vars.permissions.file.ed && obj.category=='edit')return;
 	if(!kfm_vars.permissions.image.manip && obj.category=='edit'){
 		if(obj.extensions=='all')return;
+		//remove unwanted extension (image extensions)
 		for(var i=0; i<obj.extensions.length; i++){
 			for(var j=0; j<kfm_imageExtensions; j++){
 				if(obj.extensions[i]==kfm_imageExtensions[j]){

@@ -40,6 +40,7 @@ if($kfm_startup_folder){
 		$startup_sequence_array[]=$subdir->id;
 		$kfm_startupfolder_id=$subdir->id;
 	}
+	$kfm_session->set('cwd_id',$kfm_startupfolder_id);
 	$startup_sequence='['.implode(',',$startup_sequence_array).']';
 }
 header('Content-type: text/html; Charset=utf-8');
@@ -167,6 +168,7 @@ while (false!==($dir=readdir($h))) {
             var kfm_show_files_in_groups_of=<?php echo $kfm_show_files_in_groups_of; ?>;
             var kfm_slideshow_delay=<?php echo ((int)$kfm_slideshow_delay)*1000; ?>;
             var kfm_listview=<?php echo $kfm_listview;?>;
+				var kfm_startup_sequence_index=0;
             for(var i=0;i<kfm_hidden_panels.length;++i)kfm_hidden_panels[i]='kfm_'+kfm_hidden_panels[i]+'_panel';
             <?php echo kfm_kaejax_get_javascript(); ?>
             <?php if(isset($_GET['kfm_caller_type']))echo 'window.kfm_caller_type="'.addslashes($_GET['kfm_caller_type']).'";'; ?>
