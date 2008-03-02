@@ -17,6 +17,7 @@ kfm_addHook(new plugin_image_rotate(),{name:'rotate_ccw',title:kfm.lang.RotateAn
 });
 function kfm_rotateImage(id,direction){
 	var F=File_getInstance(id);
+	kfm_fileLoader(id);
 	x_kfm_rotateImage(id,direction,function(id){
 		if($type(id)=='string')return kfm_log(id);
 		F.setThumbnailBackground($('kfm_file_icon_'+id),true);

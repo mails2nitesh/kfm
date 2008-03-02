@@ -436,3 +436,6 @@ function kfm_zip(name){
         x_kfm_zip(name,selectedFiles,kfm_refreshFiles);
     });
 }
+function kfm_fileLoader(id){
+	$j('#kfm_file_icon_'+id).css('background-image','url(themes/default/icons/64x64/loader.gif)');
+}
