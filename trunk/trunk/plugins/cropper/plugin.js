@@ -25,6 +25,7 @@ function plugin_cropper(){
 }
 	function kfm_cropToOriginal(id,coords,dimensions){
 		if(!coords || !dimensions)return;
+		kfm_fileLoader(id);
 		var F=File_getInstance(id);
 		kfm_pluginIframeHide();
 		x_kfm_cropToOriginal(id, coords.x1, coords.y1, dimensions.width, dimensions.height, function(id){
