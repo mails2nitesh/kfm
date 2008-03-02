@@ -9,10 +9,10 @@
  * @license  docs/license.txt for licensing
  * @link	 http://kfm.verens.com/
  */
+// {{{ setup
 error_reporting(E_ALL);
 require_once 'initialise.php';
 require_once KFM_BASE_PATH.'includes/kaejax.php';
-/* Startup settings */
 $kfm_root_dir=kfmDirectory::getInstance(1);
 if($kfm_user_root_folder){
 	$dirs=explode(DIRECTORY_SEPARATOR,trim($kfm_user_root_folder,' '.DIRECTORY_SEPARATOR));
@@ -43,9 +43,9 @@ if($kfm_startup_folder){
 	$kfm_session->set('cwd_id',$kfm_startupfolder_id);
 	$startup_sequence='['.implode(',',$startup_sequence_array).']';
 }
+// }}}
 header('Content-type: text/html; Charset=utf-8');
-
-// { export kaejax stuff
+// {{{ export kaejax stuff
 kfm_kaejax_export('kfm_changeCaption', 'kfm_copyFiles', 'kfm_createDirectory',
 	'kfm_createEmptyFile', 'kfm_deleteDirectory', 'kfm_downloadFileFromUrl', 
 	'kfm_extractZippedFile', 'kfm_getFileDetails', 'kfm_getFileUrl', 'kfm_getFileUrls',
@@ -55,15 +55,14 @@ kfm_kaejax_export('kfm_changeCaption', 'kfm_copyFiles', 'kfm_createDirectory',
 	'kfm_rotateImage', 'kfm_cropToOriginal', 'kfm_cropToNew', 'kfm_saveTextFile',
 	'kfm_search', 'kfm_tagAdd', 'kfm_tagRemove', 'kfm_zip');
 if(!empty($_POST['kaejax']))kfm_kaejax_handle_client_request();
-// }
-
+// }}}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
 		<style type="text/css">@import "themes/<?php echo $kfm_theme; ?>/css.php";</style>
 		<title>KFM - Kae's File Manager</title>
-<?php // get list of plugins and show their CSS files
+<?php // {{{ get list of plugins and show their CSS files
 	$plugins=array();
 	$h=opendir(KFM_BASE_PATH.'plugins');
 	while(false!==($plugin=readdir($h))){
@@ -72,12 +71,12 @@ if(!empty($_POST['kaejax']))kfm_kaejax_handle_client_request();
 		if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.css'))echo '
 		<link rel="stylesheet" href="plugins/'.$plugin.'/plugin.css" />';
 	}	
-?>
+// }}} ?>
 	</head>
 	<body>
 		<p>Please Wait - loading...</p>
 		<noscript>KFM relies on JavaScript. Please either turn on JavaScript in your browser, or <a href="http://www.getfirefox.com/">get Firefox</a> if your browser does not support JavaScript.</noscript>
-<?php
+<?php // {{{ once per day, tell the kfm website a few simple details about usage
 if (!$kfm_dont_send_metrics) {
 	$today=date('Y-m-d');
 	$last_registration=isset($kfm_parameters['last_registration'])?$kfm_parameters['last_registration']:'';
@@ -88,9 +87,10 @@ if (!$kfm_dont_send_metrics) {
 		$kfm_parameters['last_registration']=$today;
 	}
 }
-?>
+// }}} ?>
 		<script type="text/javascript" src="j/mootools.v1.11/mootools.v1.11.js"></script>
 		<script type="text/javascript" src="j/jquery/all.php"></script>
+<?php // {{{ set up JavaScript environment variables ?>
 		<script type="text/javascript">
 			var $j = jQuery.noConflict();
 			$j.tablesorter.addParser({ 
@@ -140,25 +140,28 @@ if (!$kfm_dont_send_metrics) {
 				kfm_widgets.push(obj);
 			}
 		</script>
+<?php // }}} ?>
 		<script type="text/javascript" src="j/all.php"></script>
 		<script type="text/javascript" src="j/hooks.js"></script>
 		<script type="text/javascript" src="lang/<?php echo $kfm_language; ?>.js"></script>
-<?php
+<?php // {{{ widgets and plugins
+// {{{ include widgets if they exist
 $h=opendir(KFM_BASE_PATH.'widgets');
 while (false!==($dir=readdir($h))) {
 	if ($dir[0]!='.'&&is_dir(KFM_BASE_PATH.'widgets/'.$dir)) {
-		echo '
-		<script type="text/javascript" src="widgets/'.$dir.'/widget.js"></script>';
+		echo '		<script type="text/javascript" src="widgets/'.$dir.'/widget.js"></script>'."\n";
 	}
 }
-			/* add plugins */
-			foreach($plugins as $plugin){
-				if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.php')) include(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.php');
-				if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.js'))echo '
-					<script type="text/javascript" src="plugins/'.$plugin.'/plugin.js"></script>';
-			}
-?>
+// }}}
+// {{{ show plugins if they exist
+foreach($plugins as $plugin){
+	if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.php')) include(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.php');
+	if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.js'))echo '		<script type="text/javascript" src="plugins/'.$plugin.'/plugin.js"></script>'."\n";
+}
+// }}}
+// }}} ?>
 		<script type="text/javascript" src="j/swfupload-2.1.0b/swfupload.js"></script>
+<?php // {{{ more JavaScript environment variables. These should be merged into the above set whenever possible ?>
 		<script type="text/javascript">
 			var phpsession = "<?php echo session_id(); ?>";
 			var session_key="<?php echo $kfm_session->key; ?>";
@@ -180,5 +183,6 @@ while (false!==($dir=readdir($h))) {
 			var editable_extensions=["<?php echo join('","', $kfm_editable_extensions);?>"];
 			var viewable_extensions=["<?php echo join('","', $kfm_viewable_extensions);?>"];
 		</script>
+<? // }}} ?>
 	</body>
 </html>
