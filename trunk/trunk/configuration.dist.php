@@ -112,7 +112,7 @@ $kfm_allow_file_move=1;
 $kfm_allow_file_upload=1;
 
 // use this array to ban dangerous files from being uploaded.
-$kfm_banned_extensions=array('asp','cfm','cgi','php','php3','php4','phtm','pl','sh','shtm','shtml');
+$kfm_banned_extensions=array('asp','cfm','cgi','php','php3','php4','php5','phtm','pl','sh','shtm','shtml');
 
 // you can use regular expressions in this one.
 // for exact matches, use lowercase.
@@ -125,7 +125,7 @@ $kfm_banned_files=array('thumbs.db','/^\./');
 $kfm_banned_folders=array('/^\./');
 
 // this array tells KFM what extensions indicate files which may be edited online.
-$kfm_editable_extensions=array('css','html','js','txt','xhtml','xml');
+$kfm_editable_extensions=array('css','html','js','php','txt','xhtml','xml');
 
 // this array tells KFM what extensions indicate files which may be viewed online.
 // the contents of $kfm_editable_extensions will be added automatically.

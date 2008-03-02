@@ -4,7 +4,7 @@ function plugin_codepress(){
 	this.mode=0; //only one file
 	this.writable=1;
 	this.category='edit';
-	this.extensions=['css','html','js','txt','xhtml','xml'];
+	this.extensions=['css','html','js','php','txt','xhtml','xml'];
 	this.doFunction=function(files){
 		fid=files[0];
 		x_kfm_getTextFile(fid, function(res){
