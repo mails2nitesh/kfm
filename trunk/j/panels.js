@@ -1,6 +1,7 @@
 // see license.txt for licensing
 function kfm_addPanel(wrapper,panel){
 	wrapper=$(wrapper);
+	if(!wrapper)return false;
 	if(kfm_hasPanel(wrapper,panel)){
 		$(panel).visible=1;
 		kfm_refreshPanels(wrapper);
@@ -314,6 +315,7 @@ function kfm_movePanel(wrapper,panel,offset){
 }
 function kfm_refreshPanels(wrapper){
 	wrapper=$(wrapper);
+	if(!wrapper)return false;
 	var ps=wrapper.panels,i,minheight=0;
 	var minimised=[],maximised=[],fixed_height=[],fixed_height_maxed=[];
 	for(i=0;i<ps.length;++i){
