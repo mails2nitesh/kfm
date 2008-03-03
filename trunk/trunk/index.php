@@ -74,9 +74,19 @@ if(!empty($_POST['kaejax']))kfm_kaejax_handle_client_request();
 // }}} ?>
 	</head>
 	<body>
-		<p>Please Wait - loading...</p>
-		<noscript>KFM relies on JavaScript. Please either turn on JavaScript in your browser, or <a href="http://www.getfirefox.com/">get Firefox</a> if your browser does not support JavaScript.</noscript>
-<?php // {{{ once per day, tell the kfm website a few simple details about usage
+		<div id="removeme">
+			<p>Please Wait - loading...</p>
+			<noscript>KFM relies on JavaScript. Please either turn on JavaScript in your browser, or <a href="http://www.getfirefox.com/">get Firefox</a> if your browser does not support JavaScript.</noscript>
+		</div>
+<?php
+// {{{ if there's a template, show it here
+$templated=0;
+if (file_exists('themes/'.$kfm_theme.'/template.html')) {
+	echo '<div id="templateWrapper" style="display:none">'.file_get_contents('themes/'.$kfm_theme.'/template.html').'</div>';
+	$templated=1;
+}
+// }}}
+// {{{ once per day, tell the kfm website a few simple details about usage
 if (!$kfm_dont_send_metrics) {
 	$today=date('Y-m-d');
 	$last_registration=isset($kfm_parameters['last_registration'])?$kfm_parameters['last_registration']:'';
@@ -87,7 +97,8 @@ if (!$kfm_dont_send_metrics) {
 		$kfm_parameters['last_registration']=$today;
 	}
 }
-// }}} ?>
+// }}}
+?>
 		<script type="text/javascript" src="j/mootools.v1.11/mootools.v1.11.js"></script>
 		<script type="text/javascript" src="j/jquery/all.php"></script>
 <?php // {{{ set up JavaScript environment variables ?>
@@ -133,6 +144,7 @@ if (!$kfm_dont_send_metrics) {
 				startup_sequence:<?php echo $startup_sequence; ?>,
 				show_disabled_contextmenu_links:<?php echo $kfm_show_disabled_contextmenu_links; ?>,
 				use_multiple_file_upload:<?php echo $kfm_use_multiple_file_upload; ?>,
+				use_templates:<?php echo $templated; ?>,
 				version:'<?php echo KFM_VERSION; ?>'
 			};
 			var kfm_widgets=[];

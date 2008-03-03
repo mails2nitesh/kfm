@@ -403,6 +403,7 @@ function kfm_runSearch(){
 function kfm_showFileDetails(id){
     var res=File_getInstance(id);
     var fd=$('kfm_file_details_panel'),el=$('kfm_left_column');
+		if(!el)return false;
     if(!fd){
         kfm_addPanel('kfm_left_column','kfm_file_details_panel');
         kfm_refreshPanels(el);

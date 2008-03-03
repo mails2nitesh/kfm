@@ -130,45 +130,58 @@ var KFM=new Class({
 		}
 		kfm_cwd_name=starttype;
 		$(document.body).setStyle('overflow','hidden');
+		$('removeme').remove();
 		kfm_addContextMenu(document.body,function(e){
 			var links=[['kfm.about()',kfm.lang.AboutKfm]];
 			var links=[{title:'About KFM', doFunction:function(){kfm.about();}}];
 			kfm_createContextMenu(e.page,links);
 		});
-		{ // create left column
-			var left_column=kfm_createPanelWrapper('kfm_left_column');
-			kfm_resizeHandler_addMaxHeight('kfm_left_column');
-			kfm_addPanel(left_column,'kfm_directories_panel');
-			kfm_addPanel(left_column,'kfm_widgets_panel');
-			kfm_addPanel(left_column,'kfm_search_panel');
-			kfm_addPanel(left_column,'kfm_directory_properties_panel');
-			if(!kfm_inArray('kfm_logs_panel',kfm_hidden_panels))kfm_addPanel(left_column,'kfm_logs_panel');
-			left_column.panels_unlocked=1;
-			left_column.setStyles('height:'+w.y+'px');
-			kfm_addContextMenu(left_column,function(e){
-				var links=[],i;
-				var l=left_column.panels_unlocked;
-				//links.push(['kfm_togglePanelsUnlocked()',l?kfm.lang.LockPanels:kfm.lang.UnlockPanels,l?'lock':'unlock']);
-				links.push({title:l?'lock':'unlock', doFunction:function(){
-						kfm_togglePanelsUnlocked();
-					}
-				});
-				var ps=left_column.panels;
-				for(var i=0;i<ps.length;++i){
-					var p=$(ps[i]);
-					//if(!p.visible && !kfm_inArray(ps[i],kfm_hidden_panels))links.push(['kfm_addPanel("kfm_left_column","'+ps[i]+'")',kfm.lang.ShowPanel(p.panel_title),'show_panel']);
-					if(!p.visible && !kfm_inArray(ps[i],kfm_hidden_panels))links.push({title:'Show panel '+p.panel_title, doFunction:function(){
-							kfm_addPanel("kfm_left_column",ps[i]);
+		if(kfm_vars.use_templates){
+			$('templateWrapper').style.display='block';
+			right_column=$('kfm_main_wrapper');
+			if(!right_column)alert('no main wrapper on page - please fix your template');
+			else right_column.id='kfm_right_column';
+		}
+		else{
+			{ // create left column
+				var left_column=kfm_createPanelWrapper('kfm_left_column');
+				kfm_resizeHandler_addMaxHeight('kfm_left_column');
+				kfm_addPanel(left_column,'kfm_directories_panel');
+				kfm_addPanel(left_column,'kfm_widgets_panel');
+				kfm_addPanel(left_column,'kfm_search_panel');
+				kfm_addPanel(left_column,'kfm_directory_properties_panel');
+				if(!kfm_inArray('kfm_logs_panel',kfm_hidden_panels))kfm_addPanel(left_column,'kfm_logs_panel');
+				left_column.panels_unlocked=1;
+				left_column.setStyles('height:'+w.y+'px');
+				kfm_addContextMenu(left_column,function(e){
+					var links=[],i;
+					var l=left_column.panels_unlocked;
+					links.push({title:l?'lock':'unlock', doFunction:function(){
+							kfm_togglePanelsUnlocked();
 						}
 					});
-				}
-				kfm_createContextMenu(e.page,links);
-			});
+					var ps=left_column.panels;
+					for(var i=0;i<ps.length;++i){
+						var p=$(ps[i]);
+						if(!p.visible && !kfm_inArray(ps[i],kfm_hidden_panels))links.push({title:'Show panel '+p.panel_title, doFunction:function(){
+								kfm_addPanel("kfm_left_column",ps[i]);
+							}
+						});
+					}
+					kfm_createContextMenu(e.page,links);
+				});
+			}
+			{ // create right_column
+				right_column=new Element('div',{
+					'id':'kfm_right_column'
+				});
+			}
+			{ // draw areas to screen and load files and directory info
+				kfm.addEl(document.body,[left_column,right_column]);
+				x_kfm_loadDirectories(kfm_vars.root_folder_id,kfm_refreshDirectories);
+			}
 		}
-		{ // create right_column
-			right_column=new Element('div',{
-				'id':'kfm_right_column'
-			});
+		{ // set up main panel
 			right_column.addEvent('click',function(e){
 				e=new Event(e);
 				if(e.rightClick)return;
@@ -195,11 +208,7 @@ var KFM=new Class({
 			});
 			right_column.parentResized=kfm_files_reflowIcons;
 		}
-		{ // draw areas to screen and load files and directory info
-			kfm.addEl($(document.body).empty(),[left_column,right_column]);
-			x_kfm_loadFiles(kfm_vars.startupfolder_id,kfm_refreshFiles);
-			x_kfm_loadDirectories(kfm_vars.root_folder_id,kfm_refreshDirectories);
-		}
+		x_kfm_loadFiles(kfm_vars.startupfolder_id,kfm_refreshFiles);
 		document.addEvent('keyup',kfm.keyup);
 		window.addEvent('resize',kfm_resizeHandler);
 		kfm_contextmenuinit();
