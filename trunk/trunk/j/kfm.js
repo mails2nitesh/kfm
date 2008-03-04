@@ -175,6 +175,41 @@ var KFM=new Class({
 				right_column=new Element('div',{
 					'id':'kfm_right_column'
 				});
+			   var lselect=new Element('select',{	
+			       'styles':{
+			           'position':'absolute',
+			           'z-index':2,
+			           'right':0,
+			           'top':1,
+			           'border':0
+			       },
+			       'events':{
+			           'change':function(){
+			               kfm_listview=parseInt(this.value);
+			               x_kfm_loadFiles(kfm_cwd_id,true,kfm_refreshFiles);
+			           }
+			       }
+			   });
+			   lselect.appendChild((new Element('option',{
+			       'selected':!kfm_listview,
+			       'value':0
+			   })).appendText(kfm.lang.Icons));
+			   lselect.appendChild((new Element('option',{
+			       'selected':kfm_listview,
+			       'value':1
+			   })).appendText(kfm.lang.ListView));
+
+			   var header=new Element('div',{
+			       'class':'kfm_panel_header',
+			       'id':'kfm_panel_header'
+			   }).setHTML('<span id="documents_loader"></span><span id="cwd_display"></span><span id="folder_info"></span>');
+
+				var documents_body=new Element('div',{
+					'id':'documents_body'
+				});
+			   right_column.appendChild(lselect);
+			   right_column.appendChild(header);
+				right_column.appendChild(documents_body);
 			}
 			{ // draw areas to screen and load files and directory info
 				kfm.addEl(document.body,[left_column,right_column]);
@@ -182,31 +217,31 @@ var KFM=new Class({
 			}
 		}
 		{ // set up main panel
-			right_column.addEvent('click',function(e){
+			documents_body.addEvent('click',function(e){
 				e=new Event(e);
 				if(e.rightClick)return;
 				if(!window.dragType)kfm_selectNone()
 			});
-			right_column.addEvent('mousedown',function(e){
+			documents_body.addEvent('mousedown',function(e){
 				e=new Event(e);
 				if(e.rightClick)return;
 				window.mouseAt=e.page;
 				if(this.contentMode=='file_icons' && this.fileids.length)window.dragSelectionTrigger=setTimeout(function(){kfm_selection_dragStart()},200);
-				right_column.addEvent('mouseup',kfm_selection_dragFinish);
+				documents_body.addEvent('mouseup',kfm_selection_dragFinish);
 			});
-			kfm_addContextMenu(right_column,function(e){
+			kfm_addContextMenu(documents_body,function(e){
 				var links=[],i;
 				links.push(['kfm_createEmptyFile()',kfm.lang.CreateEmptyFile,'filenew',!kfm_vars.permissions.file.mk]);
 				if(selectedFiles.length>1)links.push(['kfm_renameFiles()',kfm.lang.RenameFile,'edit',!kfm_vars.permissions.file.ed]);
 				if(selectedFiles.length>1)links.push(['kfm_zip()',kfm.lang.ZipUpFiles,'',!kfm_vars.permissions.file.mk]);
-				if(selectedFiles.length!=$('kfm_right_column').fileids.length)links.push(['kfm_selectAll()',kfm.lang.SelectAll,'ark_selectall']);
+				if(selectedFiles.length!=$('documents_body').fileids.length)links.push(['kfm_selectAll()',kfm.lang.SelectAll,'ark_selectall']);
 				if(selectedFiles.length){ // select none, invert selection
 					links.push(['kfm_selectNone()',kfm.lang.SelectNone,'select_none']);
 					links.push(['kfm_selectInvert()',kfm.lang.InvertSelection,'invert_selection']);
 				}
 				kfm_createContextMenu(e.page,links);
 			});
-			right_column.parentResized=kfm_files_reflowIcons;
+			documents_body.parentResized=kfm_files_reflowIcons;
 		}
 		x_kfm_loadFiles(kfm_vars.startupfolder_id,kfm_refreshFiles);
 		document.addEvent('keyup',kfm.keyup);
@@ -235,7 +270,7 @@ var KFM=new Class({
 	keyup:function(e){
 		var e=new Event(e);
 		var key=e.code;
-		var cm=$('kfm_right_column').contentMode;
+		var cm=$('documents_body').contentMode;
 		switch(key){
 			case 13:{ // enter
 				if(!selectedFiles.length||window.inPrompt||cm!='file_icons')return;

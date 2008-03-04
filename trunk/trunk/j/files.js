@@ -138,7 +138,7 @@ function kfm_extractZippedFile(id){
     x_kfm_extractZippedFile(id,kfm_refreshFiles);
 }
 function kfm_files_reflowIcons(){
-    var panel=$('kfm_right_column');
+    var panel=$('documents_body');
     if(panel.contentMode!='file_icons')return;
     var els=$ES('.kfm_file_icon',panel);
     for(var i=0;i<els.length;++i){
@@ -148,12 +148,12 @@ function kfm_files_reflowIcons(){
     }
 }
 function kfm_isFileInCWD(id){
-    var i,files=$('kfm_right_column').fileids;
+    var i,files=$('documents_body').fileids;
     for(i=0;i<files.length;++i)if(files[i]==id)return true;
     return false;
 }
 function kfm_incrementalFileDisplay(){
-    var b=window.kfm_incrementalFileDisplay_vars,fsdata=b.data.files,wrapper=$('kfm_right_column');
+    var b=window.kfm_incrementalFileDisplay_vars,fsdata=b.data.files,wrapper=$('documents_body');
     var icon=new Element('div',{
         'class':'kfm_file '+(kfm_listview?'kfm_file_listview':'kfm_file_icon'),
         'styles':{
@@ -268,9 +268,11 @@ function kfm_incrementalFileDisplay(){
 				widgets:['zebra']
 		   });
 		}
+		$j('#documents_loader').empty().html('&nbsp;');
 	}
 }
 function kfm_refreshFiles(res){
+	$j('#folder_info').text(res.files.length+(res.files.length==1?' file':' files')); //TODO new string
     kdnd_addDropHandler('kfm_file','.kfm_directory_link',function(e){
         dir_over=e.targetElement.node_id;
         var links=[];
@@ -287,37 +289,9 @@ function kfm_refreshFiles(res){
     if(res.parent)kfm_cwd_id=res.parent;
     if(res.toString()===res)return kfm_log(res);
     window.kfm_incrementalFileDisplay_vars={at:0,data:res};
-    var a,b,lowest_name,lowest_index,wrapper=$('kfm_right_column').empty();
+    var a,b,lowest_name,lowest_index,wrapper=$('documents_body').empty();
     $extend(wrapper,{contentMode:'file_icons',fileids:[],files:[]});
-    var lselect=new Element('select',{
-        'styles':{
-            'position':'absolute',
-            'z-index':2,
-            'right':0,
-            'top':1,
-            'border':0
-        },
-        'events':{
-            'change':function(){
-                kfm_listview=parseInt(this.value);
-                x_kfm_loadFiles(kfm_cwd_id,true,kfm_refreshFiles);
-            }
-        }
-    });
-    lselect.appendChild((new Element('option',{
-        'selected':!kfm_listview,
-        'value':0
-    })).appendText(kfm.lang.Icons));
-    lselect.appendChild((new Element('option',{
-        'selected':kfm_listview,
-        'value':1
-    })).appendText(kfm.lang.ListView));
-    var header=new Element('div',{
-        'class':'kfm_panel_header',
-        'id':'kfm_panel_header'
-    }).setHTML('<span>'+kfm.lang.CurrentWorkingDir(res.reqdir)+'</span>');
-    wrapper.appendChild(lselect);
-    wrapper.appendChild(header);
+	 $j('#cwd_display').text(kfm.lang.CurrentWorkingDir(res.reqdir));
     { // order files by name
         if(!res.files)res.files=[];
         for(a=0;a<res.files.length-1;++a){
@@ -343,10 +317,12 @@ function kfm_refreshFiles(res){
     if(res.uploads_allowed)kfm_addPanel('kfm_left_column','kfm_file_upload_panel');
     else kfm_removePanel('kfm_left_column','kfm_file_upload_panel');
     kfm_refreshPanels('kfm_left_column');
-    if(!res.files.length)kfm.addEl(wrapper,(new Element('span',{
+    if(!res.files.length){
+		$j('#documents_loader').empty().html('&nbsp;');
+		 kfm.addEl(wrapper,(new Element('span',{
         'class':'kfm_empty'
-    })).setHTML(kfm.lang.DirEmpty(res.reqdir)));
-    else{
+		})).setHTML(kfm.lang.DirEmpty(res.reqdir)));
+	 }else{
         if(kfm_listview){
             var listview_table=new Element('table',{
                 'id':'kfm_files_listview_table'
@@ -361,7 +337,7 @@ function kfm_refreshFiles(res){
 function kfm_removeFilesFromView(files){
     kfm_selectNone();
     if($type(files)!='array' || !files.length)return;
-    var i=0,right_column=$('kfm_right_column');
+    var i=0,right_column=$('documents_body');
     for(var i=0;i<files.length;++i){
         var el=$('kfm_file_icon_'+files[i]);
         if(el){
@@ -440,4 +416,7 @@ function kfm_zip(name){
 }
 function kfm_fileLoader(id){
 	$j('#kfm_file_icon_'+id).css('background-image','url(themes/'+kfm_theme+'/icons/64x64/loader.gif)');
+}
+function kfm_filesLoader(){
+	$j('<img src="themes/'+kfm_theme+'/small_loader.gif" alt=""/>').appendTo('#documents_loader');
 }

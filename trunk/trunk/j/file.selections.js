@@ -54,11 +54,11 @@ function kfm_removeFromSelection(id){
 }
 function kfm_selectAll(){
 	kfm_selectNone();
-	var a,b=$('kfm_right_column').fileids;
+	var a,b=$('documents_body').fileids;
 	for(a=0;a<b.length;++a)kfm_addToSelection(b[a]);
 }
 function kfm_selectInvert(){
-	var a,b=$('kfm_right_column').fileids;
+	var a,b=$('documents_body').fileids;
 	for(a=0;a<b.length;++a)if(kfm_isFileSelected(b[a]))kfm_removeFromSelection(b[a]);
 	else kfm_addToSelection(b[a]);
 }
@@ -93,7 +93,7 @@ function kfm_selection_dragFinish(e){
 	e=new Event(e);
 	$clear(window.dragSelectionTrigger);
 	if(!window.drag_wrapper)return;
-	var right_column=$('kfm_right_column'),p1=e.page,p2=window.drag_wrapper.orig,offset=right_column.scrollTop;
+	var right_column=$('documents_body'),p1=e.page,p2=window.drag_wrapper.orig,offset=right_column.scrollTop;
 	var x1=p1.x>p2.x?p2.x:p1.x,x2=p2.x>p1.x?p2.x:p1.x,y1=p1.y>p2.y?p2.y:p1.y,y2=p2.y>p1.y?p2.y:p1.y;
 	setTimeout('window.dragType=0;',1); // pause needed for IE
 	window.drag_wrapper.remove();
@@ -128,7 +128,7 @@ function kfm_selection_dragStart(e){
 }
 function kfm_shiftFileSelectionLR(dir){
 	if(selectedFiles.length>1)return;
-	var na=$('kfm_right_column').fileids,a=0,ns=na.length;
+	var na=$('documents_body').fileids,a=0,ns=na.length;
 	if(selectedFiles.length){
 		for(;a<ns;++a)if(na[a]==selectedFiles[0])break;
 		if(dir>0){if(a==ns-1)a=-1}
@@ -139,7 +139,7 @@ function kfm_shiftFileSelectionLR(dir){
 }
 function kfm_shiftFileSelectionUD(dir){
 	if(selectedFiles.length>1)return;
-	var na=$('kfm_right_column').fileids,a=0,ns=na.length,icons_per_line=0,topOffset=$('kfm_file_icon_'+na[0]).offsetTop;
+	var na=$('documents_body').fileids,a=0,ns=na.length,icons_per_line=0,topOffset=$('kfm_file_icon_'+na[0]).offsetTop;
 	if(selectedFiles.length){
 		if(topOffset==$('kfm_file_icon_'+na[ns-1]).offsetTop)return; // only one line of icons
 		for(;$('kfm_file_icon_'+na[icons_per_line]).offsetTop==topOffset;++icons_per_line);
@@ -182,7 +182,7 @@ function kfm_toggleSelectedFile(e){
 		}else{
 			clearSelections(e);
 			kfm_selectNone();
-			var a=$('kfm_right_column').fileids,b,c,d;
+			var a=$('documents_body').fileids,b,c,d;
 			for(b=0;b<a.length;++b){
 				if(a[b]==e)c=b;
 				if(a[b]==id)d=parseInt(b);
