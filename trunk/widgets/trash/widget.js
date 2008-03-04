@@ -14,6 +14,7 @@ function Trash(){
 				'height':'70px'
 			}
 		});
+		if(kfm_theme=="blt")$j(el).attr('src','widgets/trash/trash_blt.png');
 		el.action=function(files,dirs){
 			kfm_deleteFiles(files);
 		}

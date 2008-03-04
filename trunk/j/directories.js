@@ -10,7 +10,10 @@ function kfm_changeDirectory(id, nofiles){
 	kfm_cwd_id=el.node_id;
 	for(var a=0;a<els.length;++a)els[a].removeClass('kfm_directory_open');
 	el.parentNode.className+=' kfm_directory_open';
-	if(!nofiles)setTimeout('x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);',20);
+		kfm_filesLoader();
+	if(!nofiles){
+		setTimeout('x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);',20);
+	}
 	setTimeout('x_kfm_loadDirectories(kfm_cwd_id,kfm_refreshDirectories);',20);
 }
 function kfm_createDirectory(id){

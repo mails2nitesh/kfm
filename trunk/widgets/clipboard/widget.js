@@ -30,16 +30,25 @@ function Clipboard(){
 				}
 			}
 		});
+		if(kfm_theme=='blt'){
+			el.empty_url='widgets/clipboard/clipboard_empty_blt.png';
+			el.full_url='widgets/clipboard/clipboard_full_blt.png';
+			$j(el).css('background-image','url('+el.empty_url+')');
+		}else{
+			el.empty_url='widgets/clipboard/clipboard_empty.png';
+			el.full_url='widgets/clipboard/clipboard_full.png';
+		}
 		el.files=[];
 		el.folders=[];
 		el.setAppearance=function(){
 			var html='';
 			if(this.files.length || this.folders.length){
-				this.style.backgroundImage='url(\'widgets/clipboard/clipboard_full.png\')';
-				if(this.files.length)html+='<br/>'+this.files.length+' files'; // TODO: new string
+				this.style.backgroundImage='url(\''+this.full_url+'\')';
+				if(this.files.length)html+=this.files.length+' file'; // TODO: new string
+				if(this.files.length>1)html+='s';
 				if(this.folders.length)html+='<br/>'+this.folders.length+' folders'; // TODO: new string
 			}
-			else this.style.backgroundImage='url(\'widgets/clipboard/clipboard_empty.png\')';
+			else this.style.backgroundImage='url(\''+this.empty_url+'\')';
 			this.innerHTML=html;
 		}
 		el.action=function(files,folders){
