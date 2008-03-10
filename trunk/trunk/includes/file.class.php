@@ -108,11 +108,11 @@ class kfmFile extends kfmObject{
 	 * @return bool true opon success, false on error
 	 */
 	function delete(){
-		global $kfm_allow_file_delete;
+		global $kfm,$kfm_allow_file_delete;
 		if(!$kfm_allow_file_delete)return $this->error(kfm_lang('permissionDeniedDeleteFile'));
 		if(!kfm_cmsHooks_allowedToDeleteFile($this->id))return $this->error(kfm_lang('CMSRefusesFileDelete',$this->path));
 		if($this->exists() && !$this->writable)return $this->error(kfm_lang('fileNotMovableUnwritable',$this->name));
-		if(!$this->exists() || unlink($this->path))$this->db->exec("DELETE FROM ".KFM_DB_PREFIX."files WHERE id=".$this->id);
+		if(!$this->exists() || unlink($this->path))$kfm->db->exec("DELETE FROM ".KFM_DB_PREFIX."files WHERE id=".$this->id);
 		else return $this->error(kfm_lang('failedDeleteFile',$this->name));
 		return true;
 	}
@@ -184,7 +184,7 @@ class kfmFile extends kfmObject{
 	 * @param string $newName new file name
 	 */
 	function rename($newName){
-		global $kfm_allow_file_edit;
+		global $kfm,$kfm_allow_file_edit;
 		if(!$kfm_allow_file_edit)return $this->error(kfm_lang('permissionDeniedEditFile'));
 		if(!kfm_checkAddr($newName))return $this->error(kfm_lang('cannotRenameFromTo',$this->name,$newName));
 		$newFileAddress=$this->directory.$newName;
@@ -192,7 +192,7 @@ class kfmFile extends kfmObject{
 		rename($this->path,$newFileAddress);
 		$this->name=$newName;
 		$this->path=$newFileAddress;
-		$this->db->query("UPDATE ".KFM_DB_PREFIX."files SET name='".sql_escape($newName)."' WHERE id=".$this->id);
+		$kfm->db->query("UPDATE ".KFM_DB_PREFIX."files SET name='".sql_escape($newName)."' WHERE id=".$this->id);
 	}
 
 	/**
@@ -212,9 +212,10 @@ class kfmFile extends kfmObject{
 	 * @param array $tags
 	 */
 	function setTags($tags){
+		global $kfm;
 		if(!count($tags))return;
-		$this->db->exec("DELETE FROM ".KFM_DB_PREFIX."tagged_files WHERE file_id=".$this->id);
-		foreach($tags as $tag)$this->db->exec("INSERT INTO ".KFM_DB_PREFIX."tagged_files (file_id,tag_id) VALUES(".$this->id.",".$tag.")");
+		$kfm->db->exec("DELETE FROM ".KFM_DB_PREFIX."tagged_files WHERE file_id=".$this->id);
+		foreach($tags as $tag)$kfm->db->exec("INSERT INTO ".KFM_DB_PREFIX."tagged_files (file_id,tag_id) VALUES(".$this->id.",".$tag.")");
 	}
 
 	/**

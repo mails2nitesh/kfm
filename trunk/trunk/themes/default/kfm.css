@@ -31,9 +31,9 @@ td{vertical-align:top}
 #kfm_left_column{width:240px;position:relative;float:left;background:white;border-right:1px solid #bababa;overflow:hidden}
 #kfm_logs_panel p{border-top:1px solid #bababa;font:10px sans-serif;margin:0;padding:0;color:#666}
 #kfm_logs_panel p:first-child{border:none}
-#kfm_right_column{overflow:auto;position:relative;height:100%;background:white}
+#kfm_right_column{overflow:hidden;position:relative;height:100%;background:white}
 #kfm_right_column div.kfm_panel_header{background:url(bitsandpieces/panelheader-bg.png) repeat-x}
-#documents_body{position:relative;width:100%;height:100%;}
+#documents_body{position:relative;width:100%;height:97%;}
 #kfm_right_column #kfm_editFileTable textarea{background:#eee;font-style:italic}
 #kfm_right_column #kfm_editFileTable td{text-align:center}
 #kfm_search_table{width:100%}
