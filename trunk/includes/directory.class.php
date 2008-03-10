@@ -5,7 +5,7 @@ class kfmDirectory extends kfmObject{
 	function kfmDirectory($id=1){
 		parent::__construct();
 		$this->id=$id;
-		$res=db_fetch_row("SELECT * FROM ".$this->db_prefix."directories WHERE id=".$this->id);
+		$res=db_fetch_row("SELECT * FROM ".KFM_DB_PREFIX."directories WHERE id=".$this->id);
 		if(!$res)return $this->id=0;
 		$this->name=$res['name'];
 		$this->pid=$res['parent'];
@@ -15,8 +15,9 @@ class kfmDirectory extends kfmObject{
 		$this->kfmDirectory($id);
 	}
 	function addSubdirToDb($name){
-		$sql="INSERT INTO ".$this->db_prefix."directories (name,parent) VALUES('".sql_escape($name)."',".$this->id.")";
-		return $this->db->exec($sql);
+		global $kfm;
+		$sql="INSERT INTO ".KFM_DB_PREFIX."directories (name,parent) VALUES('".sql_escape($name)."',".$this->id.")";
+		return $kfm->db->exec($sql);
 	}
 	function checkAddr($addr){
 		return (
@@ -44,6 +45,7 @@ class kfmDirectory extends kfmObject{
 		return $this->addSubdirToDb($name);
 	}
 	function delete(){
+		global $kfm;
 		if(!$GLOBALS['kfm_allow_directory_delete'])return $this->error(kfm_lang('permissionDeniedDeleteDirectory'));
 		$files=$this->getFiles();
 		foreach($files as $f){
@@ -55,13 +57,13 @@ class kfmDirectory extends kfmObject{
 		}
 		rmdir($this->path);
 		if(is_dir($this->path))return $this->error('failed to delete directory '.$this->path);
-		$this->db->exec("delete from ".$this->db_prefix."directories where id=".$this->id);
+		$kfm->db->exec("delete from ".KFM_DB_PREFIX."directories where id=".$this->id);
 		return true;
 	}
 	function getFiles(){
 		$this->handle=opendir($this->path);
 		if(!$this->handle)return $this->error('unable to open directory');
-		$filesdb=db_fetch_all("select * from ".$this->db_prefix."files where directory=".$this->id);
+		$filesdb=db_fetch_all("select * from ".KFM_DB_PREFIX."files where directory=".$this->id);
 		$fileshash=array();
 		if(is_array($filesdb))foreach($filesdb as $r)$fileshash[$r['name']]=$r['id'];
 		$files=array();
@@ -107,8 +109,9 @@ class kfmDirectory extends kfmObject{
 		);
 	}
 	function getSubdirs($oldstyle=false){
+		global $kfm;
 		$this->handle=opendir($this->path);
-		$dirsdb=db_fetch_all("select id,name from ".$this->db_prefix."directories where parent=".$this->id);
+		$dirsdb=db_fetch_all("select id,name from ".KFM_DB_PREFIX."directories where parent=".$this->id);
 		$dirshash=array();
 		if(is_array($dirsdb))foreach($dirsdb as $r)$dirshash[$r['name']]=$r['id'];
 		$directories=array();
@@ -116,7 +119,7 @@ class kfmDirectory extends kfmObject{
 			if(is_dir($this->path.$file)&&$this->checkName($file)){
 				if(!isset($dirshash[$file])){
 					$this->addSubdirToDb($file);
-					$dirshash[$file]=$this->db->lastInsertId($this->db_prefix.'directories','id');
+					$dirshash[$file]=$kfm->db->lastInsertId(KFM_DB_PREFIX.'directories','id');
 				}
 				$directories[]=kfmDirectory::getInstance($dirshash[$file]);
 				unset($dirshash[$file]);
@@ -136,7 +139,7 @@ class kfmDirectory extends kfmObject{
 		}
 	}
 	function getSubdir($dirname){
-		$res=db_fetch_row('select id from '.$this->db_prefix.'directories where name="'.$dirname.'" and parent='.$this->id);
+		$res=db_fetch_row('select id from '.KFM_DB_PREFIX.'directories where name="'.$dirname.'" and parent='.$this->id);
 		if($res)return kfmDirectory::getInstance($res['id']);
 		return false;
 	}
@@ -144,6 +147,7 @@ class kfmDirectory extends kfmObject{
 		return is_writable($this->path);	
 	}
 	function moveTo($newParent){
+		global $kfm;
 		if(is_numeric($newParent))$newParent=kfmDirectory::getInstance($newParent);
 		{ # check for errors
 			if(!$GLOBALS['kfm_allow_directory_move'])return $this->error(kfm_lang('permissionDeniedMoveDirectory'));
@@ -156,13 +160,13 @@ class kfmDirectory extends kfmObject{
 			if(!file_exists($newParent->path.$this->name))return $this->error(kfm_lang('couldNotMoveDirectory',$this->path,$newParent->path.$this->name));
 		}
 		{ # update database and kfmDirectory object
-			$this->db->exec("update ".$this->db_prefix."directories set parent=".$newParent->id." where id=".$this->id) or die('error: '.print_r($kfmdb->errorInfo(),true));
+			$kfm->db->exec("update ".KFM_DB_PREFIX."directories set parent=".$newParent->id." where id=".$this->id) or die('error: '.print_r($kfmdb->errorInfo(),true));
 			$this->pid=$newParent->id;
 			$this->path=$this->getPath();
 		}
 	}
 	function rename($newname){
-		global $kfm_allow_directory_edit;
+		global $kfm,$kfm_allow_directory_edit;
 		if(!$GLOBALS['kfm_allow_directory_edit'])return $this->error(kfm_lang('permissionDeniedEditDirectory'));
 		if(!$this->isWritable())return $this->error(kfm_lang('permissionDeniedRename',$this->name));
 		if(!$this->checkAddr($newname))return $this->error(kfm_lang('cannotRenameFromTo',$this->name,$newname));
@@ -170,7 +174,7 @@ class kfmDirectory extends kfmObject{
 		if(file_exists($parent->path.$newname))return $this->error(kfm_lang('aDirectoryNamedAlreadyExists',$newname));
 		rename($this->path,$parent->path.$newname);
 		if(file_exists($this->path))return $this->error(kfm_lang('failedRenameDirectory'));
-		$this->db->query("update ".$this->db_prefix."directories set name='".sql_escape($newname)."' where id=".$this->id);
+		$kfm->db->query("update ".KFM_DB_PREFIX."directories set name='".sql_escape($newname)."' where id=".$this->id);
 		$this->name=$newname;
 	}
 	function checkName($file=false){

@@ -28,10 +28,10 @@ class kfmObject{
 		$this->kfmObject();
 	}
 	function kfmObject(){
-		global $kfmdb,$kfm_db_type;
-		$this->db=&$kfmdb;
-		$this->db_prefix=KFM_DB_PREFIX;
-		$this->db_type=&$kfm_db_type;
+		//global $kfmdb,$kfm_db_type;
+		//$this->db=&$kfmdb;
+		//$this->db_prefix=KFM_DB_PREFIX;
+		//$this->db_type=&$kfm_db_type;
 	}
 	function error($message, $level=3){
 		global $kfm_errors;

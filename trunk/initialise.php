@@ -91,8 +91,11 @@ require_once(KFM_BASE_PATH.'configuration.php');
 	else include_once(KFM_BASE_PATH.'api/cms_hooks.php.dist');
 }
 { # variables
+$kfm->defaultSetting('db_prefix','kfm_');
 $kfm->defaultSetting('date_format','%d-%m-%Y');
 $kfm->defaultSetting('time_format','%T');
+$kfm->setting('db_prefix', $kfm_db_prefix);
+
 	if(!isset($kfm_show_files_in_groups_of))$kfm_show_files_in_groups_of=10;
 	if(!isset($kfm_user_root_folder))$kfm_user_root_folder=false;
 	if(!isset($kfm_startup_folder))$kfm_startup_folder=false;
@@ -227,6 +230,7 @@ $kfm->defaultSetting('time_format','%T');
 		echo 'failed to connect to database';
 		exit;
 	}
+	$kfm->db=&$kfmdb; // Add database as reference to the kfm object
 }
 { # get kfm parameters and check for updates
 	$kfm_parameters=array();
