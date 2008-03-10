@@ -248,8 +248,17 @@ $kfm->setting('db_prefix', $kfm_db_prefix);
 	$session_id=(isset($_GET['kfm_session']))?$_GET['kfm_session']:'';
 	$kfm_session=new kfmSession($session_id);
 	if($kfm_session->isNew){
-		$kfm_session->setMultiple(array('cwd_id'=>1,'language'=>'','username'=>'','password'=>'','loggedin'=>0));
+		$kfm_session->setMultiple(array(
+		'cwd_id'=>1,
+		'language'=>'',
+		'username'=>'',
+		'password'=>'',
+		'loggedin'=>0,
+		'theme'=>$kfm_theme
+		));
 	}
+	if(isset($_GET['theme']))$kfm_session->set('theme',$_GET['theme']);
+	$kfm_theme=$kfm_session->get('theme');
 }
 { # check authentication
 	if(!isset($kfm_username)||!isset($kfm_password)||($kfm_username==''&&$kfm_password==''))$kfm_session->set('loggedin',1);
