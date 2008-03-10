@@ -15,7 +15,7 @@
 $kfm_langStrings=array(
 	"alreadyExists"                  => "\"%1\" existiert bereits",
 	"error: filename not allowed"    => "Fehler: Dateiname ist nicht erlaubt",
-	"error: unzip failed"            => "Fehler: entpacken fehlgeschlagen"
+	"error: unzip failed"            => "Fehler: entpacken fehlgeschlagen",
 	"error: url must begin with http"=> "Fehler: URL muss mit http beginnen",
 	"errorInvalidID"                 => "Error: unzulässige ID",
 	"errorFileIDNotFound"            => "Error: die Datei ID #%1 wurde in der Datenbank nicht gefunden",
