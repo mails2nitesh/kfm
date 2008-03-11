@@ -7,7 +7,8 @@ var Notice=new Class({
 			'styles':{
 				'position':'absolute',
 				'top':5,
-				'right':5
+				'right':5,
+				'z-index':222
 			}
 		});
 		document.body.appendChild(w);

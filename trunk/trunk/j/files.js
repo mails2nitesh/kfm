@@ -213,7 +213,7 @@ function kfm_incrementalFileDisplay(){
         var nameEl=F.getText('name');
         var el=icon.cloneNode(true);
         el.cloneEvents(icon);
-		  $j(el).addClass('kfm_icontype_'+ext);
+		  if(!kfm_listview)$j(el).addClass('kfm_icontype_'+ext);
         el.id='kfm_file_icon_'+id;
         el.dragDisplay=kfm_file_bits.dragDisplay;
         var writable=fdata.writable;
@@ -328,7 +328,7 @@ function kfm_refreshFiles(res){
                 'id':'kfm_files_listview_table'
             });
             wrapper.appendChild(listview_table);
-            listview_table.setHTML('<thead><tr class="listview_headers"><th>Name</th><th style="width:142px">Modified</th><th style="width:72px">Size</th><th style="width:72px">Type</th></tr></thead><tbody></tbody>');
+            $j(listview_table).html('<thead><tr class="listview_headers"><th>Name</th><th style="width:142px">Modified</th><th style="width:72px">Size</th><th style="width:72px">Type</th></tr></thead><tbody></tbody>');
 				$j(listview_table).css('width','99%');
         }
         kfm_incrementalFileDisplay();
