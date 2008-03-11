@@ -2,14 +2,18 @@ function plugin_codepress(){
 	this.name='codepress';
 	this.title=kfm.lang.EditTextFile;
 	this.mode=0; //only one file
-	this.writable=1;
+	this.writable=2;
 	this.category='edit';
-	this.extensions=['css','html','js','php','txt','xhtml','xml'];
+	this.extensions=['asp','autoit','css','csharp','html','tpl','htm','java','j','js','perl','php','ruby','sql','txt','vbscript','vba','xsl','xml'];
 	this.doFunction=function(files){
-		fid=files[0];
-		x_kfm_getTextFile(fid, function(res){
-			kfm_textfile_initEditor(res,true)
-		});
+		var F=File_getInstance(files[0]);
+		var url='plugins/codepress/codepress.php?id='+files[0];
+		kfm_pluginIframeShow(url);
+		if(F.writable)kfm_pluginIframeButton('codepress_save('+files[0]+')','Save');
 	}
 }
-if(kfm_vars.permissions.file.ed) kfm_addHook(new plugin_codepress());
+kfm_addHook(new plugin_codepress());
+function codepress_save(id){
+	var text=document.getElementById('plugin_iframe_element').contentWindow.editor_area.getCode();
+	x_kfm_saveTextFile(id,text,kfm_showMessage);
+}
