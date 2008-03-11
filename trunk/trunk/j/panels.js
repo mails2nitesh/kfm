@@ -154,7 +154,7 @@ function kfm_createFileUploadPanel(){
 					file_size_limit : "9999999999",
 					file_dialog_complete_handler:function(a){
 						$('kfm_fileUploadSWFCancel').disabled=null;
-						this.kfm_file_at=0;
+						this.kfm_file_at=1;
 						this.settings.upload_progress_handler({'size':1},0);
 						this.startUpload();
 					},
