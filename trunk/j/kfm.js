@@ -417,7 +417,8 @@ function kfm_pluginIframeShow(url){
 			'top':0,
 			'width':'100%',
 			'height':'100%',
-			'backgroundColor':'black'
+			'backgroundColor':'black',
+			'z-index':202
 		});
 		$j(jDiv).appendTo('body');
 		$j(jDiv).append($j('<div id="plugin_iframe_header"></div>').css({
