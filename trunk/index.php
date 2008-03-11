@@ -189,6 +189,7 @@ foreach($plugins as $plugin){
 			var kfm_slideshow_delay=<?php echo ((int)$kfm_slideshow_delay)*1000; ?>;
 			var kfm_listview=<?php echo $kfm_listview;?>;
 			var kfm_startup_sequence_index=0;
+			var kfm_cwd_id=<?php echo $kfm_startupfolder_id; ?>;
 			for(var i=0;i<kfm_hidden_panels.length;++i)kfm_hidden_panels[i]='kfm_'+kfm_hidden_panels[i]+'_panel';
 			<?php echo kfm_kaejax_get_javascript(); ?>
 			<?php if(isset($_GET['kfm_caller_type']))echo 'window.kfm_caller_type="'.addslashes($_GET['kfm_caller_type']).'";'; ?>
