@@ -18,6 +18,7 @@ $js.=file_get_contents('kdnd.js');
 $js.=file_get_contents('file.class.js');
 $js.=file_get_contents('files.js');
 $js.=file_get_contents('resize_handler.js');
+$js.=file_get_contents('search.js');
 header('Content-type: text/javascript');
 header('Expires: '.gmdate("D, d M Y H:i:s", time() + 3600*24*365).' GMT');
 echo $js;
