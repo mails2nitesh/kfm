@@ -113,9 +113,6 @@ function kfm_createFileUploadPanel(contentsonly){
 				wrapper.appendChild(f1);
 			}
 			if(kfm_vars.use_multiple_file_upload){ // load multi-upload thing if possible
-/*				var f3=newForm('upload.php','POST','multipart/form-data','kfm_iframe');
-				f3.style.display='none';
-				f3.id='kfm_uploadFormSwf'; */
 				var t=new Element('table');
 				t.id='kfm_uploadFormSwf';
 				var r=t.insertRow(0);
@@ -142,7 +139,7 @@ function kfm_createFileUploadPanel(contentsonly){
 				window.swfUpload=new SWFUpload({
 					upload_url:"../../upload.php?swf=1&kfm_session="+window.session_key+"&PHPSESSID="+window.phpsession, // relative to the flash
 					upload_cookies:["kfm_session"],
-					flash_url : "j/swfupload-2.1.0b/swfupload_f9.swf",
+					flash_url : "j/swfupload-2.1.0b/swfupload_f8.swf",
 					file_size_limit : "9999999999",
 					file_dialog_complete_handler:function(a){
 						$('kfm_fileUploadSWFCancel').disabled=null;
