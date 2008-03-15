@@ -96,6 +96,10 @@ var KFM=new Class({
 		}
 		new Notice(message);
 	},
+	switchFilesMode:function(m){
+		kfm_listview = +m;
+		x_kfm_loadFiles(kfm_cwd_id,true,kfm_refreshFiles);
+	},
 	build:function(){
 		kfm_addHook({name:"download", mode:0,"extensions":"all", writable:2, title:"download file", doFunction:function(files){
 				kfm_downloadSelectedFiles(files[0]);
@@ -198,8 +202,7 @@ var KFM=new Class({
 			       },
 			       'events':{
 			           'change':function(){
-			               kfm_listview=parseInt(this.value);
-			               x_kfm_loadFiles(kfm_cwd_id,true,kfm_refreshFiles);
+										kfm.switchFilesMode(this.value);
 			           }
 			       }
 			   });
