@@ -5,6 +5,7 @@
 	#kfm_table table{width:100%}
 	#kfm_table table td{border:0}
 	#kfm_table td{border:1px solid;border-color:#000 #333 #333 #000;vertical-align:top}
+	#viewmode a{margin:0 10px}
 </style>
 
 <table id="kfm_table">
@@ -13,7 +14,7 @@
 		<td>
 			<table>
 				<tr>
-					<td><a href="javascript:alert('not done yet');">List</a><a href="javascript:alert('not done yet');">Icons</a></td>
+					<td id="viewmode"><a href="javascript:kfm.switchFilesMode(1);">List</a><a href="javascript:kfm.switchFilesMode(0);">Icons</a></td>
 					<td id="kfm_search_wrapper"></td>
 				</tr>
 			</table>
