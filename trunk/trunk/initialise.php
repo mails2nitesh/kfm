@@ -91,10 +91,18 @@ require_once(KFM_BASE_PATH.'configuration.php');
 	else include_once(KFM_BASE_PATH.'api/cms_hooks.php.dist');
 }
 { # variables
-$kfm->defaultSetting('db_prefix','kfm_');
-$kfm->defaultSetting('date_format','%d-%m-%Y');
-$kfm->defaultSetting('time_format','%T');
-$kfm->setting('db_prefix', $kfm_db_prefix);
+	$kfm->defaultSetting('time_format','%T');
+	$kfm->setting('db_prefix', $kfm_db_prefix);
+	if(isset($kfm_date_format)){
+		$kfm->setting('date_format',$kfm_date_format);
+		unset($kfm_date_format);
+	}
+	else $kfm->defaultSetting('db_prefix','kfm_');
+	if(isset($kfm_time_format)){
+		$kfm->setting('time_format',$kfm_time_format);
+		unset($kfm_time_format);
+	}
+	else $kfm->defaultSetting('date_format','%d-%m-%Y');
 
 	if(!isset($kfm_show_files_in_groups_of))$kfm_show_files_in_groups_of=10;
 	if(!isset($kfm_user_root_folder))$kfm_user_root_folder=false;
