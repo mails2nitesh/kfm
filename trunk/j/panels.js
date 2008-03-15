@@ -41,7 +41,7 @@ function kfm_addPanel(wrapper,panel){
 	wrapper.panels[wrapper.panels.length]=panel;
 	wrapper.appendChild(el);
 }
-function kfm_createFileUploadPanel(){
+function kfm_createFileUploadPanel(contentsonly){
 	{ // create form
 		var kfm_uploadPanel_checkForZip=function(e){
 			e=new Event(e);
@@ -213,7 +213,8 @@ function kfm_createFileUploadPanel(){
 			kfm.addEl(f2,[inp2,submit2,unzip2]);
 		}
 	}
-	return kfm_createPanel(kfm.lang.FileUpload,'kfm_file_upload_panel',[sel,wrapper,iframe,f2],{maxedState:3,state:3,order:2});
+	var contents=[sel,wrapper,iframe,f2];
+	return contentsonly?contents:kfm_createPanel(kfm.lang.FileUpload,'kfm_file_upload_panel',contents,{maxedState:3,state:3,order:2});
 }
 function kfm_createFileDetailsPanel(){
 	return kfm_createPanel(kfm.lang.FileDetails,'kfm_file_details_panel',0,{abilities:1,order:4});
