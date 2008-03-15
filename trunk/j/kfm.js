@@ -140,7 +140,20 @@ var KFM=new Class({
 			$('templateWrapper').style.display='block';
 			right_column=$('kfm_main_wrapper');
 			if(!right_column)alert('no main wrapper on page - please fix your template');
-			else right_column.id='kfm_right_column';
+			else right_column.id='documents_body';
+			var documents_body=right_column; // check this - could be a problem
+			var wrapper=$('kfm_directory_wrapper');
+			if(wrapper){
+				el=kfm_createPanel(
+					kfm.lang.DirectoryProperties,
+					'kfm_directory_properties_panel',
+					new Element('div',{
+						'class':'kfm_directory_properties'
+					}),
+					{state:0,abilities:1}
+				);
+				wrapper.appendChild(el);
+			}
 		}
 		else{
 			{ // create left column
@@ -207,8 +220,8 @@ var KFM=new Class({
 				var documents_body=new Element('div',{
 					'id':'documents_body'
 				});
-			   right_column.appendChild(lselect);
-			   right_column.appendChild(header);
+			  right_column.appendChild(lselect);
+			  right_column.appendChild(header);
 				right_column.appendChild(documents_body);
 			}
 			{ // draw areas to screen and load files and directory info
