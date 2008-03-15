@@ -12,8 +12,8 @@ function plugin_lightbox(){
 kfm_addHook(new plugin_lightbox());
 kfm_addHook(new plugin_lightbox(),{mode:0,title:kfm.lang.ViewImage});
 function kfm_img_startLightbox(id){
-	window.lightbox_oldCM=$('kfm_right_column').contentMode;
-	$('kfm_right_column').contentMode='lightbox';
+	window.lightbox_oldCM=$('documents_body').contentMode;
+	$('documents_body').contentMode='lightbox';
 	if(id&&$type(id)=='array'){
 		if(id.length>1){
 			window.kfm_slideshow={ids:id,at:0};
@@ -101,7 +101,7 @@ function kfm_img_stopLightbox(e){
 	if(wrapper)wrapper.remove();
 	window.kfm_slideshow=window.kfm_slideshow_stopped=null;
 	if(window.lightbox_slideshowTimer)clearTimeout(window.lightbox_slideshowTimer);
-	$('kfm_right_column').contentMode=window.lightbox_oldCM;
+	$('documents_body').contentMode=window.lightbox_oldCM;
 	kfm_resizeHandler_remove('kfm_lightboxShader');
 	kfm_resizeHandler_remove('kfm_lightboxWrapper');
 }
