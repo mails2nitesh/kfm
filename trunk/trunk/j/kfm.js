@@ -144,8 +144,10 @@ var KFM=new Class({
 			$('templateWrapper').style.display='block';
 			var documents_body=$('documents_body');
 			if(!documents_body)alert('no #documents_body on page - please fix your template');
-			var searchwrapper=$('kfm_search_wrapper');
-			if(searchwrapper)searchwrapper.appendChild(kfm_searchBoxFile());
+			var wrapper=$('kfm_search_wrapper');
+			if(wrapper)wrapper.appendChild(kfm_searchBoxFile());
+			var wrapper=$('kfm_upload_wrapper');
+			if(wrapper)kfm.addEl(wrapper,kfm_createFileUploadPanel(true));
 		}
 		else{
 			{ // create left column
