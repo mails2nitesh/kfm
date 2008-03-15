@@ -39,6 +39,7 @@ td{vertical-align:top}
 #kfm_search_table td{width:50%}
 #kfm_search{width:100%}
 #kfm_tooltip{border:1px solid #000;background:#eee}
+#documents_body{position:relative;overflow:auto;}
 
 .boxdroptracer{border:1px solid #000;-moz-border-radius:10px;background:#9cf;height:0;width:0;position:absolute;left:0;top:0}
 

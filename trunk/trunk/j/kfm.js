@@ -142,10 +142,8 @@ var KFM=new Class({
 		});
 		if(kfm_vars.use_templates){
 			$('templateWrapper').style.display='block';
-			right_column=$('kfm_main_wrapper');
-			if(!right_column)alert('no main wrapper on page - please fix your template');
-			else right_column.id='documents_body';
-			var documents_body=right_column; // check this - could be a problem
+			var documents_body=$('documents_body');
+			if(!documents_body)alert('no #documents_body on page - please fix your template');
 		}
 		else{
 			{ // create left column
