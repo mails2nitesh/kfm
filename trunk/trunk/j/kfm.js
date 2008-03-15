@@ -144,6 +144,8 @@ var KFM=new Class({
 			$('templateWrapper').style.display='block';
 			var documents_body=$('documents_body');
 			if(!documents_body)alert('no #documents_body on page - please fix your template');
+			var searchwrapper=$('kfm_search_wrapper');
+			if(searchwrapper)searchwrapper.appendChild(kfm_searchBoxFile());
 		}
 		else{
 			{ // create left column

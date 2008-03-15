@@ -375,9 +375,6 @@ function kfm_renameFiles(nameTemplate){
 		x_kfm_renameFiles(selectedFiles,nameTemplate,kfm_refreshFiles);
 	});
 }
-function kfm_runSearch(){
-	kfm_run_delayed('search','var keywords=$("kfm_search_keywords").value,tags=$("kfm_search_tags").value;if(keywords==""&&tags=="")x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);else x_kfm_search(keywords,tags,kfm_refreshFiles)');
-}
 function kfm_showFileDetails(id){
 	var res=File_getInstance(id);
 	var fd=$('kfm_file_details_panel'),el=$('kfm_left_column');
