@@ -146,18 +146,6 @@ var KFM=new Class({
 			if(!right_column)alert('no main wrapper on page - please fix your template');
 			else right_column.id='documents_body';
 			var documents_body=right_column; // check this - could be a problem
-			var wrapper=$('kfm_directory_wrapper');
-			if(wrapper){
-				el=kfm_createPanel(
-					kfm.lang.DirectoryProperties,
-					'kfm_directory_properties_panel',
-					new Element('div',{
-						'class':'kfm_directory_properties'
-					}),
-					{state:0,abilities:1}
-				);
-				wrapper.appendChild(el);
-			}
 		}
 		else{
 			{ // create left column
@@ -229,7 +217,6 @@ var KFM=new Class({
 			}
 			{ // draw areas to screen and load files and directory info
 				kfm.addEl(document.body,[left_column,right_column]);
-				x_kfm_loadDirectories(kfm_vars.root_folder_id,kfm_refreshDirectories);
 			}
 		}
 		{ // set up main panel
@@ -259,6 +246,7 @@ var KFM=new Class({
 			});
 			documents_body.parentResized=kfm_files_reflowIcons;
 		}
+		if($('kfm_directories'))x_kfm_loadDirectories(kfm_vars.root_folder_id,kfm_refreshDirectories);
 		x_kfm_loadFiles(kfm_vars.startupfolder_id,kfm_refreshFiles);
 		document.addEvent('keyup',kfm.keyup);
 		window.addEvent('resize',kfm_resizeHandler);
