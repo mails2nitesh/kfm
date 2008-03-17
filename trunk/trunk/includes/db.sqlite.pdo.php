@@ -1,17 +1,16 @@
 <?php
 class DB_SQLite_PDO{
 	var $connection=0;
-	function DB($dsn=array()){
+	function __construct($dsn=array()){
 		if(!isset($dsn['database']))exit('no SQLite database set in configuration');
 		try {
-			$this->connection=new PDO('sqlite:'.$dsn['database']);
+			$db=new PDO('sqlite:'.$dsn['database']);
+			$db->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+			$this->connection=$db;
 		} catch (PDOException $e) {
 			print "Error!: " . $e->getMessage();
 			die();
 		}
-	}
-	function __construct($dsn=array()){
-		$this->DB($dsn);
 	}
 	function fetchAll($query){
 		$sth=$this->connection->prepare($query);
