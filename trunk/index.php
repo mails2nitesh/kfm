@@ -167,7 +167,7 @@ while (false!==($dir=readdir($h))) {
 // }}}
 // {{{ show plugins if they exist
 foreach($plugins as $plugin){
-	if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.php')) include(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.php');
+	if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.php')) require(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.php');
 	if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.js'))echo '		<script type="text/javascript" src="plugins/'.$plugin.'/plugin.js"></script>'."\n";
 }
 // }}}

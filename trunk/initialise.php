@@ -85,9 +85,9 @@ require_once(KFM_BASE_PATH.'configuration.php');
 
 
 { # API - for programmers only
-	if(file_exists(KFM_BASE_PATH.'api/config.php'))include(KFM_BASE_PATH.'api/config.php');
-	if(file_exists(KFM_BASE_PATH.'api/cms_hooks.php'))include_once(KFM_BASE_PATH.'api/cms_hooks.php');
-	else include_once(KFM_BASE_PATH.'api/cms_hooks.php.dist');
+	if(file_exists(KFM_BASE_PATH.'api/config.php'))require(KFM_BASE_PATH.'api/config.php');
+	if(file_exists(KFM_BASE_PATH.'api/cms_hooks.php'))require(KFM_BASE_PATH.'api/cms_hooks.php');
+	else require(KFM_BASE_PATH.'api/cms_hooks.php.dist');
 }
 { # variables
 	$kfm->defaultSetting('time_format','%T');
@@ -177,7 +177,7 @@ require_once(KFM_BASE_PATH.'configuration.php');
 			if(!$db_defined){
 				$res=&$kfmdb->query("show tables like '".$kfm_db_prefix_escaped."%'");
 				kfm_dieOnError($res);
-				if(!$res->numRows())include(KFM_BASE_PATH.'scripts/db.mysql.create.php');
+				if(!$res->numRows())require(KFM_BASE_PATH.'scripts/db.mysql.create.php');
 				else $db_defined=1;
 			}
 			break;
@@ -200,7 +200,7 @@ require_once(KFM_BASE_PATH.'configuration.php');
 			if(!$db_defined){
 				$res=&$kfmdb->query("SELECT tablename from pg_tables where tableowner=current_user AND tablename NOT LIKE E'pg\\\\_%' AND tablename NOT LIKE E'sql\\\\_%' AND tablename LIKE E'".$kfm_db_prefix_escaped."%'");
 				kfm_dieOnError($res);
-				if($res->numRows()<1)include(KFM_BASE_PATH.'scripts/db.pgsql.create.php');
+				if($res->numRows()<1)require(KFM_BASE_PATH.'scripts/db.pgsql.create.php');
 				else $db_defined=1;
 			}
 			break;
@@ -214,7 +214,7 @@ require_once(KFM_BASE_PATH.'configuration.php');
 			$kfmdb=&MDB2::connect($dsn);
 			kfm_dieOnError($kfmdb);
 			$kfmdb->setFetchMode(MDB2_FETCHMODE_ASSOC);
-			if($kfmdb_create)include(KFM_BASE_PATH.'scripts/db.sqlite.create.php');
+			if($kfmdb_create)require(KFM_BASE_PATH.'scripts/db.sqlite.create.php');
 			$db_defined=1;
 			break;
 		}
@@ -224,7 +224,7 @@ require_once(KFM_BASE_PATH.'configuration.php');
 			if(!file_exists(WORKPATH.DBNAME))$kfmdb_create=true;
 			$dsn=array('type'=>'sqlitepdo','database'=>WORKPATH.DBNAME,'mode'=>'0644');
 			$kfmdb=new DB($dsn);
-			if($kfmdb_create)include(KFM_BASE_PATH.'scripts/db.sqlite.create.php');
+			if($kfmdb_create)require(KFM_BASE_PATH.'scripts/db.sqlite.create.php');
 			$db_defined=1;
 			break;
 		}
@@ -265,7 +265,9 @@ require_once(KFM_BASE_PATH.'configuration.php');
 		));
 	}
 	if(isset($_GET['theme']))$kfm_session->set('theme',$_GET['theme']);
-	$kfm_theme=$kfm_session->get('theme');
+	$kt=$kfm_session->get('theme');
+	if($kt)$kfm_theme=$kt;
+	else $kfm_session->set('theme',$kfm_theme);
 }
 { # check authentication
 	if(!isset($kfm_username)||!isset($kfm_password)||($kfm_username==''&&$kfm_password==''))$kfm_session->set('loggedin',1);
@@ -278,7 +280,7 @@ require_once(KFM_BASE_PATH.'configuration.php');
 			else $err='<em>Incorrect Password. Please try again, or check your <code>configuration.php</code>.</em>';
 		}
 		if(!$kfm_session->get('loggedin')){
-			include(KFM_BASE_PATH.'includes/login.php');
+			require(KFM_BASE_PATH.'includes/login.php');
 			exit;
 		}
 	}
