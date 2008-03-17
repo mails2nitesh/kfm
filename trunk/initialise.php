@@ -21,7 +21,6 @@ function sql_escape($sql){
 function kfm_dieOnError($error){
 	if(!PEAR::isError($error))return;
 	echo '<strong>Error</strong><br />'.$error->getMessage().'<br />'.$error->userinfo.'<hr />';
-	var_dump($error);
 	exit;
 }
 
@@ -505,4 +504,3 @@ require_once(KFM_BASE_PATH.'configuration.php');
 		return _cropToNew($fid,$x1, $y1, $width, $height, $newname);
 	}
 }
-?>
