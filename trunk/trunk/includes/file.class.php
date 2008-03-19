@@ -232,6 +232,7 @@ class kfmFile extends kfmObject{
 	}
 	function addToDb($filename,$directory_id){
 		global $kfmdb;
+		if(!$directory_id)return $this->error('Directory ID not supplied');
 		$sql="insert into ".KFM_DB_PREFIX."files (name,directory) values('".sql_escape($filename)."',".$directory_id.")";
 		$q=$kfmdb->query($sql);
 		return $kfmdb->lastInsertId(KFM_DB_PREFIX.'files','id');
