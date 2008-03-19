@@ -17,12 +17,16 @@ if ($kfm_allow_file_upload) {
     $file=isset($_FILES['kfm_file'])?$_FILES['kfm_file']:$_FILES['Filedata'];
     $filename=$file['name'];
     $tmpname=$file['tmp_name'];
-    $toDir=kfmDirectory::getInstance($kfm_session->get('cwd_id'));
-    $to=$toDir->path.'/'.$filename;
-    if (!kfm_checkAddr($to)) $errors[]=kfm_lang('bannedFilenameExtension');
-		else if (!is_file($tmpname)) $errors[]='No file uploaded';
-    else if (!kfmFile::checkName($filename)) $errors[]='The filename: '.$filename.' is not allowed';
-    else {
+		$cwd=$kfm_session->get('cwd_id');
+		if(!$cwd) $errors[]=kfm_lang('CWD not set');
+		else {
+	    $toDir=kfmDirectory::getInstance($cwd);
+	    $to=$toDir->path.'/'.$filename;
+	    if (!kfm_checkAddr($to)) $errors[]=kfm_lang('bannedFilenameExtension');
+			else if (!is_file($tmpname)) $errors[]='No file uploaded';
+	    else if (!kfmFile::checkName($filename)) $errors[]='The filename: '.$filename.' is not allowed';
+		}
+    if(!count($errors)) {
         move_uploaded_file($tmpname, $to);
         if (!file_exists($to)) $errors[]=kfm_lang('failedToSaveTmpFile', $tmpname, $to);
         else if ($kfm_only_allow_image_upload && !getimagesize($to)) {
