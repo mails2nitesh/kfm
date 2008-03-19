@@ -27,7 +27,7 @@ class kfmFile extends kfmObject{
 			$this->directory=$dir->path;
 			$this->path=$dir->path.'/'.$filedata['name'];
 			if(!$this->exists()){
-				$this->error('File cannot be found');
+				$this->error(kfm_lang('File cannot be found'));
 				$this->delete();
 				return false;
 			}
@@ -265,4 +265,3 @@ class kfmFile extends kfmObject{
 		return true;
 	}
 }
-?>
