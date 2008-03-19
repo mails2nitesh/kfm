@@ -5,6 +5,7 @@ class kfmDirectory extends kfmObject{
 	function kfmDirectory($id=1){
 		parent::__construct();
 		$this->id=$id;
+		if(!$id)return;
 		$res=db_fetch_row("SELECT * FROM ".KFM_DB_PREFIX."directories WHERE id=".$this->id);
 		if(!$res)return $this->id=0;
 		$this->name=$res['name'];
