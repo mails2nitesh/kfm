@@ -274,6 +274,7 @@ function kfm_incrementalFileDisplay(){
 	}
 }
 function kfm_refreshFiles(res){
+	if(!res.files)return;
 	$j('#folder_info').text(res.files.length+(res.files.length==1?' file':' files')); //TODO new string
 	kdnd_addDropHandler('kfm_file','.kfm_directory_link',function(e){
 		dir_over=e.targetElement.node_id;

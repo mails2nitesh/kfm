@@ -13,18 +13,16 @@ function _createEmptyFile($cwd,$filename){
 	global $kfm_session;
 	$dir=kfmDirectory::getInstance($cwd);
 	$path=$dir->path;
-	//if(!kfm_checkAddr($path.$filename))return 'error: '.kfm_lang('illegalFileName',$filename);
-	if(!kfmFile::checkName($filename))return 'error: '.kfm_lang('illegalFileName',$filename);
-	return(touch($path.$filename))?kfm_loadFiles($cwd):'error: '.kfm_lang('couldNotCreateFile',$filename);
+	if(!kfmFile::checkName($filename))return kfm_error(kfm_lang('illegalFileName',$filename));
+	return(touch($path.$filename))?kfm_loadFiles($cwd):kfm_error(kfm_lang('couldNotCreateFile',$filename));
 }
 function _downloadFileFromUrl($url,$filename){
 	global $kfm_session,$kfm_default_upload_permission;
 	$cwd_id=$kfm_session->get('cwd_id');
 	$dir=kfmDirectory::getInstance($cwd_id);
 	$cwd=$dir->getPath();
-	//if(!kfm_checkAddr($cwd.'/'.$filename))return kfm_lang('error: filename not allowed');
-	if(!kfmFile::checkName($filename))return kfm_lang('error: filename not allowed');
-	if(substr($url,0,4)!='http')return kfm_lang('error: url must begin with http');
+	if(!kfmFile::checkName($filename))return kfm_error(kfm_lang('error: filename not allowed'));
+	if(substr($url,0,4)!='http')return kfm_error(kfm_lang('error: url must begin with http'));
 	$file=file_get_contents(str_replace(' ','%20',$url));
 	if(!$file)return kfm_lang('failedDownloadFromUrl');
 	if(!file_put_contents($cwd.'/'.$filename,$file))return kfm_lang('failedWriteToFile',$filename);
@@ -34,7 +32,7 @@ function _downloadFileFromUrl($url,$filename){
 function _extractZippedFile($id){
 	global $kfm_session;
 	$cwd_id=$kfm_session->get('cwd_id');
-	if(!$GLOBALS['kfm_allow_file_create'])return 'error: '.kfm_lang('permissionDeniedCreateFile');
+	if(!$GLOBALS['kfm_allow_file_create'])return kfm_error(kfm_lang('permissionDeniedCreateFile'));
 	$file=kfmFile::getInstance($id);
 	$dir=$file->directory.'/';
 	{ # try native system unzip command
@@ -44,14 +42,13 @@ function _extractZippedFile($id){
 		if(!$res){
 			for($i=3;$i<count($arr)-2;++$i){
 				$filename=preg_replace('/.* /','',$arr[$i]);
-				//if(!kfm_checkAddr($filename))return kfm_lang('errorZipContainsBannedFilename');
 				if(!kfmFile::checkName($filename))return kfm_lang('errorZipContainsBannedFilename');
 			}
 			exec('unzip -o "'.$dir.$file->name.'" -x -d "'.$dir.'"',$arr,$res);
 		}
 	}
 	if($res){ # try PHP unzip command
-		return kfm_lang('error: unzip failed');
+		return kfm_error(kfm_lang('error: unzip failed'));
 		# TODO: fix this
 		$zip=zip_open($dir.$file->name);
 		while($zip_entry=zip_read($zip)){
@@ -115,17 +112,7 @@ function _getTagName($id){
 }
 function _getTextFile($fid){
 	$file=kfmFile::getInstance($fid);
-	if(!kfm_checkAddr($file->name))return;
-	if(!$file->isWritable())return 'error: '.kfm_lang('isNotWritable',$file->name);
-	{# determine language for Codepress
-		$language='generic';
-		$langs=array('html'=>'html','tpl'=>'html','php'=>'php','css'=>'css',
-			'js'=>'js','j'=>'java','pl'=>'perl','ruby'=>'ruby','sql'=>'sql',
-			'tex'=>'tex','txt'=>'text');
-		$ext=$file->getExtension();
-		foreach($langs as $key=>$lang)if($key==$ext)$language=$lang;
-	}
-	return array('content'=>$file->getContent(),'name'=>$file->name,'id'=>$file->id,'language'=>$language);
+	return array('content'=>$file->getContent(),'name'=>$file->name,'id'=>$file->id);
 }
 function _loadFiles($rootid=1,$setParent=false){
 	global $kfm_session;
@@ -155,13 +142,12 @@ function _renameFile($fid,$newfilename,$refreshFiles=true){
 	global $kfm_session;
 	$file=kfmFile::getInstance($fid);
 	$file->rename($newfilename);
-	if($file->hasErrors())return $file->getErrors();
 	if($refreshFiles)return kfm_loadFiles($kfm_session->get('cwd_id'));
 }
 function _renameFiles($files,$template){
 	global $kfm_session;
 	$cwd_id=$kfm_session->get('cwd_id');
-	if(!$GLOBALS['kfm_allow_file_edit'])return 'error: '.kfm_lang('permissionDeniedEditFile');
+	if(!$GLOBALS['kfm_allow_file_edit'])return kfm_error(kfm_lang('permissionDeniedEditFile'));
 	$prefix=preg_replace('/\*.*/','',$template);
 	$postfix=preg_replace('/.*\*/','',$template);
 	$precision=strlen(preg_replace('/[^*]/','',$template));
@@ -198,8 +184,9 @@ function _rm($id){
 	return $id;
 }
 function _saveTextFile($fid,$text){
-	if(!$GLOBALS['kfm_allow_file_edit'])return 'error: '.kfm_lang('permissionDeniedEditFile');
+	if(!$GLOBALS['kfm_allow_file_edit'])return kfm_error(kfm_lang('permissionDeniedEditFile'));
 	$f=kfmFile::getInstance($fid);
+	if(!$f->checkName())return kfm_error(kfm_lang('permissionDeniedEditFile'));
 	if($f->setContent($text))kfm_addMessage(kfm_lang('file saved'));
 }
 function _search($keywords,$tags){
@@ -239,7 +226,7 @@ function _search($keywords,$tags){
 	return array('reqdir'=>kfm_lang('searchResults'),'files'=>$files,'uploads_allowed'=>0);
 }
 function _tagAdd($recipients,$tagList){
-	if(!$GLOBALS['kfm_allow_file_edit'])return 'error: '.kfm_lang('permissionDeniedEditFile');
+	if(!$GLOBALS['kfm_allow_file_edit'])return kfm_error(kfm_lang('permissionDeniedEditFile'));
 	global $kfmdb;
 	if(!is_array($recipients))$recipients=array($recipients);
 	$arr=explode(',',$tagList);
@@ -263,7 +250,7 @@ function _tagAdd($recipients,$tagList){
 	return _getFileDetails($recipients[0]);
 }
 function _tagRemove($recipients,$tagList){
-	if(!$GLOBALS['kfm_allow_file_edit'])return 'error: '.kfm_lang('permissionDeniedEditFile');
+	if(!$GLOBALS['kfm_allow_file_edit'])return kfm_error(kfm_lang('permissionDeniedEditFile'));
 	global $kfmdb;
 	if(!is_array($recipients))$recipients=array($recipients);
 	$arr=explode(',',$tagList);
@@ -283,14 +270,13 @@ function _zip($filename,$files){
 	$cwd_id=$kfm_session->get('cwd_id');
 	$dir=kfmDirectory::getInstance($cwd_id);
 	$cwd=$dir->path;
-	if(!$GLOBALS['kfm_allow_file_create'])return 'error: '.kfm_lang('permissionDeniedCreateFile');
+	if(!$GLOBALS['kfm_allow_file_create'])return kfm_error(kfm_lang('permissionDeniedCreateFile'));
 	global $rootdir;
-	//if(!kfm_checkAddr($cwd.'/'.$filename))return 'error: '.kfm_lang('illegalFileName',$filename);
-	if(!kfmFile::checkName($filename))return 'error: '.kfm_lang('illegalFileName',$filename);
+	if(!kfmFile::checkName($filename))return kfm_error(kfm_lang('illegalFileName',$filename));
 	$arr=array();
 	foreach($files as $f){
 		$file=kfmFile::getInstance($f);
-		if(!$file)return 'error: '.kfm_lang('missingFileInSelection');
+		if(!$file)return kfm_error(kfm_lang('missingFileInSelection'));
 		$arr[]=$file->path;
 	}
 	{ # try native system zip command
@@ -300,7 +286,7 @@ function _zip($filename,$files){
 		for($i=0;$i<count($arr);++$i)$arr[$i]=str_replace($pdir,'',$arr[$i]);
 		exec('cd "'.$cwd.'" && zip -D "'.$zipfile.'" "'.join('" "',$arr).'"',$arr,$res);
 	}
-	if($res)return 'error: '.kfm_lang('noNativeZipCommand');
+	if($res)return kfm_error(kfm_lang('noNativeZipCommand'));
 	return kfm_loadFiles($cwd_id);
 }
 ?>
