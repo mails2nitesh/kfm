@@ -393,7 +393,7 @@ function kfm_showFileDetails(id){
 	kfm.addEl(body,table);
 }
 function kfm_showToolTip(id){
-	if(!id)return;
+	if(!id || kfm_listview)return;
 	var F=File_getInstance(id);
 	var table=kfm_buildFileDetailsTable(F),icon=$('kfm_file_icon_'+id);
 	if(!icon||contextmenu)return;
