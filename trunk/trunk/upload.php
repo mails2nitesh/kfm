@@ -14,25 +14,27 @@
 require 'initialise.php';
 $errors=array();
 if ($kfm_allow_file_upload) {
-    $file=isset($_FILES['kfm_file'])?$_FILES['kfm_file']:$_FILES['Filedata'];
-    $filename=$file['name'];
-    $tmpname=$file['tmp_name'];
-		$cwd=$kfm_session->get('cwd_id');
-		if(!$cwd) $errors[]=kfm_lang('CWD not set');
-		else {
-	    $toDir=kfmDirectory::getInstance($cwd);
-	    $to=$toDir->path.'/'.$filename;
-	    if (!kfm_checkAddr($to)) $errors[]=kfm_lang('bannedFilenameExtension');
-			else if (!is_file($tmpname)) $errors[]='No file uploaded';
-	    else if (!kfmFile::checkName($filename)) $errors[]='The filename: '.$filename.' is not allowed';
+   $file=isset($_FILES['kfm_file'])?$_FILES['kfm_file']:$_FILES['Filedata'];
+   $filename=$file['name'];
+   $tmpname=$file['tmp_name'];
+	$cwd=$kfm_session->get('cwd_id');
+	if(!$cwd) $errors[]=kfm_lang('CWD not set');
+	else {
+		$toDir=kfmDirectory::getInstance($cwd);
+		$to=$toDir->path.'/'.$filename;
+		if (!is_file($tmpname)) $errors[]='No file uploaded';
+	   else if (!kfmFile::checkName($filename)){
+			$errors[]='The filename: '.$filename.' is not allowed';
 		}
-    if(!count($errors)) {
-        move_uploaded_file($tmpname, $to);
-        if (!file_exists($to)) $errors[]=kfm_lang('failedToSaveTmpFile', $tmpname, $to);
-        else if ($kfm_only_allow_image_upload && !getimagesize($to)) {
-            $errors[]='only images may be uploaded';
-            unlink($to);
-        } else {
+	}
+	if(file_exists($to))$errors[]='File already exists'; #TODO new string
+	if(!count($errors)) {
+		move_uploaded_file($tmpname, $to);
+      if (!file_exists($to)) $errors[]=kfm_lang('failedToSaveTmpFile', $tmpname, $to);
+      else if ($kfm_only_allow_image_upload && !getimagesize($to)) {
+			$errors[]='only images may be uploaded';
+			unlink($to);
+      } else {
             chmod($to, octdec('0'.$kfm_default_upload_permission));
             $fid=kfmFile::addToDb($filename, $kfm_session->get('cwd_id'));
             $file=kfmFile::getInstance($fid);

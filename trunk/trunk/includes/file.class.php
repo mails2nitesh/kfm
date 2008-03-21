@@ -40,15 +40,6 @@ class kfmFile extends kfmObject{
 			$this->type=trim(substr(strstr($this->mimetype,'/'),1));
 		}
 	}
-	function checkAddr($addr){
-		# depricated, use checkName instead
-		return (
-			strpos($addr,'..')===false&&
-			strpos($addr,'.')!==0&&
-			strpos($addr,'/')===false &&
-			!in_array(preg_replace('/.*\./','',$addr),$GLOBALS['kfm_banned_extensions'])
-			);
-	}
 	/**
 	 * Checks if the file exists
 	 * @return bool

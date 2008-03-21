@@ -194,7 +194,7 @@ function newText(a){
 	return document.createTextNode(a);
 }
 if(window.ie){
-	function XMLHttpRequest(){
+	XMLHttpRequest=function(){
 		var l=(ScriptEngineMajorVersion()>=5)?"Msxml2":"Microsoft";
 		return new ActiveXObject(l+".XMLHTTP")
 	}

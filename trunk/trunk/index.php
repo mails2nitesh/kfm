@@ -172,7 +172,8 @@ foreach($plugins as $plugin){
 }
 // }}}
 // }}} ?>
-		<script type="text/javascript" src="j/swfupload-2.1.0b/swfupload.js"></script>
+		<script type="text/javascript" src="j/swfupload-2.1.0b2/swfupload.js"></script>
+		<script type="text/javascript" src="j/swfupload-2.1.0b2/swfupload.swfobject.js"></script>
 <?php // {{{ more JavaScript environment variables. These should be merged into the above set whenever possible ?>
 		<script type="text/javascript">
 			var phpsession = "<?php echo session_id(); ?>";

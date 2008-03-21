@@ -32,9 +32,12 @@ switch($f->getExtension()){
 		$lang='perl';
 		break;
 	case 'php':
+	case 'php3':
+	case 'php4':
 		$lang='php';
 		break;
 	case 'ruby':
+	case 'rb':
 		$lang='ruby';
 		break;
 	case 'sql':
