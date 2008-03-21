@@ -117,8 +117,6 @@ require_once(KFM_BASE_PATH.'configuration.php');
 		exit;
 	}
 	$rootdir=realpath($rootdir).'/';
-	define('LSQUIGG','{');
-	define('RSQUIGG','}');
 	define('KFM_DIR', dirname(__FILE__));
 	if(!defined('GET_PARAMS')) define('GET_PARAMS', '');
 	define('IMAGEMAGICK_PATH',isset($kfm_imagemagick_path)?$kfm_imagemagick_path:'/usr/bin/convert');
