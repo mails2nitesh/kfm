@@ -491,6 +491,10 @@ require_once(KFM_BASE_PATH.'configuration.php');
 		require_once(KFM_BASE_PATH.'includes/images.php');
 		return _resizeImage($filename,$width,$height);
 	}
+	function kfm_resizeImages($files,$width,$height){
+		require_once(KFM_BASE_PATH.'includes/images.php');
+		return _resizeImages($files,$width,$height);
+	}
 	function kfm_rotateImage($filename,$direction){
 		require_once(KFM_BASE_PATH.'includes/images.php');
 		return _rotateImage($filename,$direction);

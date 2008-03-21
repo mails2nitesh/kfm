@@ -415,7 +415,8 @@ function kfm_zip(name){
 	});
 }
 function kfm_fileLoader(id){
-	$j('#kfm_file_icon_'+id).css('background-image','url(themes/'+kfm_theme+'/icons/64x64/loader.gif)');
+	if($type(id)!='array')return $j('#kfm_file_icon_'+id).css('background-image','url(themes/'+kfm_theme+'/icons/64x64/loader.gif)');
+	id.each(kfm_fileLoader);
 }
 function kfm_filesLoader(){
 	$j('<img src="themes/'+kfm_theme+'/small_loader.gif" alt=""/>').appendTo('#documents_loader');

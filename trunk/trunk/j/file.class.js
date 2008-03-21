@@ -61,15 +61,16 @@ function File_getInstance(id,data){
 	return File_Instances[id];
 }
 function File_setData(el,F){
-	var id=parseInt(el.id);
+	var id=+el.id;
 	el=$H(el);
-	if(!F)F=File_Instances[id]={};
+	if(!F)F=File_getInstance(id);
 	el.each(function(varvalue,varname){
 		F[varname]=varvalue;
-		if(!F.textInstances[varname])return;
+		if(!F.textInstances || !F.textInstances[varname])return;
 		F.textInstances[varname].each(function(t){
 			F.setText(t,varname);
 		});
 	});
+	File_Instances[id]=F;
 }
 var File_Instances=[];
