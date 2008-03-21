@@ -19,6 +19,9 @@ function _resizeImage($fid,$width,$height){
 	if($im->hasErrors())return $im->getErrors();
 	return kfm_loadFiles($cwd_id);
 }
+function _resizeImages($fs,$width,$height){
+	foreach($fs as $f)_resizeImage($f,$width,$height);
+}
 function _rotateImage($fid,$direction){
 	$im=kfmImage::getInstance($fid);
 	$im->rotate($direction);
