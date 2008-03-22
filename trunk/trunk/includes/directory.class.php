@@ -132,7 +132,7 @@ class kfmDirectory extends kfmObject{
 		$this->handle=opendir($this->path);
 		if($this->handle){
 			while(false!==($file=readdir($this->handle))){
-				if($file[0]!=='.' && is_dir($this->path.$file) && !in_array(strtolower($file),$GLOBALS['kfm_banned_folders'])) return true;
+				if($this->checkName($file) && is_dir($this->path.$file)) return true;
 			}
 			return false;
 		}else{
@@ -167,7 +167,7 @@ class kfmDirectory extends kfmObject{
 		}
 	}
 	function rename($newname){
-		global $kfm,$kfm_allow_directory_edit;
+		global $kfm,$kfm_allow_directory_edit,$kfmDirectoryInstances;
 		if(!$GLOBALS['kfm_allow_directory_edit'])return $this->error(kfm_lang('permissionDeniedEditDirectory'));
 		if(!$this->isWritable())return $this->error(kfm_lang('permissionDeniedRename',$this->name));
 		if(!$this->checkAddr($newname))return $this->error(kfm_lang('cannotRenameFromTo',$this->name,$newname));
@@ -177,10 +177,13 @@ class kfmDirectory extends kfmObject{
 		if(file_exists($this->path))return $this->error(kfm_lang('failedRenameDirectory'));
 		$kfm->db->query("update ".KFM_DB_PREFIX."directories set name='".sql_escape($newname)."' where id=".$this->id);
 		$this->name=$newname;
+		$this->path=$this->getPath();
+		$kfmDirectoryInstances[$this->id]=$this;
 	}
 	function checkName($file=false){
 		if($file===false)$file=$this->name;
 		if(trim($file)==''|| trim($file)!=$file)return false;
+		if($file=='.'||$file=='..')return false;
 		foreach($GLOBALS['kfm_banned_folders'] as $ban){
 			if(($ban[0]=='/' || $ban[0]=='@')&&preg_match($ban,$file))return false;
 			elseif($ban==strtolower(trim($file)))return false;
