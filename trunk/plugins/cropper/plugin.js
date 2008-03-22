@@ -35,11 +35,20 @@ function plugin_cropper(){
 	}
 	function kfm_cropToNew(id, coords, dimensions){
 		if(!coords || !dimensions)return;
-		var filename=File_getInstance(id).name;
-		kfm_prompt(kfm.lang.RenameFileToWhat(filename),filename,function(newName){
-			if(!newName||newName==filename)return;
-			kfm_pluginIframeHide();
-			x_kfm_cropToNew(id, coords.x1, coords.y1, dimensions.width, dimensions.height, newName, kfm_refreshFiles);
+		F=File_getInstance(id);
+		var filename=F.name;
+		var newname_suggestion=filename.substr(0,filename.length-F.ext.length-1)+'.cropped.'+F.ext;
+		var html=kfm.lang.Filename+'<br/>';
+		html+='<input type="text" id="crop_new_filename" value="'+newname_suggestion+'" size="'+(newname_suggestion.length+1)+'" />';
+		$j.prompt(html,{
+			buttons:{Cancel:false,OK:true},
+			callback:function(v,m){
+				if(!v)return;
+				newName=m.children('#crop_new_filename').val();
+				if(!newName||newName==filename)return;
+				kfm_pluginIframeHide();
+				x_kfm_cropToNew(id, coords.x1, coords.y1, dimensions.width, dimensions.height, newName, kfm_refreshFiles);
+			}
 		});
 	}
 
