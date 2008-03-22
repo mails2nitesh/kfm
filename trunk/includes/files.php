@@ -26,7 +26,7 @@ function _downloadFileFromUrl($url,$filename){
 	$file=file_get_contents(str_replace(' ','%20',$url));
 	if(!$file)return kfm_lang('failedDownloadFromUrl');
 	if(!file_put_contents($cwd.'/'.$filename,$file))return kfm_lang('failedWriteToFile',$filename);
-	chmod($to, octdec('0'.$kfm_default_upload_permission));
+	chmod($cwd.'/'.$filename, octdec('0'.$kfm_default_upload_permission));
 	return kfm_loadFiles($cwd_id);
 }
 function _extractZippedFile($id){

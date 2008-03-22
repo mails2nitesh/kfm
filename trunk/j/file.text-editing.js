@@ -16,7 +16,7 @@ function kfm_createEmptyFile(filename,msg){
 			not_ok=1;
 		}
 		if(not_ok)return kfm_createEmptyFile(filename,msg);
-		x_kfm_createEmptyFile(kfm_cwd_id,filename,function(res){if(res.files)kfm_refreshFiles;});
+		x_kfm_createEmptyFile(kfm_cwd_id,filename,kfm_refreshFiles);
 	});
 }
 function kfm_leftColumn_disable(){
