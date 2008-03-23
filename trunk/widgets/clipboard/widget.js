@@ -19,7 +19,10 @@ function Clipboard(){
 			},
 			'events':{
 				'mouseover':function(){
-					if(selectedFiles.length) this.style.backgroundImage='url(\'widgets/clipboard/clipboard_add.png\')';
+					if($j('#kdnd_drag_wrapper').length){
+						if(kfm_theme=='blt') this.style.backgroundImage='url(\'widgets/clipboard/clipboard_add_blt.png\')';
+						else this.style.backgroundImage='url(\'widgets/clipboard/clipboard_add.png\')';
+					}
 				},
 				'mouseout':function(){this.setAppearance();},
 				'click':function(){
