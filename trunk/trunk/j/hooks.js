@@ -132,7 +132,7 @@ function kfm_getLinks(files){
 	/* single file section */
 	var hookObjects=[];
 	var F=File_getInstance(files[0]);
-	var ext=F.name.replace(/.*\./,'').toLowerCase();
+	var ext=F.ext;
 	if(F.writable)HooksArray="HooksSingleWritable";
 	else HooksArray="HooksSingleReadonly";
 
