@@ -13,6 +13,7 @@
 error_reporting(E_ALL);
 require_once 'initialise.php';
 require_once KFM_BASE_PATH.'includes/kaejax.php';
+$kfm_session->set('kfm_url',dirname((!empty($_SERVER['HTTPS'])) ? "https://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'] : "http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']).DIRECTORY_SEPARATOR);
 $kfm_root_dir = kfmDirectory::getInstance(1);
 if ($kfm_user_root_folder) {
     $dirs   = explode(DIRECTORY_SEPARATOR, trim($kfm_user_root_folder, ' '.DIRECTORY_SEPARATOR));
