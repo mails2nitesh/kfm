@@ -1,5 +1,14 @@
 <?php
-require_once('initialise.php');
+/**
+ * KFM - Kae's File Manager - database maintenance
+ *
+ * @category None
+ * @package  None
+ * @author   Benjamin ter Kuile <bterkuile@gmail.com>
+ * @license  docs/license.txt for licensing
+ * @link     http://kfm.verens.com/
+ */
+require_once 'initialise.php';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
