@@ -278,6 +278,10 @@ var KFM=new Class({
 		var key=e.code;
 		var cm=$('documents_body').contentMode;
 		switch(key){
+			case 8:{ // delete
+				kfm_delete(cm);
+				break;
+			}
 			case 13:{ // enter
 				if(!selectedFiles.length||window.inPrompt||cm!='file_icons')return;
 				kfm_chooseFile();
@@ -330,9 +334,7 @@ var KFM=new Class({
 				break;
 			}
 			case 46:{ // delete
-				if(!selectedFiles.length||cm!='file_icons')return;
-				if(selectedFiles.length>1)kfm_deleteSelectedFiles();
-				else kfm_deleteFile(selectedFiles[0]);
+				kfm_delete(cm);
 				break;
 			}
 			case 65:{ // a
@@ -358,9 +360,18 @@ var KFM=new Class({
 				else kfm.alert(kfm.lang.RenameOnlyOneFile);
 				break;
 			}
+			case 127:{ // backspace
+				kfm_delete(cm);
+				break;
+			}
 		}
 	}
 });
+function kfm_delete(cm){
+	if(!selectedFiles.length||cm!='file_icons')return;
+	if(selectedFiles.length>1)kfm_deleteSelectedFiles();
+	else kfm_deleteFile(selectedFiles[0]);
+}
 function kfm_inArray(needle,haystack){
 	for(var i=0;i<haystack.length;++i)if(haystack[i]==needle)return true;
 	return false;
