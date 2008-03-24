@@ -15,6 +15,7 @@ function kfm_chooseFile(){
 	}
 	else {
 		x_kfm_getFileUrls(selectedFiles,function(urls){
+			if(copy_to_clipboard)copy_to_clipboard(urls.join("\n"));
 			if(kfm_file_handler=='download'){
 				var allImages=1;
 				for(var i=0;i<selectedFiles.length;++i)if(!File_getInstance(selectedFiles[i]).width)allImages=0;
@@ -28,6 +29,7 @@ function kfm_chooseFile(){
 				else kfm_img_startLightbox(selectedFiles)
 				return;
 			}
+			if(!window.opener)return new Notice('no action associated with double-click'); // TODO: string
 			if(selectedFiles.length==1&&File_getInstance(selectedFiles[0]).width)window.opener.SetUrl(urls[0].replace(/([^:]\/)\//g,'$1'),0,0,File_getInstance(selectedFiles[0]).caption);
 			else{
 				if(selectedFiles.length==1)window.opener.SetUrl(urls[0]);
