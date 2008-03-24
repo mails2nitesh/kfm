@@ -40,6 +40,21 @@ class kfmFile extends kfmObject{
 			$this->type=trim(substr(strstr($this->mimetype,'/'),1));
 		}
 	}
+
+	/**
+	 * Deletes the file
+	 * @return bool true opon success, false on error
+	 */
+	function delete(){
+		global $kfm,$kfm_allow_file_delete;
+		if(!$kfm_allow_file_delete)return $this->error(kfm_lang('permissionDeniedDeleteFile'));
+		if(!kfm_cmsHooks_allowedToDeleteFile($this->id))return $this->error(kfm_lang('CMSRefusesFileDelete',$this->path));
+		if($this->exists() && !$this->writable)return $this->error(kfm_lang('fileNotMovableUnwritable',$this->name));
+		if(!$this->exists() || unlink($this->path))$kfm->db->exec("DELETE FROM ".KFM_DB_PREFIX."files WHERE id=".$this->id);
+		else return $this->error(kfm_lang('failedDeleteFile',$this->name));
+		return true;
+	}
+
 	/**
 	 * Checks if the file exists
 	 * @return bool
@@ -49,12 +64,14 @@ class kfmFile extends kfmObject{
 		$this->exists=file_exists($this->path);
 		return $this->exists;
 	}
+
 	/**
 	 * Returns the file contents or false on error
 	 */
 	function getContent(){
 		return ($this->id==-1)?false:utf8_encode(file_get_contents($this->path));
 	}
+
 	/**
 	 * Function that returns the extension of the file.
 	 * if a parameter is given, the extension of that parameters is returned
@@ -92,33 +109,6 @@ class kfmFile extends kfmObject{
 			else $url=$kfm_userfiles_output.'/'.$cwd.'/'.$this->name; # TODO: check this line - $cwd may be incorrect if the requested file is from a search
 		}
 		return preg_replace('/([^:])\/{2,}/','$1/',$url);
-	}
-
-	/**
-	 * Deletes the file
-	 * @return bool true opon success, false on error
-	 */
-	function delete(){
-		global $kfm,$kfm_allow_file_delete;
-		if(!$kfm_allow_file_delete)return $this->error(kfm_lang('permissionDeniedDeleteFile'));
-		if(!kfm_cmsHooks_allowedToDeleteFile($this->id))return $this->error(kfm_lang('CMSRefusesFileDelete',$this->path));
-		if($this->exists() && !$this->writable)return $this->error(kfm_lang('fileNotMovableUnwritable',$this->name));
-		if(!$this->exists() || unlink($this->path))$kfm->db->exec("DELETE FROM ".KFM_DB_PREFIX."files WHERE id=".$this->id);
-		else return $this->error(kfm_lang('failedDeleteFile',$this->name));
-		return true;
-	}
-
-	/**
-	 * Moves the file
-	 * @param int $new_directoryparent_id
-	 */
-	function move($dir_id){
-		global $kfmdb;
-		if(!$this->writable)return $this->error(kfm_lang('fileNotMovableUnwritable',$this->name));
-		$dir=kfmDirectory::getInstance($dir_id);
-		if(!$dir)return $this->error(kfm_lang('failedGetDirectoryObject'));
-		if(!rename($this->path,$dir->path.'/'.$this->name))return $this->error(kfm_lang('failedMoveFile',$this->name));
-		$q=$kfmdb->query("update ".KFM_DB_PREFIX."files set directory=".$dir_id." where id=".$this->id);
 	}
 
 	/**
@@ -168,6 +158,19 @@ class kfmFile extends kfmObject{
 	 */
 	function isWritable(){
 		return (($this->id==-1)||!is_writable($this->path))?false:true;
+	}
+
+	/**
+	 * Moves the file
+	 * @param int $new_directoryparent_id
+	 */
+	function move($dir_id){
+		global $kfmdb;
+		if(!$this->writable)return $this->error(kfm_lang('fileNotMovableUnwritable',$this->name));
+		$dir=kfmDirectory::getInstance($dir_id);
+		if(!$dir)return $this->error(kfm_lang('failedGetDirectoryObject'));
+		if(!rename($this->path,$dir->path.'/'.$this->name))return $this->error(kfm_lang('failedMoveFile',$this->name));
+		$q=$kfmdb->query("update ".KFM_DB_PREFIX."files set directory=".$dir_id." where id=".$this->id);
 	}
 
 	/**
@@ -221,6 +224,13 @@ class kfmFile extends kfmObject{
 		$n=floor(log($size)/log(1024));
 		return $n?round($size/pow(1024,$n),1).' '.$format[$n]:'0 B';
 	}
+
+	/**
+	 * Add the file to the database
+	 * @param string $filename name of the file
+	 * @param int $directory_id id of the directory in which the file is located
+	 * @return int $file_id id assigned to the file
+	 */
 	function addToDb($filename,$directory_id){
 		global $kfmdb;
 		if(!$directory_id)return $this->error('Directory ID not supplied');
@@ -228,6 +238,7 @@ class kfmFile extends kfmObject{
 		$q=$kfmdb->query($sql);
 		return $kfmdb->lastInsertId(KFM_DB_PREFIX.'files','id');
 	}
+
 	/**
 	 * Check if the filename is authorized by the system according to the configuration
 	 * @return bool $authorized true when authorized, false if not
