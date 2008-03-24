@@ -84,7 +84,10 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 			(new Element('span',{'id':'kfm_dir_node_'+parent})).setHTML('&nbsp;')
 		),'kfm_dir_lines_'+(is_last?'lastchild':'child'));
 	cell.style.width='16px';
-	kfm.addCell(r,1,0,el,'kfm_dir_name');
+	cell=kfm.addCell(r,1,0,el,'kfm_dir_name');
+	if(window.webkit){ // fix cell width for konqueror
+		cell.style.width=(t.offsetWidth-16)+'px';
+	}
 	el.addEvent('click',function(e){
 		e=new Event(e);
 		if(e.rightClick)return;
@@ -141,13 +144,15 @@ function kfm_dir_closeNode(dir){
 	$('kfm_directories_subdirs_'+dir).empty();
 }
 function kfm_refreshDirectories(res){
+	var d,p,t;
 	if(res.toString()===res)return kfm_log(res);
-	var d=res.parent;
+	d=res.parent;
 	if(d==kfm_vars.root_folder_id){ // root node
-		var p=$('kfm_directories');
-		p.parentNode.replaceChild(kfm_dir_addLink(new Element('table',{
+		p=$('kfm_directories');
+		t=new Element('table',{
 			'id':'kfm_directories'
-		}),'','',1,0,kfm_vars.root_folder_id),p);
+		});
+		p.parentNode.replaceChild(kfm_dir_addLink(t,'','',1,0,kfm_vars.root_folder_id),p);
 		kfm_directories[kfm_vars.root_folder_id]={
 			'parent':0,
 			'name':kfm_vars.root_folder_name,
@@ -157,7 +162,7 @@ function kfm_refreshDirectories(res){
 		}
 		$('kfm_directory_icon_'+kfm_vars.root_folder_id).parentNode.className+=' kfm_directory_open';
 	}
-	var t=new Element('table'),n='kfm_dir_node_'+d;
+	t=new Element('table'),n='kfm_dir_node_'+d;
 	t.setStyle('table-layout','fixed');
 	dirwrapper=$('kfm_directories_subdirs_'+d).empty();
 	dirwrapper.appendChild(t);
