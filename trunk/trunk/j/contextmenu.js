@@ -64,8 +64,7 @@ function kfm_createContextMenu(m,links){
         document.body.appendChild(contextmenu);
     }
     else{
-        var col=kfm.addCell(kfm.addRow(contextmenu));
-        col.colSpan=2;
+        var col=kfm.addCell(kfm.addRow(contextmenu),0,2);
         col.appendChild(new Element('hr'));
     }
     var rows=contextmenu.rows.length;

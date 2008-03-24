@@ -43,9 +43,9 @@ var KFM=new Class({
 		div.setHTML(html);
 		kfm_modal_open(div,kfm.lang.AboutKfm);
 	},
-	addCell:function(o,b,c,d,e){
-		var f=$(o.insertCell(b));
-		if(c)f.colSpan=c;
+	addCell:function(o,colNum,colSpan,d,e){
+		var f=$(o.insertCell(+colNum));
+		if(colSpan)f.colSpan=colSpan;
 		if(d)kfm.addEl(f,d);
 		if(e)f.className=e;
 		return f;
@@ -423,7 +423,7 @@ function kfm_pluginIframeShow(url){
 			'top':0,
 			'width':'100%',
 			'height':'100%',
-			'backgroundColor':'black',
+			'backgroundImage':'url(i/bg-black-75.png)',
 			'z-index':202
 		});
 		$j(jDiv).appendTo('body');
@@ -449,6 +449,7 @@ function kfm_pluginIframeButton(code,text){
 	if(!hdr)return;
 	if(code=='close'){
 		btn=$j('<img src="themes/'+kfm_theme+'/icons/remove.png"/>').click(function(){parent.kfm_pluginIframeHide();});
+		btn.css({'float':'right'});
 	}else{
 		btn=$j('<span class="kfm_plugin_iframe_button"></span>').click(function(){eval(code);});
 	}
