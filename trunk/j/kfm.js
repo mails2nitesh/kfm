@@ -43,11 +43,11 @@ var KFM=new Class({
 		div.setHTML(html);
 		kfm_modal_open(div,kfm.lang.AboutKfm);
 	},
-	addCell:function(o,colNum,colSpan,d,e){
+	addCell:function(o,colNum,colSpan,subEls,className){
 		var f=$(o.insertCell(+colNum));
 		if(colSpan)f.colSpan=colSpan;
-		if(d)kfm.addEl(f,d);
-		if(e)f.className=e;
+		if(subEls)kfm.addEl(f,subEls);
+		if(className)f.className=className;
 		return f;
 	},
 	addEl:function(o,a){
