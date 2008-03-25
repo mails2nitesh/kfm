@@ -190,7 +190,7 @@ function kfm_incrementalFileDisplay(){
 		while(el.parentNode&&!el.file_id)el=el.parentNode;
 		if(!el.parentNode)return;
 		{ // variables
-			var links=[],i,id=el.file_id;
+			var i,id=el.file_id;
 			var F=File_getInstance(id);
 			var extension=F.name.replace(/.*\./,'').toLowerCase();
 			var writable=F.writable;
@@ -198,10 +198,9 @@ function kfm_incrementalFileDisplay(){
 		{ // add the links
 			if(selectedFiles.length>1)var linkObjects=kfm_getLinks(selectedFiles);
 			else var linkObjects=kfm_getLinks([id]);
-			if(selectedFiles.length<=1 && F.width)links.push(['kfm_changeCaption('+id+')',kfm.lang.ChangeCaption,'edit',!kfm_vars.permissions.file.ed]);
-			links.push(['kfm_tagAdd('+id+')',kfm.lang.AddTagsToFiles,'add_tags',!kfm_vars.permissions.file.ed]);
-			links.push(['kfm_tagRemove('+id+')',kfm.lang.RemoveTagsFromFiles,'',!kfm_vars.permissions.file.ed]);
-			for(var i=0;i<links.length;++i)linkObjects.push(links[i]);
+			if(selectedFiles.length<=1 && F.width)linkObjects.push(['kfm_changeCaption('+id+')',kfm.lang.ChangeCaption,'edit',!kfm_vars.permissions.file.ed]);
+			linkObjects.push(['kfm_tagAdd('+id+')',kfm.lang.AddTagsToFiles,'add_tags',!kfm_vars.permissions.file.ed]);
+			linkObjects.push(['kfm_tagRemove('+id+')',kfm.lang.RemoveTagsFromFiles,'',!kfm_vars.permissions.file.ed]);
 			kfm_createContextMenu(e.page,linkObjects);
 		}
 	});
