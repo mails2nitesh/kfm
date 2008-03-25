@@ -31,12 +31,12 @@ function kfm_createContextMenu(m,links){
 			if(disabled && !kfm_vars.show_disabled_contextmenu_links)return;
 			row=kfm.addRow(this);
 			if(disabled){
-				row.addClass('disabled');
+				row.className+=' disabled';
 				href='';
 			}
 			if(isSubMenu){
 				link=newLink('javascript:kfm_cm_openSubMenu("'+href+'",this);',text);
-				row.addClass('is_submenu');
+				row.className+=' is_submenu';
 			}
 			else if(href=='kfm_0')link=text;
 			else{
@@ -61,9 +61,9 @@ function kfm_createContextMenu(m,links){
 			else kfm.addCell(row,0,0,(icon?new Element('img',{src:'themes/'+kfm_theme+'/icons/'+icon+'.png'}):''),'kfm_contextmenu_iconCell');
 			kfm.addCell(row,1,0,link,'kfm_contextmenu_nameCell');
 			try{
-				row.addClass('cm_'+href.name.replace(/[^a-zA-Z]*/g,''));
+				row.className+=' cm_'+href.name.replace(/[^a-zA-Z]*/g,'');
 			}catch(e){
-				row.addClass('cm_'+link.innerHTML.replace(/[^a-zA-Z]*/g,''));
+				row.className+=' cm_'+link.innerHTML.replace(/[^a-zA-Z]*/g,'');
 			}
 		};
 		window.contextmenu_loading=setTimeout('window.contextmenu_loading=null',1);
@@ -71,7 +71,7 @@ function kfm_createContextMenu(m,links){
 	}
 	else{
 		row=kfm.addRow(contextmenu);
-		row.addClass('cm__separator');
+		row.className+=' cm__separator';
 		var col=kfm.addCell(row,0,2);
 		col.appendChild(new Element('hr'));
 	}
