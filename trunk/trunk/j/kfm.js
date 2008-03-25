@@ -62,7 +62,7 @@ var KFM=new Class({
 	},
 	addRow:function(t,p,c){
 		var o=t.insertRow(p===parseInt(p)?p:t.rows.length);
-		o.className=c;
+		if(c && c!=undefined)o.className=c;
 		return o;
 	},
 	alert:function(txt){
