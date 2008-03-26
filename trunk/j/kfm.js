@@ -446,8 +446,9 @@ function kfm_pluginIframeShow(url){
 		}));
 		kfm_pluginIframeButton('close');
 		$j(jDiv).slideDown('normal',function(){
+			var x=$j('body').width(),y=$j('body').height()-25;
 			$j(this).append(
-				'<iframe id="plugin_iframe_element" src="'+url+'" style="width:100%;height:100%;"></iframe>'
+				'<iframe id="plugin_iframe_element" src="'+url+'&ifx='+x+'&ify='+y+'" style="width:100%;height:100%;"></iframe>'
 			);
 		});
 	}else{
