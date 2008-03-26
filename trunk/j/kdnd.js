@@ -37,9 +37,12 @@ function kdnd_drag(e){
 	window.kdnd_drag_wrapper.setStyles({
 		'position':'absolute',
 		'display':'block',
-		'left':(m.x+16),
-		'top':m.y
+		'left':(m.x+window.kdnd_offset.x),
+		'top':(m.y+window.kdnd_offset.y)
 	});
+	if(kdnd_source_el.hasClass('drag_this')){
+		kdnd_source_el.setStyle('visibility','hidden');
+	}
 }
 function kdnd_dragFinish(e,notest){
 	e=new Event(e);
@@ -53,13 +56,20 @@ function kdnd_dragFinish(e,notest){
 				el=els[b];
 				if(getOffset(el,'Left')<=m.x&&m.x<getOffset(el,'Left')+el.offsetWidth&&getOffset(el,'Top')<=m.y&&m.y<getOffset(el,'Top')+el.offsetHeight){
 					e=$extend(e,{
-						sourceElement:kdnd_source_el,
-						targetElement:el
+						'sourceElement':kdnd_source_el,
+						'targetElement':el
 					});
 					fn(e);
 				}
 			}
 		});
+		if(kdnd_source_el.hasClass('drag_this')){
+			kdnd_source_el.setStyles({
+				'left'       : (m.x+window.kdnd_offset.x),
+				'top'        : (m.y+window.kdnd_offset.y),
+				'visibility' : 'visible'
+			});
+		}
 	}
 	{ // cleanup
 		window.kdnd_dragging=false;
@@ -79,6 +89,7 @@ function kdnd_dragInit(el,source_class){
 		window.dragTrigger=setTimeout(function(){
 			kdnd_dragStart(el,source_class);
 		},100);
+		window.kdnd_offset={'x':el.offsetLeft-e.page.x,'y':el.offsetTop-e.page.y};
 		e.stop();
 	};
 }
@@ -87,6 +98,12 @@ function kdnd_dragStart(el,source_class){
 	window.kdnd_drag_class=source_class;
 	window.kdnd_source_el=el;
 	var content=el.dragDisplay?el.dragDisplay():el.cloneNode(true);
+	if(el.getStyle('position')=='absolute' || el.getStyle('position')=='fixed')content.setStyles({
+		'position' : 'static',
+		'left'     : 0,
+		'top'      : 0
+	});
+	if(!el.hasClass('drag_this'))window.kdnd_offset={'x':16,'y':0};
 	var styles=window.ie?{
 		'display':'none'
 	}:

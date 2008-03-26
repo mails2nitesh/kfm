@@ -27,7 +27,8 @@ function kfm_modal_open(form,title,actions){
 	}
 	{ // wrapper
 		var wrapper=new Element('div',{
-			'id':'formWrapper'
+			'id'   :'formWrapper',
+			'class':'modal_dialog drag_this'
 		});
 		var h2=(new Element('h2')).setHTML(title);
 		h2.className='prompt';
@@ -106,4 +107,5 @@ function kfm_modal_open(form,title,actions){
 		e.stop();
 	});
 	kfm_resizeHandler_add('shader');
+	kdnd_makeDraggable('modal_dialog');
 }
