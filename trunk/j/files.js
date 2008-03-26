@@ -199,12 +199,23 @@ function kfm_incrementalFileDisplay(){
 			var writable=F.writable;
 		}
 		{ // add the links
-			if(selectedFiles.length>1)var linkObjects=kfm_getLinks(selectedFiles);
-			else var linkObjects=kfm_getLinks([id]);
-			if(selectedFiles.length<=1 && F.width)linkObjects.push(['kfm_changeCaption('+id+')',kfm.lang.ChangeCaption,'edit',!kfm_vars.permissions.file.ed]);
-			linkObjects.push(['kfm_tagAdd('+id+')',kfm.lang.AddTagsToFiles,'add_tags',!kfm_vars.permissions.file.ed]);
-			linkObjects.push(['kfm_tagRemove('+id+')',kfm.lang.RemoveTagsFromFiles,'',!kfm_vars.permissions.file.ed]);
-			kfm_createContextMenu(e.page,linkObjects);
+			var links=[],a,b,c;
+			if(selectedFiles.length>1)links=kfm_getLinks(selectedFiles);
+			else{
+				a=kfm_getDefaultOpener(id);
+				if(a){
+					b=$j.extend({},a);
+					b.name='open'; // TODO: string
+					b.title='open'; // TODO: string
+					links.push(b);
+				}
+				var a=kfm_getLinks([id]);
+				for(b=0;b<a.length;++b)links.push(a[b]); 
+			}
+			if(selectedFiles.length<=1 && F.width)links.push(['kfm_changeCaption('+id+')',kfm.lang.ChangeCaption,'edit',!kfm_vars.permissions.file.ed]);
+			links.push(['kfm_tagAdd('+id+')',kfm.lang.AddTagsToFiles,'add_tags',!kfm_vars.permissions.file.ed]);
+			links.push(['kfm_tagRemove('+id+')',kfm.lang.RemoveTagsFromFiles,'',!kfm_vars.permissions.file.ed]);
+			kfm_createContextMenu(e.page,links);
 		}
 	});
 	do{
