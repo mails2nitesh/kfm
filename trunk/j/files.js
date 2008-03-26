@@ -166,9 +166,12 @@ function kfm_incrementalFileDisplay(){
 				var el=e.target;
 				while(!el.file_id && el)el=el.parentNode;
 				if(!el)return;
+				var id=el.file_id;
 				kfm_selectNone();
-				kfm_addToSelection(el.file_id);
-				kfm_chooseFile();
+				kfm_addToSelection(id);
+				var openingHook=kfm_getDefaultOpener(id);
+				if(!window.opener && openingHook)openingHook.doFunction([id]);
+				else kfm_chooseFile();
 			}
 		}
 	});

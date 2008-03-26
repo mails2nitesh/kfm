@@ -76,8 +76,8 @@ function kfm_createContextMenu(m,links){
 		col.appendChild(new Element('hr'));
 	}
 	var rows=contextmenu.rows.length;
-	for(var ii=0;ii<links.length;++ii){
-		var link=links[ii];
+	for(var i=0;i<links.length;++i){
+		var link=links[i];
 		if($type(link)=="object")contextmenu.addLink(link);
 		else if(link[1])contextmenu.addLink(link[0],link[1],link[2],link[3],link[4]);
 	}
