@@ -2,6 +2,7 @@ function plugin_lightbox(){
 	this.name='lightbox';
 	this.title='view slideshow';
 	this.category='view';
+	this.defaultOpener=1;
 	this.extensions=['jpg','png','gif','svg'];
 	this.mode=1;//multiple files
 	this.writable=2;//all

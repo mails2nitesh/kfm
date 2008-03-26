@@ -20,6 +20,7 @@ function kfm_addHook(objoriginal, properties){
 		if(typeof(properties.title)!="undefined")obj.title=properties.title;
 		if(typeof(properties.name)!="undefined")obj.name=properties.name;
 		if(typeof(properties.category)!="undefined")obj.category=properties.category;
+		if(typeof(properties.defaultOpener)!="undefined")obj.defaultOpener=properties.defaultOpener;
 		if(typeof(properties.writable)!="undefined")obj.writable=properties.writable;
 		if(typeof(properties.extensions)!="undefined")obj.extensions=properties.extensions;
 	}
@@ -32,7 +33,7 @@ function kfm_addHook(objoriginal, properties){
 		if(obj.extensions=='all')return;
 		//remove unwanted extension (image extensions)
 		for(var i=0; i<obj.extensions.length; i++){
-			for(var j=0; j<kfm_imageExtensions; j++){
+			for(var j=0; j<kfm_imageExtensions.length; j++){
 				if(obj.extensions[i]==kfm_imageExtensions[j]){
 					obj.extensions.splice(i,1);
 					return;
@@ -150,4 +151,10 @@ function kfm_getLinks(files){
 		item.doParameter=[F.id];
 	});
 	return hookObjects;
+}
+function kfm_getDefaultOpener(id){
+	var hooks=kfm_getLinks([id]);
+	for(var i=0;i<hooks.length;++i){
+		if(hooks[i].defaultOpener)return hooks[i];
+	}
 }

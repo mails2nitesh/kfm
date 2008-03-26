@@ -2,6 +2,7 @@ function plugin_jwplayer(){
 	this.name='jwplayer';
 	this.title='Play with JW Media player';
 	this.category='view';
+	this.defaultOpener=1;
 	this.extensions=['flv','jpg','png','gif','svg','mp3'];
 	this.mode=2;
 	this.writable=2;//all

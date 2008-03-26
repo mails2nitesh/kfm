@@ -2,6 +2,7 @@ function plugin_codepress(){
 	this.name='codepress';
 	this.title=kfm.lang.EditTextFile;
 	this.mode=0; //only one file
+	this.defaultOpener=1;
 	this.writable=2;
 	this.category='edit';
 	this.extensions=['asp','autoit','css','csharp','html','tpl','htm','java','j','js','perl','php','ruby','sql','txt','vbscript','vba','xsl','xml'];
