@@ -99,6 +99,15 @@ if (!$kfm_dont_send_metrics) {
     }
 }
 // }}}
+// {{{ check for default directories
+if($kfm_default_directories!=''){
+	$dirs=explode(',',$kfm_default_directories);
+	foreach($dirs as $dir){
+		$dir=trim($dir);
+		@mkdir($rootdir.$dir,0755);
+	}
+}
+// }}}
 ?>
         <script type="text/javascript" src="j/mootools.v1.11/mootools.v1.11.js"></script>
         <script type="text/javascript" src="j/jquery/all.php"></script>

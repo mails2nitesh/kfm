@@ -186,6 +186,10 @@ $kfm_listview = 0;
 // how many files to attempt to draw at a time (use a low value for old client machines, and a higher value for newer machines)
 $kfm_show_files_in_groups_of = 10;
 
+// default directories. Separate with commas. These will be created if they don't already exist.
+// $kfm_default_directories='Documents,Music,Video';
+$kfm_default_directories='';
+
 // we would like to keep track of installations, to see how many there are, and what versions are in use.
 // if you do not want us to have this information, then set the following variable to '1'.
 $kfm_dont_send_metrics = 0;
