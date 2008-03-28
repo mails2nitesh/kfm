@@ -20,7 +20,7 @@ var File=new Class({
 	setText:function(el,varname){
 		el.empty();
 		var v=$pick(this[varname],'');
-		if(varname=='filename' && kfm_vars.files.name_length_displayed && kfm_vars.files.name_length_displayed<v.length){
+		if(varname=='name' && kfm_vars.files.name_length_displayed && kfm_vars.files.name_length_displayed<v.length){
 			el.title=v;
 			v=v.substring(0,kfm_vars.files.name_length_displayed-3)+'...';
 		}
