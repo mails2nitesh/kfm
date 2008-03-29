@@ -44,7 +44,14 @@ if ($kfm_startup_folder) {
     $kfm_session->set('cwd_id', $kfm_startupfolder_id);
     $startup_sequence = '['.implode(',', $startup_sequence_array).']';
 }
-else if (isset($_GET['cwd']) && (int)$_GET['cwd']) {
+else if (isset($_GET['fid']) && $_GET['fid']) {
+	$f = kfmFile::getInstance($_GET['fid']);
+	if($f){
+		$_GET['cwd']               = $f->parent;
+		$kfm_startup_selectedFiles = array($_GET['fid']);
+	}
+}
+if (isset($_GET['cwd']) && (int)$_GET['cwd']) {
 	$path   = kfm_getDirectoryParentsArr($_GET['cwd']);
 	$path[] = $_GET['cwd'];
 	if(count($path)>1){
@@ -171,6 +178,7 @@ if($kfm_default_directories!=''){
                 root_folder_id:<?php echo $kfm_root_folder_id; ?>,
                 startupfolder_id:<?php echo $kfm_startupfolder_id; ?>,
                 startup_sequence:<?php echo $startup_sequence; ?>,
+								startup_selectedFiles:[<?php echo join(',',$kfm_startup_selectedFiles); ?>],
                 show_disabled_contextmenu_links:<?php echo $kfm_show_disabled_contextmenu_links; ?>,
                 use_multiple_file_upload:<?php echo $kfm_use_multiple_file_upload; ?>,
                 use_templates:<?php echo $templated; ?>,
