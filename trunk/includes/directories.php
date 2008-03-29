@@ -25,6 +25,13 @@ function _getDirectoryParents($pid,$type=1){
 	$db=_getDirectoryDbInfo($pid);
 	return _getDirectoryParents($db['parent'],$type).$db['name'].'/';
 }
+function _getDirectoryParentsArr($dir,$path=array()){
+	$db=_getDirectoryDbInfo($dir);
+	$pdir=$db['parent'];
+	array_unshift($path,$pdir);
+	if($pdir>1)$path=_getDirectoryParentsArr($pdir,$path);
+	return $path;
+}
 function _loadDirectories($pid,$oldpid=0){
 	global $kfmdb, $kfm_banned_folders;
 	$dir=kfmDirectory::getInstance($pid);
@@ -70,4 +77,3 @@ function kfm_rmMixed($files=array(), $directories=array()){
 		if($dir->delete())$dircount++;
 	}
 }	
-?>
