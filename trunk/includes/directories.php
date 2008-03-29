@@ -27,6 +27,7 @@ function _getDirectoryParents($pid,$type=1){
 }
 function _getDirectoryParentsArr($dir,$path=array()){
 	$db=_getDirectoryDbInfo($dir);
+	if(!$db)return $path;
 	$pdir=$db['parent'];
 	array_unshift($path,$pdir);
 	if($pdir>1)$path=_getDirectoryParentsArr($pdir,$path);

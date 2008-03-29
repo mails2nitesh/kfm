@@ -44,14 +44,15 @@ if ($kfm_startup_folder) {
     $kfm_session->set('cwd_id', $kfm_startupfolder_id);
     $startup_sequence = '['.implode(',', $startup_sequence_array).']';
 }
-else if (isset($_GET['cwd']) && $_GET['cwd']) {
+else if (isset($_GET['cwd']) && (int)$_GET['cwd']) {
 	$path   = kfm_getDirectoryParentsArr($_GET['cwd']);
 	$path[] = $_GET['cwd'];
-	if(count($path)<2)break;
-	$startup_sequence_array = $path;
-	$kfm_startupfolder_id   = $_GET['cwd'];
-	$kfm_session->set('cwd_id', $kfm_startupfolder_id);
-	$startup_sequence = '['.implode(',', $startup_sequence_array).']';
+	if(count($path)>1){
+		$startup_sequence_array = $path;
+		$kfm_startupfolder_id   = $_GET['cwd'];
+		$kfm_session->set('cwd_id', $kfm_startupfolder_id);
+		$startup_sequence = '['.implode(',', $startup_sequence_array).']';
+	}
 }
 // }}}
 header('Content-type: text/html; Charset = utf-8');
