@@ -186,13 +186,14 @@ function kfm_refreshDirectories(res){
 	kfm_cwd_subdirs[d]=res.directories;
 	if(!kfm_cwd_subdirs[d])kfm_dir_openNode(res.parent);
 	kfm_setDirectoryProperties(res.properties);
-	kfm_selectNone();
+	if(!kfm_vars.startup_sequence)kfm_selectNone();
 	kfm_log(kfm.lang.DirRefreshed);
 	kfm_directories[kfm_cwd_id]=res.properties;
 	kfm_directories[d].hasChildren=1;
 	if(kfm_startup_sequence_index<kfm_vars.startup_sequence.length){
 		kfm_changeDirectory(kfm_vars.startup_sequence[kfm_startup_sequence_index],true);
 		kfm_startup_sequence_index++;
+		if(kfm_startup_sequence_index > kfm_vars.startup_sequence.length)kfm_vars.startup_sequence=false;
 	}
 	else kfm_refreshPanels('kfm_left_column');
 }

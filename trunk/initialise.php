@@ -119,6 +119,7 @@ if (isset($kfm_time_format)) {
 if (!isset($kfm_show_files_in_groups_of))$kfm_show_files_in_groups_of = 10;
 if (!isset($kfm_user_root_folder))$kfm_user_root_folder = false;
 if (!isset($kfm_startup_folder))$kfm_startup_folder = false;
+if (!isset($kfm_startup_selectedFiles))$kfm_startup_selectedFiles = array();
 define('KFM_VERSION', rtrim(file_get_contents(KFM_BASE_PATH.'docs/version.txt')));
 if (!isset($_SERVER['DOCUMENT_ROOT'])) { // fix for IIS
     $_SERVER['DOCUMENT_ROOT'] = preg_replace('/\/[^\/]*$/', '', str_replace('\\', '/', $_SERVER['SCRIPT_FILENAME']));

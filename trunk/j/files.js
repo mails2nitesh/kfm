@@ -284,6 +284,10 @@ function kfm_incrementalFileDisplay(){
 			});
 		}
 		$j('#documents_loader').empty().html('&nbsp;');
+		if(kfm_vars.startup_selectedFiles){
+			for(var i=0;i<kfm_vars.startup_selectedFiles.length;++i)kfm_addToSelection(kfm_vars.startup_selectedFiles[i]);
+			kfm_vars.startup_selectedFiles=false;
+		}
 	}
 }
 function kfm_refreshFiles(res){
