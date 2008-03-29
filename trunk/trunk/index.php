@@ -44,6 +44,15 @@ if ($kfm_startup_folder) {
     $kfm_session->set('cwd_id', $kfm_startupfolder_id);
     $startup_sequence = '['.implode(',', $startup_sequence_array).']';
 }
+else if (isset($_GET['cwd']) && $_GET['cwd']) {
+	$path   = kfm_getDirectoryParentsArr($_GET['cwd']);
+	$path[] = $_GET['cwd'];
+	if(count($path)<2)break;
+	$startup_sequence_array = $path;
+	$kfm_startupfolder_id   = $_GET['cwd'];
+	$kfm_session->set('cwd_id', $kfm_startupfolder_id);
+	$startup_sequence = '['.implode(',', $startup_sequence_array).']';
+}
 // }}}
 header('Content-type: text/html; Charset = utf-8');
 // {{{ export kaejax stuff
@@ -87,16 +96,25 @@ if (file_exists('themes/'.$kfm_theme.'/template.html')) {
     $templated = 1;
 }
 // }}}
+// {{{ daily tasks
+$today             = date('Y-m-d');
+$last_registration = isset($kfm_parameters['last_registration'])?$kfm_parameters['last_registration']:'';
+if ($last_registration!=$today) {
+// {{{ database maintenance
+    echo '<iframe style="display:none" src="maintenance.php"></iframe>';
+// }}}
 // {{{ once per day, tell the kfm website a few simple details about usage
-if (!$kfm_dont_send_metrics) {
-    $today             = date('Y-m-d');
-    $last_registration = isset($kfm_parameters['last_registration'])?$kfm_parameters['last_registration']:'';
-    if ($last_registration!=$today) {
-        echo '<img src="http://kfm.verens.com/extras/register.php?version = '.urlencode(KFM_VERSION).'&amp;domain_name = '.urlencode($_SERVER['SERVER_NAME']).'&amp;db_type = '.$kfm_db_type.'" />';
-        $kfmdb->query("delete from ".KFM_DB_PREFIX."parameters where name = 'last_registration'");
-        $kfmdb->query("insert into ".KFM_DB_PREFIX."parameters (name,value) values ('last_registration','".$today."')");
-        $kfm_parameters['last_registration'] = $today;
+    if (!$kfm_dont_send_metrics) {
+        echo '<img src="http://kfm.verens.com/extras/register.php?version='.urlencode(KFM_VERSION).
+            '&amp;domain_name='.urlencode($_SERVER['SERVER_NAME']).
+            '&amp;db_type='.$kfm_db_type.
+            '&amp;plugins='.join(',',$plugins).
+        '" />';
     }
+// }}}
+    $kfmdb->query("delete from ".KFM_DB_PREFIX."parameters where name='last_registration'");
+    $kfmdb->query("insert into ".KFM_DB_PREFIX."parameters (name,value) values ('last_registration','".$today."')");
+    $kfm_parameters['last_registration'] = $today;
 }
 // }}}
 // {{{ check for default directories

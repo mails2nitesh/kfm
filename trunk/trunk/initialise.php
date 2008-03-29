@@ -393,6 +393,16 @@ function kfm_getDirectoryParents($pid, $type = 1)
     include_once KFM_BASE_PATH.'includes/directories.php';
     return _getDirectoryParents($pid, $type);
 }
+function kfm_getDirectoryParentsArr($pid, $path = array())
+{
+    include_once KFM_BASE_PATH.'includes/directories.php';
+    return _getDirectoryParentsArr($pid, $path);
+}
+function kfm_loadDirectories($root, $oldpid = 0)
+{
+    include_once KFM_BASE_PATH.'includes/directories.php';
+    return _loadDirectories($root, $oldpid);
+}
 function kfm_moveDirectory($from, $to)
 {
     include_once KFM_BASE_PATH.'includes/directories.php';
@@ -402,11 +412,6 @@ function kfm_renameDirectory($dir, $newname)
 {
     include_once KFM_BASE_PATH.'includes/directories.php';
     return _renameDirectory($dir, $newname);
-}
-function kfm_loadDirectories($root, $oldpid = 0)
-{
-    include_once KFM_BASE_PATH.'includes/directories.php';
-    return _loadDirectories($root, $oldpid);
 }
 function kfm_rmdir($dir)
 {
