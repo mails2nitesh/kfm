@@ -5,7 +5,6 @@ class DB_SQLite_PDO{
 		if(!isset($dsn['database']))exit('no SQLite database set in configuration');
 		try {
 			$db=new PDO('sqlite:'.$dsn['database']);
-			$db->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 			$this->connection=$db;
 		} catch (PDOException $e) {
 			print "Error!: " . $e->getMessage();
