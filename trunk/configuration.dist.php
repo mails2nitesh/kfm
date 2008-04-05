@@ -72,8 +72,11 @@ $kfm_allow_multiple_file_returns = true;
 // warning: if you use the '/' method, then you must use the get.php method for $kfm_userfiles_output.
 $kfm_workdirectory = '.files';
 
-// maximum length of filenames displayed. use 0 to turn this off, or enter the number of letters.
+// maximum length of filenames in Icon mode. use 0 to turn this off, or enter the number of letters.
 $kfm_files_name_length_displayed = 20;
+
+// maximum length of filenames in Listmode. use 0 to turn this off, or enter the number of letters.
+$kfm_files_name_length_in_list = 0;
 
 // 1 = users are allowed to delete directories
 // 0 = users are not allowed to delete directories

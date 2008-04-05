@@ -20,9 +20,15 @@ var File=new Class({
 	setText:function(el,varname){
 		el.empty();
 		var v=$pick(this[varname],'');
-		if(varname=='name' && kfm_vars.files.name_length_displayed && kfm_vars.files.name_length_displayed<v.length){
-			el.title=v;
-			v=v.substring(0,kfm_vars.files.name_length_displayed-3)+'...';
+		if(varname=='name'){
+			if(!kfm_listview && kfm_vars.files.name_length_displayed && kfm_vars.files.name_length_displayed<v.length){
+				el.title=v;
+				v=v.substring(0,kfm_vars.files.name_length_displayed-3)+'...';
+			}
+			else if(kfm_listview && kfm_vars.files.name_length_in_list && kfm_vars.files.name_length_in_list<v.length){
+				el.title=v;
+				v=v.substring(0,kfm_vars.files.name_length_in_list-3)+'...';
+			}
 		}
 		if(varname=='modified' && !v){
 			var v=(new Date(this.ctime*1000)).toGMTString().replace(/ GMT$/,'');
