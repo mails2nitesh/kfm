@@ -237,24 +237,26 @@ function kfm_incrementalFileDisplay(){
 		}
 		kfm.addEl(wrapper,el);
 		if(kfm_listview){
+			var cs=0,cell;
 			var listview_table=$j('#kfm_files_listview_table tbody').get(0);
 			var rows=listview_table.rows.length;
 			var row=listview_table.insertRow(rows);
-			row.className=rows%2?'even':'odd';
 			row.fileid=F.id;
-			var cell=row.insertCell(0);
-			cell.appendChild(el);
+			cell=row.insertCell(cs++);
+			cell.className='listview_icon listview_icon_'+ext;
+			cell.setHTML('&nbsp;');
+			row.insertCell(cs++).appendChild(el);
 			{ // file size
-				cell=row.insertCell(1);
+				cell=row.insertCell(cs++);
 				var hidden=document.createElement('span');
 				hidden.style.display='none';
 				hidden.appendChild(document.createTextNode(F.filesize_raw));
 				cell.appendChild(hidden);
 				cell.appendChild(F.getText('filesize'));
 			}
-			row.insertCell(2).appendChild(F.getText('ext'));
+			row.insertCell(cs++).appendChild(F.getText('ext'));
 			{ // modified time
-				cell=row.insertCell(1);
+				cell=row.insertCell(cs++);
 				var hidden=document.createElement('span');
 				hidden.style.display='none';
 				hidden.appendChild(document.createTextNode(F.ctime));
@@ -348,7 +350,7 @@ function kfm_refreshFiles(res){
 				'id':'kfm_files_listview_table'
 			});
 			wrapper.appendChild(listview_table);
-			$j(listview_table).html('<thead><tr class="listview_headers"><th>Name</th><th style="width:142px">Modified</th><th style="width:72px">Size</th><th style="width:72px">Type</th></tr></thead><tbody></tbody>');
+			$j(listview_table).html('<thead><tr class="listview_headers"><th>&nbsp;</th><th>Name</th><th style="width:72px">Size</th><th style="width:72px">Type</th><th style="width:142px">Modified</th></tr></thead><tbody></tbody>');
 				$j(listview_table).css('width','99%');
 		}
 		kfm_incrementalFileDisplay();
