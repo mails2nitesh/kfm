@@ -64,7 +64,7 @@ function kfm_buildFileDetailsTable(res){
 	if(res.width) {
 		r=kfm.addRow(table);
 		kfm.addCell(r,0,0,(new Element('strong')).setHTML(kfm.lang.ImageDimensions));
-		kfm.addCell(r,1,0,res.width+" x "+res.height);      
+		kfm.addCell(r,1,0,res.width+" x "+res.height);	  
 	}
 	return table;
 }
@@ -219,12 +219,17 @@ function kfm_incrementalFileDisplay(){
 		}
 	});
 	do{
-		var a=b.at,fdata=fsdata[a];
+		var a,fdata,name,F,nameEl,el,fullfilename,id;
+		a=b.at;
+		fdata=fsdata[a];
 		if(wrapper.contentMode!='file_icons')return (window.kfm_incrementalFileDisplay_vars=null);
-		var name=fdata.name,ext=fdata.ext,b,fullfilename=kfm_cwd_name+'/'+name,id=fdata.id;
-		var F=File_getInstance(id,fdata);
-		var nameEl=F.getText('name');
-		var el=icon.cloneNode(true);
+		name=fdata.name;
+		fullfilename=kfm_cwd_name+'/'+name;
+		id=fdata.id;
+		F=File_getInstance(id,fdata);
+		ext=fdata.ext;
+		nameEl=F.getText('name');
+		el=icon.cloneNode(true);
 		el.cloneEvents(icon);
 		if(!kfm_listview)$j(el).addClass('kfm_icontype_'+ext);
 		el.id='kfm_file_icon_'+id;

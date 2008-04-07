@@ -220,7 +220,7 @@ function _search($keywords,$tags){
 			$file=kfmFile::getInstance($f['id']);
 			if(!$file->checkName())continue;
 			unset($file->db);
-			$files[]=$file;
+			$files[]=_getFileDetails($f['id']);
 		}
 	}
 	return array('reqdir'=>kfm_lang('searchResults'),'files'=>$files,'uploads_allowed'=>0);
