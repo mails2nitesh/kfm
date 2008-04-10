@@ -276,6 +276,7 @@ if ($kfm_session->isNew) {
     ));
 }
 if (isset($_GET['theme']))$kfm_session->set('theme', $_GET['theme']);
+if (isset($_GET['logout'])||isset($_GET['log_out'])) $kfm_session->set('loggedin',0);
 $kt = $kfm_session->get('theme');
 if ($kt)$kfm_theme = $kt;
 else $kfm_session->set('theme', $kfm_theme);

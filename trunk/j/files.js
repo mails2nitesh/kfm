@@ -281,9 +281,9 @@ function kfm_incrementalFileDisplay(){
 			$j('#kfm_tooltip').remove();
 			$j('#kfm_files_listview_table').columnSizing();
 			$j('#kfm_files_listview_table').tablesorter({
-				sortList:[[0,0]],
+				sortList:[[1,0]],
 				headers:{
-					0:{
+					1:{
 						sorter:'kfmobject'
 					}
 				},
