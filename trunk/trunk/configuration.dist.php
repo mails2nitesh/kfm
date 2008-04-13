@@ -200,3 +200,6 @@ $kfm_dont_send_metrics = 0;
 // hours to offset server time by.
 // for example, if the server is in GMT, and you are in Northern Territory, Australia, then the value to use is 9.5
 $kfm_server_hours_offset = 1;
+
+// 1=always move, 2=always copy, 3=give choice
+$kfm_drags_move_or_copy_files = 3;

@@ -155,7 +155,8 @@ if($kfm_default_directories!=''){
                     name_length_displayed:<?php echo $kfm_files_name_length_displayed; ?>,
                     name_length_in_list:<?php echo $kfm_files_name_length_in_list; ?>,
                     return_id_to_cms:<?php echo $kfm_return_file_id_to_cms?'true':'false'; ?>,
-                    allow_multiple_returns:<?php echo $kfm_allow_multiple_file_returns?'true':'false'; ?>
+                    allow_multiple_returns:<?php echo $kfm_allow_multiple_file_returns?'true':'false'; ?>,
+										drags_move_or_copy:<?php echo $kfm_drags_move_or_copy_files; ?>
                 },
                 get_params:"<?php echo GET_PARAMS; ?>",
                 permissions:{
