@@ -81,7 +81,7 @@ $js = isset($_REQUEST['js'])?$js:'';
 if (isset($_REQUEST['onload'])) echo $_REQUEST['onload'];
 else if (isset($_REQUEST['onupload'])) echo $_REQUEST['onupload'];
 else if (count($errors)) echo 'alert("'.addslashes(join("\n", $errors)).'");';
-else echo 'parent.x_kfm_loadFiles('.$kfm_session->get('cwd_id').',parent.kfm_refreshFiles);parent.kfm_dir_openNode('.$kfm_session->get('cwd_id').');'.$js;
+else echo 'parent.kfm_vars.startup_selectedFiles=['.$fid.'];parent.x_kfm_loadFiles('.$kfm_session->get('cwd_id').',parent.kfm_refreshFiles);parent.kfm_dir_openNode('.$kfm_session->get('cwd_id').');'.$js;
 ?>
         </script>
     </head>
