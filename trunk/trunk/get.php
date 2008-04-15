@@ -49,6 +49,8 @@ if (isset($_GET['type'])&&$_GET['type']=='thumb') {
             echo kfm_lang('errorFileIDNotFound', $id);
             exit;
         }
+				if($width>$image->width)$width=$image->width;
+				if($height>$image->height)$height=$image->height;
         $image->setThumbnail($width, $height);
         $name      = $image->thumb_id;
         $path      = $image->thumb_path;
