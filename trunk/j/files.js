@@ -249,7 +249,8 @@ function kfm_incrementalFileDisplay(){
 			row.fileid=F.id;
 			cell=row.insertCell(cs++);
 			cell.className='listview_icon listview_icon_'+ext;
-			cell.setHTML('&nbsp;');
+			if(window.ie)cell.innerHTML='&nbsp;';
+			else cell.setHTML('&nbsp;');
 			row.insertCell(cs++).appendChild(el);
 			{ // file size
 				cell=row.insertCell(cs++);
