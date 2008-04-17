@@ -251,7 +251,20 @@ var KFM=new Class({
 			});
 			documents_body.parentResized=kfm_files_reflowIcons;
 		}
-		if($('kfm_directories'))x_kfm_loadDirectories(kfm_vars.root_folder_id,kfm_refreshDirectories);
+		var dirs=$('kfm_directories');
+		if(dirs){
+			x_kfm_loadDirectories(kfm_vars.root_folder_id,kfm_refreshDirectories);
+			kfm_addContextMenu(dirs.parentNode,function(e){
+				var links=[];
+				links.push(['kfm_createDirectory(1)',kfm.lang.CreateSubDir,'folder_new',!kfm_vars.permissions.dir.mk]);
+				if(kfm_return_directory)links.push(['setTimeout("window.close()",1);window.opener.SetUrl("'+kfm_directories[node_id].realpath+'/");',kfm.lang.SendToCms]);
+				if(!window.contextmenu){
+					e=new Event(e);
+					kfm_createContextMenu(e.page,links);
+				}
+			});
+		}
+// testtest
 		x_kfm_loadFiles(kfm_vars.startupfolder_id,kfm_refreshFiles);
 		document.addEvent('keyup',kfm.keyup);
 		window.addEvent('resize',kfm_resizeHandler);
