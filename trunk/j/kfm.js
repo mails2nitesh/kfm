@@ -22,19 +22,22 @@ var KFM=new Class({
 		{ // translators
 			html+='<h2>Translators</h2><table><tr><td>';
 			html+='bg (Bulgarian): Tondy<br />';
+			html+='cz (Czech): Petr Kamenik<br />';
 			html+='da (Danish): Janich Rasmussen<br />';
 			html+='de (German): Just Agens<br />';
 			html+='en (English): Kae Verens<br />';
 			html+='es (Spanish): Ramón Ramos<br />';
-			html+='fi (Finnish): Hannu (hlpilot)<br />';
-			html+='fr (French): Hubert Garrido</td><td>';
+			html+='fa (Persion/Farsi): Ghassem Tofighi<br />';
+			html+='fi (Finnish): Hannu (hlpilot)</td><td>';
+			html+='fr (French): Hubert Garrido<br />';
 			html+='ga (Irish): Kae Verens<br />';
 			html+='hu (Hungarian): Ujj-Mészáros István<br />';
 			html+='it (Italian): Stefano Luchetta<br />';
 			html+='nl (Dutch): Roy Lubbers<br />';
 			html+='pl (Polish): Jan Kurek<br />';
 			html+='ro (Romanian): Andrei Suscov<br />';
-			html+='ru (Russian): Andrei Suscov</td></tr></table>';
+			html+='ru (Russian): Andrei Suscov<br />';
+			html+='sv (Swedish): Aram Mäkivierikko</td></tr></table>';
 		}
 		{ // bug testers
 			html+='<h2>Bug Testers</h2>';
