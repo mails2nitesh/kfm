@@ -27,6 +27,7 @@ if ($kfm_allow_file_upload) {
             $errors[] = 'The filename: '.$filename.' is not allowed';
         }
     }
+		if ($cwd==1 && !$kfm_allow_files_in_root) $errors[] = 'Cannot upload files to the root directory';
     if (file_exists($to)) $errors[] = 'File already exists'; // TODO new string
     if (!count($errors)) {
         move_uploaded_file($tmpname, $to);

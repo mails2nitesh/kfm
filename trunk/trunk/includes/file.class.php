@@ -165,7 +165,8 @@ class kfmFile extends kfmObject{
 	 * @param int $new_directoryparent_id
 	 */
 	function move($dir_id){
-		global $kfmdb;
+		global $kfmdb,$kfm_allow_files_in_root;
+		if($dir_id==1 && !$kfm_allow_files_in_root)return $this->error('Cannot move files to the root directory');
 		if(!$this->writable)return $this->error(kfm_lang('fileNotMovableUnwritable',$this->name));
 		$dir=kfmDirectory::getInstance($dir_id);
 		if(!$dir)return $this->error(kfm_lang('failedGetDirectoryObject'));

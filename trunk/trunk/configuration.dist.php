@@ -203,3 +203,6 @@ $kfm_server_hours_offset = 1;
 
 // 1=always move, 2=always copy, 3=give choice
 $kfm_drags_move_or_copy_files = 3;
+
+// allow files in the root directory
+$kfm_allow_files_in_root = 1;
