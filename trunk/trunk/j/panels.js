@@ -7,14 +7,16 @@ function kfm_addPanel(wrapper,panel){
 		kfm_refreshPanels(wrapper);
 		return;
 	}
-	if(panel=='kfm_directories_panel')el=kfm_createPanel(
-		kfm.lang.Directories,
-		'kfm_directories_panel',
-		new Element('table',{
-			'id':'kfm_directories'
-		}),
-		{'state':1,'abilities':-1,'order':1}
-	);
+	if(panel=='kfm_directories_panel'){
+		el=kfm_createPanel(
+			kfm.lang.Directories,
+			'kfm_directories_panel',
+			new Element('table',{
+				'id':'kfm_directories'
+			}),
+			{'state':1,'abilities':-1,'order':1}
+		);
+	}
 	else if(panel=='kfm_directory_properties_panel')el=kfm_createPanel(
 		kfm.lang.DirectoryProperties,
 		'kfm_directory_properties_panel',
