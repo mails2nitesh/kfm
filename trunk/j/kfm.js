@@ -140,7 +140,7 @@ var KFM=new Class({
 		$('removeme').remove();
 		kfm_addContextMenu(document.body,function(e){
 			var links=[['kfm.about()',kfm.lang.AboutKfm]];
-			var links=[{title:'About KFM', doFunction:function(){kfm.about();}}];
+			var links=[{title:kfm.lang.AboutKfm, doFunction:function(){kfm.about();}}];
 			kfm_createContextMenu(e.page,links);
 		});
 		if(kfm_vars.use_templates){
