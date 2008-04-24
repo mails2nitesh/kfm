@@ -179,7 +179,6 @@ function kfm_createFileUploadPanel(contentsonly){
 					minimum_flash_version : "9.0.28",
 					ui_container_id : "kfm_uploadFormSwf",
 					degraded_container_id : "kfm_uploadForm",
-					
 					debug:false
 				});
 				b1.addEvent('click',function(e){

@@ -11,7 +11,7 @@
  * @license  docs/license.txt for licensing
  * @link     http://kfm.verens.com/
  */
-require 'initialise.php';
+require_once 'initialise.php';
 $errors = array();
 if ($kfm_allow_file_upload) {
     $file     = isset($_FILES['kfm_file'])?$_FILES['kfm_file']:$_FILES['Filedata'];
