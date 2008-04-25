@@ -10,11 +10,16 @@ function _copyFiles($files,$dir_id){
 	kfm_addMessage(kfm_lang('filesCopied',$copied));
 }
 function _createEmptyFile($cwd,$filename){
-	global $kfm_session;
+	global $kfm_session,$kfm_default_upload_permission;
 	$dir=kfmDirectory::getInstance($cwd);
 	$path=$dir->path;
 	if(!kfmFile::checkName($filename))return kfm_error(kfm_lang('illegalFileName',$filename));
-	return(touch($path.$filename))?kfm_loadFiles($cwd):kfm_error(kfm_lang('couldNotCreateFile',$filename));
+	$success=touch($path.$filename);
+	if($success){
+		chmod($path.$filename, octdec('0'.$kfm_default_upload_permission));
+		return kfm_loadFiles($cwd);
+	}
+	return kfm_error(kfm_lang('couldNotCreateFile',$filename));
 }
 function _downloadFileFromUrl($url,$filename){
 	global $kfm_session,$kfm_default_upload_permission;
