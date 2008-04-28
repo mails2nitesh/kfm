@@ -23,7 +23,7 @@ function Trash(){
 	this.action=function(files){
 	}
 }
-kfm_addWidget(new Trash());
+if(kfm_vars.permissions.file.rm)kfm_addWidget(new Trash());
 kdnd_addDropHandler('kfm_file','.widget_trash',function(e){
 	if(!selectedFiles.length)kfm_addToSelection(e.sourceElement.id.replace(/.*_/,''));
 	e.targetElement.action(selectedFiles,[]);
