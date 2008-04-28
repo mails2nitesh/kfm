@@ -58,8 +58,14 @@ var KFM=new Class({
 		if(!a)return o;
 		if($type(a)!='array')a=[a];
 		for(var i=0;i<a.length;++i){
-			if($type(a[i])=='array')kfm.addEl(o,a[i]);
-			else o.appendChild(a[i].toString()===a[i]?newText(a[i]):a[i]);
+			if($type(a[i])=='array'){
+				kfm.addEl(o,a[i]);
+			}
+			else{
+				if($type(a[i])=='string')a[i]=newText(a[i]);
+				if(!a[i])return;
+				o.appendChild(a[i]);
+			}
 		}
 		return o;
 	},
@@ -221,7 +227,8 @@ var KFM=new Class({
 				right_column.appendChild(documents_body);
 			}
 			{ // draw areas to screen and load files and directory info
-				kfm.addEl(document.body,[left_column,right_column]);
+				document.body.appendChild(left_column);
+				document.body.appendChild(right_column);
 			}
 		}
 		{ // set up main panel
