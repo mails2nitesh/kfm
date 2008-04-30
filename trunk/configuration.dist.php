@@ -206,3 +206,6 @@ $kfm_drags_move_or_copy_files = 3;
 
 // allow files in the root directory
 $kfm_allow_files_in_root = 1;
+
+//Permissions for created directories.
+$kfm_default_directory_permission = '755';
