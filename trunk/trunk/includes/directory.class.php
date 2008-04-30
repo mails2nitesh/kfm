@@ -43,6 +43,7 @@ class kfmDirectory extends kfmObject{
 			$this->error(kfm_lang('failedCreateDirectoryCheck',$name));
 			return false;
 		}
+		chmod($physical_address,octdec('0'.$GLOBALS['kfm_default_directory_permission']));
 		return $this->addSubdirToDb($name);
 	}
 	function delete(){
