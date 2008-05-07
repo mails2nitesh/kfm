@@ -114,7 +114,7 @@ $kfm_allow_file_move = 1;
 // 0 = user are not allowed upload files
 $kfm_allow_file_upload = 1;
 
-// use this array to ban dangerous files from being uploaded.
+// use this array to ban dangerous files from being created, uploaded, or even seen.
 $kfm_banned_extensions = array('asp','cfm','cgi','php','php3','php4','php5','phtm','pl','sh','shtm','shtml');
 
 // you can use regular expressions in this one.
