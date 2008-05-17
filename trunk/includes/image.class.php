@@ -180,4 +180,3 @@ class kfmImage extends kfmFile{
 		return $retval;
 	}
 }
-?>

@@ -15,20 +15,26 @@ require_once 'initialise.php';
 $errors = array();
 if ($kfm_allow_file_upload) {
     $file     = isset($_FILES['kfm_file'])?$_FILES['kfm_file']:$_FILES['Filedata'];
+		$replace  = isset($_REQUEST['fid'])?(int)$_REQUEST['fid']:0;
     $filename = $file['name'];
     $tmpname  = $file['tmp_name'];
     $cwd      = $kfm_session->get('cwd_id');
     if(!$cwd) $errors[] = kfm_lang('CWD not set');
     else {
         $toDir = kfmDirectory::getInstance($cwd);
-        $to = $toDir->path.'/'.$filename;
+				if($replace){
+					$replace_file = kfmFile::getInstance($replace);
+					$to           = $replace_file->path;
+					if($replace_file->isImage()) $replace_file->deleteThumbs();
+				}
+        else $to = $toDir->path.'/'.$filename;
         if (!is_file($tmpname)) $errors[] = 'No file uploaded';
         else if (!kfmFile::checkName($filename)) {
             $errors[] = 'The filename: '.$filename.' is not allowed';
         }
     }
 		if ($cwd==1 && !$kfm_allow_files_in_root) $errors[] = 'Cannot upload files to the root directory';
-    if (file_exists($to)) $errors[] = 'File already exists'; // TODO new string
+    if (!$replace && file_exists($to)) $errors[] = 'File already exists'; // TODO new string
     if (!count($errors)) {
         move_uploaded_file($tmpname, $to);
         if (!file_exists($to)) $errors[] = kfm_lang('failedToSaveTmpFile', $tmpname, $to);
@@ -82,7 +88,11 @@ $js = isset($_REQUEST['js'])?$js:'';
 if (isset($_REQUEST['onload'])) echo $_REQUEST['onload'];
 else if (isset($_REQUEST['onupload'])) echo $_REQUEST['onupload'];
 else if (count($errors)) echo 'alert("'.addslashes(join("\n", $errors)).'");';
-else echo 'parent.kfm_vars.startup_selectedFiles=['.$fid.'];parent.x_kfm_loadFiles('.$kfm_session->get('cwd_id').',parent.kfm_refreshFiles);parent.kfm_dir_openNode('.$kfm_session->get('cwd_id').');'.$js;
+else{
+	echo 'parent.kfm_vars.startup_selectedFiles=['.$fid.'];';
+	echo 'parent.x_kfm_loadFiles('.$kfm_session->get('cwd_id').',parent.kfm_refreshFiles);';
+	echo 'parent.kfm_dir_openNode('.$kfm_session->get('cwd_id').');'.$js;
+}
 ?>
         </script>
     </head>
