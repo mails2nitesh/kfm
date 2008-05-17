@@ -1,5 +1,7 @@
 <?php
 function _copyFiles($files,$dir_id){
+	global $kfm_allow_files_in_root;
+	if($dir_id==1 && !$kfm_allow_files_in_root)return kfm_error(kfm_lang('files are not allowed to be create, moved or copied into root'));
 	$copied=0;
 	$dir=kfmDirectory::getInstance($dir_id);
 	foreach($files as $fid){
@@ -10,7 +12,8 @@ function _copyFiles($files,$dir_id){
 	kfm_addMessage(kfm_lang('filesCopied',$copied));
 }
 function _createEmptyFile($cwd,$filename){
-	global $kfm_session,$kfm_default_upload_permission;
+	global $kfm_session,$kfm_default_upload_permission,$kfm_allow_files_in_root;
+	if($cwd==1 && !$kfm_allow_files_in_root)return kfm_error(kfm_lang('files are not allowed to be create, moved or copied into root'));
 	$dir=kfmDirectory::getInstance($cwd);
 	$path=$dir->path;
 	if(!kfmFile::checkName($filename))return kfm_error(kfm_lang('illegalFileName',$filename));
