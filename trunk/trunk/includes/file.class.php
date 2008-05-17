@@ -126,7 +126,7 @@ class kfmFile extends kfmObject{
 	}
 
 	/**
-	 * retunrs the file size
+	 * returns the file size
 	 */
 	function getSize(){
 		if(!$this->size)$this->size=filesize($this->path);
