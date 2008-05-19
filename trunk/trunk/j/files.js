@@ -177,13 +177,13 @@ function kfm_incrementalFileDisplay(){
 	});
 	if(!kfm_listview){
 		icon.addEvent('mouseover',function(e){ // initialise info tooltip
-			if(window.kfm_tooltipInit)$clear(window.kfm_tooltipInit);
+			if(window.kfm_tooltipInit)clearTimeout(window.kfm_tooltipInit);
 			if(window.kdnd_dragging)return; // don't open if currently dragging files
 			e=new Event(e);
 			window.kfm_tooltipInit=setTimeout('kfm_showToolTip('+e.target.file_id+')',1000);
 		});
 		icon.addEvent('mouseout',function(){ // remove info tooltip
-			if(window.kfm_tooltipInit)$clear(window.kfm_tooltipInit);
+			if(window.kfm_tooltipInit)clearTimeout(window.kfm_tooltipInit);
 			var o=$('kfm_tooltip');
 			if(o)o.remove();
 		});
@@ -315,7 +315,7 @@ function kfm_refreshFiles(res){
 		}
 	});
 	if(window.kfm_incrementalFileDisplay_loader){
-		$clear(window.kfm_incrementalFileDisplay_loader);
+		clearTimeout(window.kfm_incrementalFileDisplay_loader);
 		window.kfm_incrementalFileDisplay_vars=null;
 	}
 	kfm_selectNone();

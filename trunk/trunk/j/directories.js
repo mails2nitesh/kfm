@@ -4,7 +4,7 @@ function kfm_changeDirectory(id, nofiles){
 	if(id=='kfm_directory_icon_0')id='kfm_directory_icon_1';
 	var el=$(id),a,els=$$('td.kfm_directory_open');
 	if(!el)return;
-	setTimeout('$clear(window.dragTrigger);',1);
+	setTimeout('clearTimeout(window.dragTrigger);',1);
 	if(window.ie)while(el&&!el.node_id)el=el.parentNode;
 	kfm_cwd_name=el.kfm_directoryname;
 	kfm_cwd_id=el.node_id;
