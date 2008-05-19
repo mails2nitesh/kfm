@@ -37,20 +37,17 @@ var File=new Class({
 		el.appendText(v);
 	},
 	setThumbnailBackground:function(el,reset){
-		if(this.icon_loaded && !reset)el.setStyle('background-image','url("'+this.icon_url+'")');
+		if(this.icon_loaded && !reset)el.style.backgroundImage='url("'+this.icon_url+'")';
 		else{
 			var url='get.php?id='+this.id+'&width=64&height=64&get_params='+kfm_vars.get_params+'&r'+Math.random();
-			var img=new Element('img',{
-				src:url,
-				styles:{
-					width:1,
-					height:1
-				}
-			});
+			var img=document.createElement('img');
+			img.src=url;
+			img.style.width=1;
+			img.style.height=1;
 			var id=this.id;
 			img.addEvent('load',function(){
 				var p=this.parentNode;
-				p.setStyle('background-image','url("'+url+'")');
+				p.style.backgroundImage='url("'+url+'")';
 				var F=File_getInstance(id);
 				F.icon_loaded=1;
 				F.icon_url=url;

@@ -19,7 +19,7 @@ function kdnd_unmakeDraggable(source_class){
 	if($type(source_class)=='array'){
 		return source_class.each(kdnd_unmakeDraggable);
 	}
-	var els=$$('.'+source_class),i,el;
+	var els=$j('.'+source_class),i,el;
 	for(i=0;i<els.length;++i){
 		el=els[i];
 		if(!el.kdnd_applied)continue;
