@@ -83,12 +83,13 @@ if(!empty($_POST['kaejax']))kfm_kaejax_handle_client_request();
 <?php // {{{ get list of plugins and show their CSS files
 $plugins = array();
 $h       = opendir(KFM_BASE_PATH.'plugins');
+$tmp='';
 while (false!==($plugin=readdir($h))) {
     if($plugin[0]=='.')continue;
     $plugins[] = $plugin;
-    if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.css'))echo '
-    <link rel="stylesheet" href="plugins/'.$plugin.'/plugin.css" />';
+    if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.css'))$tmp.=file_get_contents('plugins/'.$plugin.'/plugin.css');
 }	
+if($tmp!='')echo "<style type=\"text/css\">$tmp</style>";
 // }}} ?>
     </head>
     <body>
@@ -197,18 +198,21 @@ if($kfm_default_directories!=''){
         <script type="text/javascript" src="lang/<?php echo $kfm_language; ?>.js"></script>
 <?php // {{{ widgets and plugins
 // {{{ include widgets if they exist
-$h = opendir(KFM_BASE_PATH.'widgets');
+$h   = opendir(KFM_BASE_PATH.'widgets');
+$tmp = '';
 while (false!==($dir = readdir($h))) {
-    if ($dir[0]!='.'&&is_dir(KFM_BASE_PATH.'widgets/'.$dir)) {
-        echo '		<script type="text/javascript" src="widgets/'.$dir.'/widget.js"></script>'."\n";
-    }
+    if ($dir[0]!='.'&&is_dir(KFM_BASE_PATH.'widgets/'.$dir)) $tmp .= file_get_contents('widgets/'.$dir.'/widget.js');
 }
+if($tmp != '')echo "<script type=\"text/javascript\"><!--\n$tmp\n--></script>";
 // }}}
 // {{{ show plugins if they exist
+$pluginssrc='';
 foreach ($plugins as $plugin) {
     if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.php')) include KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.php';
-    if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.js'))echo '		<script type="text/javascript" src="plugins/'.$plugin.'/plugin.js"></script>'."\n";
+#    if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.js'))echo '		<script type="text/javascript" src="plugins/'.$plugin.'/plugin.js"></script>'."\n";
+    if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.js'))$pluginssrc.=file_get_contents('plugins/'.$plugin.'/plugin.js');
 }
+if($pluginssrc!='')echo "<script type=\"text/javascript\"><!--\n$pluginssrc\n--></script>";
 // }}}
 // }}} ?>
         <script type="text/javascript" src="j/swfupload-2.1.0b2/swfupload.js"></script>
