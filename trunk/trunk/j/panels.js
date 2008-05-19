@@ -316,7 +316,7 @@ function kfm_movePanel(wrapper,panel,offset){
 	kfm_refreshPanels(wrapper);
 }
 function kfm_refreshPanels(wrapper){
-	wrapper=$(wrapper);
+	if($type(wrapper)=='string')wrapper=document.getElementById(wrapper);
 	if(!wrapper)return false;
 	var ps=wrapper.panels,i,minheight=0;
 	var minimised=[],maximised=[],fixed_height=[],fixed_height_maxed=[];
@@ -443,6 +443,7 @@ function kfm_restorePanel(wrapper,panel){
 	kfm_refreshPanels(wrapper);
 }
 function kfm_togglePanelsUnlocked(){
-	$('kfm_left_column').panels_unlocked=1-$('kfm_left_column').panels_unlocked;
+	var el=document.getElementById('kfm_left_column');
+	el.panels_unlocked=1-el.panels_unlocked;
 	kfm_refreshPanels('kfm_left_column');
 }

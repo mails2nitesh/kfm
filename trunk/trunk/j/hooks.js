@@ -74,7 +74,7 @@ function kfm_addHookExtension(HooksArray, ext){
 }
 function kfm_addHookCategory(HookArray,ext, newCategory){
 	/*Add a hook category and*/
-	window[HookArray][ext][newCategory=[];
+	window[HookArray][ext][newCategory]=[];
 }
 function kfm_getLinks(files){
 	/**
@@ -141,11 +141,7 @@ function kfm_getLinks(files){
 		category=HookCategories[j];
 		/* extend is a mootools function*/
 		if(typeof(window[HooksArray]['all'][category])!='undefined')hookObjects.extend(window[HooksArray]['all'][category]);
-		try{
-			if(typeof(window[HooksArray][ext][category])!='undefined')hookObjects.extend(window[HooksArray][ext][category]);
-		}
-		catch(e){ // unknown extension
-		}
+		if(window[HooksArray][ext] && typeof(window[HooksArray][ext][category])!='undefined')hookObjects.extend(window[HooksArray][ext][category]);
 	}
 	hookObjects.forEach(function(item, index){
 		item.doParameter=[F.id];
