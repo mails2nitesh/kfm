@@ -1,5 +1,5 @@
 <?php
-$js=file_get_contents('jquery-1.2.2.pack.js');
+$js=file_get_contents('jquery-1.2.3.min.js');
 $js.=file_get_contents('jquery.dimensions.pack.js');
 $js.=file_get_contents('jquery.impromptu.js');
 $js.=file_get_contents('jquery.iutil.pack.js');
