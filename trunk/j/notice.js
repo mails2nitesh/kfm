@@ -21,15 +21,14 @@ var Notice=new Class({
 			'id':'notice_message_'+id,
 			'class':'notice'
 		});
+		$j(notice_message).css({opacity:0});
 		notice_message.setHTML(message);
 		this.getWrapper().appendChild(notice_message);
-		var myFx=new Fx.Style(notice_message,'opacity',{'duration':3500});
-		myFx.start(1,0).chain(function(){
-			var myFx2=new Fx.Style(notice_message,'height');
-			myFx2.start(notice_message.offsetHeight-parseInt(notice_message.getStyle('padding-top'))-parseInt(notice_message.getStyle('padding-bottom')),0).chain(function(){
-				notice_message.remove();
-				var w=$('notice_wrapper');
-				if(!w.childNodes.length)w.remove();
+		$j(notice_message).animate({ opacity:1},1000,'linear',function(){
+			$j(notice_message).animate({ opacity:0 },2000,'linear',function(){
+				$j(notice_message).animate({ height:0 },3000,'linear',function(){
+					$j(notice_message).remove();
+				});
 			});
 		});
 	}
