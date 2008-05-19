@@ -14,7 +14,7 @@ function kfm_addHook(objoriginal, properties){
 	if(properties){
 		if(typeof(properties.doFunction)!="undefined"){
 			if(typeof(properties.doFunction)=="function")obj.doFunction=properties.doFunction;
-			if(typeof(properties.doFunction)=="string")obj.doFunction=eval('obj.'+properties.doFunction+';');
+			if(typeof(properties.doFunction)=="string")obj.doFunction=obj[properties.doFunction];
 		}
 		if(typeof(properties.mode)!="undefined")obj.mode=properties.mode;
 		if(typeof(properties.title)!="undefined")obj.title=properties.title;
@@ -57,24 +57,24 @@ function kfm_addHookToArray(obj, HooksArray){
 	if(!obj.extensions)return false;
 	if(typeof(obj.extensions)=="string" && obj.extensions.toLowerCase()=="all" || HooksArray=="HooksMultiple"){
 		ext="all";
-		if(eval("typeof("+HooksArray+'.'+ext+')=="undefined"'))kfm_addHookExtension(HooksArray, ext);
-		if(eval("typeof("+HooksArray+'.'+ext+'.'+obj.category+')=="undefined"'))kfm_addHookCategory(HooksArray, ext, obj.category);
-		eval(HooksArray+'.'+ext+'.'+obj.category+'.push(obj);');
+		if(typeof(window[HooksArray][ext])=="undefined")kfm_addHookExtension(HooksArray, ext);
+		if(typeof(window[HooksArray][ext][obj.category])=="undefined")kfm_addHookCategory(HooksArray, ext, obj.category);
+		window[HooksArray][ext][obj.category].push(obj);
 	}else{
 		for(var i=0;i<obj.extensions.length; i++){
 			ext=obj.extensions[i];
-			if(eval("typeof("+HooksArray+'.'+ext+')=="undefined"'))kfm_addHookExtension(HooksArray, ext);
-			if(eval("typeof("+HooksArray+'.'+ext+'.'+obj.category+')=="undefined"'))kfm_addHookCategory(HooksArray, ext, obj.category);
-			eval(HooksArray+'.'+ext+'.'+obj.category+'.push(obj);');
+			if(typeof(window[HooksArray][ext])=="undefined")kfm_addHookExtension(HooksArray, ext);
+			if(typeof(window[HooksArray][ext][obj.category])=="undefined")kfm_addHookCategory(HooksArray, ext, obj.category);
+			window[HooksArray][ext][obj.category].push(obj);
 		}
 	}
 }
 function kfm_addHookExtension(HooksArray, ext){
-	eval(HooksArray+'.'+ext+'={};');
+	window[HooksArray][ext]={};
 }
 function kfm_addHookCategory(HookArray,ext, newCategory){
 	/*Add a hook category and*/
-	eval(HookArray+'.'+ext+'.'+newCategory+'=[];');
+	window[HookArray][ext][newCategory=[];
 }
 function kfm_getLinks(files){
 	/**
@@ -110,7 +110,7 @@ function kfm_getLinks(files){
 			var F=File_getInstance(files[i]);
          var extension=F.name.replace(/.*\./,'').toLowerCase();
 			for(var k=0;k<HookCategories.length; k++){
-				if(eval('HooksMultiple.all.'+HookCategories[k]))plugins=eval('HooksMultiple.all.'+HookCategories[k]);
+				if(HooksMultiple.all[HookCategories[k]])plugins=HooksMultiple.all[HookCategories[k]];
 				else plugins=[];
 				for(var j=0; j<plugins.length; j++){ // loop over plugins
 					var plugin=plugins[j];
@@ -140,9 +140,9 @@ function kfm_getLinks(files){
 	for(var j=0;j<HookCategories.length;j++){
 		category=HookCategories[j];
 		/* extend is a mootools function*/
-		if(typeof(eval(HooksArray+'.all.'+category))!='undefined')hookObjects.extend(eval(HooksArray+'.all.'+category));
+		if(typeof(window[HooksArray]['all'][category])!='undefined')hookObjects.extend(window[HooksArray]['all'][category]);
 		try{
-			if(typeof(eval(HooksArray+'.'+ext+'.'+category))!='undefined')hookObjects.extend(eval(HooksArray+'.'+ext+'.'+category));
+			if(typeof(window[HooksArray][ext][category])!='undefined')hookObjects.extend(window[HooksArray][ext][category]);
 		}
 		catch(e){ // unknown extension
 		}
