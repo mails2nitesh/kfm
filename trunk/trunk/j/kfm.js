@@ -142,16 +142,16 @@ var KFM=new Class({
 			}
 		}
 		kfm_cwd_name=starttype;
-		$(document.body).setStyle('overflow','hidden');
-		$('removeme').remove();
+		document.body.style.overflow='hidden';
+		document.getElementById('removeme').remove();
 		kfm_addContextMenu(document.body,function(e){
 			var links=[['kfm.about()',kfm.lang.AboutKfm]];
 			var links=[{title:kfm.lang.AboutKfm, doFunction:function(){kfm.about();}}];
 			kfm_createContextMenu(e.page,links);
 		});
 		if(kfm_vars.use_templates){
-			$('templateWrapper').style.display='block';
-			var documents_body=$('documents_body');
+			document.getElementById('templateWrapper').style.display='block';
+			var documents_body=document.getElementById('documents_body');
 			if(!documents_body)alert('no #documents_body on page - please fix your template');
 			var wrapper=$('kfm_search_wrapper');
 			if(wrapper)wrapper.appendChild(kfm_searchBoxFile());
@@ -271,7 +271,6 @@ var KFM=new Class({
 				}
 			});
 		}
-// testtest
 		x_kfm_loadFiles(kfm_vars.startupfolder_id,kfm_refreshFiles);
 		document.addEvent('keyup',kfm.keyup);
 		window.addEvent('resize',kfm_resizeHandler);
