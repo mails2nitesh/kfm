@@ -325,9 +325,7 @@ function kfm_refreshPanels(wrapper){
 		if(kfm_inArray(el.id,kfm_hidden_panels))el.visible=false;
 		if(el.id=='kfm_file_upload_panel')el.visible=kfm_directories[kfm_cwd_id].is_writable;
 		if(el.visible){
-			el.setStyles({
-				'display':'block'
-			});
+			el.style.display='block';
 			el.minheight=el.childNodes[0].offsetHeight;
 			minheight+=el.minheight;
 			switch(el.state){
@@ -338,18 +336,15 @@ function kfm_refreshPanels(wrapper){
 				default: kfm_log(kfm.lang.UnknownPanelState+el.state);
 			}
 		}
-		else el.setStyles({
-			'display':'none'
-		});
+		else el.style.display='none';
 	}
 	var height=wrapper.offsetHeight;
 	for(i=0;i<minimised.length;++i){
 		var n=minimised[i];
-		var el=$(n);
-		el.childNodes[1].setStyles({
-			'display':'none'
-		});
-		var head=el.childNodes[0].empty(),els=[];
+		var el=document.getElementById(n);
+		el.childNodes[1].style.display='none';
+		var head=el.childNodes[0],els=[];
+		head.innerHTML='';
 		if(wrapper.panels_unlocked){
 			el.addCloseButton();
 			el.addMaxButton();
@@ -361,13 +356,12 @@ function kfm_refreshPanels(wrapper){
 	}
 	for(i=0;i<fixed_height.length;++i){
 		var n=fixed_height[i];
-		var el=$(n);
-		el.childNodes[1].setStyles({
-			'height':el.height,
-			'display':'block'
-		});
+		var el=document.getElementById(n);
+		el.childNodes[1].style.height=el.height+'px';
+		el.childNodes[1].style.display='block';
 		minheight+=el.height;
-		var head=el.childNodes[0].empty(),els=[];
+		var head=el.childNodes[0],els=[];
+		head.innerHTML='';
 		if(wrapper.panels_unlocked){
 			el.addCloseButton();
 			el.addMaxButton();
@@ -378,32 +372,43 @@ function kfm_refreshPanels(wrapper){
 		els[els.length]=el.panel_title;
 		kfm.addEl(head,els);
 	}
+	minheight=kfm_panels_drawFixedHeightMaxed(fixed_height_maxed,wrapper,minheight);
+	kfm_panels_drawMaximised(maximised,height,minheight,wrapper);
+	kfm_panels_fixOrder(wrapper);
+}
+function kfm_panels_drawFixedHeightMaxed(fixed_height_maxed,wrapper,minheight){
+	if(!fixed_height_maxed.length)return minheight;
+	var n,el,body,head,i;
 	for(i=0;i<fixed_height_maxed.length;++i){
-		var n=fixed_height_maxed[i];
-		var el=$(n),body=el.childNodes[1].setStyles({
-			'height':'auto',
-			'display':'block'
-		});
+		n=fixed_height_maxed[i];
+		el=document.getElementById(n);
+		body=el.childNodes[1];
+		body.style.height='auto';
+		body.style.display='block';
 		minheight+=body.offsetHeight;
-		var head=el.childNodes[0].empty(),els=[];
+		head=el.childNodes[0];
+		head.innerHTML='';
 		if(wrapper.panels_unlocked){
 			el.addCloseButton();
 			el.addMinButton();
 			el.addMoveDownButton();
 			el.addMoveUpButton();
 		}
-		els[els.length]=el.panel_title;
-		kfm.addEl(head,els);
+		kfm.addEl(head,el.panel_title);
 	}
-	if(maximised.length)var size=(height-minheight)/maximised.length;
+	return minheight;
+}
+function kfm_panels_drawMaximised(maximised,height,minheight,wrapper){
+	if(!maximised.length)return;
+	var size,n,el,head,i;
+	size=(height-minheight)/maximised.length;
 	for(i=0;i<maximised.length;++i){
-		var n=maximised[i];
-		var el=$(n);
-		el.childNodes[1].setStyles({
-			'height':size,
-			'display':'block'
-		});
-		var head=el.childNodes[0].empty(),els=[];
+		n=maximised[i];
+		el=document.getElementById(n);
+		el.childNodes[1].style.height=size+'px';
+		el.childNodes[1].style.display='block';
+		head=el.childNodes[0];
+		head.innerHTML='';
 		if(wrapper.panels_unlocked){
 			el.addCloseButton();
 			el.addRestoreButton();
@@ -411,23 +416,24 @@ function kfm_refreshPanels(wrapper){
 			el.addMoveDownButton();
 			el.addMoveUpButton();
 		}
-		els[els.length]=el.panel_title;
-		kfm.addEl(head,els);
+		kfm.addEl(head,el.panel_title);
 	}
-	{ // fix order of panels
-		do{
-			var els=wrapper.childNodes,arr=[],found=0,prev=0;
-			for(var i=0;i<els.length,!found,els[i];++i){
-				var order=els[i].order;
-				if(order<prev&&i){
-					wrapper.insertBefore(els[i],els[i-1]);
-					found=1;
-				}
-				prev=order;
+}
+function kfm_panels_fixOrder(wrapper){
+	var i,els,found,prev,order;
+	do{
+		els=wrapper.childNodes;
+		found=0;
+		prev=0;
+		for(i=0;i<els.length,!found,els[i];++i){
+			order=els[i].order;
+			if(order<prev&&i){
+				wrapper.insertBefore(els[i],els[i-1]);
+				found=1;
 			}
-		}while(found);
-		for(i=0;i<els.length;++i)arr.push(els[i].order);
-	}
+			prev=order;
+		}
+	}while(found);
 }
 function kfm_removePanel(wrapper,panel){
 	var panel=$(panel);
