@@ -20,9 +20,10 @@ else{
 		$js=JSMin::minify($js);
 		file_put_contents(WORKPATH.$name,$js);
 		delete_old_md5s(WORKPATH);
+		exit;
 	}
 	else{
-		$js.="document.addEvent('domready',function(){setTimeout(function(){var a=document.createElement('img');a.src='j/jquery/all.php?minify=1';a.style.display='none';document.body.appendChild(a);},10)});";
+		$js.="setTimeout(function(){var a=document.createElement('img');a.src='j/jquery/all.php?minify=1';a.style.display='none';document.body.appendChild(a);},10000);";
 	}
 	echo $js;
 }
