@@ -34,17 +34,6 @@ function kfm_dieOnError($error)
     echo '<strong>Error</strong><br />'.$error->getMessage().'<br />'.$error->userinfo.'<hr />';
     exit;
 }
-function md5_of_dir($folder) {
-  $dircontent = scandir($folder);
-	$ret='';
-  foreach($dircontent as $filename) {
-    if ($filename != '.' && $filename != '..') {
-      if (filemtime($folder.$filename) === false) return false;
-      $ret.=date("YmdHis", filemtime($folder.$filename)).$filename;
-    }
-  }
-  return md5($ret);
-}
 
 if (get_magic_quotes_gpc()) {
     // taken from http://www.phpfreaks.com/quickcode/Get-rid-of-magic_quotes_gpc/618.php

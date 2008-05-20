@@ -1,5 +1,6 @@
 <?php
 require '../../initialise.php';
+require '../libs.php';
 
 header('Content-type: text/javascript');
 header('Expires: '.gmdate("D, d M Y H:i:s", time() + 3600*24*365).' GMT');
@@ -14,10 +15,11 @@ else{
 	$js.=file_get_contents('jquery.idrag.js');
 	$js.=file_get_contents('jquery.grid.columnSizing.js');
 	$js.=file_get_contents('jquery.tablesorter.js');
-	if($_REQUEST['minify']){
+	if(isset($_REQUEST['minify'])){
 		require '../../includes/jsmin-1.1.1.php';
 		$js=JSMin::minify($js);
 		file_put_contents(WORKPATH.$name,$js);
+		delete_old_md5s(WORKPATH);
 	}
 	else{
 		$js.="document.addEvent('domready',function(){setTimeout(function(){var a=document.createElement('img');a.src='j/jquery/all.php?minify=1';a.style.display='none';document.body.appendChild(a);},10)});";
