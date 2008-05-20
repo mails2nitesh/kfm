@@ -28,8 +28,13 @@ else{ // build cacheable js file
 	$js.=file_get_contents('files.js');
 	$js.=file_get_contents('resize_handler.js');
 	$js.=file_get_contents('search.js');
-	require '../includes/jsmin-1.1.1.php';
-	$js=JSMin::minify($js);
-	file_put_contents(WORKPATH.$name,$js);
+	if($_REQUEST['minify']){
+		require '../includes/jsmin-1.1.1.php';
+		$js=JSMin::minify($js);
+		file_put_contents(WORKPATH.$name,$js);
+	}
+	else{
+		$js.="document.addEvent('domready',function(){setTimeout(function(){var a=document.createElement('img');a.src='j/all.php?minify=1';a.style.display='none';document.body.appendChild(a);},5)});";
+	}
 	echo $js;
 }

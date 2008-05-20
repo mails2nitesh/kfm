@@ -14,8 +14,13 @@ else{
 	$js.=file_get_contents('jquery.idrag.js');
 	$js.=file_get_contents('jquery.grid.columnSizing.js');
 	$js.=file_get_contents('jquery.tablesorter.js');
-	require '../../includes/jsmin-1.1.1.php';
-	$js=JSMin::minify($js);
-	file_put_contents(WORKPATH.$name,$js);
+	if($_REQUEST['minify']){
+		require '../../includes/jsmin-1.1.1.php';
+		$js=JSMin::minify($js);
+		file_put_contents(WORKPATH.$name,$js);
+	}
+	else{
+		$js.="document.addEvent('domready',function(){setTimeout(function(){var a=document.createElement('img');a.src='j/jquery/all.php?minify=1';a.style.display='none';document.body.appendChild(a);},10)});";
+	}
 	echo $js;
 }
