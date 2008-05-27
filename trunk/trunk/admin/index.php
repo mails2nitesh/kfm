@@ -1,0 +1,115 @@
+<?php
+require_once('../initialise.php');
+?>
+<html>
+<head>
+<title>KFM admin</title>
+
+<link rel="stylesheet" href="../j/jquery/tabs/ui.tabs.css" type="text/css">
+<link rel="stylesheet" href="../themes/<?php echo $kfm->setting('theme');?>/css.php" type="text/css">
+
+<script type="text/javascript" src="../j/jquery/all.php"></script>
+<script type="text/javascript" src="../j/jquery/tabs/ui.tabs.js"></script>
+<script type="text/javascript">
+$(function(){
+	$('#tabscontainer > ul').tabs();
+});
+function message(msg){
+	jobj=$('#messages');
+	jobj.html(msg);
+	jobj.fadeIn();
+	jobj.animate({fontSize:"16px"},2500);
+	jobj.fadeOut();
+}
+function error(msg){
+	message('Error: '+msg);
+}
+
+</script>
+<style type="text/css">
+#messages{
+	display:none;
+	position:absolute;
+	border:2px dashed #aaa;
+	background-color:#006;
+	color:white;
+	width:200px;
+	top:30px;
+	right:30px;
+	padding:5px;
+	font-size:16px;
+}
+#password_div{
+	margin:30px auto;
+	padding:10px;
+	width:350px;
+	border:2px dashed #aaa;
+}
+#password_div label { position: absolute; text-align:left; width:130px; }
+#password_div input, textarea { margin-left: 140px; }
+
+.settings_container{
+	margin-left:60px;
+	margin-right:60px;
+	background-color:#eee;
+}
+.button{
+	cursor:hand;
+	width:automatic;
+}
+#kfm_admin_users_table{
+	margin-left:60px;
+	margin-right:60px;
+	background-color:#eee;
+}
+.group_header{
+	font-size:24px;
+	font-weight:bold;
+}
+.user_setting{
+}
+.default_setting{
+	color:#777;
+}
+</style>
+<style type="text/css">
+.bb_space_graph_container{
+	width:400px;
+	padding:3px;
+	background-color:#ddf;
+}
+.bb_space_graph_empty{
+	margin:0px;
+	padding:2px 0;
+	background-color:#55c;
+	height:20px;
+}
+.bb_space_graph_used{
+	margin:0;
+	background-color:#700;
+	height:100%;
+}
+.bb_space_graph_text{
+	position:absolute;
+	margin:2px 5px;
+	font-size:12px;
+	font-weight:bold;
+	color:#fff;
+}
+</style>
+</head>
+<body>
+<div id="messages"></div>
+<div id="tabscontainer">
+	<ul>
+		<?php if($kfm->user_status==1) echo '<li><a href="users.php" title="Users tab"><span>Users</span></a></li>'; ?>
+		<li><a href="settings.php" title="Settings tab"><span>Settings</span></a></li>
+		<li><a href="password.php" title="Password tab"><span>Change password</span></a></li>
+		<?php if($kfm->user_status==1) echo '<li><a href="associations.php" title="File associations"><span>File associations</span></a></li>'; ?>
+		<li><a href="bb_space.php" title="bb space"><span>Manage space</span></a></li>
+	</ul>
+</div>
+<button onclick="message('test')">Test</button>
+</body>
+</html>
+

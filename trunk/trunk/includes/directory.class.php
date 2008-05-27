@@ -27,7 +27,8 @@ class kfmDirectory extends kfmObject{
 			strpos($addr,'/.')===false);
 	}
 	function createSubdir($name){
-		if(!$GLOBALS['kfm_allow_directory_create'])return $this->error(kfm_lang('permissionDeniedCreateDirectory'));
+		global $kfm;
+		if(!$kfm->setting('allow_directory_create'))return $this->error(kfm_lang('permissionDeniedCreateDirectory'));
 		$physical_address=$this->path.$name;
 		$short_version=str_replace($GLOBALS['rootdir'],'',$physical_address);
 		if(!$this->checkAddr($physical_address)){
@@ -43,12 +44,12 @@ class kfmDirectory extends kfmObject{
 			$this->error(kfm_lang('failedCreateDirectoryCheck',$name));
 			return false;
 		}
-		chmod($physical_address,octdec('0'.$GLOBALS['kfm_default_directory_permission']));
+		chmod($physical_address,octdec('0'.$kfm->setting('default_directory_permission')));
 		return $this->addSubdirToDb($name);
 	}
 	function delete(){
 		global $kfm;
-		if(!$GLOBALS['kfm_allow_directory_delete'])return $this->error(kfm_lang('permissionDeniedDeleteDirectory'));
+		if(!$kfm->setting('allow_directory_delete'))return $this->error(kfm_lang('permissionDeniedDeleteDirectory'));
 		$files=$this->getFiles();
 		foreach($files as $f){
 			if(!$f->delete())return false;
@@ -152,7 +153,7 @@ class kfmDirectory extends kfmObject{
 		global $kfm;
 		if(is_numeric($newParent))$newParent=kfmDirectory::getInstance($newParent);
 		{ # check for errors
-			if(!$GLOBALS['kfm_allow_directory_move'])return $this->error(kfm_lang('permissionDeniedMoveDirectory'));
+			if(!$kfm->setting('allow_directory_move'))return $this->error(kfm_lang('permissionDeniedMoveDirectory'));
 			if(strpos($newParent->path,$this->path)===0) return $this->error(kfm_lang('cannotMoveIntoSelf'));
 			if(file_exists($newParent->path.$this->name))return $this->error(kfm_lang('alreadyExists',$newParent->path.$this->name));
 			if(!$newParent->isWritable())return $this->error(kfm_lang('isNotWritable',$newParent->path));
@@ -168,8 +169,8 @@ class kfmDirectory extends kfmObject{
 		}
 	}
 	function rename($newname){
-		global $kfm,$kfm_allow_directory_edit,$kfmDirectoryInstances;
-		if(!$GLOBALS['kfm_allow_directory_edit'])return $this->error(kfm_lang('permissionDeniedEditDirectory'));
+		global $kfm,$kfmDirectoryInstances;
+		if(!$kfm->setting('allow_directory_edit'))return $this->error(kfm_lang('permissionDeniedEditDirectory'));
 		if(!$this->isWritable())return $this->error(kfm_lang('permissionDeniedRename',$this->name));
 		if(!$this->checkAddr($newname))return $this->error(kfm_lang('cannotRenameFromTo',$this->name,$newname));
 		$parent=kfmDirectory::getInstance($this->pid);
@@ -182,15 +183,16 @@ class kfmDirectory extends kfmObject{
 		$kfmDirectoryInstances[$this->id]=$this;
 	}
 	function checkName($file=false){
+		global $kfm;
 		if($file===false)$file=$this->name;
 		if(trim($file)==''|| trim($file)!=$file)return false;
 		if($file=='.'||$file=='..')return false;
-		foreach($GLOBALS['kfm_banned_folders'] as $ban){
+		foreach($kfm->setting('banned_folders') as $ban){
 			if(($ban[0]=='/' || $ban[0]=='@')&&preg_match($ban,$file))return false;
 			elseif($ban==strtolower(trim($file)))return false;
 		}
-		if(isset($GLOBALS['kfm_allowed_folders']) && is_array($GLOBALS['kfm_allowed_folders'])){
-			foreach($GLOBALS['kfm_allowed_folders'] as $allow){
+		if(count($kfm->setting('allowed_folders'))){
+			foreach($kfm->setting('allowed_folders') as $allow){
 				if($allow[0]=='/' || $allow[0]=='@'){
 					if(preg_match($allow, $file))return true;
 				}else if($allow==strtolower($file)) return true;
@@ -200,7 +202,8 @@ class kfmDirectory extends kfmObject{
 		return true;
 	}
 	function addFile($file){
-		if(!$GLOBALS['kfm_allow_file_create'])return $this->error(kfm_lang('permissionDeniedCreateFile'));
+		global $kfm;
+		if(!$kfm->setting('allow_file_create'))return $this->error(kfm_lang('permissionDeniedCreateFile'));
 		if(is_numeric($file))$file=kfmFile::getInstance($file);
 		if(!$this->isWritable())return $this->error(kfm_lang('fileNotCreatedDirUnwritable',$file->name));
 		copy($file->path,$this->path.'/'.$file->name);

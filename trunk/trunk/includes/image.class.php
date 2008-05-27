@@ -43,7 +43,7 @@ class kfmImage extends kfmFile{
 		imagedestroy($im);
 	}
 	function createThumb($width=64,$height=64,$id=0){
-		global $kfm,$kfm_use_imagemagick;
+		global $kfm,$kfm;
 		if(!is_dir(WORKPATH.'thumbs'))mkdir(WORKPATH.'thumbs');
 		$ratio=min($width/$this->width,$height/$this->height);
 		$thumb_width=$this->width*$ratio;
@@ -53,12 +53,12 @@ class kfmImage extends kfmFile{
 			$id=$kfm->db->lastInsertId(KFM_DB_PREFIX.'files_images_thumbs','id');
 		}
 		$file=WORKPATH.'thumbs/'.$id;
-		if(!$kfm_use_imagemagick || $this->useImageMagick($this->path,'resize '.$thumb_width.'x'.$thumb_height,$file))$this->createResizedCopy($file,$thumb_width,$thumb_height);
+		if(!$kfm->setting('use_imagemagick') || $this->useImageMagick($this->path,'resize '.$thumb_width.'x'.$thumb_height,$file))$this->createResizedCopy($file,$thumb_width,$thumb_height);
 		return $id;
 	}
 	function delete(){
 		global $kfm;
-		if(!$GLOBALS['kfm_allow_file_delete'])return $this->error(kfm_lang('permissionDeniedDeleteFile'));
+		if(!$kfm->setting('allow_file_delete'))return $this->error(kfm_lang('permissionDeniedDeleteFile'));
 		if(!parent::delete())return false;
 		$this->deleteThumbs();
 		$kfm->db->exec('DELETE FROM '.KFM_DB_PREFIX.'files_images WHERE file_id='.$this->id);
@@ -87,8 +87,8 @@ class kfmImage extends kfmFile{
 		return $row['id'];
 	}
 	function getInstance($id=0){
-		if(!$id)return false;
 		global $imageInstances;
+		if(!$id)return false;
 		if(is_object($id)){
 			if($id->isImage())$id=$id->id;
 			else return false;
@@ -97,22 +97,22 @@ class kfmImage extends kfmFile{
 		return $imageInstances[$id];
 	}
 	function resize($new_width, $new_height=-1){
-		global $kfm_use_imagemagick,$kfm_allow_image_manipulation;
-		if(!$kfm_allow_image_manipulation)$this->error(kfm_lang('permissionDeniedManipImage'));
+		global $kfm;
+		if(!$kfm->setting('allow_image_manipulation'))$this->error(kfm_lang('permissionDeniedManipImage'));
 		if(!$this->isWritable())$this->error(kfm_lang('imageNotWritable'));
 		if($this->hasErrors())return false;
 		$this->deleteThumbs();
 		if($new_height==-1)$new_height=$this->height*$new_width/$this->width;
-		if($kfm_use_imagemagick && !$this->useImageMagick($this->path,'resize '.$new_width.'x'.$new_height,$this->path))return;
+		if($kfm->setting('use_imagemagick') && !$this->useImageMagick($this->path,'resize '.$new_width.'x'.$new_height,$this->path))return;
 		$this->createResizedCopy($this->path,$new_width,$new_height);
 	}
 	function rotate($direction){
-		global $kfm_use_imagemagick,$kfm_allow_image_manipulation;
-		if(!$kfm_allow_image_manipulation)$this->error(kfm_lang('permissionDeniedManipImage'));
+		global $kfm;
+		if(!$kfm->setting('allow_image_manipulation'))$this->error(kfm_lang('permissionDeniedManipImage'));
 		if(!$this->isWritable())$this->error(kfm_lang('imageNotWritable'));
 		if($this->hasErrors())return false;
 		$this->deleteThumbs();
-		if($kfm_use_imagemagick && !$this->useImageMagick($this->path,'rotate -'.$direction,$this->path))return;
+		if($kfm->setting('use_imagemagick') && !$this->useImageMagick($this->path,'rotate -'.$direction,$this->path))return;
 		{ # else use GD
 			$load='imagecreatefrom'.$this->type;
 			$save='image'.$this->type;
@@ -123,15 +123,15 @@ class kfmImage extends kfmFile{
 		}
 	}
 	function crop($x1, $y1, $width, $height, $newname=false){
-		global $kfm_use_imagemagick,$kfm_allow_image_manipulation;
-		if(!$kfm_allow_image_manipulation)return $this->error(kfm_lang('permissionDeniedManipImage'));
+		global $kfm;
+		if(!$kfm->setting('allow_image_manipulation'))return $this->error(kfm_lang('permissionDeniedManipImage'));
 		
 		if(!$newname){
 			$this->deleteThumbs();
 			if(!$this->isWritable())return $this->error(kfm_lang('imageNotWritable'));
 		}
-		if($kfm_use_imagemagick && $newname && !$this->useImageMagick($this->path,'crop '.$width.'x'.$height.'+'.$x1.'+'.$y1.' +repage', dirname($this->path).'/'.$newname))return;
-		else if($kfm_use_imagemagick && !$this->useImageMagick($this->path,'crop '.$width.'x'.$height.'+'.$x1.'+'.$y1.' +repage', $this->path))return;
+		if($kfm->setting('use_imagemagick') && $newname && !$this->useImageMagick($this->path,'crop '.$width.'x'.$height.'+'.$x1.'+'.$y1.' +repage', dirname($this->path).'/'.$newname))return;
+		else if($kfm->setting('use_imagemagick') && !$this->useImageMagick($this->path,'crop '.$width.'x'.$height.'+'.$x1.'+'.$y1.' +repage', $this->path))return;
 		{ # else use GD
 			$load='imagecreatefrom'.$this->type;
 			$save='image'.$this->type;

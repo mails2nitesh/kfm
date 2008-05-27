@@ -31,9 +31,11 @@ if ($kfm_allow_file_upload) {
         if (!is_file($tmpname)) $errors[] = 'No file uploaded';
         else if (!kfmFile::checkName($filename)) {
             $errors[] = 'The filename: '.$filename.' is not allowed';
-        }
+        }else if(in_array(kfmFile::getExtension($filename),$kfm->setting('banned_upload_extensions'))){
+            $errors[] = 'The extension: '.kfmFile::getExtension($filename).' is not allowed';
+		  }
     }
-		if ($cwd==1 && !$kfm_allow_files_in_root) $errors[] = 'Cannot upload files to the root directory';
+		if ($cwd==$kfm->setting('root_folder_id') && !$kfm->setting('allow_files_in_root')) $errors[] = 'Cannot upload files to the root directory';
     if (!$replace && file_exists($to)) $errors[] = 'File already exists'; // TODO new string
     if (!count($errors)) {
         move_uploaded_file($tmpname, $to);
