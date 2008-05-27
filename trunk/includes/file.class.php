@@ -46,8 +46,8 @@ class kfmFile extends kfmObject{
 	 * @return bool true opon success, false on error
 	 */
 	function delete(){
-		global $kfm,$kfm_allow_file_delete;
-		if(!$kfm_allow_file_delete)return $this->error(kfm_lang('permissionDeniedDeleteFile'));
+		global $kfm;
+		if(!$kfm->setting('allow_file_delete'))return $this->error(kfm_lang('permissionDeniedDeleteFile'));
 		if(!kfm_cmsHooks_allowedToDeleteFile($this->id))return $this->error(kfm_lang('CMSRefusesFileDelete',$this->path));
 		if($this->exists() && !$this->writable)return $this->error(kfm_lang('fileNotMovableUnwritable',$this->name));
 		if(!$this->exists() || unlink($this->path))$kfm->db->exec("DELETE FROM ".KFM_DB_PREFIX."files WHERE id=".$this->id);
@@ -79,10 +79,10 @@ class kfmFile extends kfmObject{
 	 */
 	function getExtension(){
 		if(func_num_args()==1){
-			$filename=func_get_arg(0);
+			$filename=trim(func_get_arg(0));
 		}else{
 			if($this->id==-1)return false;
-			$filename=$this->name;
+			$filename=trim($this->name);
 		}
 		$dotext=strrchr($filename,'.');
 		if($dotext === false) return false;
@@ -104,7 +104,7 @@ class kfmFile extends kfmObject{
 			if($this->isImage()&&$x&&$y){
 				$img=kfmImage::getInstance($this);
 				$img->setThumbnail($x,$y);
-				return $kfm_userfiles_output.$kfm_workdirectory.'/thumbs/'.$img->thumb_id;
+				return WORKPATH.'thumbs/'.$img->thumb_id;
 			}
 			else $url=$kfm_userfiles_output.'/'.$cwd.'/'.$this->name; # TODO: check this line - $cwd may be incorrect if the requested file is from a search
 		}
@@ -165,8 +165,8 @@ class kfmFile extends kfmObject{
 	 * @param int $new_directoryparent_id
 	 */
 	function move($dir_id){
-		global $kfmdb,$kfm_allow_files_in_root;
-		if($dir_id==1 && !$kfm_allow_files_in_root)return $this->error('Cannot move files to the root directory');
+		global $kfmdb,$kfm;
+		if($dir_id==$kfm->setting('root_folder_id') && !$kfm->setting('allow_files_in_root'))return $this->error('Cannot move files to the root directory');
 		if(!$this->writable)return $this->error(kfm_lang('fileNotMovableUnwritable',$this->name));
 		$dir=kfmDirectory::getInstance($dir_id);
 		if(!$dir)return $this->error(kfm_lang('failedGetDirectoryObject'));
@@ -179,8 +179,8 @@ class kfmFile extends kfmObject{
 	 * @param string $newName new file name
 	 */
 	function rename($newName){
-		global $kfm,$kfm_allow_file_edit;
-		if(!$kfm_allow_file_edit)return $this->error(kfm_lang('permissionDeniedEditFile'));
+		global $kfm;
+		if(!$kfm->setting('allow_file_edit'))return $this->error(kfm_lang('permissionDeniedEditFile'));
 		if(!kfm_checkAddr($newName))return $this->error(kfm_lang('cannotRenameFromTo',$this->name,$newName));
 		$newFileAddress=$this->directory.$newName;
 		if(file_exists($newFileAddress))return $this->error(kfm_lang('fileAlreadyExists'));
@@ -195,8 +195,8 @@ class kfmFile extends kfmObject{
 	 * @param mixed $content
 	 */
 	function setContent($content){
-		global $kfm_allow_file_edit;
-		if(!$kfm_allow_file_edit)return $this->error(kfm_lang('permissionDeniedEditFile'));
+		global $kfm;
+		if(!$kfm->setting('allow_file_edit'))return $this->error(kfm_lang('permissionDeniedEditFile'));
 		$result=file_put_contents($this->path,utf8_decode($content));
 		if(!$result)return $this->error(kfm_lang('errorSettingFileContent'));
 		return true;
@@ -245,20 +245,22 @@ class kfmFile extends kfmObject{
 	 * @return bool $authorized true when authorized, false if not
 	 */
 	function checkName($filename=false){
+		global $kfm;
 		if($filename===false)$filename=$this->name;
 		if($filename=='' || 
 			trim($filename)!=$filename ||
 			strpos($filename,'/')!==false ||
-			in_array(kfmFile::getExtension($filename),$GLOBALS['kfm_banned_extensions'])
+			in_array(kfmFile::getExtension($filename),$kfm->setting('banned_extensions'))
 		)return false;
 		
-		foreach($GLOBALS['kfm_banned_files'] as $ban){
+		foreach($kfm->setting('banned_files') as $ban){
 			if(($ban[0]=='/' || $ban[0]=='@')&&preg_match($ban,$filename))return false;
 			elseif($ban==strtolower($filename))return false;
 		}
 
-		if(isset($GLOBALS['kfm_allowed_files']) && is_array($GLOBALS['kfm_allowed_files'])){
-			foreach($GLOBALS['kfm_allowed_files'] as $allow){
+		if(count($kfm->setting('allowed_files'))){
+			$this->error('found allowed files');
+			foreach($kfm->setting('allowed_files') as $allow){
 				if($allow[0]=='/' || $allow[0]=='@'){
 					if(preg_match($allow, $file))return true;
 				}else if($allow==strtolower($file)) return true;

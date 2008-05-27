@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<style type="text/css"><?php
-			$cssfile='themes/'.$kfm_theme.'/login.css';
+			$cssfile=KFM_BASE_PATH.'themes/'.$kfm_theme.'/login.css';
 			$css=file_exists($cssfile)?file_get_contents($cssfile):'';
 			echo preg_replace('/\s+/',' ',$css);
 		?></style>

@@ -20,6 +20,7 @@ require KFM_BASE_PATH.'includes/session.class.php';
 require KFM_BASE_PATH.'includes/file.class.php';
 require KFM_BASE_PATH.'includes/image.class.php';
 require KFM_BASE_PATH.'includes/directory.class.php';
+require KFM_BASE_PATH.'includes/plugin.class.php';
 // }}}
 function sql_escape($sql)
 {
@@ -62,31 +63,6 @@ define('KFM_DB_PREFIX', $kfm_db_prefix);
 // {{{ check for fatal errors
 $m = array();
 if (ini_get('safe_mode'))$m[] = 'KFM does not work if you have <code>safe_mode</code> enabled. This is not a bug - please see <a href="http://ie.php.net/features.safe-mode">PHP.net\'s safe_mode page</a> for details';
-if (!isset($kfm_allow_directory_create))$m[] = 'missing <code>$kfm_allow_directory_create</code> variable';
-if (!isset($kfm_allow_directory_delete))$m[] = 'missing <code>$kfm_allow_directory_delete</code> variable';
-if (!isset($kfm_allow_directory_edit))$m[] = 'missing <code>$kfm_allow_directory_edit</code> variable';
-if (!isset($kfm_allow_directory_move))$m[] = 'missing <code>$kfm_allow_directory_move</code> variable';
-if (!isset($kfm_allow_file_create))$m[] = 'missing <code>$kfm_allow_file_create</code> variable';
-if (!isset($kfm_allow_file_delete))$m[] = 'missing <code>$kfm_allow_file_delete</code> variable';
-if (!isset($kfm_allow_file_edit))$m[] = 'missing <code>$kfm_allow_file_edit</code> variable';
-if (!isset($kfm_allow_file_move))$m[] = 'missing <code>$kfm_allow_file_move</code> variable';
-if (!isset($kfm_allow_file_upload))$m[] = 'missing <code>$kfm_allow_file_upload</code> variable';
-if (!isset($kfm_allow_image_manipulation))$m[] = 'missing <code>$kfm_allow_image_manipulation</code> variable';
-if (!isset($kfm_only_allow_image_upload))$m[] = 'missing <code>$kfm_only_allow_image_upload</code> variable';
-if (!isset($kfm_show_disabled_contextmenu_links))$m[] = 'missing <code>$kfm_show_disabled_contextmenu_links</code> variable';
-if (!isset($kfm_use_multiple_file_upload))$m[] = 'missing <code>$kfm_use_multiple_file_upload</code> variable';
-if (!isset($kfm_use_imagemagick))$m[] = 'missing <code>$kfm_use_imagemagick</code> variable';
-if (!isset($kfm_slideshow_delay))$m[] = 'missing <code>$kfm_slideshow_delay</code> variable';
-if (!isset($kfm_db_port))$m[] = 'missing <code>$kfm_db_port</code> variable';
-if (!isset($kfm_root_folder_name))$m[] = 'missing <code>$kfm_root_folder_name</code> variable';
-if (!isset($kfm_files_name_length_displayed))$m[] = 'missing <code>$kfm_files_name_length_displayed</code> variable';
-if (!isset($kfm_default_upload_permission))$m[] = 'missing <code>$kfm_default_upload_permission</code> variable';
-if (!isset($kfm_return_file_id_to_cms))$m[] = 'missing <code>$kfm_return_file_id_to_cms</code> variable';
-if (!isset($kfm_listview))$m[] = 'missing <code>$kfm_listview</code> variable';
-if (!isset($kfm_allow_multiple_file_returns))$m[] = 'missing <code>$kfm_allow_multiple_file_returns</code> variable';
-if (!isset($kfm_userfiles_address))$m[] = 'missing <code>$kfm_userfiles_address</code> variable. this variable replaces the old <code>$kfm_userfiles</code> variable. <strong>Please read the examples carefully.</strong>';
-if (!isset($kfm_banned_files))$m[] = 'missing <code>$kfm_banned_files</code> variable';
-if (!isset($kfm_banned_folders))$m[] = 'missing <code>$kfm_banned_folders</code> variable';
 if (count($m)) {
     echo '<html><body><p>There are errors in your configuration or server. If the messages below describe missing variables, please check the supplied <code>configuration.php.dist</code> for notes on their usage.</p><ul>';
     foreach($m as $a)echo '<li>'.$a.'</li>';
@@ -101,25 +77,61 @@ if (file_exists(KFM_BASE_PATH.'api/cms_hooks.php')) require KFM_BASE_PATH.'api/c
 else require KFM_BASE_PATH.'api/cms_hooks.php.dist';
 // }}}
 // {{{ variables
+// structure
+$kfm->defaultSetting('user_root_folder','');
+$kfm->defaultSetting('startup_folder','');
+$kfm->defaultSetting('hidden_panels',array('logs','file_details','directory_properties'));
+$kfm->defaultSetting('log_level', 0);
+//display
 $kfm->defaultSetting('time_format', '%T');
-$kfm->setting('db_prefix', $kfm_db_prefix);
-if (isset($kfm_date_format)) {
-    $kfm->setting('date_format', $kfm_date_format);
-    unset($kfm_date_format);
-} else {
-    $kfm->defaultSetting('db_prefix', 'kfm_');
-}
-if (isset($kfm_time_format)) {
-    $kfm->setting('time_format', $kfm_time_format);
-    unset($kfm_time_format);
-} else {
-    $kfm->defaultSetting('date_format', '%d-%m-%Y');
-}
+$kfm->defaultSetting('date_format', '%x');
+$kfm->defaultSetting('theme', false); // must be overwritten
+$kfm->defaultSetting('listview',0);
+$kfm->defaultSetting('preferred_languages',array('en','de','da','es','fr','nl','ga'));
+// directory
+$kfm->defaultSetting('root_folder_name','root');
+$kfm->defaultSetting('allow_files_in_root',1);
+$kfm->defaultSetting('allow_directory_create',1);
+$kfm->defaultSetting('allow_directory_delete',1);
+$kfm->defaultSetting('allow_directory_edit',1);
+$kfm->defaultSetting('allow_directory_move',1);
+$kfm->defaultSetting('folder_drag_action',3);
+$kfm->defaultSetting('default_directories',array());
+$kfm->defaultSetting('default_directory_permission',755);
+$kfm->defaultSetting('banned_folders',array('/^\./'));
+$kfm->defaultSetting('allowed_folders',array());
+//files
+$kfm->defaultSetting('allow_file_create',1);
+$kfm->defaultSetting('allow_file_delete',1);
+$kfm->defaultSetting('allow_file_edit',1);
+$kfm->defaultSetting('allow_file_move',1);
+$kfm->defaultSetting('show_files_in_groups_of', 10);
+$kfm->defaultSetting('files_name_length_displayed',20);
+$kfm->defaultSetting('files_name_length_in_list', 0);
+$kfm->defaultSetting('banned_extensions',array('asp','cfm','cgi','php','php3','php4','php5','phtm','pl','sh','shtm','shtml'));
+$kfm->defaultSetting('banned_files',array('thumbs.db','/^\./'));
+$kfm->defaultSetting('allowed_files',array());
 
-if (!isset($kfm_show_files_in_groups_of))$kfm_show_files_in_groups_of = 10;
-if (!isset($kfm_user_root_folder))$kfm_user_root_folder = false;
-if (!isset($kfm_startup_folder))$kfm_startup_folder = false;
-if (!isset($kfm_startup_selectedFiles))$kfm_startup_selectedFiles = array();
+$kfm->defaultSetting('startup_selected_files', array()); // maybe should just be a get setting
+//image
+$kfm->defaultSetting('use_imagemagick',1);
+//upload
+$kfm->defaultSetting('allow_file_upload',1);
+$kfm->defaultSetting('only_allow_image_upload',0);
+$kfm->defaultSetting('use_multiple_file_upload',1);
+$kfm->defaultSetting('default_upload_permission',644);
+$kfm->defaultSetting('banned_upload_extensions',array());
+// plugins
+$kfm->defaultSetting('disabled_plugins',array());
+// depricated
+$kfm->defaultSetting('allow_image_manipulation',1); // this is plugin management
+$kfm->defaultSetting('show_disabled_contextmenu_links',1); // Should be depricated
+$kfm->defaultSetting('return_file_id_to_cms',0); // Should be deprecated in favour of plugin
+$kfm->defaultSetting('allow_multiple_file_returns',0); // Should be deprecated in favour of plugin
+$kfm->defaultSetting('slideshow_delay',4);
+
+
+
 define('KFM_VERSION', rtrim(file_get_contents(KFM_BASE_PATH.'docs/version.txt')));
 if (!isset($_SERVER['DOCUMENT_ROOT'])) { // fix for IIS
     $_SERVER['DOCUMENT_ROOT'] = preg_replace('/\/[^\/]*$/', '', str_replace('\\', '/', $_SERVER['SCRIPT_FILENAME']));
@@ -185,6 +197,7 @@ case 'mysql': // {{{
         kfm_dieOnError($kfmdb);
     }
     $kfmdb->setFetchMode(MDB2_FETCHMODE_ASSOC);
+	 $kfmdb->setOption('portability',MDB2_PORTABILITY_ALL ^ MDB2_PORTABILITY_EMPTY_TO_NULL);
     if (!$db_defined) {
         $res = &$kfmdb->query("show tables like '".$kfm_db_prefix_escaped."%'");
         kfm_dieOnError($res);
@@ -192,7 +205,7 @@ case 'mysql': // {{{
         else $db_defined = 1;
     }
     break;
-// }}}
+ // must be overwritten// }}}
 case 'pgsql': // {{{
     include_once 'MDB2.php';
     $dsn   = 'pgsql://'.$kfm_db_username.':'.$kfm_db_password.'@'.$kfm_db_host.$port.'/'.$kfm_db_name;
@@ -208,6 +221,7 @@ case 'pgsql': // {{{
         kfm_dieOnError($kfmdb);
     }
     $kfmdb->setFetchMode(MDB2_FETCHMODE_ASSOC);
+	 $kfmdb->setOption('portability',MDB2_PORTABILITY_ALL ^ MDB2_PORTABILITY_EMPTY_TO_NULL);
     if (!$db_defined) {
         $res = &$kfmdb->query("SELECT tablename from pg_tables where tableowner = current_user AND tablename NOT LIKE E'pg\\\\_%' AND tablename NOT LIKE E'sql\\\\_%' AND tablename LIKE E'".$kfm_db_prefix_escaped."%'");
         kfm_dieOnError($res);
@@ -225,6 +239,7 @@ case 'sqlite': // {{{
     $kfmdb = &MDB2::connect($dsn);
     kfm_dieOnError($kfmdb);
     $kfmdb->setFetchMode(MDB2_FETCHMODE_ASSOC);
+	 $kfmdb->setOption('portability',MDB2_PORTABILITY_ALL ^ MDB2_PORTABILITY_EMPTY_TO_NULL);
     if ($kfmdb_create)include KFM_BASE_PATH.'scripts/db.sqlite.create.php';
     $db_defined = 1;
     break;
@@ -269,32 +284,154 @@ if ($kfm_session->isNew) {
     $kfm_session->setMultiple(array(
     'cwd_id'=>1,
     'language'=>'',
+	 'user_id'=>1,
     'username'=>'',
     'password'=>'',
     'loggedin'=>0,
-    'theme'=>$kfm_theme
+    'theme'=>false
     ));
 }
-if (isset($_GET['theme']))$kfm_session->set('theme', $_GET['theme']);
 if (isset($_GET['logout'])||isset($_GET['log_out'])) $kfm_session->set('loggedin',0);
-$kt = $kfm_session->get('theme');
-if ($kt)$kfm_theme = $kt;
-else $kfm_session->set('theme', $kfm_theme);
 // }}}
 // {{{ check authentication
-if (!isset($kfm_username)||!isset($kfm_password)||($kfm_username==''&&$kfm_password==''))$kfm_session->set('loggedin', 1);
+if (isset($use_kfm_security) && !$use_kfm_security)$kfm_session->set('loggedin', 1);
 if (!$kfm_session->get('loggedin') && (!isset($kfm_api_auth_override)||!$kfm_api_auth_override)) {
     $err = '';
     if (isset($_POST['username'])&&isset($_POST['password'])) {
+		$res=db_fetch_row('SELECT id, username, password, status FROM '.KFM_DB_PREFIX.'users WHERE username="'.$_POST['username'].'" AND password="'.sha1($_POST['password']).'"');
+		if(count($res)){
+            $kfm_session->setMultiple(array('user_id'=>$res['id'],'username'=>$_POST['username'], 'password'=>$_POST['password'],'user_status'=>$res['status'], 'loggedin'=>1));
+		}else $err = '<em>Incorrect Password. Please try again, or check your <code>configuration.php</code>.</em>';
+		/*
         if ($_POST['username']==$kfm_username && $_POST['password']==$kfm_password) {
             $kfm_session->setMultiple(array('username'=>$_POST['username'], 'password'=>$_POST['password'], 'loggedin'=>1));
         }
-        else $err = '<em>Incorrect Password. Please try again, or check your <code>configuration.php</code>.</em>';
+		*/
     }
     if (!$kfm_session->get('loggedin')) {
         include KFM_BASE_PATH.'includes/login.php';
         exit;
     }
+}
+$uid=$kfm_session->get('user_id');
+$kfm->user_id=$uid;
+$kfm->user_status=$kfm_session->get('user_status');
+$kfm->username=$kfm_session->get('username');
+$kfm->user_name=&$kfm->username;
+$kfm->session= &$kfm_session;
+// }}}
+// {{{ Read settings
+function setting_array($str){
+	return preg_split('/,\s*/',trim($str,' ,'));
+}
+$settings=array();
+$admin_settings=db_fetch_all('SELECT name, value, usersetting FROM '.KFM_DB_PREFIX.'settings WHERE user_id=1');
+foreach($admin_settings as $setting){
+	$settings[$setting['name']]=$setting['value'];
+	if($setting['usersetting'])$kfm->addUserSetting($setting['name']);
+}
+if($uid!=1){
+	$user_settings=db_fetch_all('SELECT name, value FROM '.KFM_DB_PREFIX.'settings WHERE user_id='.$uid.' AND usersetting=1');
+	foreach($user_settings as $setting){
+		$settings[$setting['name']]=$setting['value'];
+	}
+}
+if(isset($settings['disabled_plugins'])){
+	$kfm->defaultSetting('disabled_plugins',setting_array($settings['disabled_plugins']));
+	unset($settings['disabled_plugins']); // it does not have to be set again
+}
+// }}}
+// {{{ Setting plugins
+$h=opendir(KFM_BASE_PATH.'plugins');
+while(false!==($file=readdir($h))){
+	if(!is_dir(KFM_BASE_PATH.'plugins/'.$file))continue;
+	if($file[0]!='.' && substr($file,0,9)!='disabled_'){
+		//if(in_array($file, $kfm->setting('disabled_plugins')))continue;
+		if(file_exists(KFM_BASE_PATH.'plugins/'.$file.'/plugin.php')) include(KFM_BASE_PATH.'plugins/'.$file.'/plugin.php');
+	}
+}
+closedir($h);
+foreach($kfm->plugins as $key=>$plugin){
+	$kfm->sdef['disabled_plugins']['options'][]=$plugin->name;
+	if(in_array($plugin->name,$kfm->setting('disabled_plugins'))){
+		$kfm->plugins[$key]->disabled=true;
+		continue;
+	}
+	if(count($plugin->settings)){
+		$kfm->addSdef($plugin->name, array('type'=>'group_header'));
+		foreach($plugin->settings as $psetting){
+			$kfm->addSdef($psetting['name'], $psetting['definition'],$psetting['default']);
+		}
+	}
+}
+// }}}
+// {{{ Apply settings
+foreach($kfm->sdef as $sname=>$sdef){
+	if(isset($settings[$sname])){
+		switch($sdef['type']){
+			case 'array':
+			case 'select_list':
+				$value=setting_array($settings[$sname]);
+				break;
+			default:
+				$value=$settings[$sname];
+				break;
+		}
+		$kfm->defaultSetting($sname, $value);
+	}
+}
+// }}}
+/* temp
+print  '<pre>';
+print_r($kfm->settings);
+print "\n\n";
+print_r($kfm->sdef);
+print "\n\n".count($kfm->setting('allowed_files'));
+exit;
+*/
+// {{{ (user) root folder
+$kfm_root_dir = kfmDirectory::getInstance(1);
+if ($kfm->user_id!=1 && $kfm->setting('user_root_folder')){
+	$kfm->defaultSetting('user_root_folder',str_replace('username',$kfm->username,$kfm->setting('user_root_folder')));
+    $dirs   = explode(DIRECTORY_SEPARATOR, trim($kfm->setting('user_root_folder'), ' '.DIRECTORY_SEPARATOR));
+    $subdir = $kfm_root_dir;
+    foreach ($dirs as $dirname) {
+        $subdir = $subdir->getSubdir($dirname);
+        if(!$subdir) die ('Error: Root directory cannot be found.');
+        $kfm_root_folder_id = $subdir->id;
+    }
+    $user_root_dir = $subdir;
+} else {
+    $user_root_dir = $kfm_root_dir;
+}
+$kfm_root_folder_id = $user_root_dir->id;
+$kfm->setting('root_folder_id',$user_root_dir->id);
+// }}}
+// {{{ Setting themes
+$h=opendir(KFM_BASE_PATH.'themes');
+while(false!==($file=readdir($h))){
+	if($file[0]!='.' || substr($file,0,9)=='disabled_'){
+		$kfm->themes[]=$file;
+		$kfm->sdef['theme']['options'][$file]=$file;
+	}
+}
+closedir($h);
+// }}}
+// {{{ Setting the theme
+if(isset($_GET['theme']))$kfm_session->set('theme',$_GET['theme']);
+if($kfm_session->get('theme'))$kfm->defaultSetting('theme',$kfm_session->get('theme'));
+else if($kfm->setting('theme')) $kfm_session->set('theme',$kfm->setting('theme'));
+else{
+	if(in_array('default',$kfm->themes)){
+		$kfm->defaultSetting('theme','default');
+		$kfm_session->set('theme','default');
+	}else{
+		if(!count($kfm->themes)) kfm_error('No themes available');
+		else{
+			$kfm->defaultSetting('theme',$kfm->themes[0]);
+			$kfm_session->set('theme',$kfm->themes[0]);
+		}
+	}
 }
 // }}}
 // {{{ languages
