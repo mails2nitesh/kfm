@@ -48,7 +48,7 @@ function error(msg){
 #password_div label { position: absolute; text-align:left; width:130px; }
 #password_div input, textarea { margin-left: 140px; }
 
-.settings_container{
+#settings_container{
 	margin-left:60px;
 	margin-right:60px;
 	background-color:#eee;
@@ -95,6 +95,41 @@ function error(msg){
 	font-size:12px;
 	font-weight:bold;
 	color:#fff;
+}
+</style>
+<style type="text/css">
+.help_container{
+	position:absolute;
+	display:none;
+	border:2px solid #bbb;
+	background-color:#444;
+	width:300px;
+	padding:5px;
+}
+.help_title{
+	margin:0 25px 0 0;
+	background-color:#777;
+	color:white;
+}
+.help_title h1{
+	font-sze:10px;
+	cursor:pointer;
+	background-color:inherit;
+}
+.help_body{
+	padding:10px;
+	background-color:#777;
+	color:white;
+	margin-top:5px;
+}
+.help_close{
+	position:absolute;
+	right:5;
+	top:5;
+	border:1px solid #bbb;
+	background-color:#777;
+	color:white;
+	padding: 0 2px;
 }
 </style>
 </head>

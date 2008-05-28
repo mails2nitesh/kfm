@@ -27,15 +27,37 @@ function setting_select_list(name, option, checked){
 	checked=checked?1:0;
 	$.post('setting_change.php',{name:name,value:option,checked:checked},function(res){eval(res);});
 }
+function setting_help(setting_name, caller){
+	var cont=$("<div class=\"help_container\" id=\""+setting_name+"_help\"></div>");
+	var title=$("<div class=\"help_title\"><h1>"+setting_name+"</h1></div>");
+	var help="<img src=\"/themes/<?php echo $kfm->setting('theme');?>/large_loader.gif\" alt=\"loading...\" />";
+	var hbody=$("<div class=\"help_body\">"+help+"</div>");
+	var close=$("<span class=\"help_close\" onclick=\"setting_help_close('"+setting_name+"')\">x</span>");
+	cont.append(title);
+	cont.append(hbody);
+	cont.append(close);
+	cont.Draggable({handle:'h1'});
+	$("#settings_container").append(cont);
+	var calpos=$(caller).offset();
+	calpos.left+=20;
+	cont.css(calpos);
+	hbody.html(help);
+	cont.fadeIn();
+	$.post('setting_get_help.php',{name:setting_name},function(res){hbody.html(res);});
+}
+function setting_help_close(setting_name){
+	$("#"+setting_name+"_help").remove();
+}
 </script>
 <?php
 $js='';
-$str='<div class="settings_container"><table class="settings_table">
+$str='<div id="settings_container"><table class="settings_table">
 <thead>
 	<tr>
 		<th>Setting name</th>
 		<th>Setting value</th>
 		<th>User setting</th>
+		<th></th>
 	</tr>
 </thead>
 <tbody>';
@@ -93,6 +115,9 @@ foreach($kfm->sdef as $sname=>$sdef){
 				($ismyset?'':' style="display:none;"').
 				'>Back to default</span>';
 		$str.='
+		</td>
+		<td>
+			<span class="button" onclick="setting_help(\''.$sname.'\',this)">?</span>
 		</td>
 		</tr>';
 	}
