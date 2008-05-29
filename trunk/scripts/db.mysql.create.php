@@ -71,7 +71,7 @@
 	
 	$kfmdb->query("insert into ".KFM_DB_PREFIX."parameters values('version','1.4')");
 	$kfmdb->query("insert into ".KFM_DB_PREFIX."directories values(1,'root',0)");
-	$kfmdb->query('INSERT INTO '.KFM_DB_PREFIX.'users (id, username, password, status) VALUES (1,"admin", "'.sha1('admin').'",1)')
+	$kfmdb->query('INSERT INTO '.KFM_DB_PREFIX.'users (id, username, password, status) VALUES (1,"admin", "'.sha1('admin').'",1)');
 
 	if(!PEAR::isError($kfmdb))$db_defined=1;
 ?>
