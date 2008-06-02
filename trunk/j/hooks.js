@@ -1,8 +1,15 @@
 /* begin core section */
 
 /* define the order of the categories */
-var HookCategories=["main", "view", "edit", "returning"];
-
+var HookCategories=["main", "view", "edit", "returning",'selection','kfm'];
+var subcontext_categories=[];
+var subcontext_size=4;
+var context_categories={};
+for(i=0;i<HookCategories.length;i++){
+	var catname=HookCategories[i];
+	var cat=new kfm_context_category(catname);
+	context_categories[catname]=cat;
+}
 var kfm_imageExtensions=['jpg','png','gif'];
 /* initialize arrays */
 var HooksSingleReadonly={};
@@ -85,7 +92,7 @@ function kfm_getLinks(files){
 
 	/* multiple file section */
 	var cPlugins=[];
-	function addPlugin(plugin, fid){
+	function addPlugin(plugin, fid, category){
 		var add=true;
 		/* determine index and add plugin if is not present */
 		var index=-1;
@@ -104,11 +111,13 @@ function kfm_getLinks(files){
 	
 		/* Then add the file id to the doParameter */
 		cPlugins[index].doParameter.push(fid);
+		context_categories[category].add(cPlugins[index]);
 	}
 	if(files.length>1){
 		for(var i=0; i<files.length; i++){
 			var F=File_getInstance(files[i]);
-         var extension=F.name.replace(/.*\./,'').toLowerCase();
+         //var extension=F.name.replace(/.*\./,'').toLowerCase();
+			var extension=F.ext;
 			for(var k=0;k<HookCategories.length; k++){
 				if(HooksMultiple.all[HookCategories[k]])plugins=HooksMultiple.all[HookCategories[k]];
 				else plugins=[];
@@ -123,7 +132,7 @@ function kfm_getLinks(files){
 							(plugin.writable==0 || plugin.writable==2) && 
 							((typeof(plugin.extensions)=="string" && plugin.extensions=="all") || plugin.extensions.indexOf(extension)!=-1)
 						)
-						addPlugin(plugin,F.id);
+						addPlugin(plugin,F.id,category);
 				}
 			}
 		}
@@ -145,12 +154,31 @@ function kfm_getLinks(files){
 	}
 	hookObjects.forEach(function(item, index){
 		item.doParameter=[F.id];
+		context_categories[item.category].add(item);
 	});
 	return hookObjects;
 }
 function kfm_getDefaultOpener(id){
+	return;
 	var hooks=kfm_getLinks([id]);
 	for(var i=0;i<hooks.length;++i){
 		if(hooks[i].defaultOpener)return hooks[i];
+	}
+}
+function kfm_context_category(name){
+	this.name=name;
+	this.title=this.name;
+	this.type='context_category';
+	this.items=[];
+	this.add=function(item){
+		if(typeof(item)=='array'){
+			for(var i=0;i<item.length;i++) this.add(item[i]);
+		}else this.items.push(item);
+	}
+	this.size=function(){
+		return this.items.length;
+	}
+	this.clear=function(){
+		this.items=[];
 	}
 }

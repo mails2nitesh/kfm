@@ -5,12 +5,34 @@ kfm_dir_bits={
 		while(el&&!el.node_id)el=el.parentNode;
 		if(!el)return;
 		var links=[],i,node_id=el.node_id;
-		links.push(['kfm_renameDirectory("'+node_id+'")',kfm.lang.RenameDir,'',!kfm_vars.permissions.dir.ed]);
-		links.push(['kfm_createDirectory("'+node_id+'")',kfm.lang.CreateSubDir,'folder_new',!kfm_vars.permissions.dir.mk]);
-		if(node_id!=1)links.push(['kfm_deleteDirectory("'+node_id+'")',kfm.lang.DeleteDir,'remove',!kfm_vars.permissions.dir.rm]);
-		if(kfm_return_directory)links.push(['setTimeout("window.close()",1);window.opener.SetUrl("'+kfm_directories[node_id].realpath+'/");',kfm.lang.SendToCms]);
-		e=new Event(e);
-		kfm_createContextMenu(e.page,links);
+		if(kfm_vars.permissions.dir.ed)context_categories['edit'].add({
+			name:'directory_rename',
+			title:kfm.lang.RenameDir,
+			category:'edit',
+			doFunction:function(){kfm_renameDirectory(node_id)}
+		});
+		if(kfm_vars.permissions.dir.mk)context_categories['main'].add({
+			name:'directory_new',
+			title:kfm.lang.CreateSubDir,
+			category:'main',
+			doFunction:function(){kfm_createDirectory(node_id)}
+		});
+		if(node_id!=1 && kfm_vars.permissions.dir.rm)context_categories['edit'].add({
+			name:'directory_delete',
+			title:kfm.lang.DeleteDir,
+			category:'edit',
+			doFunction:function(){kfm_deleteDirectory(node_id)}
+		});
+		if(kfm_return_directory)context_categories['returning'].add({
+			name:'directory_return',
+			title:kfm.lang.SendToCms,
+			doFunction:function(){
+				setTimeout("window.close()",1);
+				window.opener.SetUrl(kfm_directories[node_id].realpath+'/');
+			}
+		});
+		//e=new Event(e);
+		//kfm_createContextMenu(e.page,links);
 	},
 	clickDir:function(e){
 		e=new Event(e);

@@ -145,8 +145,11 @@ var KFM=new Class({
 		document.body.style.overflow='hidden';
 		document.getElementById('removeme').remove();
 		kfm_addContextMenu(document.body,function(e){
+			kfm_closeContextMenu();
 			var links=[['kfm.about()',kfm.lang.AboutKfm]];
 			var links=[{title:kfm.lang.AboutKfm, doFunction:function(){kfm.about();}}];
+			context_categories['kfm'].add({name:'about',title:kfm.lang.AboutKfm,category:'kfm', doFunction:function(){kfm.about();}});
+			$j(document.body).click(function(){kfm_closeContextMenu();});
 			kfm_createContextMenu(e.page,links);
 		});
 		if(kfm_vars.use_templates){
@@ -184,7 +187,7 @@ var KFM=new Class({
 							}
 						});
 					}
-					kfm_createContextMenu(e.page,links);
+					//kfm_createContextMenu(e.page,links);
 				});
 			}
 			{ // create right_column
@@ -246,15 +249,46 @@ var KFM=new Class({
 			});
 			kfm_addContextMenu(documents_body,function(e){
 				var links=[],i;
-				links.push(['kfm_createEmptyFile()',kfm.lang.CreateEmptyFile,'filenew',!kfm_vars.permissions.file.mk]);
-				if(selectedFiles.length>1)links.push(['kfm_renameFiles()',kfm.lang.RenameFile,'edit',!kfm_vars.permissions.file.ed]);
-				if(selectedFiles.length>1)links.push(['kfm_zip()',kfm.lang.ZipUpFiles,'',!kfm_vars.permissions.file.mk]);
-				if(selectedFiles.length!=$('documents_body').fileids.length)links.push(['kfm_selectAll()',kfm.lang.SelectAll,'ark_selectall']);
+				if(kfm_vars.permissions.file.mk)context_categories['edit'].add({
+					name:'file_new',
+					title:kfm.lang.CreateEmptyFile,
+					category:'edit',
+					doFunction:function(){kfm_createEmptyFile()}
+				});
+				if(selectedFiles.length>1 && kfm_vars.permissions.file.ed)context_categories['edit'].add({
+					name:'files_rename',
+					title:kfm.lang.RenameFile,
+					category:'edit',
+					doFunction:function(){kfm_renameFiles()}
+				});
+				
+				if(selectedFiles.length>1 && kfm_vars.permissions.file.mk)context_categories['main'].add({
+					name:'files_zip',
+					title:kfm.lang.ZipUpFiles,
+					category:'main',
+					doFunction:function(){kfm_zip()}
+				});
+				if(selectedFiles.length!=$('documents_body').fileids.length)context_categories['selection'].add({
+					name:'files_select_all',
+					title:kfm.lang.SelectAll,
+					category:'selection',
+					doFunction:function(){kfm_selectAll()}
+				});
 				if(selectedFiles.length){ // select none, invert selection
-					links.push(['kfm_selectNone()',kfm.lang.SelectNone,'select_none']);
-					links.push(['kfm_selectInvert()',kfm.lang.InvertSelection,'invert_selection']);
+					context_categories['selection'].add({
+						name:'files_select_none',
+						title:kfm.lang.SelectNone,
+						category:'selection',
+						doFunction:function(){kfm_selectNone()}
+					});
+					context_categories['selection'].add({
+						name:'files_select_invert',
+						title:kfm.lang.InvertSelection,
+						category:'selection',
+						doFunction:function(){kfm_selectInvert()}
+					});
 				}
-				kfm_createContextMenu(e.page,links);
+				//kfm_createContextMenu(e.page,links);
 			});
 			documents_body.parentResized=kfm_files_reflowIcons;
 		}
@@ -267,7 +301,7 @@ var KFM=new Class({
 				if(kfm_return_directory)links.push(['setTimeout("window.close()",1);window.opener.SetUrl("'+kfm_directories[node_id].realpath+'/");',kfm.lang.SendToCms]);
 				if(!window.contextmenu){
 					e=new Event(e);
-					kfm_createContextMenu(e.page,links);
+					//kfm_createContextMenu(e.page,links);
 				}
 			});
 		}

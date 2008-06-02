@@ -69,7 +69,7 @@ $kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."settings(
 	usersetting INTEGER(1) default 0
 )");
 
-$kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."plugin_extensionss(
+$kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."plugin_extensions(
 	id serial,
 	extension varchar(16),
 	plugin varchar(256),

@@ -28,7 +28,7 @@ var kfm_file_bits={
 			if(selectedFiles.length<=1 && F.width)links.push(['kfm_changeCaption('+id+')',kfm.lang.ChangeCaption,'edit',!kfm_vars.permissions.file.ed]);
 			links.push(['kfm_tagAdd('+id+')',kfm.lang.AddTagsToFiles,'add_tags',!kfm_vars.permissions.file.ed]);
 			links.push(['kfm_tagRemove('+id+')',kfm.lang.RemoveTagsFromFiles,'',!kfm_vars.permissions.file.ed]);
-			kfm_createContextMenu(e.page,links);
+			//kfm_createContextMenu(e.page,links);
 		}
 	},
 	dragDisplay:function(){
@@ -331,7 +331,7 @@ function kfm_refreshFiles(res){
 			var links=[];
 			links.push([cp,kfm.lang.CopyFiles]);
 			links.push([mv,kfm.lang.MoveFiles,0,!kfm_vars.permissions.file.mv]);
-			kfm_createContextMenu(e.page,links);
+			//kfm_createContextMenu(e.page,links);
 		}
 	});
 	if(window.kfm_incrementalFileDisplay_loader){
