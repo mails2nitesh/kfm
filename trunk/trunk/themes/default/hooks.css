@@ -24,3 +24,31 @@
 	background-color:white;
 	color:black;
 }
+.kfm_plugin_file_new_contexticon{
+	background-image:url(icons/filenew.png);
+	background-repeat:no-repeat;
+}
+.kfm_plugin_files_rename_contexticon{
+	background-image:url(icons/edit.png);
+	background-repeat:no-repeat;
+}
+.kfm_plugin_files_select_all_contexticon{
+	background-image:url(icons/ark_selectall.png);
+	background-repeat:no-repeat;
+}
+.kfm_plugin_files_select_none_contexticon{
+	background-image:url(icons/select_none.png);
+	background-repeat:no-repeat;
+}
+.kfm_plugin_files_select_invert_contexticon{
+	background-image:url(icons/invert_selection.png);
+	background-repeat:no-repeat;
+}
+.kfm_plugin_directory_new_contexticon{
+	background-image:url(icons/folder_new.png);
+	background-repeat:no-repeat;
+}
+.kfm_plugin_directory_delete_contexticon{
+	background-image:url(icons/remove.png);
+	background-repeat:no-repeat;
+}

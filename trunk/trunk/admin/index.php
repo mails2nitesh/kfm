@@ -73,6 +73,14 @@ function error(msg){
 }
 </style>
 <style type="text/css">
+#associations_container{
+	margin-left:60px;
+	margin-right:60px;
+	padding:10px;
+	background-color:#eee;
+}
+</style>
+<style type="text/css">
 .bb_space_graph_container{
 	width:400px;
 	padding:3px;
@@ -122,6 +130,13 @@ function error(msg){
 	color:white;
 	margin-top:5px;
 }
+.help_body pre{
+	display:block;
+	margin: 3px 0px 3px 15px;
+	padding: 2px 4px;
+	font-family: verdana;
+	background-color:#888;
+}
 .help_close{
 	position:absolute;
 	right:5;
@@ -130,6 +145,7 @@ function error(msg){
 	background-color:#777;
 	color:white;
 	padding: 0 2px;
+	cursor:pointer;
 }
 </style>
 </head>
@@ -142,6 +158,7 @@ function error(msg){
 		<li><a href="password.php" title="Password tab"><span>Change password</span></a></li>
 		<?php if($kfm->user_status==1) echo '<li><a href="associations.php" title="File associations"><span>File associations</span></a></li>'; ?>
 		<li><a href="bb_space.php" title="bb space"><span>Manage space</span></a></li>
+		<li><a href="manage_help.php" title="manage help"><span>Manage help</span></a></li>
 	</ul>
 </div>
 <button onclick="message('test')">Test</button>

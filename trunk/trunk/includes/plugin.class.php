@@ -5,10 +5,12 @@
 class kfmPlugin extends kfmObject{
 	public $disabled=false;
 	public $name='KFM plugin';
+	public $title='KFM plugin';
 	public $settings=array();
 	private $javascript=false;
 	function __construct($name){
 		$this->name=$name;
+		$this->title=$this->name;
 		$bt=debug_backtrace();
 		$this->path=dirname($bt[0]['file']).'/';
 	}

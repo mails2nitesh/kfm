@@ -14,7 +14,7 @@ $kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."settings(
 	usersetting INTEGER(1) default 0
 ) DEFAULT CHARSET=utf8");
 
-$kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."plugin_extensionss(
+$kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."plugin_extensions(
 	id INTEGER PRIMARY KEY auto_increment,
 	extension varchar(16),
 	plugin varchar(256),

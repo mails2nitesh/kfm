@@ -1,5 +1,7 @@
 // see license.txt for licensing
 function kfm_closeContextMenu(){
+	$j('.contextmenu').remove();
+	return;
 	if(contextmenu)contextmenu.remove();
 	contextmenu=null;
 }
@@ -17,6 +19,73 @@ function kfm_contextmenuinit(){
 	});
 }
 function kfm_createContextMenu(m,links){
+	var li,category,cat,sublist,issub,contextlink;
+	var list=$j('<ul></ul>').addClass('contextmenu');
+	var firsthead=true;
+	for(category in context_categories){
+		cat=context_categories[category];
+		if(typeof(cat)!='object' || cat.type!='context_category'){dump(cat);continue;}
+		if(cat.size()==0)continue;
+		var head=$j('<li><span>'+cat.title+'</span></li>');
+		if(cat.size()>subcontext_size || kfm_inArray(cat.name, subcontext_categories)){
+			issub=true;
+			firsthead=true; // a head after a submenu is also a first one
+			sublist=$j('<ul></ul>').addClass('subcontextmenu');
+			head.append(sublist);
+			head.addClass('contextmenu_subhead');
+			head.hover(
+				function(){
+					$j(this).children('ul').each(function(i){
+						var top=$j(this).siblings('span').position().top;
+						$j(this).css('top',top).show();
+					});
+					$j(this).addClass('contextmenu_subhead_hover');
+				},
+				function(){
+					$j(this).children('ul').hide();
+					$j(this).removeClass('contextmenu_subhead_hover');
+				}
+			);
+		}else{
+			if(firsthead){
+				head.addClass('contextmenu_head_first');
+				firsthead=false;
+			}
+			issub=false;
+			head.addClass('contextmenu_head');
+			head.hover(function(){$j(this).addClass('contextmenu_head_hover');},function(){$j(this).removeClass('contextmenu_head_hover')});
+		}
+		head.addClass('contextmenu_head_'+cat.name);
+		
+		list.append(head);
+		for(var i=0;i<cat.size();i++){
+			contextlink=$j('<span>'+cat.items[i].title+'</span>');
+			//$j(contextlink).attr('doFunction',cat.items[i].doFunction);
+			//contextlink.attr('doParameter',cat.items[i].doParameter);
+			li=$j('<li></li>').addClass('kfm_plugin_'+cat.items[i].name+'_contexticon').
+			addClass('kfm_plugin_'+cat.items[i].name+'_'+kfm_theme+'_contexticon');
+			li.append(contextlink);
+			li.hover(function(){$j(this).addClass('hover');},function(){$j(this).removeClass('hover');});
+			li.click(function(){kfm_closeContextMenu();this.doFunction(this.doParameter);});
+			li.each(function(){
+				this.doFunction=cat.items[i].doFunction;
+				this.doParameter=cat.items[i].doParameter;
+			});
+			if(issub){
+				li.addClass('subcontextmenu_link');
+				sublist.append(li);
+			}else{
+				li.addClass('contextmenu_link');
+				list.append(li);
+			}
+		}
+		cat.clear();
+	}
+	$j('body').append(list);
+	list.css({left:m.x,top:m.y});
+	list.find('.subcontextmenu').css('left',list.width());
+	list.show('normal');
+	return;
 	var row;
 	if(!window.contextmenu_loading)kfm_closeContextMenu();
 	if(!contextmenu){

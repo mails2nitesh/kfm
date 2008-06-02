@@ -13,8 +13,9 @@ class kfmBase extends kfmObject{
 		'Structure settings'=>array( 'type'=>'group_header'),
 		'user_root_folder'=>array('type'=>'text'),
 		'startup_folder'=>array('type'=>'text'),
-		'hidden_panels'=>array('type'=>'select_list','options'=>array('logs','file_details','file_upload','search','directory_properties')),
+		'hidden_panels'=>array('type'=>'select_list','options'=>array('logs','file_details','file_upload','search','directory_properties','widgets')),
 		'startup_folder'=>array('type'=>'text', 'properties'=>array('size'=>16)),
+		'file_handler'=>array('type'=>'choice_list', 'options'=>array('Return'=>'return','Download'=>'download')),
 		
 		'Display settings'=>array( 'type'=>'group_header'),
 		'date_format'=>array( 'type'=>'text', 'properties'=>array('size'=>10,'maxsize'=>25)),
