@@ -39,9 +39,17 @@ if ($kfm->setting('startup_folder')) {
 }
 $kfm->setting('startupfolder_id',$kfm_startupfolder_id);
 // }}}
+// {{{ file associations
+$associations=db_fetch_all('SELECT extension, plugin FROM '.KFM_DB_PREFIX.'plugin_extensions WHERE user_id='.$kfm->user_id);
+$ass_arr='{';
+foreach($associations as $association){
+	$ass_arr.='"'.trim($association['extension']).'":"'.trim($association['plugin']).'",';
+}
+$ass_arr=rtrim($ass_arr,' ,');
+$ass_arr.='}';
+// }}}
 /**
  * Look for startup selected files
- * benjamn: are this id's or names?
  */
 if (isset($_GET['fid']) && $_GET['fid']) {
 	$f = kfmFile::getInstance($_GET['fid']);
@@ -184,6 +192,7 @@ if(count($kfm->setting('default_directories'))){
                 show_disabled_contextmenu_links:<?php echo $kfm->setting('show_disabled_contextmenu_links'); ?>,
                 use_multiple_file_upload:<?php echo $kfm->setting('use_multiple_file_upload'); ?>,
                 use_templates:<?php echo $templated; ?>,
+					 associations:<?php echo $ass_arr; ?>,
                 version:'<?php echo KFM_VERSION; ?>'
             };
             var kfm_widgets=[];

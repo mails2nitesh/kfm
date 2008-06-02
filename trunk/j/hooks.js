@@ -153,6 +153,15 @@ function kfm_getLinks(files){
 		if(window[HooksArray][ext] && typeof(window[HooksArray][ext][category])!='undefined')hookObjects.extend(window[HooksArray][ext][category]);
 	}
 	hookObjects.forEach(function(item, index){
+		if(kfm_vars.associations[F.ext] && kfm_vars.associations[F.ext]==item.name){ // Create an open object
+			context_categories['main'].add({
+				name:'open',
+				title:'open',
+				category:'main',
+				doFunction:item.doFunction,
+				doParameter:item.doParameter
+			},true);
+		}
 		item.doParameter=[F.id];
 		context_categories[item.category].add(item);
 	});
@@ -170,10 +179,13 @@ function kfm_context_category(name){
 	this.title=this.name;
 	this.type='context_category';
 	this.items=[];
-	this.add=function(item){
+	this.add=function(item,first){
 		if(typeof(item)=='array'){
 			for(var i=0;i<item.length;i++) this.add(item[i]);
-		}else this.items.push(item);
+		}else{
+			if(first) this.items.unshift(item);
+			else this.items.push(item);
+		}
 	}
 	this.size=function(){
 		return this.items.length;
