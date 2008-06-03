@@ -18,7 +18,7 @@ function kfm_contextmenuinit(){
 		if(window.webkit||!e.control)e.stop();
 	});
 }
-function kfm_createContextMenu(m,links){
+function kfm_createContextMenu(m,show_category_headers){
 	var li,category,cat,sublist,issub,contextlink;
 	var list=$j('<ul></ul>').addClass('contextmenu');
 	var firsthead=true;
@@ -37,6 +37,7 @@ function kfm_createContextMenu(m,links){
 				function(){
 					$j(this).children('ul').each(function(i){
 						var top=$j(this).siblings('span').position().top;
+						if((m.x+list.width()+$j(this).width())>$j(document).width())$j(this).css('left',-$j(this).width());
 						$j(this).css('top',top).show();
 					});
 					$j(this).addClass('contextmenu_subhead_hover');
@@ -57,7 +58,7 @@ function kfm_createContextMenu(m,links){
 		}
 		head.addClass('contextmenu_head_'+cat.name);
 		
-		list.append(head);
+		if(show_category_headers || issub)list.append(head);
 		for(var i=0;i<cat.size();i++){
 			contextlink=$j('<span>'+cat.items[i].title+'</span>');
 			//$j(contextlink).attr('doFunction',cat.items[i].doFunction);
@@ -82,77 +83,13 @@ function kfm_createContextMenu(m,links){
 		cat.clear();
 	}
 	$j('body').append(list);
-	list.css({left:m.x,top:m.y});
+	//list.css({left:m.x,top:m.y});
+	if((m.y+list.height())>$j(document).height())list.css('top',m.y-list.height());
+	else list.css('top',m.y);
+	if((m.x+list.width())>$j(document).width())list.css('left',m.x-list.width());
+	else list.css('left',m.x);
 	list.find('.subcontextmenu').css('left',list.width());
 	list.show('normal');
-	return;
-	var row;
-	if(!window.contextmenu_loading)kfm_closeContextMenu();
-	if(!contextmenu){
-		window.contextmenu=new Element('table',{
-			'class':'contextmenu',
-			'styles':{
-				'left':m.x,
-				'top':m.y
-			}
-		});
-		window.contextmenu.addLink=function(href,text,icon,disabled,isSubMenu, obj){
-			if(disabled && !kfm_vars.show_disabled_contextmenu_links)return;
-			row=kfm.addRow(this);
-			if(disabled){
-				row.className+=' disabled';
-				href='';
-			}
-			if(isSubMenu){
-				link=newLink('javascript:kfm_cm_openSubMenu("'+href+'",this);',text);
-				row.className+=' is_submenu';
-			}
-			else if(href=='kfm_0')link=text;
-			else{
-				if(typeof(href)=="object"){
-					var display=1; // default, display
-					if(href.displayCheck) display=href.displayCheck(href.doParameter);
-					if(!display)return;
-					if(display==2)row.className+=' disabled';
-					if(!href.name && href.title)href.name=href.title; // make name title if not exists
-					if(!href.name) href.name='default'; // make name default if not exists
-					link=newLink('#',href.title);
-					link.doFunction=href.doFunction;
-					link.doParameter=href.doParameter;
-					link.addEvent("click",function(){
-						kfm_closeContextMenu();
-						href.doFunction(href.doParameter);
-					});
-				}
-				else link=newLink('javascript:kfm_closeContextMenu();'+href,text);
-			}
-			if(typeof(href)=="object") kfm.addCell(row,0,0,'','kfm_contextmenu_iconCell kfm_plugin_'+href.name+'_contexticon kfm_plugin_'+href.name+'_'+kfm_theme+'_contexticon');
-			else kfm.addCell(row,0,0,(icon?new Element('img',{src:'themes/'+kfm_theme+'/icons/'+icon+'.png'}):''),'kfm_contextmenu_iconCell');
-			kfm.addCell(row,1,0,link,'kfm_contextmenu_nameCell');
-			try{
-				row.className+=' cm_'+href.name.replace(/[^a-zA-Z]*/g,'');
-			}catch(e){
-				row.className+=' cm_'+link.innerHTML.replace(/[^a-zA-Z]*/g,'');
-			}
-		};
-		window.contextmenu_loading=setTimeout('window.contextmenu_loading=null',1);
-		document.body.appendChild(contextmenu);
-	}
-	else{
-		row=kfm.addRow(contextmenu);
-		row.className+=' cm__separator';
-		var col=kfm.addCell(row,0,2);
-		col.appendChild(new Element('hr'));
-	}
-	var rows=contextmenu.rows.length;
-	for(var i=0;i<links.length;++i){
-		var link=links[i];
-		if($type(link)=="object")contextmenu.addLink(link);
-		else if(link[1])contextmenu.addLink(link[0],link[1],link[2],link[3],link[4]);
-	}
-	var w=contextmenu.offsetWidth,h=contextmenu.offsetHeight,ws=window.getSize().size;
-	if(h+m.y>ws.y)contextmenu.style.top=(ws.y-h)+'px';
-	if(w+m.x>ws.x)contextmenu.style.left=(m.x-w)+'px';
 }
 function kfm_addContextMenu(el,fn){
 	el.addEvent(window.webkit&&!window.webkit420?'mousedown':'contextmenu',function(e){

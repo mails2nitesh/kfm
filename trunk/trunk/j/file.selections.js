@@ -158,6 +158,7 @@ function kfm_toggleSelectedFile(e){
 	e=new Event(e);
 	if(e.rightClick)return;
 	e.stopPropagation();
+	kfm_closeContextMenu();
 	var el=e.target;
 	while(el.tagName!='DIV')el=el.parentNode;
 	var id=el.file_id;

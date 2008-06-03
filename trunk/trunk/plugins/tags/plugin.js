@@ -1,4 +1,15 @@
-// see license.txt for licensing
+function kfm_plugin_tags(){
+	this.name='tags';
+	this.title='tags Plugin'; //will be set dynamically
+	this.category='edit';
+	this.mode=0;
+	this.writable=2;
+	this.extensions='all';
+	this.doFunction=function(files){alert('Tags doFunction is not set')};
+}
+kfm_addHook(new kfm_plugin_tags(),{name:'tags_add',title:kfm.lang.AddTagsToFiles,doFunction:function(files){kfm_tagAdd(files[0])}});
+kfm_addHook(new kfm_plugin_tags(),{name:'tags_remove',title:kfm.lang.RemoveTagsToFiles,doFunction:function(files){kfm_tagRemove(files[0])}});
+
 function kfm_tagAdd(id){
 	kfm_prompt(kfm.lang.WhatIsTheNewTag,'',function(newTag){
 		if(newTag){

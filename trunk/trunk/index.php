@@ -215,10 +215,11 @@ if($tmp != '')echo "<script type=\"text/javascript\"><!--\n$tmp\n--></script>";
 // }}}
 // {{{ show plugins if they exist
 $pluginssrc='';
-foreach ($plugins as $plugin) {
-    if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.php')) include KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.php';
+foreach ($kfm->plugins as $plugin) {
+    //if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.php')) include KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.php';
 #    if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.js'))echo '		<script type="text/javascript" src="plugins/'.$plugin.'/plugin.js"></script>'."\n";
-    if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.js'))$pluginssrc.=file_get_contents('plugins/'.$plugin.'/plugin.js');
+    //if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.js'))$pluginssrc.=file_get_contents('plugins/'.$plugin.'/plugin.js');
+	 $pluginssrc.=$plugin->getJavascript();
 }
 if($pluginssrc!='')echo "<script type=\"text/javascript\"><!--\n$pluginssrc\n--></script>";
 // }}}

@@ -138,7 +138,9 @@ class kfmFile extends kfmObject{
 	 * @return Array
 	 */
 	function getTags(){
+		global $kfm;
 		$arr=array();
+		if(!$kfm->isPlugin('tags'))return $arr;
 		$tags=db_fetch_all("select tag_id from ".KFM_DB_PREFIX."tagged_files where file_id=".$this->id);
 		foreach($tags as $r)$arr[]=$r['tag_id'];
 		return $arr;

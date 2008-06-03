@@ -19,9 +19,7 @@ else{ // build cacheable js file
 	$js.=file_get_contents('directories.js');
 	$js.=file_get_contents('file.selections.js');
 	$js.=file_get_contents('file.text-editing.js');
-	$js.=file_get_contents('images.and.icons.js');
 	$js.=file_get_contents('panels.js');
-	$js.=file_get_contents('tags.js');
 	$js.=file_get_contents('common.js');
 	$js.=file_get_contents('kaejax_replaces.js');
 	$js.=file_get_contents('kdnd.js');

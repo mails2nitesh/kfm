@@ -86,6 +86,15 @@ class kfmBase extends kfmObject{
 	function addPlugin($plugin){
 		$this->plugins[]=$plugin;
 	}
+
+	/**
+	 * Function to determine if a plugin is active in KFM
+	 * @param $name
+	 */
+	function isPlugin($name){
+		if(isset($this->plugins[$name]) && !$this->plugins[$name]->disabled)return true;
+		return false;
+	}
 	/**
 	 * setting function, returns a configuration parameter if one config is given, 
 	 * sets a config parameter if two parameters are given
