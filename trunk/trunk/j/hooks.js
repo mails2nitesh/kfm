@@ -19,6 +19,7 @@ var HooksMultiple={};
 var HooksFilePanel=[];
 var HooksDirectoryReadonly=[];
 var HooksDirectoryWritable=[];
+var HooksGlobal=[];
 function kfm_addHook(objoriginal, properties){
 	var obj=objoriginal;
 	/*Write properties to object, so they can be different for each call*/
@@ -62,13 +63,14 @@ function kfm_addHook(objoriginal, properties){
 		/*selection of multiple files*/
 		kfm_addHookToArray(obj,"HooksMultiple");
 	}
-	if(obj.mode==3){
+	if(obj.mode==3){ //file panel
 		HooksFilePanel.push(obj);
 	}
-	if(obj.mode==4){
-		HooksDirectoryReadonly.push(obj);
+	if(obj.mode==4){ // directories
+		if(obj.writable==0 || obj.writable==2) HooksDirectoryReadonly.push(obj);
+		if(obj.writable==1 || obj.writable==2) HooksDirectoryWritable.push(obj);
 	}
-	if(obj.mode==5)HooksDirectoryWritable.push(obj);
+	if(obj.mode==5)HooksGlobal.push(obj);
 }
 function kfm_addHookToArray(obj, HooksArray){
 	/* Add the hook object to the proper array */

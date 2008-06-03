@@ -108,7 +108,7 @@ class kfmDirectory extends kfmObject{
 			'name'                    => $this->name,
 			'path'                    => str_replace($_SERVER['DOCUMENT_ROOT'],'',$this->path),
 			'parent'                  => $this->pid,
-			'is_writable'             => $this->isWritable()
+			'writable'             => $this->isWritable()
 		);
 	}
 	function getSubdirs($oldstyle=false){

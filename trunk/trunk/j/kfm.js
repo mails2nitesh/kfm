@@ -148,6 +148,10 @@ var KFM=new Class({
 			kfm_closeContextMenu();
 			var links=[['kfm.about()',kfm.lang.AboutKfm]];
 			var links=[{title:kfm.lang.AboutKfm, doFunction:function(){kfm.about();}}];
+			for(i=0;i<HooksGlobal.length;i++){
+				obj=HooksGlobal[i];
+				context_categories[obj.category].add(obj);
+			}
 			context_categories['kfm'].add({name:'about',title:kfm.lang.AboutKfm,category:'kfm', doFunction:function(){kfm.about();}});
 			$j(document.body).click(function(){kfm_closeContextMenu();});
 			kfm_createContextMenu(e.page,show_category_headers);
@@ -287,6 +291,10 @@ var KFM=new Class({
 						category:'selection',
 						doFunction:function(){kfm_selectInvert()}
 					});
+				}
+				for(i=0;i<HooksFilePanel.length;i++){
+					obj=HooksFilePanel[i];
+					context_categories[obj.category].add(obj);
 				}
 				//kfm_createContextMenu(e.page,links);
 			});
