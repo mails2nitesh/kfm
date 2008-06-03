@@ -9,34 +9,23 @@ function kfm_addToSelection(id){
 }
 function kfm_chooseFile(){
 	if(selectedFiles.length>1 && !kfm_vars.files.allow_multiple_returns)return kfm.alert(kfm.lang.NotMoreThanOneFile);
-	if(kfm_vars.files.return_id_to_cms){
-		window.opener.SetUrl(selectedFiles.join(','));
+	x_kfm_getFileUrls(selectedFiles,function(urls){
+		if(copy_to_clipboard)copy_to_clipboard(urls.join("\n"));
+		if(!window.opener || kfm_file_handler=='download'){
+			for(var i=0;i<urls.length;++i){
+				var url=urls[i];
+				if(/get.php/.test(url))url+='&forcedownload=1';
+				document.location=url;
+			}
+			return;
+		}
+		if(selectedFiles.length==1&&File_getInstance(selectedFiles[0]).width)window.opener.SetUrl(urls[0].replace(/([^:]\/)\//g,'$1'),0,0,File_getInstance(selectedFiles[0]).caption);
+		else{
+			if(selectedFiles.length==1)window.opener.SetUrl(urls[0]);
+			else window.opener.SetUrl('"'+urls.join('","')+'"');
+		}
 		setTimeout('window.close()',1);
-	}
-	else {
-		x_kfm_getFileUrls(selectedFiles,function(urls){
-			if(copy_to_clipboard)copy_to_clipboard(urls.join("\n"));
-			if(!window.opener || kfm_file_handler=='download'){
-				var allImages=1;
-				for(var i=0;i<selectedFiles.length;++i)if(!File_getInstance(selectedFiles[i]).width)allImages=0;
-				if(!allImages){
-					for(var i=0;i<urls.length;++i){
-						var url=urls[i];
-						if(/get.php/.test(url))url+='&forcedownload=1';
-						document.location=url;
-					}
-				}
-				else kfm_img_startLightbox(selectedFiles)
-				return;
-			}
-			if(selectedFiles.length==1&&File_getInstance(selectedFiles[0]).width)window.opener.SetUrl(urls[0].replace(/([^:]\/)\//g,'$1'),0,0,File_getInstance(selectedFiles[0]).caption);
-			else{
-				if(selectedFiles.length==1)window.opener.SetUrl(urls[0]);
-				else window.opener.SetUrl('"'+urls.join('","')+'"');
-			}
-			setTimeout('window.close()',1);
-		});
-	}
+	});
 }
 function kfm_isFileSelected(filename){
 	return kfm_inArray(filename,selectedFiles);

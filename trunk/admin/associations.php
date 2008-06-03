@@ -28,6 +28,24 @@ function new_association(){
 		}
 	});
 }
+function change_association_plugin(id){
+	var newval=$("#plugin_selector_"+id).val();
+	$.post('association_change_plugin.php',{aid:id,plugin:newval},function(res){eval(res);});
+}
+function association_delete(id){
+	$.prompt('Are you sure you want to delete this association?',{
+		buttons:{cancel:false, 'Yes':true},
+		callback:function(v,m){
+			if(v){
+				$.post('association_delete.php',{aid:id},function(res){eval(res);});
+			}
+		}
+	});
+}
+function association_extension_change(id){
+	var newext=$("#association_extension_"+id).val();
+	$.post('association_extension_change.php',{aid:id,extension:newext},function(res){eval(res);})
+}
 function rand (n){
 	  return (Math.floor(Math.random()*n+1));
 }

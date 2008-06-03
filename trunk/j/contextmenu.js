@@ -60,6 +60,7 @@ function kfm_createContextMenu(m,show_category_headers){
 		
 		if(show_category_headers || issub)list.append(head);
 		for(var i=0;i<cat.size();i++){
+			if(cat.items[i].nocontextmeu) continue;
 			contextlink=$j('<span>'+cat.items[i].title+'</span>');
 			//$j(contextlink).attr('doFunction',cat.items[i].doFunction);
 			//contextlink.attr('doParameter',cat.items[i].doParameter);

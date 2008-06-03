@@ -181,10 +181,19 @@ function kfm_getLinks(files){
 	return hookObjects;
 }
 function kfm_getDefaultOpener(id){
-	return;
+	var plugin_name;
 	var hooks=kfm_getLinks([id]);
-	for(var i=0;i<hooks.length;++i){
-		if(hooks[i].defaultOpener)return hooks[i];
+	var F=File_getInstance(id);
+	if(kfm_vars.associations[F.ext]){
+		plugin_name=kfm_vars.associations[F.ext];
+		for(var i=0;i<hooks.length;++i){
+			if(hooks[i].name==plugin_name)return hooks[i];
+		}
+	}else if(kfm_vars.associations['all']){
+		plugin_name=kfm_vars.associations['all'];
+		for(var i=0;i<hooks.length;++i){
+			if(hooks[i].name==plugin_name)return hooks[i];
+		}
 	}
 }
 function kfm_context_category(name){
