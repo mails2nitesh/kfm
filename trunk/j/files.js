@@ -5,31 +5,8 @@ var kfm_file_bits={
 		var el=e.target;
 		while(el.parentNode&&!el.file_id)el=el.parentNode;
 		if(!el.parentNode)return;
-		{ // variables
-			var i,id=el.file_id;
-			var F=File_getInstance(id);
-			var extension=F.name.replace(/.*\./,'').toLowerCase();
-			var writable=F.writable;
-		}
-		{ // add the links
-			var links=[],a,b,c;
-			if(selectedFiles.length>1)links=kfm_getLinks(selectedFiles);
-			else{
-				a=kfm_getDefaultOpener(id);
-				if(a){
-					b=$j.extend({},a);
-					b.name='open'; // TODO: string
-					b.title='open'; // TODO: string
-					links.push(b);
-				}
-				var a=kfm_getLinks([id]);
-				for(b=0;b<a.length;++b)links.push(a[b]); 
-			}
-			if(selectedFiles.length<=1 && F.width)links.push(['kfm_changeCaption('+id+')',kfm.lang.ChangeCaption,'edit',!kfm_vars.permissions.file.ed]);
-			links.push(['kfm_tagAdd('+id+')',kfm.lang.AddTagsToFiles,'add_tags',!kfm_vars.permissions.file.ed]);
-			links.push(['kfm_tagRemove('+id+')',kfm.lang.RemoveTagsFromFiles,'',!kfm_vars.permissions.file.ed]);
-			//kfm_createContextMenu(e.page,links);
-		}
+		if(selectedFiles.length>1)kfm_getLinks(selectedFiles);
+		else kfm_getLinks([el.file_id]);
 	},
 	dragDisplay:function(){
 		kfm_addToSelection(this.file_id);
@@ -329,9 +306,21 @@ function kfm_refreshFiles(res){
 		else if(kfm_vars.files.drags_move_or_copy == 2)eval(cp); // always Copy
 		else{
 			var links=[];
-			links.push([cp,kfm.lang.CopyFiles]);
-			links.push([mv,kfm.lang.MoveFiles,0,!kfm_vars.permissions.file.mv]);
-			//kfm_createContextMenu(e.page,links);
+			//links.push([cp,kfm.lang.CopyFiles]);
+			context_categories['edit'].add({
+				name:'files_copy',
+				title:kfm.lang.CopyFiles,
+				category:'edit',
+				doFunction:function(){eval(cp);}
+			});
+			//links.push([mv,kfm.lang.MoveFiles,0,!kfm_vars.permissions.file.mv]);
+			context_categories['edit'].add({
+				name:'files_move',
+				title:kfm.lang.MoveFiles,
+				category:'edit',
+				doFunction:function(){eval(mv)}
+			});
+			kfm_createContextMenu(e.page,false);
 		}
 	});
 	if(window.kfm_incrementalFileDisplay_loader){

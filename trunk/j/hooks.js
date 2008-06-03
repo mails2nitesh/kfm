@@ -4,6 +4,7 @@
 var HookCategories=["main", "view", "edit", "returning",'selection','kfm'];
 var subcontext_categories=[];
 var subcontext_size=4;
+var show_category_headers=true;
 var context_categories={};
 for(i=0;i<HookCategories.length;i++){
 	var catname=HookCategories[i];
@@ -15,6 +16,9 @@ var kfm_imageExtensions=['jpg','png','gif'];
 var HooksSingleReadonly={};
 var HooksSingleWritable={};
 var HooksMultiple={};
+var HooksFilePanel=[];
+var HooksDirectoryReadonly=[];
+var HooksDirectoryWritable=[];
 function kfm_addHook(objoriginal, properties){
 	var obj=objoriginal;
 	/*Write properties to object, so they can be different for each call*/
@@ -58,6 +62,13 @@ function kfm_addHook(objoriginal, properties){
 		/*selection of multiple files*/
 		kfm_addHookToArray(obj,"HooksMultiple");
 	}
+	if(obj.mode==3){
+		HooksFilePanel.push(obj);
+	}
+	if(obj.mode==4){
+		HooksDirectoryReadonly.push(obj);
+	}
+	if(obj.mode==5)HooksDirectoryWritable.push(obj);
 }
 function kfm_addHookToArray(obj, HooksArray){
 	/* Add the hook object to the proper array */

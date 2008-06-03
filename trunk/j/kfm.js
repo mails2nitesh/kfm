@@ -150,7 +150,7 @@ var KFM=new Class({
 			var links=[{title:kfm.lang.AboutKfm, doFunction:function(){kfm.about();}}];
 			context_categories['kfm'].add({name:'about',title:kfm.lang.AboutKfm,category:'kfm', doFunction:function(){kfm.about();}});
 			$j(document.body).click(function(){kfm_closeContextMenu();});
-			kfm_createContextMenu(e.page,links);
+			kfm_createContextMenu(e.page,show_category_headers);
 		});
 		if(kfm_vars.use_templates){
 			document.getElementById('templateWrapper').style.display='block';

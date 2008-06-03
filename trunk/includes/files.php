@@ -79,6 +79,7 @@ function _getFileAsArray($filename){
 	return explode("\n",rtrim(file_get_contents($filename)));
 }
 function _getFileDetails($fid){
+	global $kfm;
 	$file=kfmFile::getInstance($fid);
 	if(!is_object($file))return kfm_lang('failedGetFileObject');
 	$fpath=$file->path;
@@ -97,7 +98,7 @@ function _getFileDetails($fid){
 		'ext'=>$file->getExtension()
 	);
 	if($file->isImage()){
-		$details['caption']=$file->caption;
+		if($kfm->isPlugin('captions'))$details['caption']=$file->caption;
 		$details['width']=$file->width;
 		$details['height']=$file->height;
 		$details['thumb_url']=$file->thumb_url;
