@@ -43,7 +43,12 @@ $kfm->setting('startupfolder_id',$kfm_startupfolder_id);
 $associations=db_fetch_all('SELECT extension, plugin FROM '.KFM_DB_PREFIX.'plugin_extensions WHERE user_id='.$kfm->user_id);
 $ass_arr='{';
 foreach($associations as $association){
-	$ass_arr.='"'.trim($association['extension']).'":"'.trim($association['plugin']).'",';
+	if(strpos($association['extension'],',')!==false){
+		$exts=split(',',$association['extension']);
+		foreach($exts as $ext) $ass_arr.='"'.trim($ext).'":"'.trim($association['plugin']).'",';
+	}else{
+		$ass_arr.='"'.trim($association['extension']).'":"'.trim($association['plugin']).'",';
+	}
 }
 $ass_arr=rtrim($ass_arr,' ,');
 $ass_arr.='}';
@@ -138,7 +143,7 @@ if ($last_registration!=$today) {
 if(count($kfm->setting('default_directories'))){
 	foreach($kfm->setting('default_directories') as $dir){
 		$dir=trim($dir);
-		@mkdir($rootdir.$dir,0755);
+		@mkdir($user_root_dir->path.$dir,0755);
 	}
 }
 // }}}

@@ -72,20 +72,19 @@ function user_row($id, $username, $status){
 }
 function get_association_row($ext, $plugin,$id){
 	$str= '
-	<tr>
-		<td><input type="text" id="association_extension_'.$id.'" value="'.$ext.'" /></td>
+	<tr id="association_row_'.$id.'">
+		<td><input type="text" id="association_extension_'.$id.'" value="'.$ext.'" onblur="association_extension_change('.$id.')"/></td>
 		<td>'.get_plugin_list($plugin,$id).'</td>
-		<td></td>
+		<td><span class="button" onclick="association_delete('.$id.');">delete</span></td>
 	</tr>';
 	$str=preg_replace('/\n/','',$str);
 	return $str;
 }
-function get_plugin_list($selected_plugin, $unique=false){
+function get_plugin_list($selected_plugin, $unique){
 	global $kfm;
-	if(!$unique)$unique=22222;
-	$str='<select name="plugin_selector_'.$unique.'" id="plugin_selector_'.$unique.'">
-	<option value="return" '.($selected_plugin=='return'?'selected="selected"':'').'>Return</option>
-	<option value="download" '.($selected_plugin=='download'?'selected="selected"':'').'>Download</option>';
+	$str='<select name="plugin_selector_'.$unique.'" id="plugin_selector_'.$unique.'"';
+	if($unique!='0222')$str.=' onchange="change_association_plugin('.$unique.')"';
+	$str.='>';
 	foreach($kfm->plugins as $plugin){
 		$str.='<option value="'.$plugin->name.'" '.($selected_plugin==$plugin->name?'selected="selected"':'').'>'.$plugin->title.'</option>';
 	}
