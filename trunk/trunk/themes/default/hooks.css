@@ -52,3 +52,11 @@
 	background-image:url(icons/remove.png);
 	background-repeat:no-repeat;
 }
+.kfm_plugin_captions_contexticon{
+	background-image:url(icons/edit.png);
+	background-repeat:no-repeat;
+}
+.kfm_plugin_tags_add_contexticon{
+	background-image:url(icons/add_tags.png);
+	background-repeat:no-repeat;
+}

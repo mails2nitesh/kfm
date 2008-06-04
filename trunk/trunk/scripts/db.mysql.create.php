@@ -64,8 +64,8 @@
 	
 	$kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."plugin_extensions(
 		id INTEGER PRIMARY KEY auto_increment,
-		extension varchar(16),
-		plugin varchar(256),
+		extension varchar(64),
+		plugin varchar(64),
 		user_id INTEGER(8)
 	) DEFAULT CHARSET=utf8");
 	
