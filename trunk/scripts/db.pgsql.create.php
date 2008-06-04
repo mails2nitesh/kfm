@@ -71,8 +71,8 @@ $kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."settings(
 
 $kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."plugin_extensions(
 	id serial,
-	extension varchar(16),
-	plugin varchar(256),
+	extension varchar(64),
+	plugin varchar(64),
 	user_id INTEGER(8)
 )");
 
