@@ -124,7 +124,7 @@ function kfm_getLinks(files){
 	
 		/* Then add the file id to the doParameter */
 		cPlugins[index].doParameter.push(fid);
-		context_categories[category].add(cPlugins[index]);
+		if(add)context_categories[category].add(cPlugins[index]);
 	}
 	if(files.length>1){
 		for(var i=0; i<files.length; i++){
@@ -140,12 +140,12 @@ function kfm_getLinks(files){
 							(plugin.writable==1 || plugin.writable==2) && 
 							((typeof(plugin.extensions)=="string" && plugin.extensions=="all") || plugin.extensions.indexOf(extension)!=-1)
 						)
-						addPlugin(plugin,F.id);
+						addPlugin(plugin,F.id,HookCategories[k]);
 					else if(	!F.writable && 
 							(plugin.writable==0 || plugin.writable==2) && 
 							((typeof(plugin.extensions)=="string" && plugin.extensions=="all") || plugin.extensions.indexOf(extension)!=-1)
 						)
-						addPlugin(plugin,F.id,category);
+						addPlugin(plugin,F.id,HookCategories[k]);
 				}
 			}
 		}

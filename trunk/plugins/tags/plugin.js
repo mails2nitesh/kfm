@@ -8,7 +8,7 @@ function kfm_plugin_tags(){
 	this.doFunction=function(files){alert('Tags doFunction is not set')};
 }
 kfm_addHook(new kfm_plugin_tags(),{name:'tags_add',title:kfm.lang.AddTagsToFiles,doFunction:function(files){kfm_tagAdd(files[0])}});
-kfm_addHook(new kfm_plugin_tags(),{name:'tags_remove',title:kfm.lang.RemoveTagsToFiles,doFunction:function(files){kfm_tagRemove(files[0])}});
+kfm_addHook(new kfm_plugin_tags(),{name:'tags_remove',title:kfm.lang.RemoveTagsFromFiles,doFunction:function(files){kfm_tagRemove(files[0])}});
 
 function kfm_tagAdd(id){
 	kfm_prompt(kfm.lang.WhatIsTheNewTag,'',function(newTag){

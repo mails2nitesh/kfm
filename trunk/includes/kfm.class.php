@@ -11,6 +11,7 @@ class kfmBase extends kfmObject{
 	//Settings definition
 	var $sdef=array(
 		'Structure settings'=>array( 'type'=>'group_header'),
+		'kfm_url'=>array('type'=>'text'),
 		'user_root_folder'=>array('type'=>'text'),
 		'startup_folder'=>array('type'=>'text'),
 		'hidden_panels'=>array('type'=>'select_list','options'=>array('logs','file_details','file_upload','search','directory_properties','widgets')),

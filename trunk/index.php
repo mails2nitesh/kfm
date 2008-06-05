@@ -40,29 +40,41 @@ if ($kfm->setting('startup_folder')) {
 $kfm->setting('startupfolder_id',$kfm_startupfolder_id);
 // }}}
 // {{{ file associations
-$associations=db_fetch_all('SELECT extension, plugin FROM '.KFM_DB_PREFIX.'plugin_extensions WHERE user_id='.$kfm->user_id);
-$ass_arr='{';
+$ass_arr=array();
+$associations=db_fetch_all('SELECT extension, plugin FROM '.KFM_DB_PREFIX.'plugin_extensions WHERE user_id=1');
 foreach($associations as $association){
 	if(strpos($association['extension'],',')!==false){
 		$exts=split(',',$association['extension']);
-		foreach($exts as $ext) $ass_arr.='"'.trim($ext).'":"'.trim($association['plugin']).'",';
+		foreach($exts as $ext) $ass_arr[trim($ext)]=trim($association['plugin']);
 	}else{
-		$ass_arr.='"'.trim($association['extension']).'":"'.trim($association['plugin']).'",';
+		$ass_arr[trim($association['extension'])]=trim($association['plugin']);
 	}
 }
-$ass_arr=rtrim($ass_arr,' ,');
-$ass_arr.='}';
+if($kfm->user_id!=1){
+	$associations=db_fetch_all('SELECT extension, plugin FROM '.KFM_DB_PREFIX.'plugin_extensions WHERE user_id='.$kfm->user_id);
+	foreach($associations as $association){
+		if(strpos($association['extension'],',')!==false){
+			$exts=split(',',$association['extension']);
+			foreach($exts as $ext) $ass_arr[trim($ext)]=trim($association['plugin']);
+		}else{
+			$ass_arr[trim($association['extension'])]=trim($association['plugin']);
+		}
+	}
+}
+// To javascript object
+$ass_str='{';
+foreach($ass_arr as $ext=>$plugin)$ass_str.='"'.$ext.'":"'.$plugin.'",';
+$ass_str=rtrim($ass_str,', ').'}';
 // }}}
-/**
- * Look for startup selected files
- */
-if (isset($_GET['fid']) && $_GET['fid']) {
-	$f = kfmFile::getInstance($_GET['fid']);
+// {{{ startup selected files
+if (isset($_GET['fid']) && $_GET['fid']) {/*{{{*/
+	$f = kfmFile::getInstance($_GET['fid']);/*}}}*/
 	if($f){
 		$_GET['cwd']               = $f->parent;
 		$kfm->setting('startup_selected_files', array($_GET['fid']));
 	}
 }
+// }}}
 //TODO:The next section should be reviewed (benjamin: I thing $_GET['startup_folder']) should be used in stead of this. (no directory id supported)
 if (isset($_GET['cwd']) && (int)$_GET['cwd']) {
 	$path   = kfm_getDirectoryParentsArr($_GET['cwd']);
@@ -74,6 +86,14 @@ if (isset($_GET['cwd']) && (int)$_GET['cwd']) {
 		$startup_sequence = '['.implode(',', $startup_sequence_array).']';
 	}
 }
+// {{{ check for default directories
+if(count($kfm->setting('default_directories'))){
+	foreach($kfm->setting('default_directories') as $dir){
+		$dir=trim($dir);
+		@mkdir($user_root_dir->path.$dir,0755);
+	}
+}
+// }}}
 // }}} setup
 header('Content-type: text/html; Charset = utf-8');
 // {{{ export kaejax stuff
@@ -139,14 +159,6 @@ if ($last_registration!=$today) {
     $kfm_parameters['last_registration'] = $today;
 }
 // }}}
-// {{{ check for default directories
-if(count($kfm->setting('default_directories'))){
-	foreach($kfm->setting('default_directories') as $dir){
-		$dir=trim($dir);
-		@mkdir($user_root_dir->path.$dir,0755);
-	}
-}
-// }}}
 ?>
         <script type="text/javascript" src="j/mootools.v1.11/mootools.v1.11.js"></script>
         <script type="text/javascript" src="j/jquery/all.php"></script>
@@ -197,7 +209,7 @@ if(count($kfm->setting('default_directories'))){
                 show_disabled_contextmenu_links:<?php echo $kfm->setting('show_disabled_contextmenu_links'); ?>,
                 use_multiple_file_upload:<?php echo $kfm->setting('use_multiple_file_upload'); ?>,
                 use_templates:<?php echo $templated; ?>,
-					 associations:<?php echo $ass_arr; ?>,
+					 associations:<?php echo $ass_str; ?>,
                 version:'<?php echo KFM_VERSION; ?>'
             };
             var kfm_widgets=[];

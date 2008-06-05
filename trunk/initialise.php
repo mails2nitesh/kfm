@@ -78,6 +78,7 @@ else require KFM_BASE_PATH.'api/cms_hooks.php.dist';
 // }}}
 // {{{ variables
 // structure
+$kfm->defaultSetting('kfm_url','/');
 $kfm->defaultSetting('user_root_folder','');
 $kfm->defaultSetting('startup_folder','');
 $kfm->defaultSetting('hidden_panels',array('logs','file_details','directory_properties'));

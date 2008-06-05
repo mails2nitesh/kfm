@@ -1,6 +1,6 @@
 function plugin_file_details(){
 	this.name='file_details',
-	this.title='file details'; // TODO: string
+	this.title=kfm.lang.FileDetails; // TODO: string
 	this.mode=2;
 	this.writable=2;
 	this.category='returning'; // to put it near the bottom
