@@ -134,7 +134,9 @@ if($tmp!='')echo "<style type=\"text/css\">$tmp</style>";
 // {{{ if there's a template, show it here
 $templated = 0;
 if (file_exists('themes/'.$kfm->setting('theme').'/template.html')) {
-    echo '<div id="templateWrapper" style="display:none">'.file_get_contents('themes/'.$kfm->setting('theme').'/template.html').'</div>';
+	$template=file_get_contents('themes/'.$kfm->setting('theme').'/template.html');
+	require_once('templating.php');
+    echo '<div id="templateWrapper" style="display:none">'.kfm_parse_template($template).'</div>';
     $templated = 1;
 }
 // }}}
