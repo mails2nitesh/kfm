@@ -26,6 +26,11 @@ function error(msg){
 }
 
 </script>
+<?php
+foreach($kfm->admin_tabs as $tab){
+	if($tab['stylesheet'])echo '<link rel="stylesheet" href="'.$tab['stylesheet'].'" type="text/css" />'."\n";
+}
+?>
 <style type="text/css">
 #messages{
 	display:none;
@@ -81,31 +86,6 @@ function error(msg){
 }
 </style>
 <style type="text/css">
-.bb_space_graph_container{
-	width:400px;
-	padding:3px;
-	background-color:#ddf;
-}
-.bb_space_graph_empty{
-	margin:0px;
-	padding:2px 0;
-	background-color:#55c;
-	height:20px;
-}
-.bb_space_graph_used{
-	margin:0;
-	background-color:#700;
-	height:100%;
-}
-.bb_space_graph_text{
-	position:absolute;
-	margin:2px 5px;
-	font-size:12px;
-	font-weight:bold;
-	color:#fff;
-}
-</style>
-<style type="text/css">
 .help_container{
 	position:absolute;
 	display:none;
@@ -156,9 +136,12 @@ function error(msg){
 		<?php if($kfm->user_status==1) echo '<li><a href="users.php" title="Users tab"><span>Users</span></a></li>'; ?>
 		<li><a href="settings.php" title="Settings tab"><span>Settings</span></a></li>
 		<li><a href="password.php" title="Password tab"><span>Change password</span></a></li>
-		<?php if($kfm->user_status==1) echo '<li><a href="associations.php" title="File associations"><span>File associations</span></a></li>'; ?>
-		<li><a href="bb_space.php" title="bb space"><span>Manage space</span></a></li>
-		<li><a href="manage_help.php" title="manage help"><span>Manage help</span></a></li>
+		<?php 
+		if($kfm->user_status==1) echo '<li><a href="associations.php" title="File associations"><span>File associations</span></a></li>';
+		foreach($kfm->admin_tabs as $tab){
+			echo '<li><a href="'.$tab['page'].'" title="'.$tab['title'].'"><span>'.$tab['title'].'</span></a></li>'."\n";
+		}
+		?>
 	</ul>
 </div>
 <button onclick="message('test')">Test</button>

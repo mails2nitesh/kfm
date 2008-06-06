@@ -1,10 +1,14 @@
 <html>
 	<head>
-		<style type="text/css"><?php
-			$cssfile=KFM_BASE_PATH.'themes/'.$kfm_theme.'/login.css';
-			$css=file_exists($cssfile)?file_get_contents($cssfile):'';
-			echo preg_replace('/\s+/',' ',$css);
-		?></style>
+		<style type="text/css">
+			th,td,input{font:12px sans-serif}
+			body{margin:0;padding:0;text-align:center;background:#fff}
+			form{padding:0;margin:200px auto 0;text-align:left;width:300px;border:1px solid #006;background:#f0f0f0}
+			em{margin:0 auto;display:block}
+			table{width:100%}
+			th[colspan=2]{font-size:2em}
+			td{vertical-align:top}
+		</style>
 		<title>KFM - Kae's File Manager - Login</title>
 	</head>
 	<body>

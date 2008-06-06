@@ -263,8 +263,6 @@ if($pluginssrc!='')echo "<script type=\"text/javascript\"><!--\n$pluginssrc\n-->
             for(var i = 0;i<kfm_hidden_panels.length;++i)kfm_hidden_panels[i] = 'kfm_'+kfm_hidden_panels[i]+'_panel';
             <?php echo kfm_kaejax_get_javascript(); ?>
             <?php if(isset($_GET['kfm_caller_type']))echo 'window.kfm_caller_type="'.addslashes($_GET['kfm_caller_type']).'";'; ?>
-            var editable_extensions=["<?php echo join('","', $kfm_editable_extensions);?>"];
-            var viewable_extensions=["<?php echo join('","', $kfm_viewable_extensions);?>"];
         </script>
 <?php // }}} ?>
     </body>

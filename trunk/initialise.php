@@ -310,10 +310,11 @@ if (!$kfm_session->get('loggedin') && (!isset($kfm_api_auth_override)||!$kfm_api
         }
 		*/
     }
-    if (!$kfm_session->get('loggedin')) {
-        include KFM_BASE_PATH.'includes/login.php';
-        exit;
-    }
+   if (!$kfm_session->get('loggedin')) {
+		if(file_exists(KFM_BASE_PATH.'login.php'))include(KFM_BASE_PATH.'login.php');
+      else include KFM_BASE_PATH.'includes/login.php';
+		exit;
+	}
 }
 $uid=$kfm_session->get('user_id');
 $kfm->user_id=$uid;
@@ -383,14 +384,6 @@ foreach($kfm->sdef as $sname=>$sdef){
 	}
 }
 // }}}
-/* temp
-print  '<pre>';
-print_r($kfm->settings);
-print "\n\n";
-print_r($kfm->sdef);
-print "\n\n".count($kfm->setting('allowed_files'));
-exit;
-*/
 // {{{ (user) root folder
 $kfm_root_dir = kfmDirectory::getInstance(1);
 if ($kfm->user_id!=1 && $kfm->setting('user_root_folder')){
@@ -484,9 +477,6 @@ if ($kfm_language=='')foreach($kfm_preferred_languages as $lang)if (in_array($la
 // {{{  still no language chosen? use the first available one then
     if ($kfm_language=='')$kfm_language = $kfm_available_languages[0];
 // }}}
-// }}}
-// {{{ make a few corrections to the config where necessary
-foreach($kfm_editable_extensions as $v)if (!in_array($v, $kfm_viewable_extensions))$kfm_viewable_extensions[] = $v;
 // }}}
 // {{{ common functions
 function kfm_checkAddr($addr)
