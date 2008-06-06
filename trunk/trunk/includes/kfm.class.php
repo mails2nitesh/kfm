@@ -8,6 +8,7 @@ class kfmBase extends kfmObject{
 	var $plugins=array();
 	var $themes=array();
 	var $user_settings=array();
+	var $admin_tabs=array();
 	//Settings definition
 	var $sdef=array(
 		'Structure settings'=>array( 'type'=>'group_header'),
@@ -116,7 +117,10 @@ class kfmBase extends kfmObject{
 		$this->settings[$name]=$value;
 		//if(!isset($this->settings[$name]))$this->settings[$name]=$value;
 	}
-
+	
+	function addAdminTab($name, $page,$stylesheet=false){
+		$this->admin_tabs[]=array('title'=>$name, 'page'=>$page, 'stylesheet'=>$stylesheet);
+	}
 	/**
 	 * returns a parameter, returns the default if not present
 	 * @param $parameter
