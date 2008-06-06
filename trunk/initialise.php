@@ -318,9 +318,13 @@ if (!$kfm_session->get('loggedin') && (!isset($kfm_api_auth_override)||!$kfm_api
 }
 $uid=$kfm_session->get('user_id');
 $kfm->user_id=$uid;
+$kfm->defaultSetting('user_id',$uid);
 $kfm->user_status=$kfm_session->get('user_status');
+$kfm->defaultSetting('user_status',$kfm->user_status);
 $kfm->username=$kfm_session->get('username');
 $kfm->user_name=&$kfm->username;
+$kfm->defaultSetting('username',$kfm->username);
+$kfm->defaultSetting('user_name',$kfm->username);
 $kfm->session= &$kfm_session;
 // }}}
 // {{{ Read settings
@@ -445,8 +449,8 @@ if ($handle = opendir(KFM_BASE_PATH.'lang')) {
 }
 // }}}
 // {{{  check for URL parameter "lang"
-if (isset($_GET['lang'])&&$_GET['lang']&&in_array($_GET['lang'], $kfm_available_languages)) {
-    $kfm_language = $_GET['lang'];
+if (isset($_REQUEST['lang'])&&$_REQUEST['lang']&&in_array($_REQUEST['lang'], $kfm_available_languages)) {
+    $kfm_language = $_REQUEST['lang'];
     $kfm_session->set('language', $kfm_language);
 }
 // }}}
