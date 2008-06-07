@@ -3,7 +3,7 @@ function kfm_addToSelection(id){
 	id=parseInt(id);
 	if(!id || selectedFiles.contains(id))return;
 	selectedFiles.push(id);
-	$('kfm_file_icon_'+id).className+=' selected';
+	document.getElementById('kfm_file_icon_'+id).className+=' selected';
 	if(kfm_log_level>0)kfm_log(kfm.lang.FileSelected(id));
 	kfm_selectionCheck();
 }
@@ -35,8 +35,8 @@ function kfm_removeFromSelection(id){
 	var i;
 	for(i=0;i<selectedFiles.length;++i){
 		if(selectedFiles[i]==id){
-			var el=$('kfm_file_icon_'+id);
-			if(el)el.removeClass('selected');
+			var el=document.getElementById('kfm_file_icon_'+id);
+			if(el)$j.className.remove(el,'selected');
 			kfm_selectionCheck();
 			return selectedFiles.splice(i,1);
 		}
@@ -44,18 +44,18 @@ function kfm_removeFromSelection(id){
 }
 function kfm_selectAll(){
 	kfm_selectNone();
-	var a,b=$('documents_body').fileids;
+	var a,b=document.getElementById('documents_body').fileids;
 	for(a=0;a<b.length;++a)kfm_addToSelection(b[a]);
 }
 function kfm_selectInvert(){
-	var a,b=$('documents_body').fileids;
+	var a,b=document.getElementById('documents_body').fileids;
 	for(a=0;a<b.length;++a)if(kfm_isFileSelected(b[a]))kfm_removeFromSelection(b[a]);
 	else kfm_addToSelection(b[a]);
 }
 function kfm_selectNone(){
 	if(kfm_lastClicked){
-		var el=$('kfm_file_icon_'+kfm_lastClicked);
-		if(el)el.removeClass('last_clicked');
+		var el=document.getElementById('kfm_file_icon_'+kfm_lastClicked);
+		if(el)$j.className.remove(el,'last_clicked');
 	}
 	for(var i=selectedFiles.length;i>-1;--i)kfm_removeFromSelection(selectedFiles[i]);
 	kfm_lastClicked=0;
@@ -84,7 +84,7 @@ function kfm_selection_dragFinish(e){
 	e=new Event(e);
 	clearTimeout(window.dragSelectionTrigger);
 	if(!window.drag_wrapper)return;
-	var right_column=$('documents_body'),p1=e.page,p2=window.drag_wrapper.orig,offset=right_column.scrollTop;
+	var right_column=document.getElementById('documents_body'),p1=e.page,p2=window.drag_wrapper.orig,offset=right_column.scrollTop;
 	var x1=p1.x>p2.x?p2.x:p1.x, x2=p2.x>p1.x?p2.x:p1.x, y1=p1.y>p2.y?p2.y:p1.y, y2=p2.y>p1.y?p2.y:p1.y;
 	setTimeout('window.dragType=0;',1); // pause needed for IE
 	window.drag_wrapper.remove();
@@ -94,7 +94,7 @@ function kfm_selection_dragFinish(e){
 	var fileids=right_column.fileids;
 	kfm_selectNone();
 	for(var i=0;i<fileids.length;++i){
-		var curIcon=$('kfm_file_icon_'+fileids[i]);
+		var curIcon=document.getElementById('kfm_file_icon_'+fileids[i]);
 		var curTop=getOffset(curIcon,'Top');
 		var curLeft=getOffset(curIcon,'Left');
 		if((curLeft+curIcon.offsetWidth)>x1&&curLeft<x2&&(curTop+curIcon.offsetHeight)>y1&&curTop<y2)kfm_addToSelection(fileids[i]);
@@ -103,7 +103,7 @@ function kfm_selection_dragFinish(e){
 }
 function kfm_selection_dragStart(e){
 	if(window.dragType)return;
-	if (!kfm_vars.use_templates && window.mouseAt.x > $('kfm_right_column').scrollWidth + $('kfm_left_column').scrollWidth - 15) return;
+	if (!kfm_vars.use_templates && window.mouseAt.x > document.getElementById('kfm_right_column').scrollWidth + document.getElementById('kfm_left_column').scrollWidth - 15) return;
 	window.dragType=2;
 	var w=window.getSize().size;
 	document.addEvent('mouseup',kfm_selection_dragFinish);
@@ -119,7 +119,7 @@ function kfm_selection_dragStart(e){
 }
 function kfm_shiftFileSelectionLR(dir){
 	if(selectedFiles.length>1)return;
-	var na=$('documents_body').fileids,a=0,ns=na.length;
+	var na=document.getElementById('documents_body').fileids,a=0,ns=na.length;
 	if(selectedFiles.length){
 		for(;a<ns;++a)if(na[a]==selectedFiles[0])break;
 		if(dir>0){if(a==ns-1)a=-1}
@@ -130,10 +130,10 @@ function kfm_shiftFileSelectionLR(dir){
 }
 function kfm_shiftFileSelectionUD(dir){
 	if(selectedFiles.length>1)return;
-	var na=$('documents_body').fileids,a=0,ns=na.length,icons_per_line=0,topOffset=$('kfm_file_icon_'+na[0]).offsetTop;
+	var na=document.getElementById('documents_body').fileids,a=0,ns=na.length,icons_per_line=0,topOffset=document.getElementById('kfm_file_icon_'+na[0]).offsetTop;
 	if(selectedFiles.length){
-		if(topOffset==$('kfm_file_icon_'+na[ns-1]).offsetTop)return; // only one line of icons
-		for(;$('kfm_file_icon_'+na[icons_per_line]).offsetTop==topOffset;++icons_per_line);
+		if(topOffset==document.getElementById('kfm_file_icon_'+na[ns-1]).offsetTop)return; // only one line of icons
+		for(;document.getElementById('kfm_file_icon_'+na[icons_per_line]).offsetTop==topOffset;++icons_per_line);
 		for(;a<ns;++a)if(na[a]==selectedFiles[0])break; // what is the selected file
 		a+=icons_per_line*dir;
 		if(a>=ns)a=ns-1;
@@ -157,8 +157,8 @@ function kfm_toggleSelectedFile(e){
 		rowInd=row.rowIndex;
 	}
 	if(kfm_lastClicked){
-		var el=$('kfm_file_icon_'+kfm_lastClicked);
-		if(el)el.removeClass('last_clicked');
+		var el=document.getElementById('kfm_file_icon_'+kfm_lastClicked);
+		if(el)$j.className.remove(el,'last_clicked');
 		else kfm_lastClicked=0;
 	}
 	if(kfm_lastClicked&&e.shift){
@@ -174,7 +174,7 @@ function kfm_toggleSelectedFile(e){
 		}else{
 			clearSelections(e);
 			kfm_selectNone();
-			var a=$('documents_body').fileids,b,c,d;
+			var a=document.getElementById('documents_body').fileids,b,c,d;
 			for(b=0;b<a.length;++b){
 				if(a[b]==e)c=b;
 				if(a[b]==id)d=parseInt(b);
@@ -198,12 +198,12 @@ function kfm_toggleSelectedFile(e){
 		}
 	}
 	kfm_lastClicked=id;
-	$('kfm_file_icon_'+id).className+=' last_clicked';
+	document.getElementById('kfm_file_icon_'+id).className+=' last_clicked';
 }
 function kfm_selectSingleFile(id){
 	kfm_selectNone();
 	kfm_addToSelection(id);
-	var panel=$('kfm_right_column'),el=$('kfm_file_icon_'+id);
+	var panel=document.getElementById('kfm_right_column'),el=document.getElementById('kfm_file_icon_'+id);
 	var offset=panel.scrollTop,panelHeight=panel.offsetHeight,elTop=getOffset(el,'Top'),elHeight=el.offsetHeight;
 	if(elTop+elHeight-offset>panelHeight)panel.scrollTop=elTop-panelHeight+elHeight;
 	else if(elTop<offset)panel.scrollTop=elTop;

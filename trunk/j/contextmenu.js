@@ -1,6 +1,6 @@
 // see license.txt for licensing
 function kfm_addContextMenu(el,fn){
-	el.addEvent(window.webkit&&!window.webkit420?'mousedown':'contextmenu',function(e){
+	$j.event.add(el,window.webkit&&!window.webkit420?'mousedown':'contextmenu',function(e){
 		e=new Event(e);
 		if(e.type=='contextmenu' || e.rightClick)fn(e);
 	});

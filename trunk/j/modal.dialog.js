@@ -1,6 +1,8 @@
 function kfm_modal_close(msg){
-	$('shader').remove();
-	$('formWrapper').remove();
+	var shader=document.getElementById('shader');
+	shader.parentNode.removeChild(shader);
+	var formWrapper=document.getElementById('formWrapper');
+	formWrapper.parentNode.removeChild(formWrapper);
 	if(msg)alert(msg);
 }
 function kfm_modal_open(form,title,actions){

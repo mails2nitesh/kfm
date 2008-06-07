@@ -4,7 +4,7 @@ function kfm_runSearch(){
 }
 function kfm_runSearch2(){
 	var keywords='',tags='';
-	var kEl=$("kfm_search_keywords"),tEl=$("kfm_search_tags");
+	var kEl=document.getElementById("kfm_search_keywords"),tEl=document.getElementById("kfm_search_tags");
 	if(kEl)keywords=kEl.value;
 	if(tEl)tags=tEl.value;
 	if(keywords==""&&tags=="")x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);
