@@ -100,7 +100,7 @@ function loadJS(url,id,lang,onload){
 	return 1;
 }
 function newForm(action,method,enctype,target){
-	if(window.ie)return $(document.createElement('<form action="'+action+'" method="'+method+'" enctype="'+enctype+'" target="'+target+'">'));
+	if(window.ie)return document.createElement('<form action="'+action+'" method="'+method+'" enctype="'+enctype+'" target="'+target+'">');
 	return new Element('form',{
 		'action':action,
 		'method':method,

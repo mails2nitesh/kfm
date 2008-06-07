@@ -1,9 +1,9 @@
 // see license.txt for licensing
 function kfm_resizeHandler(){
 	var w=window.getSize().size;
-	for(var i=0;i<kfm_resizeHandler_maxHeights.length;++i)if($(kfm_resizeHandler_maxHeights[i]))$(kfm_resizeHandler_maxHeights[i]).setStyle('height',w.y);
-	for(var i=0;i<kfm_resizeHandler_maxWidths.length;++i)if($(kfm_resizeHandler_maxWidths[i]))$(kfm_resizeHandler_maxWidths[i]).setStyle('width',w.x);
-	var el=$('kfm_codepressTableCell');
+	for(var i=0;i<kfm_resizeHandler_maxHeights.length;++i)if(document.getElementById(kfm_resizeHandler_maxHeights[i]))document.getElementById(kfm_resizeHandler_maxHeights[i]).style.height=w.y+'px';
+	for(var i=0;i<kfm_resizeHandler_maxWidths.length;++i)if(document.getElementById(kfm_resizeHandler_maxWidths[i]))document.getElementById(kfm_resizeHandler_maxWidths[i]).style.width=w.x+'px';
+	var el=document.getElementById('kfm_codepressTableCell');
 	if(el){
 		var iframe=$E('iframe',el);
 		if(iframe){

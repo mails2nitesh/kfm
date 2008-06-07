@@ -1,6 +1,6 @@
 var Notice=new Class({
 	getWrapper:function(){
-		var w=$('notice_wrapper');
+		var w=document.getElementById('notice_wrapper');
 		if(w)return w;
 		w=new Element('div',{
 			'id':'notice_wrapper',
