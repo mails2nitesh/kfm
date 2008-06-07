@@ -40,6 +40,7 @@ function db_fetch_all($query){
 		return $kfmdb->fetchAll($query);
 	}
 	$q=$kfmdb->query($query);
+	if(PEAR::isError($q))die('alert("'.$q->getMessage().'\n'.$query.'")');
 	return $q->fetchAll();
 }
 function db_fetch_row($query){
