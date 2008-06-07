@@ -49,8 +49,8 @@ function kdnd_dragFinish(e,notest){
 	clearTimeout(window.dragTrigger);
 	if(!window.kdnd_dragging)return;
 	if(!notest){ // check for targets and run functions if found
-		var a,b,t=$H(kdnd_targets[window.kdnd_drag_class]),els,m=e.page,el;
-		t.each(function(fn,a){
+		var a,b,els,m=e.page,el;
+		$each(kdnd_targets[window.kdnd_drag_class],function(fn,a){
 			els=$ES(a);
 			for(b=0;b<els.length;++b){
 				el=els[b];

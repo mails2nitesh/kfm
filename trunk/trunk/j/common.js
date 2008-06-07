@@ -152,15 +152,14 @@ function newInput(n,t,v,cl){
 	return b;
 }
 function newLink(h,t,id,c,title){
-	if(!title){
-		title='';
-	}
-	return (new Element('a',{
-		'id':id,
-		'class':c,
-		'href':h,
-		'title':title
-	})).setHTML(t);
+	if(!title)title='';
+	var a=document.createElement('a');
+	a.id=id;
+	a.className=c;
+	a.href=h;
+	a.title=title;
+	a.innerHTML=t;
+	return a;
 }
 function newSelectbox(name,keys,vals,s,f){
 	var el2=new Element('select',{
@@ -175,19 +174,15 @@ function newSelectbox(name,keys,vals,s,f){
 	for(;i<vals.length;++i){
 		var v1=vals[i].toString();
 		var v2=v1.length>20?v1.substr(0,27)+'...':v1;
-		el3=(new Element('option',{
-			value:keys[i],
-			title:v1
-		})).setHTML(v2);
-		if(keys[i]==s){
-			s2=i;
-		}
+		el3=document.createElement('option');
+		el3.value=keys[i];
+		el3.title=v1;
+		el3.innerHTML=v2;
+		if(keys[i]==s)s2=i;
 		el2.appendChild(el3);
 	}
 	el2.selectedIndex=s2;
-	if(f){
-		el2.onchange=f;
-	}
+	if(f)el2.onchange=f;
 	return el2;
 }
 function newText(a){
