@@ -38,7 +38,7 @@ class kfmBase extends kfmObject{
 			'always copy'=>2,
 			'choice list'=>3), 'user'=>1
 		),
-		'default_directories'=>array('type'=>'array'),
+		'default_directories'=>array('type'=>'array', 'properties'=>array('size'=>34)),
 		'default_directory_permission'=>array('type'=>'integer', 'properties'=>array('size'=>3,'maxsize'=>3)),
 		'banned_folders'=>array('type'=>'array'),
 		'allowed_folders'=>array('type'=>'array'),

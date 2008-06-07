@@ -32,6 +32,17 @@ foreach($kfm->admin_tabs as $tab){
 }
 ?>
 <style type="text/css">
+#general_info{
+	float:right;
+	width:300px;
+	background-color:#ddd;
+	text-align:right;
+	padding-right:4px;
+}
+.admin_button{
+	color:black;
+	font-weight:bold;
+}
 #messages{
 	display:none;
 	position:absolute;
@@ -130,6 +141,9 @@ foreach($kfm->admin_tabs as $tab){
 </style>
 </head>
 <body>
+<div id="general_info">
+<?php echo $kfm->username;?> <a class="admin_button" href="<?php echo $kfm->setting('kfm_url');?>">To the File Manager</a>
+</div>
 <div id="messages"></div>
 <div id="tabscontainer">
 	<ul>
@@ -144,7 +158,5 @@ foreach($kfm->admin_tabs as $tab){
 		?>
 	</ul>
 </div>
-<button onclick="message('test')">Test</button>
 </body>
 </html>
-
