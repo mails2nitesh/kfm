@@ -1,4 +1,11 @@
 // see license.txt for licensing
+function kfm_addContextMenu(el,fn){
+	el.addEvent(window.webkit&&!window.webkit420?'mousedown':'contextmenu',function(e){
+		e=new Event(e);
+		if(e.type=='contextmenu' || e.rightClick)fn(e);
+	});
+	return el;
+}
 function kfm_closeContextMenu(){
 	$j('.contextmenu').remove();
 	return;
@@ -105,13 +112,6 @@ function kfm_createContextMenu(m,show_category_headers){
 	else list[0].style.left=m.x+'px';
 	list.find('.subcontextmenu').css('left',list.width());
 	list.show('normal');
-}
-function kfm_addContextMenu(el,fn){
-	el.addEvent(window.webkit&&!window.webkit420?'mousedown':'contextmenu',function(e){
-		e=new Event(e);
-		if(e.type=='contextmenu' || e.rightClick)fn(e);
-	});
-	return el;
 }
 kfm.cm={
 	submenus:[]

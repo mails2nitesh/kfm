@@ -43,7 +43,7 @@ var KFM=new Class({
 			html+='<h2>Bug Testers</h2>';
 			html+='To many to mention! To report a bug, please <a href="http://mantis.verens.com/">go here</a>.';
 		}
-		div.setHTML(html);
+		div.innerHTML=html;
 		kfm_modal_open(div,kfm.lang.AboutKfm);
 	},
 	addCell:function(o,colNum,colSpan,subEls,className){
@@ -95,7 +95,7 @@ var KFM=new Class({
 			 *errors[i].file
 			 */
 		}
-		div.setHTML(html);
+		div.innerHTML=html;
 		kfm_modal_open(div,kfm.lang.Errors);
 	},
 	showMessages:function(messages){
@@ -224,7 +224,8 @@ var KFM=new Class({
 			   var header=new Element('div',{
 			       'class':'kfm_panel_header',
 			       'id':'kfm_panel_header'
-			   }).setHTML('<span id="documents_loader"></span><span id="cwd_display"></span><span id="folder_info"></span>');
+			   });
+				header.innerHTML='<span id="documents_loader"></span><span id="cwd_display"></span><span id="folder_info"></span>';
 
 				var documents_body=new Element('div',{
 					'id':'documents_body'
@@ -450,7 +451,8 @@ function kfm_log(msg){
 		wrapper=$('kfm_logs_panel');
 	}
 	wrapper.visible=1;
-	var el=$E('#kfm_logs_panel div.kfm_panel_body'),p=(new Element('p')).setHTML(msg);
+	var el=$E('#kfm_logs_panel div.kfm_panel_body'),p=(new Element('p'));
+	p.innerHTML=msg;
 	if(msg.indexOf(kfm.lang.ErrorPrefix)==0)p.setStyles('background:#ff0;fontWeight:bold;color:red');
 	kfm.addEl(el,p);
 	el.scrollTop=el.scrollTop+p.offsetHeight;
