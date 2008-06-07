@@ -142,8 +142,14 @@ class kfmDirectory extends kfmObject{
 		}
 	}
 	function getSubdir($dirname){
+		global $kfm;
 		$res=db_fetch_row('select id from '.KFM_DB_PREFIX.'directories where name="'.$dirname.'" and parent='.$this->id);
 		if($res)return kfmDirectory::getInstance($res['id']);
+		else if(is_dir($this->path.$dirname)){
+			$this->addSubdirToDb($dirname);
+			$id=$kfm->db->lastInsertId(KFM_DB_PREFIX.'directories','id');
+			return kfmDirectory::getInstance($id);
+		}
 		return false;
 	}
 	function isWritable(){

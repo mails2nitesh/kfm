@@ -294,6 +294,7 @@ if ($kfm_session->isNew) {
     ));
 }
 if (isset($_GET['logout'])||isset($_GET['log_out'])) $kfm_session->set('loggedin',0);
+$kfm->defaultSetting('kfm_session_id', $kfm_session->key);
 // }}}
 // {{{ check authentication
 if (isset($use_kfm_security) && !$use_kfm_security)$kfm_session->set('loggedin', 1);
