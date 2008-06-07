@@ -13,14 +13,14 @@
  */
 require_once 'initialise.php';
 $errors = array();
-if ($kfm_allow_file_upload) {
-    $file     = isset($_FILES['kfm_file'])?$_FILES['kfm_file']:$_FILES['Filedata'];
-		$replace  = isset($_REQUEST['fid'])?(int)$_REQUEST['fid']:0;
-    $filename = $file['name'];
-    $tmpname  = $file['tmp_name'];
-    $cwd      = $kfm_session->get('cwd_id');
-    if(!$cwd) $errors[] = kfm_lang('CWD not set');
-    else {
+if ($kfm->setting('allow_file_upload')) {
+   $file     = isset($_FILES['kfm_file'])?$_FILES['kfm_file']:$_FILES['Filedata'];
+	$replace  = isset($_REQUEST['fid'])?(int)$_REQUEST['fid']:0;
+   $filename = $file['name'];
+   $tmpname  = $file['tmp_name'];
+   $cwd      = $kfm_session->get('cwd_id');
+   if(!$cwd) $errors[] = kfm_lang('CWD not set');
+   else {
         $toDir = kfmDirectory::getInstance($cwd);
 				if($replace){
 					$replace_file = kfmFile::getInstance($replace);
@@ -40,11 +40,11 @@ if ($kfm_allow_file_upload) {
     if (!count($errors)) {
         move_uploaded_file($tmpname, $to);
         if (!file_exists($to)) $errors[] = kfm_lang('failedToSaveTmpFile', $tmpname, $to);
-        else if ($kfm_only_allow_image_upload && !getimagesize($to)) {
+        else if ($kfm->setting('only_allow_image_upload') && !getimagesize($to)) {
             $errors[] = 'only images may be uploaded';
             unlink($to);
         } else {
-            chmod($to, octdec('0'.$kfm_default_upload_permission));
+            chmod($to, octdec('0'.$kfm->setting('default_upload_permission')));
             $fid  = kfmFile::addToDb($filename, $kfm_session->get('cwd_id'));
             $file = kfmFile::getInstance($fid);
             if (function_exists('exif_imagetype')) {

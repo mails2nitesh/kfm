@@ -14,9 +14,8 @@ require_once 'initialise.php';
 <html>
 <head>
 <title>KFM-maintenance</title>
-<link rel="stylesheet" href="themes/<?php echo $kfm_theme; ?>/prompt.css" />
-<script type="text/javascript" src="j/jquery/jquery-1.2.2.pack.js"></script>
-<script type="text/javascript" src="j/jquery/jquery.impromptu.js"></script>
+<link rel="stylesheet" href="themes/<?php echo $kfm->setting('theme'); ?>/prompt.css" />
+<script type="text/javascript" src="j/jquery/all.php"></script>
 <script type="text/javascript">
 	var $j = jQuery.noConflict();
 	$j(document).ready(function(){
@@ -38,7 +37,7 @@ body{
 <div id="maintenance_messages">
 <?php
 //Ghost file deletion
-$kfmdb->query('DELETE FROM '.$kfm_db_prefix.'_files WHERE directory=0');
+$kfmdb->query('DELETE FROM '.KFM_DB_PREFIX.'_files WHERE directory=0');
 ?>
 <p>Maintenance done. <a href="index.php">Return to the filemanager</a></p>
 </div>

@@ -273,7 +273,7 @@ function kfm_incrementalFileDisplay(){
 				widgets:['zebra']
 			});
 		}
-		document.getElementById('documents_loader').innerHTML='&nbsp;';
+		$j('#documents_loader').html('&nbsp;');
 		if(kfm_vars.startup_selectedFiles){
 			for(var i=0;i<kfm_vars.startup_selectedFiles.length;++i)kfm_addToSelection(kfm_vars.startup_selectedFiles[i]);
 			kfm_vars.startup_selectedFiles=false;
