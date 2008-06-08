@@ -14,8 +14,7 @@ function kfm_resizeHandler(){
 		}
 	}
 	kfm_refreshPanels('kfm_left_column');
-	var els=$ES('body *');
-	els.each(function(el){
+	$j('body *').each(function(key,el){
 		if(el.parentResized)el.parentResized();
 	});
 }

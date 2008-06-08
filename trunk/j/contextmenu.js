@@ -13,7 +13,7 @@ function kfm_closeContextMenu(){
 	contextmenu=null;
 }
 function kfm_contextmenuinit(){
-	document.addEvent('click',function(e){
+	$j.event.add(document,'click',function(e){
 		e=new Event(e);
 		if(e.control)return;
 		if(!contextmenu)return;

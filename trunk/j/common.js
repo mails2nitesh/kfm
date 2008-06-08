@@ -61,16 +61,15 @@ function kfm_kaejax_sendRequests(uri){
 	x.send(post_data);
 }
 function loadJS(url,id,lang,onload){
-	var i=0;
+	var i=0,el;
 	for(;i<loadedScripts.length;++i){
 		if(loadedScripts[i]==url){
 			return 0;
 		}
 	}
 	loadedScripts.push(url);
-	var el=new Element('script',{
-		'type':'text/javascript'
-	});
+	el=document.createElement('script');
+	el.type='text/javascript';
 	if(id){
 		el.id=id;
 	}
@@ -101,12 +100,12 @@ function loadJS(url,id,lang,onload){
 }
 function newForm(action,method,enctype,target){
 	if(window.ie)return document.createElement('<form action="'+action+'" method="'+method+'" enctype="'+enctype+'" target="'+target+'">');
-	return new Element('form',{
-		'action':action,
-		'method':method,
-		'enctype':enctype,
-		'target':target
-	});
+	var form=document.createElement('form');
+	form.action=action;
+	form.method=method;
+	form.enctype=enctype;
+	form.target=target;
+	return form;
 }
 function newInput(n,t,v,cl){
 	var b;
@@ -114,32 +113,23 @@ function newInput(n,t,v,cl){
 		t='text';
 	}
 	switch(t){
-		case 'checkbox':{
-			b=new Element('input',{
-				'id':n,
-				'name':n,
-				'type':'checkbox',
-				'styles':{
-					'width':'auto'
-				}
-			});
+		case 'checkbox': // {{{
+			b=document.createElement('input');
+			b.type='checkbox';
+			b.style.width='auto';
 			break;
-		}
-		case 'textarea':{
-			b=new Element('textarea',{
-				'id':n,
-				'id':n
-			});
+		// }}}
+		case 'textarea': // {{{
+			b=document.createElement('textarea');
 			break;
-		}
-		default:{
-			b=new Element('input',{
-				'id':n,
-				'name':n,
-				'type':t
-			});
-		}
+		// }}}
+		default: // {{{
+			b=document.createElement('input');
+			b.type=t;
+		// }}}
 	}
+	b.id=n;
+	b.name=n;
 	if(v){
 		if(t=='checkbox'){
 			$extend(b,{checked:'checked',defaultChecked:'checked'});
@@ -162,9 +152,9 @@ function newLink(h,t,id,c,title){
 	return a;
 }
 function newSelectbox(name,keys,vals,s,f){
-	var el2=new Element('select',{
-		'id':name
-	}),el3,s2=0,i=0;
+	var el2,el3,s2=0,i=0;
+	el2=document.createElement('select');
+	el2.id=name;
 	if(!s){
 		s=0;
 	}
@@ -188,6 +178,29 @@ function newSelectbox(name,keys,vals,s,f){
 function newText(a){
 	return document.createTextNode(a);
 }
+function $type(obj){
+if (!$defined(obj)) return false;
+if (obj.htmlElement) return 'element';
+var type = typeof obj;
+if (type == 'object' && obj.nodeName){
+switch(obj.nodeType){
+case 1: return 'element';
+case 3: return (/\S/).test(obj.nodeValue) ? 'textnode' : 'whitespace';
+}
+}
+if (type == 'object' || type == 'function'){
+switch(obj.constructor){
+case Array: return 'array';
+case RegExp: return 'regexp';
+case Class: return 'class';
+}
+if (typeof obj.length == 'number'){
+if (obj.item) return 'collection';
+if (obj.callee) return 'arguments';
+}
+}
+return type;
+};
 if(window.ie){
 	XMLHttpRequest=function(){
 		var l=(ScriptEngineMajorVersion()>=5)?"Msxml2":"Microsoft";

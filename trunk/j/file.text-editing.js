@@ -21,18 +21,16 @@ function kfm_createEmptyFile(filename,msg){
 }
 function kfm_leftColumn_disable(){
 	var left_column=document.getElementById('kfm_left_column');
-	document.body.appendChild(new Element('div',{
-		'id':'kfm_left_column_hider',
-		'styles':{
-			'position':'absolute',
-			'left':0,
-			'top':0,
-			'width':left_column.offsetWidth,
-			'height':left_column.offsetHeight,
-			'opacity':'.7',
-			'background':'#fff'
-		}
-	}));
+	var left_column_hider=document.createElement('div');
+	left_column.id='kfm_left_column_hider';
+	left_column_hider.style.position='absolute';
+	left_column_hider.style.left      =0;
+	left_column_hider.style.top       =0;
+	left_column_hider.style.width     =left_column.offsetWidth+'px';
+	left_column_hider.style.height    =left_column.offsetHeight+'px';
+	left_column_hider.style.opacity   ='.7';
+	left_column_hider.style.background='#fff';
+	document.body.appendChild(left_column_hider);
 	kfm_resizeHandler_addMaxHeight('kfm_left_column_hider');
 }
 function kfm_leftColumn_enable(){
@@ -61,12 +59,9 @@ function kfm_textfile_createEditor(){
 }
 function kfm_textfile_initEditor(res,readonly){
 	if(!document.getElementById('kfm_left_column_hider'))kfm_leftColumn_disable();
-	var t=new Element('table',{
-		'id':'kfm_editFileTable',
-		'styles':{
-			'width':'100%'
-		}
-	});
+	var t=document.createElement('table');
+	t.id='kfm_editFileTable';
+	t.style.width='100%';
 	var right_column=document.getElementById('kfm_right_column');
 	right_column.innerHTML='';
 	$j.event.add(right_column,'keyup',kfm_textfile_keybinding);
@@ -84,18 +79,15 @@ function kfm_textfile_initEditor(res,readonly){
 	var className='codepress '+res.language+(readonly?' readonly-on':'');
 	var h=window.getSize().size.y-t.offsetHeight-2;
 	if(window.ie)h-=13;
-	var codeEl=new Element('textarea',{
-		'id':'codepress',
-		'class':className,
-		'value':res.content,
-		'title':res.name,
-		'styles':{
-			'width':t.offsetWidth-25,
-			'height':h
-		}
-	});
+	var codeEl=document.createElement('textarea');
+	codeEl.id          ='codepress';
+	codeEl.classname   =className,
+	codeEl.value       =res.content,
+	codeEl.title       =res.name;
+	codeEl.style.width =(t.offsetWidth-25)+'px';
+	codeEl.style.height=h+'px';
 	changeCheckEl=newInput('edit-start','textarea',res.content);
-	changeCheckEl.setStyle('display','none');
+	changeCheckEl.style.display='none';
 	r3.appendChild(codeEl);
 	r3.appendChild(changeCheckEl);
 	if(window.CodePress)kfm_textfile_createEditor();

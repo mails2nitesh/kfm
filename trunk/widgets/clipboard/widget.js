@@ -4,34 +4,29 @@ function Clipboard(){
 	this.files=[];
 	this.folders=[];
 	this.display=function(){
-		el=new Element('div',{
-			'id':'kfm_widget_clipboard_container',
-			'class':'widget_clipboard',
-			'title':this.name,
-			'styles':{
-				'float':'left',
-				'padding':'5px',
-				'width':'70px',
-				'height':'70px',
-				'background-image':'url(\'widgets/clipboard/clipboard_empty.png\')',
-				'background-repeat':'no-repeat',
-				'font-size':'10px'
-			},
-			'events':{
-				'mouseover':function(){
-					if($j('#kdnd_drag_wrapper').length){
-						if(kfm_theme=='blt') this.style.backgroundImage='url(\'widgets/clipboard/clipboard_add_blt.png\')';
-						else this.style.backgroundImage='url(\'widgets/clipboard/clipboard_add.png\')';
-					}
-				},
-				'mouseout':function(){this.setAppearance();},
-				'click':function(){
-					if(selectedFiles.length){
-						this.action(selectedFiles,[]);
-						kfm_selectNone();
-					}
-				}
+		el=document.createElement('div');
+		el.id='kfm_widget_clipboard_container';
+		el.className='widget_clipboard';
+		el.title=this.name;
+		el.style.float='left';
+		el.style.padding='5px';
+		el.style.width='70px';
+		el.style.height='70px';
+		el.style.background='url(\'widgets/clipboard/clipboard_empty.png\') no-repeat';
+		el.style.fontSize='10px';
+		$j.event.add(el,'mouseover',function(){
+			if(document.getElementById('kdnd_drag_wrapper')){
+				if(kfm_theme=='blt') this.style.backgroundImage='url(\'widgets/clipboard/clipboard_add_blt.png\')';
+				else this.style.backgroundImage='url(\'widgets/clipboard/clipboard_add.png\')';
 			}
+			if(this.hasEventsSet)return;
+			$j.event.add(this,'mouseout',function(){this.setAppearance();});
+			$j.event.add(this,'click',function(){
+				if(!selectedFiles.length)return;
+				this.action(selectedFiles,[]);
+				kfm_selectNone();
+			});
+			this.hasEventsSet=true;
 		});
 		if(kfm_theme=='blt'){
 			el.empty_url='widgets/clipboard/clipboard_empty_blt.png';
