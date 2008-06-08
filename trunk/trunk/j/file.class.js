@@ -45,7 +45,7 @@ File.prototype.setThumbnailBackground=function(el,reset){
 		img.style.width=1;
 		img.style.height=1;
 		var id=this.id;
-		img.addEvent('load',function(){
+		$j.event.add(img,'load',function(){
 			var p=this.parentNode;
 			p.style.backgroundImage='url("'+url+'")';
 			var F=File_getInstance(id);

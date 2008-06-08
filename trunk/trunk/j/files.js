@@ -187,12 +187,10 @@ function kfm_filesLoader(){
 function kfm_files_reflowIcons(){
 	var panel=document.getElementById('documents_body');
 	if(panel.contentMode!='file_icons')return;
-	var els=$ES('.kfm_file_icon',panel);
-	for(var i=0;i<els.length;++i){
-		var el=els[i];
-		el.setStyle('clear','none');
-		if(i&&els[i-1].offsetLeft>=el.offsetLeft)el.setStyle('clear','left');
-	}
+	$j('#documents_body .kfm_file_icon').each(function(el){
+		el.style.clear='none';
+		if(i&&els[i-1].offsetLeft>=el.offsetLeft)el.style.clear='left';
+	});
 }
 function kfm_getCachedIcon(type){
 	if(window.kfm_file_bits.cacheableIcons[type])return window.kfm_file_bits.cacheableIcons[type];
@@ -262,7 +260,7 @@ function kfm_incrementalFileDisplay(){
 			}
 		}
 		else wrapper.appendChild(el);
-		if(a&&document.getElementById('kfm_file_icon_'+fsdata[a-1].id).offsetLeft>=el.offsetLeft)el.setStyle('clear','left');
+		if(a&&document.getElementById('kfm_file_icon_'+fsdata[a-1].id).offsetLeft>=el.offsetLeft)el.style.clear='left';
 		window.kfm_incrementalFileDisplay_vars.at=a+1;
 	}while(a+1<fsdata.length && (a+1)%kfm_show_files_in_groups_of);
 	if(a+1<fsdata.length)window.kfm_incrementalFileDisplay_loader=setTimeout(kfm_incrementalFileDisplay,1);
@@ -390,11 +388,8 @@ function kfm_removeFilesFromView(files){
 	for(var i=0;i<files.length;++i){
 		var el=document.getElementById('kfm_file_icon_'+files[i]);
 		if(el){
-			if(kfm_listview){
-							el.parentNode.parentNode.remove();
-							var trows=$ES('#kfm_files_listview_table tr');
-						}
-			else el.remove();
+			if(kfm_listview)el.parentNode.parentNode.removeChild(el.parentNode);
+			else el.parentNode.removeChild(el);
 		}
 		right_column.fileids.remove(files[i]);
 	}
@@ -447,7 +442,11 @@ function kfm_showToolTip(id){
 	kfm.addEl(document.body,table);
 	var l=getOffset(icon,'Left'),t=getOffset(icon,'Top'),w=icon.offsetWidth,h=icon.offsetHeight,ws=window.getSize().size;
 	l=(l+(w/2)>ws.x/2)?l-table.offsetWidth:l+w;
-	table.setStyles('position:absolute;top:'+t+'px;left:'+l+'px;visibility:visible;opacity:.9');
+	table.style.position  ='absolute';
+	table.style.top       =t+'px';
+	table.style.left      =l+'px';
+	table.style.visibility='visible';
+	table.style.opacity   =.9;
 }
 function kfm_zip(name){
 	if(!name || name.toString()!==name)name='zipped.zip';

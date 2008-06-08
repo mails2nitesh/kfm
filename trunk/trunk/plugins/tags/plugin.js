@@ -19,22 +19,27 @@ function kfm_tagAdd(id){
 	});
 }
 function kfm_tagDraw(id){
+	var ret;
 	if($type(id)!='array'){
-		if(kfm_tags[id])return (new Element('span')).setHTML(kfm_tags[id]);
+		if(kfm_tags[id]){
+			ret=document.createElement('span');
+			ret.innerHTML=kfm_tags[id];
+			return ret;
+		}
 		x_kfm_getTagName(id,kfm_tagDraw);
-		return (new Element('span',{
-			'class':'kfm_unknown_tag'
-		})).setHTML(id);
+		ret=document.createElement('span');
+		ret.className='kfm_unknown_tag';
+		ret.innerHTML=id;
+		return ret;
 	}
-	var name=id[1],id=id[0],els=$ES('span.kfm_unknown_tag');
+	var name=id[1],id=id[0];
 	kfm_tags[id]=name;
-	for(var i=0;i<els.length;++i){
-		var el=els[i];
+	$j('span.kfm_unknown_tag').each(function(key,el){
 		if(el.innerHTML==id){
 			el.innerHTML=name;
-			el.removeClass('kfm_unknown_tag');
+			$j.className.remove(el,'kfm_unknown_tag');
 		}
-	}
+	});
 }
 function kfm_tagRemove(id){
 	kfm_prompt(kfm.lang.WhichTagsDoYouWantToRemove,'',function(tagsToRemove){

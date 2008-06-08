@@ -2,11 +2,8 @@
 var KFM=function(){
 };
 KFM.prototype.about=function(){
-	var div=new Element('div',{
-		'styles':{
-			'width':400
-		}
-	});
+	var div=document.createElement('div');
+	div.style.width='400px';
 	var html='<h1>KFM '+kfm_vars.version+'</h1>';
 	{ // sponsors
 		html+='<h2>Sponsors</h2>';
@@ -81,11 +78,8 @@ KFM.prototype.alert=function(txt){
 	setTimeout('window.inPrompt=0',1);
 };
 KFM.prototype.showErrors=function(errors){
-	var div=new Element('div',{
-		'styles':{
-			'width':400
-		}
-	});
+	var div=document.createElement('div');
+	div.style.width='400px';
 	var html='';
 	for(var i=0;i<errors.length;i++){
 		html+='<span>'+errors[i].message+'</span><br/>';
@@ -193,43 +187,42 @@ KFM.prototype.build=function(){
 			});
 		}
 		{ // create right_column
-			right_column=new Element('div',{
-				'id':'kfm_right_column'
+			var option,lselect;
+			right_column=document.createElement('div');
+			right_column.id='kfm_right_column';
+			// {{{ create view-type selectbox
+			lselect=document.createElement('select');	
+			lselect.style.position='absolute';
+			lselect.style.zIndex=2;
+			lselect.style.right=0;
+			lselect.style.top='1px';
+			lselect.style.border=0;
+			$j.event.add(lselect,'change',function(){
+				kfm.switchFilesMode(this.value);
 			});
-		   var lselect=new Element('select',{	
-		       'styles':{
-		           'position':'absolute',
-		           'z-index':2,
-		           'right':0,
-		           'top':1,
-		           'border':0
-		       },
-		       'events':{
-		           'change':function(){
-									kfm.switchFilesMode(this.value);
-		           }
-		       }
-		   });
-		   lselect.appendChild((new Element('option',{
-		       'selected':!kfm_listview,
-		       'value':0
-		   })).appendText(kfm.lang.Icons));
-		   lselect.appendChild((new Element('option',{
-		       'selected':kfm_listview,
-		       'value':1
-		   })).appendText(kfm.lang.ListView));
-
-		   var header=new Element('div',{
-		       'class':'kfm_panel_header',
-		       'id':'kfm_panel_header'
-		   });
+			// {{{ icons mode
+			option=document.createElement('option');
+			option.selected=!kfm_listview;
+			option.value=0;
+			option.innerHTML=kfm.lang.Icons;
+			lselect.appendChild(option);
+			// }}}
+			// {{{
+			option=document.createElement('option');
+			option.selected=kfm_listview;
+			option.value=1;
+			option.innerHTML=kfm.lang.ListView;
+			lselect.appendChild(option);
+			// }}}
+			// }}}
+			var header=document.createElement('div');
+			header.className='kfm_panel_header';
+			header.id='kfm_panel_header';
 			header.innerHTML='<span id="documents_loader"></span><span id="cwd_display"></span><span id="folder_info"></span>';
-
-			var documents_body=new Element('div',{
-				'id':'documents_body'
-			});
-		  right_column.appendChild(lselect);
-		  right_column.appendChild(header);
+			var documents_body=document.createElement('div');
+			documents_body.id='documents_body';
+			right_column.appendChild(lselect);
+			right_column.appendChild(header);
 			right_column.appendChild(documents_body);
 		}
 		{ // draw areas to screen and load files and directory info
@@ -248,7 +241,7 @@ KFM.prototype.build=function(){
 			if(e.rightClick)return;
 			window.mouseAt=e.page;
 			if(this.contentMode=='file_icons' && this.fileids.length)window.dragSelectionTrigger=setTimeout(function(){kfm_selection_dragStart()},200);
-			documents_body.addEvent('mouseup',kfm_selection_dragFinish);
+			$j.event.add(documents_body,'mouseup',kfm_selection_dragFinish);
 		});
 		kfm_addContextMenu(documents_body,function(e){
 			var links=[],i;
@@ -313,8 +306,8 @@ KFM.prototype.build=function(){
 		});
 	}
 	x_kfm_loadFiles(kfm_vars.startupfolder_id,kfm_refreshFiles);
-	document.addEvent('keyup',kfm.keyup);
-	window.addEvent('resize',kfm_resizeHandler);
+	$j.event.add(document,'keyup',kfm.keyup);
+	$j.event.add(window,'resize',kfm_resizeHandler);
 	kfm_contextmenuinit();
 };
 KFM.prototype.confirm=function(txt){
@@ -446,17 +439,20 @@ function kfm_log(msg){
 	}
 	wrapper.visible=1;
 alert("is this panel actually used by anyone?\nif so, please email kae@verens.com to tell him not to delete it");
-	var el=$E('#kfm_logs_panel div.kfm_panel_body'),p=(new Element('p'));
+	var el=$E('#kfm_logs_panel div.kfm_panel_body'),p=document.createElement('p');
 	p.innerHTML=msg;
-	if(msg.indexOf(kfm.lang.ErrorPrefix)==0)p.setStyles('background:#ff0;fontWeight:bold;color:red');
+	if(msg.indexOf(kfm.lang.ErrorPrefix)==0){
+		p.style.background='#ff0';
+		p.style.fontWeight='bold';
+		p.style.color='red';
+	}
 	kfm.addEl(el,p);
 	el.scrollTop=el.scrollTop+p.offsetHeight;
 }
 function kfm_prompt(txt,val,fn){
 	window.inPrompt=1;
-	var table=new Element('table',{
-		'id':'kfm_prompt_table'
-	});
+	var table=document.createElement('table');
+	table.id='kfm_prompt_table';
 	var row=table.insertRow(0),inp=newInput('kfm_prompt',0,val);
 	row.insertCell(0).innerHTML=txt.replace(/\n/g,'<br />');
 	row.insertCell(1).appendChild(inp);

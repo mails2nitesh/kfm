@@ -11,10 +11,8 @@ function kfm_runSearch2(){
 	else x_kfm_search(keywords,tags,kfm_refreshFiles)
 }
 function kfm_searchBoxFile(){
-	return new Element('input',{
-		'id':'kfm_search_keywords',
-		'events':{
-			'keyup':kfm_runSearch
-		}
-	});
+	var sbox=document.createElement('input');
+	sbox.id='kfm_search_keywords';
+	$j.event.add(sbox,'keyup',kfm_runSearch);
+	return sbox;
 }

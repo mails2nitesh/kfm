@@ -3,17 +3,14 @@ function Trash(){
 	this.name='Trash';
 	this.display=function(){
 		if(!kfm_vars.permissions.file.rm)return false;
-		el=new Element('img',{
-			'src':'widgets/trash/trash.png',
-			'class':'widget_trash',
-			'title':this.name,
-			'styles':{
-				'display':'block',
-				'float':'left',
-				'width':'70px',
-				'height':'70px'
-			}
-		});
+		el=document.createElement('img');
+		el.src='widgets/trash/trash.png';
+		el.className='widget_trash';
+		el.title=this.name;
+		el.style.display='block';
+		el.style.float='left';
+		el.style.width='70px';
+		el.style.height='70px';
 		if(kfm_theme=="blt")$j(el).attr('src','widgets/trash/trash_blt.png');
 		el.action=function(files,dirs){
 			kfm_deleteFiles(files);
