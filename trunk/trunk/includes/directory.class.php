@@ -31,7 +31,7 @@ class kfmDirectory extends kfmObject{
 		if(!$kfm->setting('allow_directory_create'))return $this->error(kfm_lang('permissionDeniedCreateDirectory'));
 		$physical_address=$this->path.$name;
 		$short_version=str_replace($GLOBALS['rootdir'],'',$physical_address);
-		if(!$this->checkAddr($physical_address)){
+		if(!$this->checkAddr($physical_address) || !$this->checkName($name)){
 			$this->error(kfm_lang('illegalDirectoryName',$short_version));
 			return false;
 		}
@@ -178,7 +178,7 @@ class kfmDirectory extends kfmObject{
 		global $kfm,$kfmDirectoryInstances;
 		if(!$kfm->setting('allow_directory_edit'))return $this->error(kfm_lang('permissionDeniedEditDirectory'));
 		if(!$this->isWritable())return $this->error(kfm_lang('permissionDeniedRename',$this->name));
-		if(!$this->checkAddr($newname))return $this->error(kfm_lang('cannotRenameFromTo',$this->name,$newname));
+		if(!$this->checkName($newname))return $this->error(kfm_lang('cannotRenameFromTo',$this->name,$newname));
 		$parent=kfmDirectory::getInstance($this->pid);
 		if(file_exists($parent->path.$newname))return $this->error(kfm_lang('aDirectoryNamedAlreadyExists',$newname));
 		rename($this->path,$parent->path.$newname);
