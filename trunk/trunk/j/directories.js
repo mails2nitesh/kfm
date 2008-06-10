@@ -120,7 +120,8 @@ function kfm_deleteDirectoryCheck(res){
 	}
 }
 function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
-	var r=kfm.addRow(t),c,pdir=parent_addr+name,name=(name==''?kfm_vars.root_folder_name:name),name_text,el,openerEl;
+	var r=kfm.addRow(t);
+	var c,pdir=parent_addr+name,name=(name==''?kfm_vars.root_folder_name:name),name_text,el,openerEl;
 	// {{{ directory element
 	el=document.createElement('div');
 	el.id='kfm_directory_icon_'+parent;
