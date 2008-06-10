@@ -68,7 +68,9 @@ KFM.prototype.addEl=function(o,a){
 	return o;
 };
 KFM.prototype.addRow=function(t,p,c){
-	var o=t.insertRow(p===parseInt(p)?p:t.rows.length);
+	if(p)var position=p;
+	else var position=-1;
+	var o=t.insertRow(position);
 	if(c && c!=undefined)o.className=c;
 	return o;
 };
@@ -138,7 +140,7 @@ KFM.prototype.build=function(){
 	}
 	kfm_cwd_name=starttype;
 	document.body.style.overflow='hidden';
-	document.getElementById('removeme').remove();
+	$j(document.getElementById('removeme')).remove();
 	kfm_addContextMenu(document.body,function(e){
 		kfm_closeContextMenu();
 		var links=[['kfm.about()',kfm.lang.AboutKfm]];
@@ -295,6 +297,7 @@ KFM.prototype.build=function(){
 	var dirs=document.getElementById('kfm_directories');
 	if(dirs){
 		x_kfm_loadDirectories(kfm_vars.root_folder_id,kfm_refreshDirectories);
+		/*
 		kfm_addContextMenu(dirs.parentNode,function(e){
 			var links=[];
 			links.push(['kfm_createDirectory(1)',kfm.lang.CreateSubDir,'folder_new',!kfm_vars.permissions.dir.mk]);
@@ -304,6 +307,7 @@ KFM.prototype.build=function(){
 				//kfm_createContextMenu(e.page,links);
 			}
 		});
+		*/
 	}
 	x_kfm_loadFiles(kfm_vars.startupfolder_id,kfm_refreshFiles);
 	$j.event.add(document,'keyup',kfm.keyup);
