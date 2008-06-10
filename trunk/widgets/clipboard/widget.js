@@ -8,7 +8,7 @@ function Clipboard(){
 		el.id='kfm_widget_clipboard_container';
 		el.className='widget_clipboard';
 		el.title=this.name;
-		el.style.float='left';
+		$j(el).css('float','left');
 		el.style.padding='5px';
 		el.style.width='70px';
 		el.style.height='70px';

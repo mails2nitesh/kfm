@@ -8,7 +8,7 @@ function Trash(){
 		el.className='widget_trash';
 		el.title=this.name;
 		el.style.display='block';
-		el.style.float='left';
+		$j(el).css('float','left');
 		el.style.width='70px';
 		el.style.height='70px';
 		if(kfm_theme=="blt")$j(el).attr('src','widgets/trash/trash_blt.png');

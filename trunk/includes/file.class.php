@@ -183,7 +183,7 @@ class kfmFile extends kfmObject{
 	function rename($newName){
 		global $kfm;
 		if(!$kfm->setting('allow_file_edit'))return $this->error(kfm_lang('permissionDeniedEditFile'));
-		if(!kfm_checkAddr($newName))return $this->error(kfm_lang('cannotRenameFromTo',$this->name,$newName));
+		if(!$this->checkName($newName))return $this->error(kfm_lang('cannotRenameFromTo',$this->name,$newName));
 		$newFileAddress=$this->directory.$newName;
 		if(file_exists($newFileAddress))return $this->error(kfm_lang('fileAlreadyExists'));
 		rename($this->path,$newFileAddress);
