@@ -77,10 +77,20 @@ function Clipboard(){
 			var links=[];
 			var plugins=kfm_getLinks(el.files);
 			{ // add the links
-				plugins.push(['$("kfm_widget_clipboard_container").clearContents()','clear clipboard']); // TODO: new string
-				plugins.push(['$("kfm_widget_clipboard_container").pasteContents()','paste clipboard contents']); // TODO: new string
+				context_categories['kfm'].add({
+					name:'clipboard_clear',
+					title:'clear clipboard',
+					category:'kfm',
+					doFunction:function(){el.clearContents();}
+				});
+				context_categories['kfm'].add({
+					name:'clipboard_paste',
+					title:'paste clipboard to current folder',
+					category:'kfm',
+					doFunction:function(){el.pasteContents();}
+				});
 			}
-			kfm_createContextMenu(e.page,plugins);
+			//kfm_createContextMenu(e.page,plugins);
 		});
 		setTimeout("kdnd_makeDraggable('widget_clipboard');",1);
 		return el;

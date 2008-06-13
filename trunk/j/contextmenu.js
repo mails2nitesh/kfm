@@ -9,8 +9,6 @@ function kfm_addContextMenu(el,fn){
 function kfm_closeContextMenu(){
 	$j('.contextmenu').remove();
 	return;
-	if(contextmenu)contextmenu.remove();
-	contextmenu=null;
 }
 function kfm_contextmenuinit(){
 	$j.event.add(document,'click',function(e){

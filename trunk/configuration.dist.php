@@ -27,6 +27,12 @@ $kfm_db_username = 'username';
 $kfm_db_password = 'password';
 $kfm_db_port     = '';
 
+/**
+ * This setting specifies if you want to use the KFM security. If set to false, no login form will be displayd
+ * Note that the user_root_folder setting will not work when the user is the main user
+ */
+$use_kfm_security=true;
+
 // where on the machine are the files located? if the first two characters are './', then the
 //   files are relative to the directory that KFM is in.
 // Here are some examples:
@@ -47,10 +53,6 @@ $kfm_userfiles_address = '/home/kae/Desktop/userfiles';
 //   $kfm_userfiles_output = '/kfm/get.php';
 $kfm_userfiles_output = '/userfiles/';
 
-// what happens if someone double-clicks a file or presses enter on one? use 'return' for FCKeditor
-// values allowed: download, return
-$kfm_file_handler = 'return';
-
 // directory in which KFM keeps its database and generated files
 // if this starts with '/', then the address is absolute. otherwise, it is relative to $kfm_userfiles_address.
 // $kfm_workdirectory = '.files';
@@ -68,3 +70,10 @@ $kfm_dont_send_metrics = 0;
 // hours to offset server time by.
 // for example, if the server is in GMT, and you are in Northern Territory, Australia, then the value to use is 9.5
 $kfm_server_hours_offset = 1;
+
+/**
+ * This function is called in the admin area. To specify your own admin requirements or security, edit this function
+ */
+function kfm_admin_check(){
+	return true;
+}

@@ -54,7 +54,7 @@ if (!file_exists(KFM_BASE_PATH.'configuration.php')) {
     echo '<em>Missing <code>configuration.php</code>!</em><p>If this is a fresh installation of KFM, then please copy <code>configuration.dist.php</code> to <code>configuration.php</code>, remove the settings you don\'t want to change, and edit the rest to your needs.</p><p>For examples of configuration, please visit http://kfm.verens.com/configuration</p>';
     exit;
 }
-require_once KFM_BASE_PATH.'configuration.dist.php';
+//require_once KFM_BASE_PATH.'configuration.dist.php';
 require_once KFM_BASE_PATH.'configuration.php';
 // {{{ defines
 define('KFM_DB_PREFIX', $kfm_db_prefix);
@@ -297,7 +297,7 @@ if (isset($_GET['logout'])||isset($_GET['log_out'])) $kfm_session->set('loggedin
 $kfm->defaultSetting('kfm_session_id', $kfm_session->key);
 // }}}
 // {{{ check authentication
-if (isset($use_kfm_security) && !$use_kfm_security)$kfm_session->set('loggedin', 1);
+if (isset($use_kfm_security) && !$use_kfm_security)$kfm_session->setMultipe(array('loggedin'=>1,'user_id'=>1,'username'=>'CMS user','user_status'=>1));
 if (!$kfm_session->get('loggedin') && (!isset($kfm_api_auth_override)||!$kfm_api_auth_override)) {
     $err = '';
     if (isset($_POST['username'])&&isset($_POST['password'])) {
@@ -311,11 +311,7 @@ if (!$kfm_session->get('loggedin') && (!isset($kfm_api_auth_override)||!$kfm_api
         }
 		*/
     }
-   if (!$kfm_session->get('loggedin')) {
-		if(file_exists(KFM_BASE_PATH.'login.php'))include(KFM_BASE_PATH.'login.php');
-      else include KFM_BASE_PATH.'includes/login.php';
-		exit;
-	}
+   if (!$kfm_session->get('loggedin')) $kfm->show_login_form($err);
 }
 $uid=$kfm_session->get('user_id');
 $kfm->user_id=$uid;

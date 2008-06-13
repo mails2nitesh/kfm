@@ -48,7 +48,7 @@ function kfm_img_startLightbox(id){
 		el.style.width=ws.x+'px';
 		el.style.height=ws.y+'px';
 		el.style.background='#000';
-		el.style.opacity=.7;
+		$j(el).css('opacity',0.7);
 		wrapper.appendChild(el);
 	}
 	if(oldEl)oldEl.remove();

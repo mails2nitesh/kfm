@@ -37,7 +37,7 @@ function kdnd_drag(e){
 	window.kdnd_drag_wrapper.style.display ='block';
 	window.kdnd_drag_wrapper.style.left    =(m.x+window.kdnd_offset.x)+'px';
 	window.kdnd_drag_wrapper.style.top     =(m.y+window.kdnd_offset.y)+'px';
-	if(kdnd_source_el.hasClass('drag_this')){
+	if($j(kdnd_source_el).hasClass('drag_this')){
 		kdnd_source_el.style.visibility='hidden';
 	}
 }
@@ -56,7 +56,7 @@ function kdnd_dragFinish(e,notest){
 				}
 			});
 		});
-		if(kdnd_source_el.hasClass('drag_this')){
+		if($j(kdnd_source_el).hasClass('drag_this')){
 			kdnd_source_el.style.left      =(m.x+window.kdnd_offset.x)+'px';
 			kdnd_source_el.style.top       =(m.y+window.kdnd_offset.y)+'px';
 			kdnd_source_el.style.visibility='visible';
@@ -66,7 +66,7 @@ function kdnd_dragFinish(e,notest){
 		window.kdnd_dragging=false;
 		document.removeEvent('mousemove',kdnd_drag);
 		document.removeEvent('mouseup',kdnd_dragFinish);
-		window.kdnd_drag_wrapper.remove();
+		$j(window.kdnd_drag_wrapper).remove();
 		window.kdnd_drag_wrapper=null;
 		window.kdnd_source_el=null;
 	}
@@ -89,12 +89,12 @@ function kdnd_dragStart(el,source_class){
 	window.kdnd_drag_class=source_class;
 	window.kdnd_source_el=el;
 	var content=el.dragDisplay?el.dragDisplay():el.cloneNode(true);
-	if(el.getStyle('position')=='absolute' || el.getStyle('position')=='fixed'){
+	if($j(el).css('position')=='absolute' || $j(el).css('position')=='fixed'){
 		content.style.position='static';
 		content.style.left    =0;
 		content.style.top     =0;
 	}
-	if(!el.hasClass('drag_this'))window.kdnd_offset={'x':16,'y':0};
+	if(!$j(el).hasClass('drag_this'))window.kdnd_offset={'x':16,'y':0};
 	window.kdnd_drag_wrapper=document.createElement('div');
 	window.kdnd_drag_wrapper.id='kdnd_drag_wrapper';
 	window.kdnd_drag_wrapper.style.display='none';
