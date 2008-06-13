@@ -52,7 +52,7 @@ kfm_dir_bits={
 	},
 	removeHover:function(){
 		kfm_directory_over=0;
-		this.removeClass('hovered');
+		$j(this).removeClass('hovered');
 	},
 	addHover:function(){
 		if(!this.actionEvents){
@@ -75,7 +75,7 @@ function kfm_changeDirectory(id, nofiles){
 	if(window.ie)while(el&&!el.node_id)el=el.parentNode;
 	kfm_cwd_name=el.kfm_directoryname;
 	kfm_cwd_id=el.node_id;
-	for(var a=0;a<els.length;++a)els[a].removeClass('kfm_directory_open');
+	for(var a=0;a<els.length;++a)$j(els[a]).removeClass('kfm_directory_open');
 	el.parentNode.className+=' kfm_directory_open';
 		kfm_filesLoader();
 	if(!nofiles){

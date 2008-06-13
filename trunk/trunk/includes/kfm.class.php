@@ -140,5 +140,11 @@ class kfmBase extends kfmObject{
 	function setParameter($parameter, $value){
 
 	}
+
+	function show_login_form($err=''){
+		if(file_exists(KFM_BASE_PATH.'login.php'))include(KFM_BASE_PATH.'login.php');
+		else include KFM_BASE_PATH.'includes/login.php';
+		exit;
+	}
 }
 $kfm=new kfmBase();

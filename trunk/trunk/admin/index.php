@@ -1,5 +1,5 @@
 <?php
-require_once('../initialise.php');
+require_once('initialise.php');
 ?>
 <html>
 <head>

@@ -53,7 +53,7 @@ File.prototype.setThumbnailBackground=function(el,reset){
 			var F=File_getInstance(id);
 			F.icon_loaded=1;
 			F.icon_url=url;
-			this.remove();
+			$j(this).remove();
 		});
 		kfm.addEl(el,img);
 	}
