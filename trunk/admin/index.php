@@ -58,10 +58,10 @@ foreach($kfm->admin_tabs as $tab){
 #password_div{
 	margin:30px auto;
 	padding:10px;
-	width:350px;
+	width:450px;
 	border:2px dashed #aaa;
 }
-#password_div label { position: absolute; text-align:left; width:130px; }
+#password_div label { position: absolute; text-align:left; width:222px; }
 #password_div input, textarea { margin-left: 140px; }
 
 #settings_container{

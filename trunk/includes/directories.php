@@ -4,7 +4,7 @@ function _createDirectory($parent,$name){
 	if(!$kfm->setting('allow_directory_create'))return 'error: '.kfm_lang('permissionDeniedCreateDirectory');
 	$dir=kfmDirectory::getInstance($parent);
 	$dir->createSubdir($name);
-	if($dir->hasErrors()) return $dir->getErrors();
+	if($dir->hasErrors()) return;
 	return kfm_loadDirectories($parent);
 }
 function _deleteDirectory($id,$recursive=0){
@@ -53,7 +53,7 @@ function _moveDirectory($from,$to){
 	if(!$kfm->setting('allow_directory_move'))return 'error: '.kfm_lang('permissionDeniedMoveDirectory');
 	$dir=kfmDirectory::getInstance($from);
 	$dir->moveTo($to);
-	if($dir->hasErrors()) return $dir->getErrors();
+	if($dir->hasErrors()) return;
 	return _loadDirectories(1);
 }
 function _renameDirectory($fid,$newname){
