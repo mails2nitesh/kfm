@@ -2,8 +2,6 @@
 
 /* define the order of the categories */
 var HookCategories=["main", "view", "edit", "returning",'selection','kfm'];
-var subcontext_categories=[];
-var subcontext_size=4;
 var show_category_headers=true;
 var context_categories={};
 for(i=0;i<HookCategories.length;i++){
@@ -96,7 +94,7 @@ function kfm_addHookCategory(HookArray,ext, newCategory){
 	/*Add a hook category and*/
 	window[HookArray][ext][newCategory]=[];
 }
-function kfm_getLinks(files){
+function kfm_getLinks(files,nocontext){
 	/**
 	 * initial return function 
 	 * category information is lost but order of category is maintained 
@@ -124,7 +122,7 @@ function kfm_getLinks(files){
 	
 		/* Then add the file id to the doParameter */
 		cPlugins[index].doParameter.push(fid);
-		if(add)context_categories[category].add(cPlugins[index]);
+		if(add && !nocontext)context_categories[category].add(cPlugins[index]);
 	}
 	if(files.length>1){
 		for(var i=0; i<files.length; i++){
@@ -165,36 +163,40 @@ function kfm_getLinks(files){
 		if(typeof(window[HooksArray]['all'][category])!='undefined')hookObjects.extend(window[HooksArray]['all'][category]);
 		if(window[HooksArray][ext] && typeof(window[HooksArray][ext][category])!='undefined')hookObjects.extend(window[HooksArray][ext][category]);
 	}
-	hookObjects.forEach(function(item, index){
-		if(kfm_vars.associations[F.ext] && kfm_vars.associations[F.ext]==item.name){ // Create an open object
-			context_categories['main'].add({
-				name:'open',
-				title:'open',
-				category:'main',
-				doFunction:item.doFunction,
-				doParameter:item.doParameter
-			},true);
-		}
-		item.doParameter=[F.id];
-		context_categories[item.category].add(item);
-	});
+	if(!nocontext){
+		hookObjects.forEach(function(item, index){
+			if(kfm_vars.associations[F.ext] && kfm_vars.associations[F.ext]==item.name){ // Create an open object
+				context_categories['main'].add({
+					name:'open',
+					title:'open',
+					category:'main',
+					doFunction:item.doFunction,
+					doParameter:item.doParameter
+				},true);
+			}
+			item.doParameter=[F.id];
+			context_categories[item.category].add(item);
+		});
+	}
 	return hookObjects;
 }
-function kfm_getDefaultOpener(id){
+function kfm_getDefaultOpener(files){
 	var plugin_name;
-	var hooks=kfm_getLinks([id]);
-	var F=File_getInstance(id);
+	var F=File_getInstance(files[0]);
 	if(kfm_vars.associations[F.ext]){
+		var hooks=kfm_getLinks(files,true);
 		plugin_name=kfm_vars.associations[F.ext];
 		for(var i=0;i<hooks.length;++i){
 			if(hooks[i].name==plugin_name)return hooks[i];
 		}
 	}else if(kfm_vars.associations['all']){
+		var hooks=kfm_getLinks(files,true);
 		plugin_name=kfm_vars.associations['all'];
 		for(var i=0;i<hooks.length;++i){
 			if(hooks[i].name==plugin_name)return hooks[i];
 		}
 	}
+	return false;
 }
 function kfm_context_category(name){
 	this.name=name;

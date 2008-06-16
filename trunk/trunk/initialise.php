@@ -21,6 +21,7 @@ require KFM_BASE_PATH.'includes/file.class.php';
 require KFM_BASE_PATH.'includes/image.class.php';
 require KFM_BASE_PATH.'includes/directory.class.php';
 require KFM_BASE_PATH.'includes/plugin.class.php';
+require_once(KFM_BASE_PATH.'templating.php');
 // }}}
 function sql_escape($sql)
 {
@@ -90,6 +91,9 @@ $kfm->defaultSetting('date_format', '%x');
 $kfm->defaultSetting('theme', false); // must be overwritten
 $kfm->defaultSetting('listview',0);
 $kfm->defaultSetting('preferred_languages',array('en','de','da','es','fr','nl','ga'));
+//contextmenu
+$kfm->defaultSetting('subcontext_categories',array());
+$kfm->defaultSetting('subcontext_size',4);
 // directory
 $kfm->defaultSetting('root_folder_name','root');
 $kfm->defaultSetting('allow_files_in_root',1);

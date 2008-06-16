@@ -31,9 +31,11 @@ var kfm_file_bits={
 		var id=el.file_id;
 		kfm_selectNone();
 		kfm_addToSelection(id);
-		var openingHook=kfm_getDefaultOpener(id);
-		if(!window.opener && openingHook)openingHook.doFunction([id]);
-		else kfm_chooseFile();
+		var openingHook=kfm_getDefaultOpener([id]);
+		if(openingHook)openingHook.doFunction([id]);
+		if(!openingHook){
+			kfm_chooseFile();
+		}
 	},
 	infoTooltipStart:function(e){ // initialise info tooltip
 		if(window.kfm_tooltipInit)clearTimeout(window.kfm_tooltipInit);

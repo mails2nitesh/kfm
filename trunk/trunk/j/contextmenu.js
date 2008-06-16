@@ -30,13 +30,9 @@ function kfm_createContextMenu(m,show_category_headers){
 	for(category in context_categories){
 		cat=context_categories[category];
 		cat_size=cat.size();
-		if(typeof(cat)!='object' || cat.type!='context_category'){
-			dump(cat);
-			continue;
-		}
 		if(!cat_size)continue;
 		var head=$j('<li class="contextmenu_head_'+cat.name+'"><span>'+cat.title+'</span></li>');
-		if(cat_size>subcontext_size || kfm_inArray(cat.name, subcontext_categories)){
+		if(cat_size>kfm_vars.subcontext_size || kfm_inArray(cat.name, kfm_vars.subcontext_categories)){
 			issub=true;
 			firsthead=true; // a head after a submenu is also a first one
 			sublist=$j('<ul class="subcontextmenu"></ul>');
