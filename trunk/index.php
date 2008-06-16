@@ -9,6 +9,16 @@
  * @license  docs/license.txt for licensing
  * @link     http://kfm.verens.com/
  */
+// {{{ functions
+function js_array($a,$quotes=true){
+	if(gettype($a)!='array')return '[]';
+	if(count($a)){
+		if($quotes) return '["'.join('","',$a).'"]';
+		else return '['.join(',',$a).']';
+	}
+	return '[]';
+}
+// }}}
 // {{{ setup
 error_reporting(E_ALL);
 require_once 'initialise.php';
@@ -135,7 +145,6 @@ if($tmp!='')echo "<style type=\"text/css\">$tmp</style>";
 $templated = 0;
 if (file_exists('themes/'.$kfm->setting('theme').'/template.html')) {
 	$template=file_get_contents('themes/'.$kfm->setting('theme').'/template.html');
-	require_once('templating.php');
     echo '<div id="templateWrapper" style="display:none">'.kfm_parse_template($template).'</div>';
     $templated = 1;
 }
@@ -212,6 +221,8 @@ if ($last_registration!=$today) {
                 use_multiple_file_upload:<?php echo $kfm->setting('use_multiple_file_upload'); ?>,
                 use_templates:<?php echo $templated; ?>,
 					 associations:<?php echo $ass_str; ?>,
+					 subcontext_categories:<?php echo js_array($kfm->setting('subcontext_categories'),true);?>,
+					 subcontext_size:<?php echo $kfm->setting('subcontext_size');?>,
                 version:'<?php echo KFM_VERSION; ?>'
             };
             var kfm_widgets=[];

@@ -79,7 +79,7 @@ function kfm_img_startLightbox(id){
 	el.style.zIndex=2;
 	if(window.kfm_slideshow&&!window.kfm_slideshow_stopped){
 		$j.event.add(el,'load',function(){
-			window.lightbox_slideshowTimer=setTimeout('kfm_img_startLightbox()',kfm_slideshow_delay);
+			window.lightbox_slideshowTimer=setTimeout('kfm_img_startLightbox()',lightbox_slideshow_delay);
 		});
 	}
 	wrapper.appendChild(el);

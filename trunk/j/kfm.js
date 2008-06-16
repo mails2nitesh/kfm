@@ -341,7 +341,15 @@ KFM.prototype.keyup=function(e){
 		}
 		case 13:{ // enter
 			if(!selectedFiles.length||window.inPrompt||cm!='file_icons')return;
-			kfm_chooseFile();
+			if(selectedFiles.length>1){
+				var files=$j.extend([],selectedFiles);
+				var openingHook=kfm_getDefaultOpener(files);
+				if(openingHook)openingHook.doFunction(files);
+			}else{
+				var openingHook=kfm_getDefaultOpener([id]);
+				if(openingHook)openingHook.doFunction([id]);
+			}
+			if(!openingHook)kfm_chooseFile();
 			break;
 		}
 		case 27:{ // escape

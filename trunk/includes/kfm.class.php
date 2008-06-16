@@ -25,7 +25,11 @@ class kfmBase extends kfmObject{
 		'listview'=>array('type'=>'bool'),
 		'theme'=>array('type'=>'choice_list','options'=>array()), // will be filled in initialise.php
 		'preferred_languages'=>array('type'=>'array'),
-		
+	
+		'Contextmenu settings'=>array('type'=>'group_header'),
+		'subcontext_categories'=>array('type'=>'array'),
+		'subcontext_size'=>array('type'=>'integer', 'properties'=>array('size'=>3,'maxsize'=>3)),
+
 		'Directory settings'=>array( 'type'=>'group_header'),
 		'root_folder_name'=>array('type'=>'text'),
 		'allow_files_in_root'=>array('type'=>'bool'),
