@@ -176,9 +176,9 @@ function kfm_dir_addLink(t,name,parent_addr,is_last,has_node_control,parent){
 	return t;
 }
 function kfm_dir_dropHandler(e){
-	var dir_from=parseInt($E('.kfm_directory_link',e.sourceElement).node_id);
+	var dir_from=parseInt($j('.kfm_directory_link',e.sourceElement).attr('node_id'));
 	if(dir_from==1)return;
-	var dir_to=parseInt($E('.kfm_directory_link',e.targetElement).node_id);
+	var dir_to=parseInt($j('.kfm_directory_link',e.targetElement).attr('node_id'));
 	if(dir_to==0||dir_to==dir_from)return;
 	if(!kfm_vars.permissions.dir.mv)return kfm.alert(kfm.lang.CannotMoveDirectory);
 	x_kfm_moveDirectory(dir_from,dir_to,kfm_refreshDirectories);
