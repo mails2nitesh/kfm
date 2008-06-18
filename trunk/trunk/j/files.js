@@ -313,7 +313,7 @@ function kfm_refreshFiles(res){
 			var listview_table=document.createElement('table');
 			listview_table.id='kfm_files_listview_table';
 			wrapper.appendChild(listview_table);
-			$j(listview_table).html('<thead><tr class="listview_headers"><th>&nbsp;</th><th>Name</th><th style="width:72px">Size</th><th style="width:72px">Type</th><th style="width:142px">Modified</th></tr></thead><tbody></tbody>');
+			$j(listview_table).html('<thead><tr class="listview_headers"><th>&nbsp;</th><th>'+kfm.lang.name+'</th><th style="width:72px">'+kfm.lang.size+'</th><th style="width:72px">'+kfm.lang.type+'</th><th style="width:142px">'+kfm.lang.LastModified+'</th></tr></thead><tbody></tbody>');
 				$j(listview_table).css('width','99%');
 		}
 		kfm_incrementalFileDisplay();

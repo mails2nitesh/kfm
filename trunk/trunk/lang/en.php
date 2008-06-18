@@ -68,6 +68,20 @@ $kfm_langStrings=array(
 	"error: filename not allowed"    => "error: filename not allowed",
 	"error: url must begin with http"=> "error: url must begin with http",
 	"UNKNOWN TAG"                    => "UNKNOWN TAG \"%1\"",
-	"error: unzip failed"            => "error: unzip failed"
+	"error: unzip failed"            => "error: unzip failed",
+	# 1.4
+	'files'									=> 'files',
+	'folders'								=> 'Folders',
+	'maps'									=> 'Maps',
+	'icons'									=> 'Icons',
+	'listview'								=> 'List view',
+	'list'									=> 'List',
+	'settings'								=> 'Settings',
+	'logout'									=> 'Log out',
+	'name',									=> 'Name',
+	'size',									=> 'Size',
+	'filename'								=> 'Filename',
+	'type'									=> 'Type',
+	'lastModified'							=> 'from js file'
 );
 ?>

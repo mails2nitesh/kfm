@@ -13,7 +13,7 @@ function kfm_modal_open(form,title,actions){
 		var shader=document.createElement('div');
 		shader.id='shader';
 		shader.style.background='#fff';
-		shader.style.opacity=.5;
+		$j(shader).css("opacity",0.5);
 		shader.style.position=pos;
 		shader.style.top=scrollAt.y+'px';
 		shader.style.left=scrollAt.x+'px';
@@ -90,6 +90,5 @@ function kfm_modal_open(form,title,actions){
 		e=new Event(e);
 		e.stop();
 	});
-	kfm_resizeHandler_add('shader');
-	kdnd_makeDraggable('modal_dialog');
+	$j(wrapper).Draggable({"handle":h2});
 }
