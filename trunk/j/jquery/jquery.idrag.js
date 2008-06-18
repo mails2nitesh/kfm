@@ -131,7 +131,7 @@ jQuery.iDrag =	{
 			jQuery.iUtil.getSize(elm)
 		);
 		if (elm.dragCfg.oP != 'relative' && elm.dragCfg.oP != 'absolute') {
-			dEs.position = 'relative';
+			dEs.position = 'absolute';
 		}
 
 		jQuery.iDrag.helper.empty();
