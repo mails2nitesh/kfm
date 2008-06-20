@@ -75,6 +75,7 @@ function kfm_changeDirectory(id, nofiles){
 	if(window.ie)while(el&&!el.node_id)el=el.parentNode;
 	kfm_cwd_name=el.kfm_directoryname;
 	kfm_cwd_id=el.node_id;
+	clearTimeout(window.kfm_incrementalFileDisplay_loader);
 	for(var a=0;a<els.length;++a)$j(els[a]).removeClass('kfm_directory_open');
 	el.parentNode.className+=' kfm_directory_open';
 		kfm_filesLoader();
