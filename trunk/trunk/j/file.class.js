@@ -41,23 +41,35 @@ File.prototype.setText=function(el,varname){
 File.prototype.setThumbnailBackground=function(el,reset){
 	if(this.icon_loaded && !reset)el.style.backgroundImage='url("'+this.icon_url+'")';
 	else{
-		var url='get.php?id='+this.id+'&width=64&height=64&get_params='+kfm_vars.get_params+'&r'+Math.random();
+		File_ThumbnailsQueue.push([el,this.id]);
+		if(!window.File_ThumbnailsTimeout)window.File_ThumbnailsTimeout=setTimeout(File.prototype.iterateThumbnailQueue,1);
+	}
+}
+File.prototype.iterateThumbnailQueue=function(){
+	if(!File_ThumbnailsQueue.length){
+		window.File_ThumbnailsTimeout=null;
+		return;
+	}
+	var el=window.File_ThumbnailsQueue[0][0],id=window.File_ThumbnailsQueue[0][1];
+	if(el && el.parentNode && el.parentNode.id=='documents_body'){
+		var url='get.php?id='+id+'&width=64&height=64&get_params='+kfm_vars.get_params;
 		var img=document.createElement('img');
 		img.src=url;
 		img.style.width=1;
 		img.style.height=1;
-		var id=this.id;
 		$j.event.add(img,'load',function(){
-			var p=this.parentNode;
-			p.style.backgroundImage='url("'+url+'")';
+			el.style.backgroundImage='url("'+url+'")';
 			var F=File_getInstance(id);
 			F.icon_loaded=1;
 			F.icon_url=url;
 			$j(this).remove();
+			setTimeout(File.prototype.iterateThumbnailQueue,1);
 		});
 		kfm.addEl(el,img);
 	}
-};
+	else setTimeout(File.prototype.iterateThumbnailQueue,1);
+	window.File_ThumbnailsQueue.shift();
+}
 function File_getInstance(id,data){
 	id=parseInt(id);
 	if(isNaN(id))return;
@@ -80,3 +92,4 @@ function File_setData(el,F){
 	File_Instances[id]=F;
 }
 var File_Instances=[];
+var File_ThumbnailsQueue=[];
