@@ -192,7 +192,8 @@ if ($last_registration!=$today) {
                     name_length_in_list:<?php echo $kfm->setting('files_name_length_in_list'); ?>,
                     return_id_to_cms:<?php echo $kfm->setting('return_file_id_to_cms')?'true':'false'; ?>,
                     allow_multiple_returns:<?php echo $kfm->setting('allow_multiple_file_returns')?'true':'false'; ?>,
-						drags_move_or_copy:<?php echo $kfm->setting('folder_drag_action'); ?>
+						drags_move_or_copy:<?php echo $kfm->setting('folder_drag_action'); ?>,
+						refresh_count:0
                 },
                 get_params:"<?php echo GET_PARAMS; ?>",
                 permissions:{

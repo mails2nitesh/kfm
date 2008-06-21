@@ -3,7 +3,7 @@ function plugin_image_rotate(){
 	this.title='rotate',
 	this.mode=0;//single files
 	this.writable=1;//writable files
-	this.category='edit';
+	this.category="edit";
 	this.extensions=['jpg','png','gif'];
 	this.doFunction=function(){}
 }
@@ -20,6 +20,9 @@ function kfm_rotateImage(id,direction){
 	kfm_fileLoader(id);
 	x_kfm_rotateImage(id,direction,function(id){
 		if($type(id)=='string')return kfm_log(id);
-		F.setThumbnailBackground($('kfm_file_icon_'+id),true);
+		x_kfm_getFileDetails(id,function(res){
+			File_setData(res);
+			F.setThumbnailBackground(document.getElementById('kfm_file_icon_'+id));
+		});
 	});
 }

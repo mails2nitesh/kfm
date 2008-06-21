@@ -144,11 +144,14 @@ function kfm_isFileInCWD(id){
 	for(i=0;i<files.length;++i)if(files[i]==id)return true;
 	return false;
 }
-function kfm_incrementalFileDisplay(){
+function kfm_incrementalFileDisplay(refresh_count){
 	var b=window.kfm_incrementalFileDisplay_vars,fsdata=b.data.files,wrapper=document.getElementById('documents_body');
 	if(wrapper.contentMode!='file_icons')return (window.kfm_incrementalFileDisplay_vars=null);
 	icon=kfm_getCachedIcon(kfm_listview);
 	do{
+		if(refresh_count!=kfm_vars.files.refresh_count){ // a new refresh is fired
+			return;
+		}
 		var a,fdata,name,F,nameEl,el,fullfilename,id;
 		a=b.at;
 		fdata=fsdata[a];
@@ -166,7 +169,11 @@ function kfm_incrementalFileDisplay(){
 		var writable=fdata.writable;
 		// {{{ file attributes
 		el.file_id=id;
-		if(!kfm_listview && fdata.width)F.setThumbnailBackground(el);
+		if(!kfm_listview && fdata.width){
+			F.setThumbnailBackground(el);
+			/* add as active file */
+			// if(!F.icon_loaded)kfm_vars.files.active[refresh_count].push(F);
+		}
 		wrapper.files[a]=el;
 		// }}}
 		el.appendChild(nameEl);
@@ -202,7 +209,8 @@ function kfm_incrementalFileDisplay(){
 		if(a&&document.getElementById('kfm_file_icon_'+fsdata[a-1].id).offsetLeft>=el.offsetLeft)el.style.clear='left';
 		window.kfm_incrementalFileDisplay_vars.at=a+1;
 	}while(a+1<fsdata.length && (a+1)%kfm_show_files_in_groups_of);
-	if(a+1<fsdata.length)window.kfm_incrementalFileDisplay_loader=setTimeout(kfm_incrementalFileDisplay,1);
+	//if(a+1<fsdata.length)window.kfm_incrementalFileDisplay_loader=setTimeout(kfm_incrementalFileDisplay,1);
+	if(a+1<fsdata.length)kfm_incrementalFileDisplay(refresh_count);
 	else{ // finished displaying icons
 		kdnd_makeDraggable('kfm_file');
 		if(kfm_listview){
@@ -317,7 +325,14 @@ function kfm_refreshFiles(res){
 			$j(listview_table).html('<thead><tr class="listview_headers"><th>&nbsp;</th><th>'+kfm.lang.name+'</th><th style="width:72px">'+kfm.lang.size+'</th><th style="width:72px">'+kfm.lang.type+'</th><th style="width:142px">'+kfm.lang.LastModified+'</th></tr></thead><tbody></tbody>');
 				$j(listview_table).css('width','99%');
 		}
-		kfm_incrementalFileDisplay();
+		/* Clear active files that are still loading */
+		/*
+			foreach(kfm_vars.files.active[kfm_vars.files.refresh_count] as F)if(!F.icon_loaded)F.thumb_image=nil;
+			kfm_vars.files.active[kfm_vars.files.refresh_count]=[]; //free memory
+		*/
+		kfm_vars.files.refresh_count++;
+		// kfm_vars.files.active[kfm_vars.files.refresh_count]=[]; // initialise new array
+		kfm_incrementalFileDisplay(kfm_vars.files.refresh_count);
 	}
 }
 function kfm_removeFilesFromView(files){
