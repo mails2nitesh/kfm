@@ -77,7 +77,7 @@ function kfm_createContextMenu(m,show_category_headers){
 			lClass='contextmenu_link';
 		}
 		for(var i=0;i<cat_size;i++){
-			if(cat.items[i].nocontextmeu)continue;
+			if(cat.items[i].nocontextmenu)continue;
 			li=$j('<li class="kfm_plugin_'+cat.items[i].name+'_contexticon kfm_plugin_'+cat.items[i].name+'_'+kfm_theme+'_contexticon '+lClass+'"><span>'+cat.items[i].title+'</span></li>');
 			$j.event.add(li[0],'mouseover',function(){
 				$j.className.add(this,'hover');
