@@ -39,11 +39,23 @@ File.prototype.setText=function(el,varname){
 	$j(el).text(v);
 };
 File.prototype.setThumbnailBackground=function(el,reset){
+	if(this.icon_loaded)el.style.backgroundImage='url("'+this.icon_url+'")';
+	else{
+		el.style.backgroundImage='url("themes/'+kfm_theme+'/icons/64x64/loader.gif")';
+		this.thumb_image=document.createElement('img');
+		var thumb_url=this.icon_url;
+		$j.event.add(this.thumb_image,'load',function(){
+			el.style.backgroundImage='url("'+thumb_url+'")';
+			this.icon_loaded=true;
+		});
+		this.thumb_image.src=thumb_url;
+	}
+	/*
 	if(this.icon_loaded && !reset)el.style.backgroundImage='url("'+this.icon_url+'")';
 	else{
 		File_ThumbnailsQueue.push([el,this.id]);
 		if(!window.File_ThumbnailsTimeout)window.File_ThumbnailsTimeout=setTimeout(File.prototype.iterateThumbnailQueue,1);
-	}
+	}*/
 }
 File.prototype.iterateThumbnailQueue=function(){
 	if(!File_ThumbnailsQueue.length){
@@ -63,8 +75,8 @@ File.prototype.iterateThumbnailQueue=function(){
 			F.icon_loaded=1;
 			F.icon_url=url;
 			$j(this).remove();
-			setTimeout(File.prototype.iterateThumbnailQueue,1);
 		});
+		setTimeout(File.prototype.iterateThumbnailQueue,1);
 		kfm.addEl(el,img);
 	}
 	else setTimeout(File.prototype.iterateThumbnailQueue,1);
