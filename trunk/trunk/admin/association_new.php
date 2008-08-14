@@ -1,5 +1,5 @@
 <?php
-require_once('../initialise.php');
+require_once('initialise.php');
 require_once('functions.php');
 if(!isset($_POST['extension']) || !isset($_POST['plugin']))die('error("Post values are missing");');
 $uid=$kfm->user_id;

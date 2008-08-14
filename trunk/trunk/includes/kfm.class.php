@@ -18,6 +18,7 @@ class kfmBase extends kfmObject{
 		'hidden_panels'=>array('type'=>'select_list','options'=>array('logs','file_details','file_upload','search','directory_properties','widgets')),
 		'startup_folder'=>array('type'=>'text', 'properties'=>array('size'=>16)),
 		'file_handler'=>array('type'=>'choice_list', 'options'=>array('Return'=>'return','Download'=>'download')),
+		'allow_user_file_associations'=>array('type'=>'bool'),
 		
 		'Display settings'=>array( 'type'=>'group_header'),
 		'date_format'=>array( 'type'=>'text', 'properties'=>array('size'=>10,'maxsize'=>25)),
@@ -98,9 +99,18 @@ class kfmBase extends kfmObject{
 	 * @param $name
 	 */
 	function isPlugin($name){
-		if(isset($this->plugins[$name]) && !$this->plugins[$name]->disabled)return true;
+		foreach($this->plugins as $p) if($p->name==$name && !$p->disabled)return true;
 		return false;
 	}
+
+	/**
+	 * Function to get a plugin. Returns false if plugin does not exists
+	 */
+	function getPlugin($name){
+		foreach($this->plugins as $p)if($p->name==$name)return $p;
+		return false;
+	}
+	
 	/**
 	 * setting function, returns a configuration parameter if one config is given, 
 	 * sets a config parameter if two parameters are given
@@ -125,6 +135,7 @@ class kfmBase extends kfmObject{
 	function addAdminTab($name, $page,$stylesheet=false){
 		$this->admin_tabs[]=array('title'=>$name, 'page'=>$page, 'stylesheet'=>$stylesheet);
 	}
+
 	/**
 	 * returns a parameter, returns the default if not present
 	 * @param $parameter
@@ -149,6 +160,34 @@ class kfmBase extends kfmObject{
 		if(file_exists(KFM_BASE_PATH.'login.php'))include(KFM_BASE_PATH.'login.php');
 		else include KFM_BASE_PATH.'includes/login.php';
 		exit;
+	}
+
+	/**
+	 * This function returns true if the user is an admin user, false if not
+	 */
+	function isAdmin(){
+		return $this->user_status==1;
+	}
+
+	/**
+	 * This function should be called in an admin page. If the user is not allowed to view the page, he/she will be shown the login form.
+	 */
+	function adminPage($level=3){
+		$allow=true;
+		if(function_exists('kfm_admin_check'))$allow=kfm_admin_check();
+		if(!$allow)$this->show_login_form();
+		return $allow;
+	}
+
+	/**
+	 * this function makes sure that the user is the admin user and delivers an error message if not.
+	 * if $ajax is true, an ajax error message is returned
+	 */
+	function requireAdmin($ajax){
+		if($this->user_status==1)return true;
+		$message="Only the admin user can use this";
+		if($ajax)$message='error("'.str_replace('"','\"',$message).'");';
+		die($message);
 	}
 }
 $kfm=new kfmBase();

@@ -85,6 +85,7 @@ $kfm->defaultSetting('startup_folder','');
 $kfm->defaultSetting('hidden_panels',array('logs','file_details','directory_properties'));
 $kfm->defaultSetting('log_level', 0);
 $kfm->defaultSetting('file_handler','download');
+$kfm->defaultSetting('allow_user_file_associations',false);
 //display
 $kfm->defaultSetting('time_format', '%T');
 $kfm->defaultSetting('date_format', '%x');

@@ -1,5 +1,5 @@
 <?php
-require_once('../initialise.php');
+require_once('initialise.php');
 require_once('functions.php');
 if($kfm->user_status!=1)die ('error("No authorization aquired")');
 if(!(isset($_POST['username'])&&isset($_POST['password'])))die('$.prompt("error with new user request");');

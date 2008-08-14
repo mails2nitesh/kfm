@@ -51,17 +51,8 @@ $kfm->setting('startupfolder_id',$kfm_startupfolder_id);
 // }}}
 // {{{ file associations
 $ass_arr=array();
-$associations=db_fetch_all('SELECT extension, plugin FROM '.KFM_DB_PREFIX.'plugin_extensions WHERE user_id=1');
-foreach($associations as $association){
-	if(strpos($association['extension'],',')!==false){
-		$exts=split(',',$association['extension']);
-		foreach($exts as $ext) $ass_arr[trim($ext)]=trim($association['plugin']);
-	}else{
-		$ass_arr[trim($association['extension'])]=trim($association['plugin']);
-	}
-}
-if($kfm->user_id!=1){
-	$associations=db_fetch_all('SELECT extension, plugin FROM '.KFM_DB_PREFIX.'plugin_extensions WHERE user_id='.$kfm->user_id);
+function addAssociations($associations){
+	global $ass_arr;
 	foreach($associations as $association){
 		if(strpos($association['extension'],',')!==false){
 			$exts=split(',',$association['extension']);
@@ -71,6 +62,17 @@ if($kfm->user_id!=1){
 		}
 	}
 }
+
+// First the user defined file associations
+if($kfm->user_id!=1 || $kfm->isAdmin() || !$kfm->setting('allow_user_file_associations')){
+	$associations=db_fetch_all('SELECT extension, plugin FROM '.KFM_DB_PREFIX.'plugin_extensions WHERE user_id='.$kfm->user_id);
+	addAssociations($associations);
+}
+
+// Now the default file associations
+$associations=db_fetch_all('SELECT extension, plugin FROM '.KFM_DB_PREFIX.'plugin_extensions WHERE user_id=1');
+addAssociations($associations);
+
 // To javascript object
 $ass_str='{';
 foreach($ass_arr as $ext=>$plugin)$ass_str.='"'.$ext.'":"'.$plugin.'",';
@@ -247,10 +249,8 @@ if($tmp != '')echo "<script type=\"text/javascript\"><!--\n$tmp\n--></script>";
 // {{{ show plugins if they exist
 $pluginssrc='';
 foreach ($kfm->plugins as $plugin) {
-    //if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.php')) include KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.php';
-#    if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.js'))echo '		<script type="text/javascript" src="plugins/'.$plugin.'/plugin.js"></script>'."\n";
-    //if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.js'))$pluginssrc.=file_get_contents('plugins/'.$plugin.'/plugin.js');
-	 $pluginssrc.=$plugin->getJavascript();
+	echo $plugin->getJavascriptFiles();
+	$pluginssrc.=$plugin->getJavascript();
 }
 if($pluginssrc!='')echo "<script type=\"text/javascript\"><!--\n$pluginssrc\n--></script>";
 // }}}

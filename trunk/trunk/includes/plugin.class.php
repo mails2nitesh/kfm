@@ -8,13 +8,20 @@ class kfmPlugin extends kfmObject{
 	public $title='KFM plugin';
 	public $settings=array();
 	private $javascript='';
+	public $javascript_files=array();
+	public $admin_tabs=array();
 	function __construct($name){
+		global $kfm;
 		$this->name=$name;
 		$this->title=$this->name;
 		$bt=debug_backtrace();
 		$this->path=dirname($bt[0]['file']).'/';
+		$this->url=$kfm->setting('kfm_url').'plugins/'.$name.'/';
 	}
-
+	
+	/**
+	 * This function add a setting that can be used by this plugin. This setting will appear in the settings panel
+	 */
 	function addSetting($name, $definition, $default){
 		$this->settings[]=array('name'=>$name,'definition'=>$definition,'default'=>$default);
 	}
@@ -26,7 +33,29 @@ class kfmPlugin extends kfmObject{
 		if(file_exists($this->path.'plugin.js'))$js.=file_get_contents($this->path.'plugin.js');
 		return $js;
 	}
+	function getJavascriptFiles(){
+		$str='';
+		foreach($this->javascript_files as $js_file){
+			$str.='<script type="text/javascript" src="plugins/'.$this->name.'/'.$js_file.'"></script>'."\n";
+		}
+		return $str;
+	}
 	function addJavascript($js){
-		$this->javascript.=$js."\n";
+		if(substr($js,-3,3)=='.js')$this->javascript_files[]=$js;
+		else $this->javascript.=$js."\n";
+	}
+
+	/**
+	 * This function sets the title of the plugin
+	 */
+	function setTitle($title){
+		$this->title=$title;
+	}
+	
+	/**
+	 * This function add a tab to the admin section. The file will be the content of this tab
+	 */
+	function adminTab($file){
+		$this->admin_tabs[]=$file;
 	}
 }
