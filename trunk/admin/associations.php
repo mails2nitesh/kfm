@@ -1,7 +1,9 @@
 <?php
-require_once('../initialise.php');
+require_once('initialise.php');
 require_once('functions.php');
-if($kfm->user_status!=1)die ('No authorization to view this page');
+if(!($kfm->isAdmin() || $kfm->setting('allow_user_file_associations'))) die ('Users are not allowed to create their own file associations');
+//$kfm->requireAdmin();
+//if($kfm->user_status!=1)die ('No authorization to view this page');
 print 'There are '.count($kfm->plugins).' plugins available';
 $uid=$kfm->user_id;
 $extensions=db_fetch_all('SELECT * FROM '.KFM_DB_PREFIX.'plugin_extensions WHERE user_id='.$uid);

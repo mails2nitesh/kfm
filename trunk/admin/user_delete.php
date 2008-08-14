@@ -1,5 +1,5 @@
 <?php
-require_once('../initialise.php');
+require_once('initialise.php');
 if($kfm->user_status!=1)die ('error("No authorization aquired")');
 if(!isset($_POST['uid'])) die ('error("Some parameters are missing")');
 $kfm->db->query('DELETE FROM '.KFM_DB_PREFIX.'users WHERE id='.$_POST['uid']);

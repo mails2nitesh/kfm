@@ -1,5 +1,5 @@
 <?php
-require_once('../initialise.php');
+require_once('initialise.php');
 if(!isset($_POST['sname'])) die ('error("Postvalues are not correct")');
 $uid=$kfm->user_id;
 $sn=$_POST['sname'];

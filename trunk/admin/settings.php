@@ -1,5 +1,5 @@
 <?php
-require_once('../initialise.php');
+require_once('initialise.php');
 require_once('functions.php');
 $sprefix='kfm_setting_';
 $uid=$kfm->user_id;

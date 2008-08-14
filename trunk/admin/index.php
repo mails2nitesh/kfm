@@ -1,5 +1,10 @@
 <?php
 require_once('initialise.php');
+foreach($kfm->plugins as $plugin){
+	foreach($plugin->admin_tabs as $tab){
+		$kfm->addAdminTab($plugin->title,$plugin->url.$tab);
+	}
+}
 ?>
 <html>
 <head>

@@ -1,5 +1,5 @@
 <?php
-require_once('../initialise.php');
+require_once('initialise.php');
 if($kfm->user_status!=1)die ('error("No authorization aquired")');
 if(!isset($_POST['sname']) || !isset($_POST['isuser'])) die ('error("Some parameters are missing")');
 $isuser=$_POST['isuser']?1:0;

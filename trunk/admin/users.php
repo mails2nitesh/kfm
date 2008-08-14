@@ -1,6 +1,7 @@
 <?php
-require_once('../initialise.php');
-if($kfm->user_status!=1)die ('error("No authorization aquired")');
+require_once('initialise.php');
+$kfm->requireAdmin(true);
+//if($kfm->user_status!=1)die ('error("No authorization aquired")');
 require_once('functions.php');
 $users=db_fetch_all('SELECT * FROM '.KFM_DB_PREFIX.'users WHERE id>1');
 if(!is_array($users))die ('error retrieving user list');

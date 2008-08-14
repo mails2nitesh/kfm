@@ -15,6 +15,7 @@ kfm_addHook(new plugin_lightbox(),{mode:0,title:kfm.lang.ViewImage});
 function kfm_img_startLightbox(id){
 	window.lightbox_oldCM=$('documents_body').contentMode;
 	$('documents_body').contentMode='lightbox';
+	window.title_before_lightbox=document.title;
 	if(id&&$type(id)=='array'){
 		if(id.length>1){
 			window.kfm_slideshow={ids:id,at:0};
@@ -25,6 +26,7 @@ function kfm_img_startLightbox(id){
 	}
 	if(!id){
 		window.kfm_slideshow.at++;
+		if(window.kfm_slideshow.at>window.kfm_slideshow.ids.length)window.kfm_slideshow.at-=kfm_slideshow.ids.length;
 		document.title='KFM Slideshow: '+window.kfm_slideshow.at;
 		id=window.kfm_slideshow.ids[window.kfm_slideshow.at%window.kfm_slideshow.ids.length];
 	}
@@ -42,6 +44,7 @@ function kfm_img_startLightbox(id){
 		document.body.appendChild(wrapper);
 		wrapper.focus();
 	}
+	wrapper.style.backgroundImage='url("themes/'+kfm_theme+'/large_loader.gif")';
 	if(!$('kfm_lightboxShader')){
 		el=document.createElement('div');
 		el.id='kfm_lightboxShader';
@@ -73,6 +76,9 @@ function kfm_img_startLightbox(id){
 	el=document.createElement('img');
 	el.id='kfm_lightboxImage';
 	el.src=url;
+	$j.event.add(el,'load',function(){
+		wrapper.style.backgroundImage='url()';
+	});
 	el.style.position='absolute';
 	el.style.left=(+((ws.x-w)/2))+'px';
 	el.style.top=(+((ws.y-h)/2))+'px';
@@ -89,10 +95,12 @@ function kfm_img_startLightbox(id){
 function kfm_img_stopLightbox(e){
 	e=new Event(e);
 	if(e.rightClick)return;
-	var wrapper=$('kfm_lightboxWrapper');
-	if(wrapper)wrapper.remove();
+	//var wrapper=$('kfm_lightboxWrapper');
+	//if(wrapper)wrapper.remove();
+	$j("#kfm_lightboxWrapper").remove();
 	window.kfm_slideshow=window.kfm_slideshow_stopped=null;
 	if(window.lightbox_slideshowTimer)clearTimeout(window.lightbox_slideshowTimer);
+	document.title=window.title_before_lightbox;
 	$('documents_body').contentMode=window.lightbox_oldCM;
 	kfm_resizeHandler_remove('kfm_lightboxShader');
 	kfm_resizeHandler_remove('kfm_lightboxWrapper');

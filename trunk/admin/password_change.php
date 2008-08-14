@@ -1,5 +1,5 @@
 <?php
-require_once('../initialise.php');
+require_once('initialise.php');
 if(isset($_POST['uid'])){
 	if($kfm->user_status==1){
 		$uid=$_POST['uid'];

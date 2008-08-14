@@ -1,5 +1,5 @@
 <?php
-require_once('../initialise.php');
+require_once('initialise.php');
 if(!isset($_POST['name']) || !isset($_POST['value'])) die ('error("post value missing");');
 $sn=$_POST['name'];
 $uid=$kfm->user_id;
