@@ -2,7 +2,7 @@ function kfm_plugin_tags(){
 	this.name='tags';
 	this.title='tags Plugin'; //will be set dynamically
 	this.category='edit';
-	this.mode=0;
+	this.mode=2;
 	this.writable=2;
 	this.extensions='all';
 	this.doFunction=function(files){alert('Tags doFunction is not set')};
@@ -14,7 +14,13 @@ function kfm_tagAdd(id){
 	kfm_prompt(kfm.lang.WhatIsTheNewTag,'',function(newTag){
 		if(newTag){
 			files=selectedFiles.length?selectedFiles:id;
-			x_kfm_tagAdd(files,newTag,kfm_showFileDetails);
+			x_kfm_tagAdd(files,newTag,function(res){
+				if(selectedFiles.length && selectedFiles.length > 1){
+					for(var i=0;i<files.length; i++)  x_kfm_getFileDetails(files[i],File_setData);
+				}else{
+					File_setData(res);
+				}
+			});
 		}
 	});
 }
@@ -45,7 +51,13 @@ function kfm_tagRemove(id){
 	kfm_prompt(kfm.lang.WhichTagsDoYouWantToRemove,'',function(tagsToRemove){
 		if(tagsToRemove){
 			files=selectedFiles.length?selectedFiles:id;
-			x_kfm_tagRemove(files,tagsToRemove,kfm_showFileDetails);
+			x_kfm_tagRemove(files,tagsToRemove,function(res){
+				if(selectedFiles.length && selectedFiles.length > 1){
+					for(var i=0;i<files.length; i++)  x_kfm_getFileDetails(files[i],File_setData);
+				}else{
+					File_setData(res);
+				}
+			});
 		}
 	});
 }
