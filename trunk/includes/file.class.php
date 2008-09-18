@@ -92,23 +92,28 @@ class kfmFile extends kfmObject{
 	 * Returns the url of the file as specified by the configuration
 	 */
 	function getUrl($x=0,$y=0){
-		global $rootdir, $kfm_userfiles_output,$kfm_workdirectory;
-		$cwd=$this->directory.'/'==$rootdir?'':str_replace($rootdir,'',$this->directory);
+		global $kfm;
+		//$this->url=$this->directory==$kfm->setting('files_root_path')?'':str_replace($rootdir,'',$this->directory);
+		//global $rootdir, $kfm_userfiles_output,$kfm_workdirectory;
 		if(!$this->exists())return 'javascript:alert("missing file")';
+		/*
 		if(preg_replace('/.*(get\.php)$/','$1',$kfm_userfiles_output)=='get.php'){
 			if($kfm_userfiles_output=='get.php')$url=preg_replace('/\/[^\/]*$/','/get.php?id='.$this->id.GET_PARAMS,$_SERVER['REQUEST_URI']);
 			else $url=$kfm_userfiles_output.'?id='.$this->id;
 			if($x&&$y)$url.='&width='.$x.'&height='.$y;
+		}*/
+		if($this->isImage()&&$x&&$y){
+			$img=kfmImage::getInstance($this);
+			$img->setThumbnail($x,$y);
+			return WORKPATH.'thumbs/'.$img->thumb_id;
 		}
-		else{
-			if($this->isImage()&&$x&&$y){
-				$img=kfmImage::getInstance($this);
-				$img->setThumbnail($x,$y);
-				return WORKPATH.'thumbs/'.$img->thumb_id;
-			}
-			else $url=$kfm_userfiles_output.'/'.$cwd.'/'.$this->name; # TODO: check this line - $cwd may be incorrect if the requested file is from a search
+		if($kfm->setting('file_url')=='secure'){
+			$url=$kfm->setting('kfm_url').'get.php?id='.$this->id.GET_PARAMS;
+		}else{
+			$url=$kfm->setting('files_url').str_replace($kfm->setting('files_root_path'),'',$this->path);
+			//else $url=$kfm_userfiles_output.'/'.$cwd.'/'.$this->name; # TODO: check this line - $cwd may be incorrect if the requested file is from a search
 		}
-		return preg_replace('/([^:])\/{2,}/','$1/',$url);
+		return preg_replace('/([^:])?\/{2,}/','$1/',$url);
 	}
 
 	/**
