@@ -80,6 +80,7 @@ else require KFM_BASE_PATH.'api/cms_hooks.php.dist';
 // {{{ variables
 // structure
 $kfm->defaultSetting('kfm_url','/');
+$kfm->defaultSetting('file_url','url');
 $kfm->defaultSetting('user_root_folder','');
 $kfm->defaultSetting('startup_folder','');
 $kfm->defaultSetting('hidden_panels',array('logs','file_details','directory_properties'));
@@ -137,19 +138,21 @@ $kfm->defaultSetting('return_file_id_to_cms',0); // Should be deprecated in favo
 $kfm->defaultSetting('allow_multiple_file_returns',0); // Should be deprecated in favour of plugin
 $kfm->defaultSetting('slideshow_delay',4);
 
-
-
+if(!substr($kfm_userfiles_output,-1,1)=='/')$kfm_userfiles_output .= '/'; // Just convention, end with slash
+$kfm->defaultSetting('files_url',$kfm_userfiles_output);
 define('KFM_VERSION', rtrim(file_get_contents(KFM_BASE_PATH.'docs/version.txt')));
 if (!isset($_SERVER['DOCUMENT_ROOT'])) { // fix for IIS
     $_SERVER['DOCUMENT_ROOT'] = preg_replace('/\/[^\/]*$/', '', str_replace('\\', '/', $_SERVER['SCRIPT_FILENAME']));
 }
 $rootdir = strpos($kfm_userfiles_address, './')===0?KFM_BASE_PATH.$kfm_userfiles_address:$kfm_userfiles_address.'/';
+
 if (!is_dir($rootdir))mkdir($rootdir, 0755);
 if (!is_dir($rootdir)) {
     echo 'error: "'.htmlspecialchars($rootdir).'" could not be created';
     exit;
 }
 $rootdir = realpath($rootdir).'/';
+$kfm->defaultSetting('files_root_path',$rootdir);
 define('KFM_DIR', dirname(__FILE__));
 if (!defined('GET_PARAMS')) define('GET_PARAMS', '');
 define('IMAGEMAGICK_PATH', isset($kfm_imagemagick_path)?$kfm_imagemagick_path:'/usr/bin/convert');
