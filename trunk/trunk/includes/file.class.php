@@ -269,8 +269,8 @@ class kfmFile extends kfmObject{
 			$this->error('found allowed files');
 			foreach($kfm->setting('allowed_files') as $allow){
 				if($allow[0]=='/' || $allow[0]=='@'){
-					if(preg_match($allow, $file))return true;
-				}else if($allow==strtolower($file)) return true;
+					if(preg_match($allow, $filename))return true;
+				}else if($allow==strtolower($filename)) return true;
 			}
 			return false;
 		}
