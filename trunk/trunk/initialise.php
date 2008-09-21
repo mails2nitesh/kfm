@@ -334,7 +334,9 @@ $kfm->session= &$kfm_session;
 // }}}
 // {{{ Read settings
 function setting_array($str){
-	return preg_split('/,\s*/',trim($str,' ,'));
+	$str=trim($str,' ,');
+	if($str=='')return array();
+	return preg_split('/\s*,\s*/',$str);
 }
 $settings=array();
 $admin_settings=db_fetch_all('SELECT name, value, usersetting FROM '.KFM_DB_PREFIX.'settings WHERE user_id=1');
