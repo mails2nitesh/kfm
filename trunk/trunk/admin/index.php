@@ -5,6 +5,9 @@ foreach($kfm->plugins as $plugin){
 		$kfm->addAdminTab($plugin->title,$plugin->url.$tab);
 	}
 }
+$getparams='?';
+foreach($_GET as $key => $value)$getparams.=urlencode($key).'='.urlencode($value).'&';
+$getparams=rtrim($getparams,'& ');
 ?>
 <html>
 <head>
@@ -158,7 +161,8 @@ foreach($kfm->admin_tabs as $tab){
 		<?php 
 		if($kfm->user_status==1) echo '<li><a href="associations.php" title="File associations"><span>File associations</span></a></li>';
 		foreach($kfm->admin_tabs as $tab){
-			echo '<li><a href="'.$tab['page'].'" title="'.$tab['title'].'"><span>'.$tab['title'].'</span></a></li>'."\n";
+			$active=isset($_GET['tab'])&&$_GET['tab']==$tab['title']?' class="ui-tabs-selected"':'';
+			echo '<li'.$active.'><a href="'.$tab['page'].$getparams.'" title="'.$tab['title'].'"><span>'.$tab['title'].'</span></a></li>'."\n";
 		}
 		?>
 	</ul>
