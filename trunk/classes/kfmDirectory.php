@@ -88,9 +88,9 @@ class kfmDirectory extends kfmObject{
 		if (!@array_key_exists($id,self::$instances)) {
 			$dir=new kfmDirectory($id);
 			if($dir->id==0)return false;
-			$self::$instances[$id]=$dir;
+			self::$instances[$id]=$dir;
 		}
-		return $self::$instances[$id];
+		return self::$instances[$id];
 	}
 	function getPath(){
 		$pathTmp=$this->name.'/';
