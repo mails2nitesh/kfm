@@ -1,6 +1,6 @@
 <?php
-$sessionInstances=array();
 class kfmSession extends kfmObject{
+	static $instances=array();
 	var $vars;
 	var $id;
 	function kfmSession($key=''){
@@ -34,10 +34,10 @@ class kfmSession extends kfmObject{
 		$this->kfmSession($key);
 	}
 	function getInstance($id=0){
-		if(!$id)return false;
-		global $sessionInstances;
-		if(!isset($sessionInstances[$id]))$sessionInstances[$id]=new kfmSession($id);
-		return $sessionInstances[$id];
+		$id=(int)$id;
+		if ($id<1) return false;
+		if (!@array_key_exists($id,self::$instances)) self::$instances[$id]=new kfmSession($id);
+		return self::$instances[$id];
 	}
 	function set($name='',$value=''){
 		global $kfm;

@@ -191,4 +191,3 @@ class kfmBase extends kfmObject{
 		die($message);
 	}
 }
-$kfm=new kfmBase();
