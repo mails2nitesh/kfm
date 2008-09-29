@@ -18,7 +18,6 @@ File.prototype.initialize=function(id,data){
 	else x_kfm_getFileDetails(id,File_setData);
 };
 File.prototype.setText=function(el,varname){
-	//el.empty(); // does not work with ie
 	$j(el).empty();
 	var v=$pick(this[varname],'');
 	if(varname=='name'){
@@ -35,7 +34,6 @@ File.prototype.setText=function(el,varname){
 		var v=(new Date(this.ctime*1000)).toGMTString().replace(/ GMT$/,'');
 		this.modified=v;
 	}
-	//el.appendText(v); // does not work with ie
 	$j(el).text(v);
 };
 File.prototype.setThumbnailBackground=function(el,reset){
