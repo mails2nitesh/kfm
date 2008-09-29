@@ -5,10 +5,10 @@ require '../libs.php';
 header('Content-type: text/javascript');
 header('Expires: '.gmdate("D, d M Y H:i:s", time() + 3600*24*365).' GMT');
 
-$name=md5_of_dir(KFM_BASE_PATH.'j/jquery/');
-if(file_exists(WORKPATH.$name))readfile(WORKPATH.$name);
+$md5path=md5_of_dir(KFM_BASE_PATH.'j/jquery/');
+if(file_exists($md5path))readfile($md5path);
 else{
-	$js=file_get_contents('jquery-1.2.6.js');
+	$js=file_get_contents('http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js');
 	$js.=file_get_contents('jquery.dimensions.pack.js');
 	$js.=file_get_contents('jquery.impromptu.js');
 	$js.=file_get_contents('jquery.iutil.pack.js');
@@ -18,7 +18,7 @@ else{
 	if(isset($_REQUEST['minify'])){
 		require '../../includes/jsmin-1.1.1.php';
 		$js=JSMin::minify($js);
-		file_put_contents(WORKPATH.$name,$js);
+		file_put_contents($md5path,$js);
 		delete_old_md5s(WORKPATH);
 		exit;
 	}
