@@ -12,15 +12,12 @@
 define('KFM_BASE_PATH', dirname(__FILE__).'/');
 
 // {{{ load classes and helper functions
+function __autoload($class_name) {
+	require_once KFM_BASE_PATH . 'classes/' . $class_name . '.php';
+}
 require KFM_BASE_PATH.'includes/lang.php';
 require KFM_BASE_PATH.'includes/db.php';
-require KFM_BASE_PATH.'includes/object.class.php';
-require KFM_BASE_PATH.'includes/kfm.class.php';
-require KFM_BASE_PATH.'includes/session.class.php';
-require KFM_BASE_PATH.'includes/file.class.php';
-require KFM_BASE_PATH.'includes/image.class.php';
-require KFM_BASE_PATH.'includes/directory.class.php';
-require KFM_BASE_PATH.'includes/plugin.class.php';
+$kfm=new kfmBase();
 require_once(KFM_BASE_PATH.'templating.php');
 // }}}
 function sql_escape($sql)
