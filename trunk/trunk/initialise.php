@@ -340,9 +340,11 @@ function setting_array($str){
 }
 $settings=array();
 $admin_settings=db_fetch_all('SELECT name, value, usersetting FROM '.KFM_DB_PREFIX.'settings WHERE user_id=1');
-foreach($admin_settings as $setting){
-	$settings[$setting['name']]=$setting['value'];
-	if($setting['usersetting'])$kfm->addUserSetting($setting['name']);
+if(is_array($admin_settings)){
+	foreach($admin_settings as $setting){
+		$settings[$setting['name']]=$setting['value'];
+		if($setting['usersetting'])$kfm->addUserSetting($setting['name']);
+	}
 }
 if($uid!=1){
 	$user_settings=db_fetch_all('SELECT name, value FROM '.KFM_DB_PREFIX.'settings WHERE user_id='.$uid.' AND usersetting=1');
@@ -507,6 +509,28 @@ function get_mimetype($f)
     $extension = preg_replace('/.*\./', '', $f);
     if (isset($mimetypes[$extension]))return $mimetypes[$extension];
     return 'unknown/mimetype';
+}
+function kfm_error($message,$level=3){
+	global $kfm_errors;
+	$kfm_errors[]=array('message'=>$message,'level'=>$level);
+	return false;
+}
+function kfm_isError($level=3){
+	global $kfm_errors;
+	foreach($kfm_errors as $error) if($error->level<=$level)return true;
+	return false;
+}
+function kfm_getErrors($level=3){
+	global $kfm_errors;
+	return $kfm_errors;
+}
+function kfm_addMessage($message){
+	global $kfm_messages;
+	$kfm_messages[]=array('message'=>$message);
+}
+function kfm_getMessages(){
+	global $kfm_messages;
+	return $kfm_messages;
 }
 // }}}
 // {{{ directory functions

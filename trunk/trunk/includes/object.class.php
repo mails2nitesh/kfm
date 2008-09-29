@@ -1,27 +1,4 @@
 <?php
-function kfm_error($message,$level=3){
-	global $kfm_errors;
-	$kfm_errors[]=array('message'=>$message,'level'=>$level);
-	return false;
-}
-function kfm_isError($level=3){
-	global $kfm_errors;
-	foreach($kfm_errors as $error) if($error->level<=$level)return true;
-	return false;
-}
-function kfm_getErrors($level=3){
-	global $kfm_errors;
-	return $kfm_errors;
-}
-function kfm_addMessage($message){
-	global $kfm_messages;
-	$kfm_messages[]=array('message'=>$message);
-}
-function kfm_getMessages(){
-	global $kfm_messages;
-	return $kfm_messages;
-}
-#TODO move the above functions to a separate functions file.
 class kfmObject{
 	var $error_array = array();
 	function __construct(){
@@ -76,4 +53,3 @@ class kfmObject{
 		);
 	}
 }
-?>

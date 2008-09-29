@@ -62,4 +62,3 @@ class kfmSession extends kfmObject{
 		return null;
 	}
 }
-?>
