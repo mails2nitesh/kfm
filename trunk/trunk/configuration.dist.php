@@ -30,8 +30,10 @@ $kfm_db_port     = '';
 /**
  * This setting specifies if you want to use the KFM security. If set to false, no login form will be displayd
  * Note that the user_root_folder setting will not work when the user is the main user
+ *
+ * Please change this to 'true' if you want to use usernames and passwords.
  */
-$use_kfm_security=true;
+$use_kfm_security=false;
 
 // where on the machine are the files located? if the first two characters are './', then the
 //   files are relative to the directory that KFM is in.
