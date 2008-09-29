@@ -1,20 +1,20 @@
 <?php
-$fileInstances=array();
 /**
  * Base file class
  */
 class kfmFile extends kfmObject{
-	var $ctime='';
-	var $directory='';
-	var $exists=0;
-	var $id=-1;
-	var $mimetype='';
-	var $name='';
-	var $parent=0;
-	var $path='';
-	var $size=0;
+	static $instances = array();
+	var $ctime        = '';
+	var $directory    = '';
+	var $exists       = 0;
+	var $id           = -1;
+	var $mimetype     = '';
+	var $name         = '';
+	var $parent       = 0;
+	var $path         = '';
+	var $size         = 0;
+	var $writable     = false;
 	var $type;
-	var $writable=false;
 	function kfmFile(){
 		global $kfm;
 		if(func_num_args()==1){
@@ -122,12 +122,12 @@ class kfmFile extends kfmObject{
 	 * @return Object file or image
 	 */
 	function getInstance($id=0){
-		global $fileInstances;
-		if(!$id)return false;
 		if(is_object($id))$id=$id->id;
-		if(!isset($fileInstances[$id]))$fileInstances[$id]=new kfmFile($id);
-		if($fileInstances[$id]->isImage())return kfmImage::getInstance($id);
-		return $fileInstances[$id];
+		$id=(int)$id;
+		if($id<1)return;
+		if (!@array_key_exists($id,self::$instances)) self::$instances[$id]=new kfmFile($id);
+		if (self::$instances[$id]->isImage()) return kfmImage::getInstance($id);
+		return self::$instances[$id];
 	}
 
 	/**

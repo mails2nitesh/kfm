@@ -1,6 +1,6 @@
 <?php
-$kfmDirectoryInstances=array();
 class kfmDirectory extends kfmObject{
+	static $instances=array();
 	var $subDirs=array();
 	function kfmDirectory($id=1){
 		parent::__construct();
@@ -83,13 +83,14 @@ class kfmDirectory extends kfmObject{
 		return $files;
 	}
 	function getInstance($id=1){
-		global $kfmDirectoryInstances;
-		if(!isset($kfmDirectoryInstances[$id])){
+		$id=(int)$id;
+		if($id<1)return;
+		if (!@array_key_exists($id,self::$instances)) {
 			$dir=new kfmDirectory($id);
 			if($dir->id==0)return false;
-			$kfmDirectoryInstances[$id]=$dir;
+			$self::$instances[$id]=$dir;
 		}
-		return $kfmDirectoryInstances[$id];
+		return $self::$instances[$id];
 	}
 	function getPath(){
 		$pathTmp=$this->name.'/';

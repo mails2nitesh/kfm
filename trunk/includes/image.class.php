@@ -1,13 +1,13 @@
 <?php
-$imageInstances=array();
 class kfmImage extends kfmFile{
-	var $caption='';
+	static $instances = array();
+	var $caption      = '';
+	var $info         = array(); # info from getimagesize
 	var $width;
 	var $height;
 	var $thumb_url;
 	var $thumb_id;
 	var $thumb_path;
-	var $info=array(); # info from getimagesize
 	function kfmImage($file){
 		if(is_object($file) && $file->isImage())parent::kfmFile($file->id);
 		else if(is_numeric($file))parent::kfmFile($file);
@@ -87,14 +87,14 @@ class kfmImage extends kfmFile{
 		return $row['id'];
 	}
 	function getInstance($id=0){
-		global $imageInstances;
-		if(!$id)return false;
 		if(is_object($id)){
 			if($id->isImage())$id=$id->id;
 			else return false;
 		}
-		if(!isset($imageInstances[$id]))$imageInstances[$id]=new kfmImage($id);
-		return $imageInstances[$id];
+		$id=(int)$id;
+		if($id<1)return false;
+		if (!@array_key_exists($id,self::$instances)) self::$instances[$id]=new kfmImage($id);
+		return self::$instances[$id];
 	}
 	function resize($new_width, $new_height=-1){
 		global $kfm;
