@@ -178,6 +178,12 @@ function newSelectbox(name,keys,vals,s,f){
 function newText(a){
 	return document.createTextNode(a);
 }
+function $defined(obj){
+return (obj != undefined);
+};
+function $pick(obj, picked){
+return $defined(obj) ? obj : picked;
+};
 function $type(obj){
 if (!$defined(obj)) return false;
 if (obj.htmlElement) return 'element';

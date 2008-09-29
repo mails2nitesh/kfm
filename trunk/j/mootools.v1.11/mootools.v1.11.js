@@ -1,9 +1,6 @@
 var MooTools = {
 version: '1.11'
 };
-function $defined(obj){
-return (obj != undefined);
-};
 function $merge(){
 var mix = {};
 for (var i = 0; i < arguments.length; i++){
@@ -41,9 +38,6 @@ $native(Function, Array, String, Number);
 function $chk(obj){
 return !!(obj || obj === 0);
 };
-function $pick(obj, picked){
-return $defined(obj) ? obj : picked;
-};
 var Abstract = function(obj){
 obj = obj || {};
 obj.extend = $extend;
@@ -51,7 +45,6 @@ return obj;
 };
 var Window = new Abstract(window);
 var Document = new Abstract(document);
-document.head = document.getElementsByTagName('head')[0];
 window.xpath = !!(document.evaluate);
 if (window.ActiveXObject) window.ie = window[window.XMLHttpRequest ? 'ie7' : 'ie6'] = true;
 else if (document.childNodes && !document.all && !navigator.taintEnabled) window.webkit = window[window.xpath ? 'webkit420' : 'webkit419'] = true;
@@ -83,9 +76,6 @@ var pp = proto[property];
 proto[property] = Class.Merge(pp, properties[property]);
 }
 return new Class(proto);
-},
-implement: function(){
-for (var i = 0, l = arguments.length; i < l; i++) $extend(this.prototype, arguments[i]);
 }
 };
 Class.Merge = function(previous, current){
@@ -127,17 +117,6 @@ if (this.$events && this.$events[type]) this.$events[type].remove(fn);
 return this;
 }
 });
-var Options = new Class({
-setOptions: function(){
-this.options = $merge.apply(null, [this.options].extend(arguments));
-if (this.addEvent){
-for (var option in this.options){
-if ($type(this.options[option] == 'function') && (/^on[A-Z]/).test(option)) this.addEvent(option, this.options[option]);
-}
-}
-return this;
-}
-});
 Array.extend({
 forEach: function(fn, bind){
 for (var i = 0, j = this.length; i < j; i++) fn.call(bind, this[i], i, this);
@@ -159,12 +138,6 @@ for (var i = 0, j = this.length; i < j; i++){
 if (!fn.call(bind, this[i], i, this)) return false;
 }
 return true;
-},
-some: function(fn, bind){
-for (var i = 0, j = this.length; i < j; i++){
-if (fn.call(bind, this[i], i, this)) return true;
-}
-return false;
 },
 indexOf: function(item, from){
 var len = this.length;
@@ -197,11 +170,6 @@ return this;
 contains: function(item, from){
 return this.indexOf(item, from) != -1;
 },
-associate: function(keys){
-var obj = {}, length = Math.min(this.length, keys.length);
-for (var i = 0; i < length; i++) obj[keys[i]] = this[i];
-return obj;
-},
 extend: function(array){
 for (var i = 0, j = array.length; i < j; i++) this.push(array[i]);
 return this;
@@ -213,9 +181,6 @@ return this;
 include: function(item){
 if (!this.contains(item)) this.push(item);
 return this;
-},
-getLast: function(){
-return this[this.length - 1] || null;
 }
 });
 Array.prototype.each = Array.prototype.forEach;
@@ -235,12 +200,6 @@ String.extend({
 test: function(regex, params){
 return (($type(regex) == 'string') ? new RegExp(regex, params) : regex).test(this);
 },
-toInt: function(){
-return parseInt(this, 10);
-},
-toFloat: function(){
-return parseFloat(this);
-},
 camelCase: function(){
 return this.replace(/-\D/g, function(match){
 return match.charAt(1).toUpperCase();
@@ -256,12 +215,6 @@ return this.replace(/\b[a-z]/g, function(match){
 return match.toUpperCase();
 });
 },
-trim: function(){
-return this.replace(/^\s+|\s+$/g, '');
-},
-clean: function(){
-return this.replace(/\s{2,}/g, ' ').trim();
-},
 rgbToHex: function(array){
 var rgb = this.match(/\d{1,3}/g);
 return (rgb) ? rgb.rgbToHex(array) : false;
@@ -272,9 +225,6 @@ return (hex) ? hex.slice(1).hexToRgb(array) : false;
 },
 contains: function(string, s){
 return (s) ? (s + this + s).indexOf(s + string + s) > -1 : this.indexOf(string) > -1;
-},
-escapeRegExp: function(){
-return this.replace(/([.*+?^${}()|[\]\/\\])/g, '\\$1');
 }
 });
 Array.extend({
@@ -305,8 +255,7 @@ options = $merge({
 'event': false,
 'arguments': null,
 'delay': false,
-'periodical': false,
-'attempt': false
+'periodical': false
 }, options);
 if ($chk(options.arguments) && $type(options.arguments) != 'array') options.arguments = [options.arguments];
 return function(event){
@@ -322,45 +271,14 @@ return fn.apply($pick(options.bind, fn), args);
 };
 if (options.delay) return setTimeout(returns, options.delay);
 if (options.periodical) return setInterval(returns, options.periodical);
-if (options.attempt) try {return returns();} catch(err){return false;};
 return returns();
 };
-},
-pass: function(args, bind){
-return this.create({'arguments': args, 'bind': bind});
-},
-attempt: function(args, bind){
-return this.create({'arguments': args, 'bind': bind, 'attempt': true})();
 },
 bind: function(bind, args){
 return this.create({'bind': bind, 'arguments': args});
 },
 bindAsEventListener: function(bind, args){
 return this.create({'bind': bind, 'event': true, 'arguments': args});
-},
-delay: function(delay, bind, args){
-return this.create({'delay': delay, 'bind': bind, 'arguments': args})();
-},
-periodical: function(interval, bind, args){
-return this.create({'periodical': interval, 'bind': bind, 'arguments': args})();
-}
-});
-Number.extend({
-toInt: function(){
-return parseInt(this);
-},
-toFloat: function(){
-return parseFloat(this);
-},
-limit: function(min, max){
-return Math.min(max, Math.max(min, this));
-},
-round: function(precision){
-precision = Math.pow(10, precision || 0);
-return Math.round(this * precision) / precision;
-},
-times: function(fn){
-for (var i = 0; i < this; i++) fn(i);
 }
 });
 var Element = new Class({
@@ -463,7 +381,7 @@ var val = props[prop];
 switch(prop){
 case 'styles': this.setStyles(val); break;
 case 'events': if (this.addEvents) this.addEvents(val); break;
-case 'properties': this.setProperties(val); break;
+case 'properties': Element.setMany(this, 'setProperty', val); break;
 default: this.setProperty(prop, val);
 }
 }
@@ -534,15 +452,12 @@ hasClass: function(className){
 return this.className.contains(className, ' ');
 },
 addClass: function(className){
-if (!this.hasClass(className)) this.className = (this.className + ' ' + className).clean();
+if (!this.hasClass(className)) this.className = (this.className + ' ' + className).replace(/\s{2,}/g, ' ').replace(/^\s+|\s+$/g, '');
 return this;
 },
 removeClass: function(className){
-this.className = this.className.replace(new RegExp('(^|\\s)' + className + '(?:\\s|$)'), '$1').clean();
+this.className = this.className.replace(new RegExp('(^|\\s)' + className + '(?:\\s|$)'), '$1').replace(/\s{2,}/g, ' ').replace(/^\s+|\s+$/g, '');
 return this;
-},
-toggleClass: function(className){
-return this.hasClass(className) ? this.removeClass(className) : this.addClass(className);
 },
 setStyle: function(property, value){
 switch(property){
@@ -619,7 +534,11 @@ return color.rgbToHex();
 return result;
 },
 getStyles: function(){
-return Element.getMany(this, 'getStyle', arguments);
+var result = {};
+$each(arguments, function(key){
+result[key] = this.getStyle(key);
+});
+return result;
 },
 walk: function(brother, start){
 brother += 'Sibling';
@@ -627,23 +546,8 @@ var el = (start) ? this[start] : this[brother];
 while (el && $type(el) != 'element') el = el[brother];
 return $(el);
 },
-getPrevious: function(){
-return this.walk('previous');
-},
 getNext: function(){
 return this.walk('next');
-},
-getFirst: function(){
-return this.walk('next', 'firstChild');
-},
-getLast: function(){
-return this.walk('previous', 'lastChild');
-},
-getParent: function(){
-return $(this.parentNode);
-},
-getChildren: function(){
-return $$(this.childNodes);
 },
 hasChild: function(el){
 return !!$A(this.getElementsByTagName('*')).contains(el);
@@ -656,61 +560,16 @@ if (!window.ie || flag) return this.getAttribute(property, flag);
 var node = this.attributes[property];
 return (node) ? node.nodeValue : null;
 },
-removeProperty: function(property){
-var index = Element.Properties[property];
-if (index) this[index] = '';
-else this.removeAttribute(property);
-return this;
-},
-getProperties: function(){
-return Element.getMany(this, 'getProperty', arguments);
-},
 setProperty: function(property, value){
 var index = Element.Properties[property];
 if (index) this[index] = value;
 else this.setAttribute(property, value);
 return this;
 },
-setProperties: function(source){
-return Element.setMany(this, 'setProperty', source);
-},
-setHTML: function(){
-this.innerHTML = $A(arguments).join('');
-return this;
-},
-setText: function(text){
-var tag = this.getTag();
-if (['style', 'script'].contains(tag)){
-if (window.ie){
-if (tag == 'style') this.styleSheet.cssText = text;
-else if (tag ==  'script') this.setProperty('text', text);
-return this;
-} else {
-this.removeChild(this.firstChild);
-return this.appendText(text);
-}
-}
-this[$defined(this.innerText) ? 'innerText' : 'textContent'] = text;
-return this;
-},
-getText: function(){
-var tag = this.getTag();
-if (['style', 'script'].contains(tag)){
-if (window.ie){
-if (tag == 'style') return this.styleSheet.cssText;
-else if (tag ==  'script') return this.getProperty('text');
-} else {
-return this.innerHTML;
-}
-}
-return ($pick(this.innerText, this.textContent));
-},
-getTag: function(){
-return this.tagName.toLowerCase();
-},
 empty: function(){
 Garbage.trash(this.getElementsByTagName('*'));
-return this.setHTML('');
+this.innerHTML='';
+return this;
 }
 });
 Element.fixStyle = function(property, result, element){
@@ -719,7 +578,7 @@ if (['height', 'width'].contains(property)){
 var values = (property == 'width') ? ['left', 'right'] : ['top', 'bottom'];
 var size = 0;
 values.each(function(value){
-size += element.getStyle('border-' + value + '-width').toInt() + element.getStyle('padding-' + value).toInt();
+size += parseInt(element.getStyle('border-' + value + '-width'),10) + parseInt(element.getStyle('padding-' + value),10);
 });
 return element['offset' + property.capitalize()] - size + 'px';
 } else if (property.test(/border(.+)Width|margin|padding/)){
@@ -732,13 +591,6 @@ Element.Styles = {'border': [], 'padding': [], 'margin': []};
 for (var style in Element.Styles) Element.Styles[style].push(style + direction);
 });
 Element.borderShort = ['borderWidth', 'borderStyle', 'borderColor'];
-Element.getMany = function(el, method, keys){
-var result = {};
-$each(keys, function(key){
-result[key] = el[method](key);
-});
-return result;
-};
 Element.setMany = function(el, method, pairs){
 for (var key in pairs) el[method](key, pairs[key]);
 return el;
@@ -757,11 +609,6 @@ Listeners: {
 addListener: function(type, fn){
 if (this.addEventListener) this.addEventListener(type, fn, false);
 else this.attachEvent('on' + type, fn);
-return this;
-},
-removeListener: function(type, fn){
-if (this.removeEventListener) this.removeEventListener(type, fn, false);
-else this.detachEvent('on' + type, fn);
 return this;
 }
 }
@@ -841,7 +688,8 @@ switch(this.type){
 case 'mouseover': this.relatedTarget = event.relatedTarget || event.fromElement; break;
 case 'mouseout': this.relatedTarget = event.relatedTarget || event.toElement;
 }
-this.fixRelatedTarget();
+if(window.gecko)Event.fix.relatedTargetGecko();
+else            Event.fix.relatedTarget();
 }
 return this;
 },
@@ -867,7 +715,6 @@ relatedTargetGecko: function(){
 try {Event.fix.relatedTarget.call(this);} catch(e){this.relatedTarget = this.target;}
 }
 };
-Event.prototype.fixRelatedTarget = (window.gecko) ? Event.fix.relatedTargetGecko : Event.fix.relatedTarget;
 Event.keys = new Abstract({
 'enter': 13,
 'up': 38,
@@ -908,7 +755,12 @@ if (custom){
 if (custom.remove) custom.remove.call(this, fn);
 if (custom.type) type = custom.type;
 }
-return (Element.NativeEvents.contains(type)) ? this.removeListener(type, value) : this;
+if(Element.NativeEvents.contains(type)){
+if (this.removeEventListener) this.removeEventListener(type, value, false);
+else this.detachEvent('on' + type, value);
+return this;
+}
+else return this;
 },
 addEvents: function(source){
 return Element.setMany(this, 'addEvent', source);
@@ -930,17 +782,6 @@ fireEvent: function(type, args, delay){
 if (this.$events && this.$events[type]){
 this.$events[type].keys.each(function(fn){
 fn.create({'bind': this, 'delay': delay, 'arguments': args})();
-}, this);
-}
-return this;
-},
-cloneEvents: function(from, type){
-if (!from.$events) return this;
-if (!type){
-for (var evType in from.$events) this.cloneEvents(from, evType);
-} else if (from.$events[type]){
-from.$events[type].keys.each(function(fn){
-this.addEvent(type, fn);
 }, this);
 }
 return this;
@@ -977,17 +818,7 @@ Element.NativeEvents = [
 'focus', 'blur', 'change', 'submit', 'reset', 'select', //forms elements
 'error', 'abort', 'contextmenu', 'scroll' //misc
 ];
-Function.extend({
-bindWithEvent: function(bind, args){
-return this.create({'bind': bind, 'arguments': args, 'event': Event});
-}
-});
 Elements.extend({
-filterByTag: function(tag){
-return new Elements(this.filter(function(el){
-return (Element.getTag(el) == tag);
-}));
-},
 filterByClass: function(className, nocash){
 var elements = this.filter(function(el){
 return (el.className && el.className.contains(className, ' '));
@@ -1056,7 +887,7 @@ getParam: function(items, context, param, i){
 if (i == 0){
 if (param[2]){
 var el = context.getElementById(param[2]);
-if (!el || ((param[1] != '*') && (Element.getTag(el) != param[1]))) return false;
+if (!el || ((param[1] != '*') && (el.tagName.toLowerCase() != param[1]))) return false;
 items = [el];
 } else {
 items = $A(context.getElementsByTagName(param[1]));
@@ -1086,7 +917,7 @@ $$.shared.method = (window.xpath) ? 'xpath' : 'normal';
 Element.Methods.Dom = {
 getElements: function(selector, nocash){
 var items = [];
-selector = selector.trim().split(' ');
+selector = selector.replace(/^\s+|\s+$/g, '').split(' ');
 for (var i = 0, j = selector.length; i < j; i++){
 var sel = selector[i];
 var param = sel.match($$.shared.regexp);
