@@ -5,7 +5,7 @@ require '../libs.php';
 header('Content-type: text/javascript');
 header('Expires: '.gmdate("D, d M Y H:i:s", time() + 3600*24*365).' GMT');
 
-$md5path=md5_of_dir(KFM_BASE_PATH.'j/jquery/');
+$md5path=WORKPATH.md5_of_dir(KFM_BASE_PATH.'j/jquery/');
 if(file_exists($md5path))readfile($md5path);
 else{
 	$js=file_get_contents('http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js');
@@ -19,6 +19,7 @@ else{
 		require '../../includes/jsmin-1.1.1.php';
 		$js=JSMin::minify($js);
 		file_put_contents($md5path,$js);
+		if(!file_exists($md5path))echo 'failed to write to '.$md5path;
 		delete_old_md5s(WORKPATH);
 		exit;
 	}

@@ -53,6 +53,7 @@ $kfm->setting('startupfolder_id',$kfm_startupfolder_id);
 $ass_arr=array();
 function addAssociations($associations){
 	global $ass_arr;
+	if(!is_array($associations))return;
 	foreach($associations as $association){
 		if(strpos($association['extension'],',')!==false){
 			$exts=split(',',$association['extension']);

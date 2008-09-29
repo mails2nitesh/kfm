@@ -224,4 +224,3 @@ class kfmDirectory extends kfmObject{
 		return true;
 	}
 }
-?>
