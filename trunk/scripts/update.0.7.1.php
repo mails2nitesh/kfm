@@ -8,7 +8,7 @@ switch($kfm_db_type){
 		require 'scripts/db.pgsql.update.0.7.1.php';
 		break;
 	}
-	case 'sqlite':{
+	case 'sqlite': case 'sqlitepdo':{
 		require 'scripts/db.sqlite.update.0.7.1.php';
 		break;
 	}

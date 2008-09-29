@@ -305,7 +305,7 @@ if (isset($_GET['logout'])||isset($_GET['log_out'])) $kfm_session->set('loggedin
 $kfm->defaultSetting('kfm_session_id', $kfm_session->key);
 // }}}
 // {{{ check authentication
-if (isset($use_kfm_security) && !$use_kfm_security)$kfm_session->setMultipe(array('loggedin'=>1,'user_id'=>1,'username'=>'CMS user','user_status'=>1));
+if (isset($use_kfm_security) && !$use_kfm_security)$kfm_session->setMultiple(array('loggedin'=>1,'user_id'=>1,'username'=>'CMS user','user_status'=>1));
 if (!$kfm_session->get('loggedin') && (!isset($kfm_api_auth_override)||!$kfm_api_auth_override)) {
     $err = '';
     if (isset($_POST['username'])&&isset($_POST['password'])) {
