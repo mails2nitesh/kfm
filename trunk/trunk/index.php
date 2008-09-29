@@ -236,7 +236,6 @@ if ($last_registration!=$today) {
         </script>
 <?php // }}} ?>
         <script type="text/javascript" src="j/all.php"></script>
-        <script type="text/javascript" src="j/hooks.js"></script>
         <script type="text/javascript" src="lang/<?php echo $kfm_language; ?>.js"></script>
 <?php // {{{ widgets and plugins
 // {{{ include widgets if they exist
