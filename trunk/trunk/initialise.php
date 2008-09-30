@@ -11,70 +11,53 @@
  */
 define('KFM_BASE_PATH', dirname(__FILE__).'/');
 
-// {{{ load classes and helper functions
+// { load classes and helper functions
 function __autoload($class_name) {
-	require_once KFM_BASE_PATH . 'classes/' . $class_name . '.php';
+    require_once KFM_BASE_PATH . 'classes/' . $class_name . '.php';
 }
 require KFM_BASE_PATH.'includes/lang.php';
 require KFM_BASE_PATH.'includes/db.php';
 $kfm=new kfmBase();
 require_once(KFM_BASE_PATH.'templating.php');
-// }}}
-function sql_escape($sql)
-{
+function kfm_dieOnError($error) {
+    if (!PEAR::isError($error))return;
+    echo '<strong>Error</strong><br />'.$error->getMessage().'<br />'.$error->userinfo.'<hr />';
+    exit;
+}
+function setting_array($str){
+    $str=trim($str,' ,');
+    if($str=='')return array();
+    return preg_split('/\s*,\s*/',$str);
+}
+function sql_escape($sql) {
     global $kfm_db_type;
     $sql = addslashes($sql);
     if ($kfm_db_type=='sqlite'||$kfm_db_type=='sqlitepdo')$sql = str_replace("\\'", "''", $sql);
     return $sql;
 }
-function kfm_dieOnError($error)
-{
-    if (!PEAR::isError($error))return;
-    echo '<strong>Error</strong><br />'.$error->getMessage().'<br />'.$error->userinfo.'<hr />';
+// }
+if (get_magic_quotes_gpc()) require 'includes/remove_magic_quotes.php';
+set_include_path(KFM_BASE_PATH.'includes/pear'.PATH_SEPARATOR.get_include_path());
+// { check for fatal errors
+if (ini_get('safe_mode')){
+    echo '<html><body><p>KFM does not work if you have <code>safe_mode</code> enabled. This is not a bug - please see <a href="http://ie.php.net/features.safe-mode">PHP.net\'s safe_mode page</a> for details</p></body></html>';
     exit;
 }
-
-if (get_magic_quotes_gpc()) {
-    // taken from http://www.phpfreaks.com/quickcode/Get-rid-of-magic_quotes_gpc/618.php
-    function traverse (&$arr)
-    {
-        if (!is_array($arr))return;
-        foreach ($arr as $key=>$val) {
-            if (is_array($arr[$key])) traverse($arr[$key]);
-            else $arr[$key] = stripslashes($arr[$key]);
-        }
-    }
-    $gpc = array(&$_GET,&$_POST,&$_COOKIE);
-    traverse($gpc);
-}
-set_include_path(KFM_BASE_PATH.'includes/pear'.PATH_SEPARATOR.get_include_path());
 if (!file_exists(KFM_BASE_PATH.'configuration.php')) {
     echo '<em>Missing <code>configuration.php</code>!</em><p>If this is a fresh installation of KFM, then please copy <code>configuration.dist.php</code> to <code>configuration.php</code>, remove the settings you don\'t want to change, and edit the rest to your needs.</p><p>For examples of configuration, please visit http://kfm.verens.com/configuration</p>';
     exit;
 }
-//require_once KFM_BASE_PATH.'configuration.dist.php';
+// }
 require_once KFM_BASE_PATH.'configuration.php';
-// {{{ defines
+// { defines
 define('KFM_DB_PREFIX', $kfm_db_prefix);
-// }}}
-
-// {{{ check for fatal errors
-$m = array();
-if (ini_get('safe_mode'))$m[] = 'KFM does not work if you have <code>safe_mode</code> enabled. This is not a bug - please see <a href="http://ie.php.net/features.safe-mode">PHP.net\'s safe_mode page</a> for details';
-if (count($m)) {
-    echo '<html><body><p>There are errors in your configuration or server. If the messages below describe missing variables, please check the supplied <code>configuration.php.dist</code> for notes on their usage.</p><ul>';
-    foreach($m as $a)echo '<li>'.$a.'</li>';
-    echo '</li></ul></body></html>';
-    exit;
-}
-// }}}
-
-// {{{ API - for programmers only
+// }
+// { API - for programmers only
 if (file_exists(KFM_BASE_PATH.'api/config.php')) require KFM_BASE_PATH.'api/config.php';
 if (file_exists(KFM_BASE_PATH.'api/cms_hooks.php')) require KFM_BASE_PATH.'api/cms_hooks.php';
 else require KFM_BASE_PATH.'api/cms_hooks.php.dist';
-// }}}
-// {{{ variables
+// }
+// { variables
 // structure
 $kfm->defaultSetting('kfm_url','/');
 $kfm->defaultSetting('file_url','url');
@@ -156,8 +139,8 @@ define('IMAGEMAGICK_PATH', isset($kfm_imagemagick_path)?$kfm_imagemagick_path:'/
 $cache_directories = array();
 $kfm_errors        = array();
 $kfm_messages      = array();
-// }}}
-// {{{ work directory
+// }
+// { work directory
 if ($kfm_workdirectory[0]=='/') {
     $workpath = $kfm_workdirectory;
 } else {
@@ -183,13 +166,13 @@ if (is_dir($workpath)) {
         exit;
     }
 }
-// }}}
-// {{{ database
+// }
+// { database
 $db_defined            = 0;
 $kfm_db_prefix_escaped = str_replace('_', '\\\\_', KFM_DB_PREFIX);
 $port                  = ($kfm_db_port=='')?'':':'.$kfm_db_port;
 switch($kfm_db_type) {
-case 'mysql': // {{{
+case 'mysql': // {
     include_once 'MDB2.php';
     $dsn   = 'mysql://'.$kfm_db_username.':'.$kfm_db_password.'@'.$kfm_db_host.$port.'/'.$kfm_db_name;
     $kfmdb = &MDB2::connect($dsn);
@@ -204,7 +187,7 @@ case 'mysql': // {{{
         kfm_dieOnError($kfmdb);
     }
     $kfmdb->setFetchMode(MDB2_FETCHMODE_ASSOC);
-	 $kfmdb->setOption('portability',MDB2_PORTABILITY_ALL ^ MDB2_PORTABILITY_EMPTY_TO_NULL);
+     $kfmdb->setOption('portability',MDB2_PORTABILITY_ALL ^ MDB2_PORTABILITY_EMPTY_TO_NULL);
     if (!$db_defined) {
         $res = &$kfmdb->query("show tables like '".$kfm_db_prefix_escaped."%'");
         kfm_dieOnError($res);
@@ -212,8 +195,8 @@ case 'mysql': // {{{
         else $db_defined = 1;
     }
     break;
- // must be overwritten// }}}
-case 'pgsql': // {{{
+ // must be overwritten// }
+case 'pgsql': // {
     include_once 'MDB2.php';
     $dsn   = 'pgsql://'.$kfm_db_username.':'.$kfm_db_password.'@'.$kfm_db_host.$port.'/'.$kfm_db_name;
     $kfmdb = &MDB2::connect($dsn);
@@ -228,7 +211,7 @@ case 'pgsql': // {{{
         kfm_dieOnError($kfmdb);
     }
     $kfmdb->setFetchMode(MDB2_FETCHMODE_ASSOC);
-	 $kfmdb->setOption('portability',MDB2_PORTABILITY_ALL ^ MDB2_PORTABILITY_EMPTY_TO_NULL);
+     $kfmdb->setOption('portability',MDB2_PORTABILITY_ALL ^ MDB2_PORTABILITY_EMPTY_TO_NULL);
     if (!$db_defined) {
         $res = &$kfmdb->query("SELECT tablename from pg_tables where tableowner = current_user AND tablename NOT LIKE E'pg\\\\_%' AND tablename NOT LIKE E'sql\\\\_%' AND tablename LIKE E'".$kfm_db_prefix_escaped."%'");
         kfm_dieOnError($res);
@@ -236,8 +219,8 @@ case 'pgsql': // {{{
         else $db_defined = 1;
     }
     break;
-// }}}
-case 'sqlite': // {{{
+// }
+case 'sqlite': // {
     include_once 'MDB2.php';
     $kfmdb_create = false;
     define('DBNAME', $kfm_db_name);
@@ -246,12 +229,12 @@ case 'sqlite': // {{{
     $kfmdb = &MDB2::connect($dsn);
     kfm_dieOnError($kfmdb);
     $kfmdb->setFetchMode(MDB2_FETCHMODE_ASSOC);
-	 $kfmdb->setOption('portability',MDB2_PORTABILITY_ALL ^ MDB2_PORTABILITY_EMPTY_TO_NULL);
+     $kfmdb->setOption('portability',MDB2_PORTABILITY_ALL ^ MDB2_PORTABILITY_EMPTY_TO_NULL);
     if ($kfmdb_create)include KFM_BASE_PATH.'scripts/db.sqlite.create.php';
     $db_defined = 1;
     break;
-// }}}
-case 'sqlitepdo': // {{{
+// }
+case 'sqlitepdo': // {
     $kfmdb_create = false;
     define('DBNAME', $kfm_db_name);
     if (!file_exists(WORKPATH.DBNAME)) $kfmdb_create = true;
@@ -260,61 +243,45 @@ case 'sqlitepdo': // {{{
     if ($kfmdb_create)include KFM_BASE_PATH.'scripts/db.sqlite.create.php';
     $db_defined = 1;
     break;
-// }}}
-default: // {{{
+// }
+default: // {
     echo "unknown database type specified ($kfm_db_type)";
     exit;
-    // }}}
+    // }
 }
 if (!$db_defined) {
     echo 'failed to connect to database';
     exit;
 }
 $kfm->db = &$kfmdb; // Add database as reference to the kfm object
-// }}}
-// {{{ get kfm parameters and check for updates
+// }
+// { get kfm parameters and check for updates
 $kfm_parameters = array();
 $rs = db_fetch_all("select * from ".KFM_DB_PREFIX."parameters");
 foreach($rs as $r)$kfm_parameters[$r['name']] = $r['value'];
 if ($kfm_parameters['version']!=KFM_VERSION && file_exists(KFM_BASE_PATH.'scripts/update.'.KFM_VERSION.'.php')) require KFM_BASE_PATH.'scripts/update.'.KFM_VERSION.'.php';
-// }}}
-// {{{ JSON
+// }
+// { JSON
 if (!function_exists('json_encode')) { // php-json is not installed
     include_once 'JSON.php';
     include_once KFM_BASE_PATH.'includes/json.php';
 }
-// }}}
-// {{{ start session
+// }
+// { start session
 $session_id  = (isset($_GET['kfm_session']))?$_GET['kfm_session']:'';
 $kfm_session = new kfmSession($session_id);
-if ($kfm_session->isNew) {
-    $kfm_session->setMultiple(array(
-    'cwd_id'=>1,
-    'language'=>'',
-	 'user_id'=>1,
-    'username'=>'',
-    'password'=>'',
-    'loggedin'=>0,
-    'theme'=>false
-    ));
-}
 if (isset($_GET['logout'])||isset($_GET['log_out'])) $kfm_session->set('loggedin',0);
 $kfm->defaultSetting('kfm_session_id', $kfm_session->key);
-// }}}
-// {{{ check authentication
+// }
+// { check authentication
 if (isset($use_kfm_security) && !$use_kfm_security)$kfm_session->setMultiple(array('loggedin'=>1,'user_id'=>1,'username'=>'CMS user','user_status'=>1));
 if (!$kfm_session->get('loggedin') && (!isset($kfm_api_auth_override)||!$kfm_api_auth_override)) {
     $err = '';
     if (isset($_POST['username'])&&isset($_POST['password'])) {
-		$res=db_fetch_row('SELECT id, username, password, status FROM '.KFM_DB_PREFIX.'users WHERE username="'.$_POST['username'].'" AND password="'.sha1($_POST['password']).'"');
-		if(count($res)){
+        $res=db_fetch_row('SELECT id, username, password, status FROM '.KFM_DB_PREFIX.'users WHERE username="'.$_POST['username'].'" AND password="'.sha1($_POST['password']).'"');
+        if(count($res)){
             $kfm_session->setMultiple(array('user_id'=>$res['id'],'username'=>$_POST['username'], 'password'=>$_POST['password'],'user_status'=>$res['status'], 'loggedin'=>1));
-		}else $err = '<em>Incorrect Password. Please try again, or check your <code>configuration.php</code>.</em>';
-		/*
-        if ($_POST['username']==$kfm_username && $_POST['password']==$kfm_password) {
-            $kfm_session->setMultiple(array('username'=>$_POST['username'], 'password'=>$_POST['password'], 'loggedin'=>1));
-        }
-		*/
+        }else $err = '<em>Incorrect Password. Please try again, or check your <code>configuration.php</code>.</em>';
     }
    if (!$kfm_session->get('loggedin')) $kfm->show_login_form($err);
 }
@@ -328,76 +295,71 @@ $kfm->user_name=&$kfm->username;
 $kfm->defaultSetting('username',$kfm->username);
 $kfm->defaultSetting('user_name',$kfm->username);
 $kfm->session= &$kfm_session;
-// }}}
-// {{{ Read settings
-function setting_array($str){
-	$str=trim($str,' ,');
-	if($str=='')return array();
-	return preg_split('/\s*,\s*/',$str);
-}
+// }
+// { Read settings
 $settings=array();
 $admin_settings=db_fetch_all('SELECT name, value, usersetting FROM '.KFM_DB_PREFIX.'settings WHERE user_id=1');
 if(is_array($admin_settings)){
-	foreach($admin_settings as $setting){
-		$settings[$setting['name']]=$setting['value'];
-		if($setting['usersetting'])$kfm->addUserSetting($setting['name']);
-	}
+    foreach($admin_settings as $setting){
+        $settings[$setting['name']]=$setting['value'];
+        if($setting['usersetting'])$kfm->addUserSetting($setting['name']);
+    }
 }
 if($uid!=1){
-	$user_settings=db_fetch_all('SELECT name, value FROM '.KFM_DB_PREFIX.'settings WHERE user_id='.$uid.' AND usersetting=1');
-	foreach($user_settings as $setting){
-		$settings[$setting['name']]=$setting['value'];
-	}
+    $user_settings=db_fetch_all('SELECT name, value FROM '.KFM_DB_PREFIX.'settings WHERE user_id='.$uid.' AND usersetting=1');
+    foreach($user_settings as $setting){
+        $settings[$setting['name']]=$setting['value'];
+    }
 }
 if(isset($settings['disabled_plugins'])){
-	$kfm->defaultSetting('disabled_plugins',setting_array($settings['disabled_plugins']));
-	unset($settings['disabled_plugins']); // it does not have to be set again
+    $kfm->defaultSetting('disabled_plugins',setting_array($settings['disabled_plugins']));
+    unset($settings['disabled_plugins']); // it does not have to be set again
 }
-// }}}
-// {{{ Setting plugins
+// }
+// { Setting plugins
 $h=opendir(KFM_BASE_PATH.'plugins');
 while(false!==($file=readdir($h))){
-	if(!is_dir(KFM_BASE_PATH.'plugins/'.$file))continue;
-	if($file[0]!='.' && substr($file,0,9)!='disabled_'){
-		//if(in_array($file, $kfm->setting('disabled_plugins')))continue;
-		if(file_exists(KFM_BASE_PATH.'plugins/'.$file.'/plugin.php')) include(KFM_BASE_PATH.'plugins/'.$file.'/plugin.php');
-	}
+    if(!is_dir(KFM_BASE_PATH.'plugins/'.$file))continue;
+    if($file[0]!='.' && substr($file,0,9)!='disabled_'){
+        //if(in_array($file, $kfm->setting('disabled_plugins')))continue;
+        if(file_exists(KFM_BASE_PATH.'plugins/'.$file.'/plugin.php')) include(KFM_BASE_PATH.'plugins/'.$file.'/plugin.php');
+    }
 }
 closedir($h);
 foreach($kfm->plugins as $key=>$plugin){
-	$kfm->sdef['disabled_plugins']['options'][]=$plugin->name;
-	if(in_array($plugin->name,$kfm->setting('disabled_plugins'))){
-		$kfm->plugins[$key]->disabled=true;
-		continue;
-	}
-	if(count($plugin->settings)){
-		$kfm->addSdef($plugin->name, array('type'=>'group_header'));
-		foreach($plugin->settings as $psetting){
-			$kfm->addSdef($psetting['name'], $psetting['definition'],$psetting['default']);
-		}
-	}
+    $kfm->sdef['disabled_plugins']['options'][]=$plugin->name;
+    if(in_array($plugin->name,$kfm->setting('disabled_plugins'))){
+        $kfm->plugins[$key]->disabled=true;
+        continue;
+    }
+    if(count($plugin->settings)){
+        $kfm->addSdef($plugin->name, array('type'=>'group_header'));
+        foreach($plugin->settings as $psetting){
+            $kfm->addSdef($psetting['name'], $psetting['definition'],$psetting['default']);
+        }
+    }
 }
-// }}}
-// {{{ Apply settings
+// }
+// { Apply settings
 foreach($kfm->sdef as $sname=>$sdef){
-	if(isset($settings[$sname])){
-		switch($sdef['type']){
-			case 'array':
-			case 'select_list':
-				$value=setting_array($settings[$sname]);
-				break;
-			default:
-				$value=$settings[$sname];
-				break;
-		}
-		$kfm->defaultSetting($sname, $value);
-	}
+    if(isset($settings[$sname])){
+        switch($sdef['type']){
+            case 'array':
+            case 'select_list':
+                $value=setting_array($settings[$sname]);
+                break;
+            default:
+                $value=$settings[$sname];
+                break;
+        }
+        $kfm->defaultSetting($sname, $value);
+    }
 }
-// }}}
-// {{{ (user) root folder
+// }
+// { (user) root folder
 $kfm_root_dir = kfmDirectory::getInstance(1);
 if ($kfm->user_id!=1 && $kfm->setting('user_root_folder')){
-	$kfm->defaultSetting('user_root_folder',str_replace('username',$kfm->username,$kfm->setting('user_root_folder')));
+    $kfm->defaultSetting('user_root_folder',str_replace('username',$kfm->username,$kfm->setting('user_root_folder')));
     $dirs   = explode(DIRECTORY_SEPARATOR, trim($kfm->setting('user_root_folder'), ' '.DIRECTORY_SEPARATOR));
     $subdir = $kfm_root_dir;
     foreach ($dirs as $dirname) {
@@ -411,37 +373,37 @@ if ($kfm->user_id!=1 && $kfm->setting('user_root_folder')){
 }
 $kfm_root_folder_id = $user_root_dir->id;
 $kfm->setting('root_folder_id',$user_root_dir->id);
-// }}}
-// {{{ Setting themes
+// }
+// { Setting themes
 $h=opendir(KFM_BASE_PATH.'themes');
 while(false!==($file=readdir($h))){
-	if($file[0]!='.' || substr($file,0,9)=='disabled_'){
-		$kfm->themes[]=$file;
-		$kfm->sdef['theme']['options'][$file]=$file;
-	}
+    if($file[0]!='.' || substr($file,0,9)=='disabled_'){
+        $kfm->themes[]=$file;
+        $kfm->sdef['theme']['options'][$file]=$file;
+    }
 }
 closedir($h);
-// }}}
-// {{{ Setting the theme
+// }
+// { Setting the theme
 if(isset($_GET['theme']))$kfm_session->set('theme',$_GET['theme']);
 if($kfm_session->get('theme'))$kfm->defaultSetting('theme',$kfm_session->get('theme'));
 else if($kfm->setting('theme')) $kfm_session->set('theme',$kfm->setting('theme'));
 else{
-	if(in_array('default',$kfm->themes)){
-		$kfm->defaultSetting('theme','default');
-		$kfm_session->set('theme','default');
-	}else{
-		if(!count($kfm->themes)) kfm_error('No themes available');
-		else{
-			$kfm->defaultSetting('theme',$kfm->themes[0]);
-			$kfm_session->set('theme',$kfm->themes[0]);
-		}
-	}
+    if(in_array('default',$kfm->themes)){
+        $kfm->defaultSetting('theme','default');
+        $kfm_session->set('theme','default');
+    }else{
+        if(!count($kfm->themes)) kfm_error('No themes available');
+        else{
+            $kfm->defaultSetting('theme',$kfm->themes[0]);
+            $kfm_session->set('theme',$kfm->themes[0]);
+        }
+    }
 }
-// }}}
-// {{{ languages
+// }
+// { languages
 $kfm_language = '';
-// {{{  find available languages
+// {  find available languages
 if ($handle = opendir(KFM_BASE_PATH.'lang')) {
     $files = array();
     while(false!==($file = readdir($handle)))if (is_file(KFM_BASE_PATH.'lang/'.$file))$files[] = $file;
@@ -453,22 +415,22 @@ if ($handle = opendir(KFM_BASE_PATH.'lang')) {
     echo 'error: missing language files';
     exit;
 }
-// }}}
-// {{{  check for URL parameter "lang"
+// }
+// {  check for URL parameter "lang"
 if (isset($_REQUEST['lang'])&&$_REQUEST['lang']&&in_array($_REQUEST['lang'], $kfm_available_languages)) {
     $kfm_language = $_REQUEST['lang'];
     $kfm_session->set('language', $kfm_language);
 }
-// }}}
-// {{{  check session for language selected earlier
+// }
+// {  check session for language selected earlier
     if (
         $kfm_language==''&&
         !is_null($kfm_session->get('language'))&&
         $kfm_session->get('language')!=''&&
         in_array($kfm_session->get('language'), $kfm_available_languages)
     )$kfm_language = $kfm_session->get('language');
-// }}}
-// {{{  check the browser's http headers for preferred languages
+// }
+// {  check the browser's http headers for preferred languages
 if ($kfm_language=='') {
     if (!isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))$_SERVER['HTTP_ACCEPT_LANGUAGE'] = '';
     $langs = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
@@ -477,20 +439,19 @@ if ($kfm_language=='') {
         break;
     }
 }
-// }}}
-// {{{  check the kfm_preferred_languages
+// }
+// {  check the kfm_preferred_languages
 if ($kfm_language=='')foreach($kfm_preferred_languages as $lang)if (in_array($lang, $kfm_available_languages)) {
     $kfm_language = $lang;
     break;
 }
-// }}}
-// {{{  still no language chosen? use the first available one then
+// }
+// {  still no language chosen? use the first available one then
     if ($kfm_language=='')$kfm_language = $kfm_available_languages[0];
-// }}}
-// }}}
-// {{{ common functions
-function kfm_checkAddr($addr)
-{
+// }
+// }
+// { common functions
+function kfm_checkAddr($addr) {
     return (
         strpos($addr, '..')===false&&
         strpos($addr, '.')!==0&&
@@ -500,229 +461,184 @@ function kfm_checkAddr($addr)
         !in_array(preg_replace('/.*\./', '', $addr), $GLOBALS['kfm_banned_extensions'])
     );
 }
-function get_mimetype($f)
-{
-    $mimetypes = array('ez'=>'application/andrew-inset', 'hqx'=>'application/mac-binhex40', 'cpt'=>'application/mac-compactpro', 'doc'=>'application/msword', 'bin'=>'application/octet-stream', 'dms'=>'application/octet-stream', 'lha'=>'application/octet-stream', 'lzh'=>'application/octet-stream', 'exe'=>'application/octet-stream', 'class'=>'application/octet-stream', 'so'=>'application/octet-stream', 'dll'=>'application/octet-stream', 'oda'=>'application/oda', 'pdf'=>'application/pdf', 'ai'=>'application/postscript', 'eps'=>'application/postscript', 'ps'=>'application/postscript', 'smi'=>'application/smil', 'smil'=>'application/smil', 'mif'=>'application/vnd.mif', 'xls'=>'application/vnd.ms-excel', 'ppt'=>'application/vnd.ms-powerpoint', 'wbxml'=>'application/vnd.wap.wbxml', 'wmlc'=>'application/vnd.wap.wmlc', 'wmlsc'=>'application/vnd.wap.wmlscriptc', 'bcpio'=>'application/x-bcpio', 'vcd'=>'application/x-cdlink', 'pgn'=>'application/x-chess-pgn', 'cpio'=>'application/x-cpio', 'csh'=>'application/x-csh', 'dcr'=>'application/x-director', 'dir'=>'application/x-director', 'dxr'=>'application/x-director', 'dvi'=>'application/x-dvi', 'spl'=>'application/x-futuresplash', 'gtar'=>'application/x-gtar', 'hdf'=>'application/x-hdf', 'js'=>'application/x-javascript', 'skp'=>'application/x-koan', 'skd'=>'application/x-koan', 'skt'=>'application/x-koan', 'skm'=>'application/x-koan', 'latex'=>'application/x-latex', 'nc'=>'application/x-netcdf', 'cdf'=>'application/x-netcdf', 'sh'=>'application/x-sh', 'shar'=>'application/x-shar', 'swf'=>'application/x-shockwave-flash', 'sit'=>'application/x-stuffit', 'sv4cpio'=>'application/x-sv4cpio', 'sv4crc'=>'application/x-sv4crc', 'tar'=>'application/x-tar', 'tcl'=>'application/x-tcl', 'tex'=>'application/x-tex', 'texinfo'=>'application/x-texinfo', 'texi'=>'application/x-texinfo', 't'=>'application/x-troff', 'tr'=>'application/x-troff', 'roff'=>'application/x-troff', 'man'=>'application/x-troff-man', 'me'=>'application/x-troff-me', 'ms'=>'application/x-troff-ms', 'ustar'=>'application/x-ustar', 'src'=>'application/x-wais-source', 'xhtml'=>'application/xhtml+xml', 'xht'=>'application/xhtml+xml', 'zip'=>'application/zip', 'au'=>'audio/basic', 'snd'=>'audio/basic', 'mid'=>'audio/midi', 'midi'=>'audio/midi', 'kar'=>'audio/midi', 'mpga'=>'audio/mpeg', 'mp2'=>'audio/mpeg', 'mp3'=>'audio/mpeg', 'aif'=>'audio/x-aiff', 'aiff'=>'audio/x-aiff', 'aifc'=>'audio/x-aiff', 'm3u'=>'audio/x-mpegurl', 'ram'=>'audio/x-pn-realaudio', 'rm'=>'audio/x-pn-realaudio', 'rpm'=>'audio/x-pn-realaudio-plugin', 'ra'=>'audio/x-realaudio', 'wav'=>'audio/x-wav', 'pdb'=>'chemical/x-pdb', 'xyz'=>'chemical/x-xyz', 'bmp'=>'image/bmp', 'gif'=>'image/gif', 'ief'=>'image/ief', 'jpeg'=>'image/jpeg', 'jpg'=>'image/jpeg', 'jpe'=>'image/jpeg', 'png'=>'image/png', 'tiff'=>'image/tiff', 'tif'=>'image/tiff', 'djvu'=>'image/vnd.djvu', 'djv'=>'image/vnd.djvu', 'wbmp'=>'image/vnd.wap.wbmp', 'ras'=>'image/x-cmu-raster', 'pnm'=>'image/x-portable-anymap', 'pbm'=>'image/x-portable-bitmap', 'pgm'=>'image/x-portable-graymap', 'ppm'=>'image/x-portable-pixmap', 'rgb'=>'image/x-rgb', 'xbm'=>'image/x-xbitmap', 'xpm'=>'image/x-xpixmap', 'xwd'=>'image/x-xwindowdump', 'igs'=>'model/iges', 'iges'=>'model/iges', 'msh'=>'model/mesh', 'mesh'=>'model/mesh', 'silo'=>'model/mesh', 'wrl'=>'model/vrml', 'vrml'=>'model/vrml', 'css'=>'text/css', 'html'=>'text/html', 'htm'=>'text/html', 'asc'=>'text/plain', 'txt'=>'text/plain', 'rtx'=>'text/richtext', 'rtf'=>'text/rtf', 'sgml'=>'text/sgml', 'sgm'=>'text/sgml', 'tsv'=>'text/tab-separated-values', 'wml'=>'text/vnd.wap.wml', 'wmls'=>'text/vnd.wap.wmlscript', 'etx'=>'text/x-setext', 'xsl'=>'text/xml', 'xml'=>'text/xml', 'mpeg'=>'video/mpeg', 'mpg'=>'video/mpeg', 'mpe'=>'video/mpeg', 'qt'=>'video/quicktime', 'mov'=>'video/quicktime', 'mxu'=>'video/vnd.mpegurl', 'avi'=>'video/x-msvideo', 'movie'=>'video/x-sgi-movie', 'ice'=>'x-conference/x-cooltalk');
-    $extension = preg_replace('/.*\./', '', $f);
-    if (isset($mimetypes[$extension]))return $mimetypes[$extension];
-    return 'unknown/mimetype';
-}
 function kfm_error($message,$level=3){
-	global $kfm_errors;
-	$kfm_errors[]=array('message'=>$message,'level'=>$level);
-	return false;
+    global $kfm_errors;
+    $kfm_errors[]=array('message'=>$message,'level'=>$level);
+    return false;
 }
 function kfm_isError($level=3){
-	global $kfm_errors;
-	foreach($kfm_errors as $error) if($error->level<=$level)return true;
-	return false;
+    global $kfm_errors;
+    foreach($kfm_errors as $error) if($error->level<=$level)return true;
+    return false;
 }
 function kfm_getErrors($level=3){
-	global $kfm_errors;
-	return $kfm_errors;
+    global $kfm_errors;
+    return $kfm_errors;
 }
 function kfm_addMessage($message){
-	global $kfm_messages;
-	$kfm_messages[]=array('message'=>$message);
+    global $kfm_messages;
+    $kfm_messages[]=array('message'=>$message);
 }
 function kfm_getMessages(){
-	global $kfm_messages;
-	return $kfm_messages;
+    global $kfm_messages;
+    return $kfm_messages;
 }
-// }}}
-// {{{ directory functions
-function kfm_add_directory_to_db($name, $parent)
-{
+// }
+// { directory functions
+function kfm_add_directory_to_db($name, $parent) {
     include_once KFM_BASE_PATH.'includes/directories.php';
     return _add_directory_to_db($name, $parent);
 }
-function kfm_createDirectory($parent, $name)
-{
+function kfm_createDirectory($parent, $name) {
     include_once KFM_BASE_PATH.'includes/directories.php';
     return _createDirectory($parent, $name);
 }
-function kfm_deleteDirectory($id, $recursive = 0)
-{
+function kfm_deleteDirectory($id, $recursive = 0) {
     include_once KFM_BASE_PATH.'includes/directories.php';
     return _deleteDirectory($id, $recursive);
 }
-function kfm_getDirectoryDbInfo($id)
-{
+function kfm_getDirectoryDbInfo($id) {
     include_once KFM_BASE_PATH.'includes/directories.php';
     return _getDirectoryDbInfo($id);
 }
-function kfm_getDirectoryParents($pid, $type = 1)
-{
+function kfm_getDirectoryParents($pid, $type = 1) {
     include_once KFM_BASE_PATH.'includes/directories.php';
     return _getDirectoryParents($pid, $type);
 }
-function kfm_getDirectoryParentsArr($pid, $path = array())
-{
+function kfm_getDirectoryParentsArr($pid, $path = array()) {
     include_once KFM_BASE_PATH.'includes/directories.php';
     return _getDirectoryParentsArr($pid, $path);
 }
-function kfm_loadDirectories($root, $oldpid = 0)
-{
+function kfm_loadDirectories($root, $oldpid = 0) {
     include_once KFM_BASE_PATH.'includes/directories.php';
     return _loadDirectories($root, $oldpid);
 }
-function kfm_moveDirectory($from, $to)
-{
+function kfm_moveDirectory($from, $to) {
     include_once KFM_BASE_PATH.'includes/directories.php';
     return _moveDirectory($from, $to);
 }
-function kfm_renameDirectory($dir, $newname)
-{
+function kfm_renameDirectory($dir, $newname) {
     include_once KFM_BASE_PATH.'includes/directories.php';
     return _renameDirectory($dir, $newname);
 }
-function kfm_rmdir($dir)
-{
+function kfm_rmdir($dir) {
     include_once KFM_BASE_PATH.'includes/directories.php';
     return _rmdir($dir);
 }
-// }}}
-// {{{ file functions
-function kfm_copyFiles($files, $dir_id)
-{
+// }
+// { file functions
+function kfm_copyFiles($files, $dir_id) {
     include_once KFM_BASE_PATH.'includes/files.php';
     return _copyFiles($files, $dir_id);
 }
-function kfm_createEmptyFile($cwd, $filename)
-{
+function kfm_createEmptyFile($cwd, $filename) {
     include_once KFM_BASE_PATH.'includes/files.php';
     return _createEmptyFile($cwd, $filename);
 }
-function kfm_downloadFileFromUrl($url, $filename)
-{
+function kfm_downloadFileFromUrl($url, $filename) {
     include_once KFM_BASE_PATH.'includes/files.php';
     return _downloadFileFromUrl($url, $filename);
 }
-function kfm_extractZippedFile($id)
-{
+function kfm_extractZippedFile($id) {
     include_once KFM_BASE_PATH.'includes/files.php';
     return _extractZippedFile($id);
 }
-function kfm_getFileAsArray($filename)
-{
+function kfm_getFileAsArray($filename) {
     include_once KFM_BASE_PATH.'includes/files.php';
     return _getFileAsArray($filename);
 }
-function kfm_getFileDetails($filename)
-{
+function kfm_getFileDetails($filename) {
     include_once KFM_BASE_PATH.'includes/files.php';
     return _getFileDetails($filename);
 }
-function kfm_getFileUrl($fid, $x = 0, $y = 0)
-{
+function kfm_getFileUrl($fid, $x = 0, $y = 0) {
     include_once KFM_BASE_PATH.'includes/files.php';
     return _getFileUrl($fid, $x, $y);
 }
-function kfm_getFileUrls($farr)
-{
+function kfm_getFileUrls($farr) {
     include_once KFM_BASE_PATH.'includes/files.php';
     return _getFileUrls($farr);
 }
-function kfm_getTagName($id)
-{
+function kfm_getTagName($id) {
     include_once KFM_BASE_PATH.'includes/files.php';
     return _getTagName($id);
 }
-function kfm_getTextFile($filename)
-{
+function kfm_getTextFile($filename) {
     include_once KFM_BASE_PATH.'includes/files.php';
     return _getTextFile($filename);
 }
-function kfm_moveFiles($files, $dir_id)
-{
+function kfm_moveFiles($files, $dir_id) {
     include_once KFM_BASE_PATH.'includes/files.php';
     return _moveFiles($files, $dir_id);
 }
-function kfm_loadFiles($rootid = 1, $setParent = false)
-{
+function kfm_loadFiles($rootid = 1, $setParent = false) {
     include_once KFM_BASE_PATH.'includes/files.php';
     return _loadFiles($rootid, $setParent);
 }
-function kfm_renameFile($filename, $newfilename)
-{
+function kfm_renameFile($filename, $newfilename) {
     include_once KFM_BASE_PATH.'includes/files.php';
     return _renameFile($filename, $newfilename);
 }
-function kfm_renameFiles($files, $template)
-{
+function kfm_renameFiles($files, $template) {
     include_once KFM_BASE_PATH.'includes/files.php';
     return _renameFiles($files, $template);
 }
-function kfm_resize_bytes($size)
-{
+function kfm_resize_bytes($size) {
     include_once KFM_BASE_PATH.'includes/files.php';
     return _resize_bytes($size);
 }
-function kfm_rm($files, $no_dir = 0)
-{
+function kfm_rm($files, $no_dir = 0) {
     include_once KFM_BASE_PATH.'includes/files.php';
     return _rm($files, $no_dir);
 }
-function kfm_saveTextFile($filename, $text)
-{
+function kfm_saveTextFile($filename, $text) {
     include_once KFM_BASE_PATH.'includes/files.php';
     return _saveTextFile($filename, $text);
 }
-function kfm_search($keywords, $tags)
-{
+function kfm_search($keywords, $tags) {
     include_once KFM_BASE_PATH.'includes/files.php';
     return _search($keywords, $tags);
 }
-function kfm_tagAdd($recipients, $tagList)
-{
+function kfm_tagAdd($recipients, $tagList) {
     include_once KFM_BASE_PATH.'includes/files.php';
     return _tagAdd($recipients, $tagList);
 }
-function kfm_tagRemove($recipients, $tagList)
-{
+function kfm_tagRemove($recipients, $tagList) {
     include_once KFM_BASE_PATH.'includes/files.php';
     return _tagRemove($recipients, $tagList);
 }
-function kfm_zip($name, $files)
-{
+function kfm_zip($name, $files) {
     include_once KFM_BASE_PATH.'includes/files.php';
     return _zip($name, $files);
 }
-// }}}
-// {{{ image functions
-function kfm_changeCaption($filename, $newCaption)
-{
+// }
+// { image functions
+function kfm_changeCaption($filename, $newCaption) {
     include_once KFM_BASE_PATH.'includes/images.php';
     return _changeCaption($filename, $newCaption);
 }
-function kfm_getThumbnail($fileid, $width, $height)
-{
+function kfm_getThumbnail($fileid, $width, $height) {
     include_once KFM_BASE_PATH.'includes/images.php';
     return _getThumbnail($fileid, $width, $height);
 }
-function kfm_resizeImage($filename, $width, $height)
-{
+function kfm_resizeImage($filename, $width, $height) {
     include_once KFM_BASE_PATH.'includes/images.php';
     return _resizeImage($filename, $width, $height);
 }
-function kfm_resizeImages($files, $width, $height)
-{
+function kfm_resizeImages($files, $width, $height) {
     include_once KFM_BASE_PATH.'includes/images.php';
     return _resizeImages($files, $width, $height);
 }
-function kfm_rotateImage($filename, $direction)
-{
+function kfm_rotateImage($filename, $direction) {
     include_once KFM_BASE_PATH.'includes/images.php';
     return _rotateImage($filename, $direction);
 }
-function kfm_cropToOriginal($fid, $x1, $y1, $width, $height)
-{
+function kfm_cropToOriginal($fid, $x1, $y1, $width, $height) {
     include_once KFM_BASE_PATH.'includes/images.php';
     return _cropToOriginal($fid, $x1, $y1, $width, $height);
 }
-function kfm_cropToNew($fid, $x1, $y1, $width, $height, $newname)
-{
+function kfm_cropToNew($fid, $x1, $y1, $width, $height, $newname) {
     include_once KFM_BASE_PATH.'includes/images.php';
     return _cropToNew($fid, $x1, $y1, $width, $height, $newname);
 }
-// }}}
+// }

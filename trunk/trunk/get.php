@@ -77,7 +77,7 @@ header('Content-Length: '.(string)(filesize($path)));
 if (isset($_GET['forcedownload'])) {
     header('Content-Type: force/download');
     header('Content-Disposition: attachment; filename="'.$name.'"');
-} else header('Content-Type: '.get_mimetype($extension));
+} else header('Content-Type: '.Mimetype::get($extension));
 header('Content-Transfer-Encoding: binary');
 // }
 if ($file = fopen($path, 'rb')) { // send file

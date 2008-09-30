@@ -25,6 +25,15 @@ class kfmSession extends kfmObject{
 			$key=md5($this->id);
 			$kfm->db->query("UPDATE ".KFM_DB_PREFIX."session SET cookie='".$key."' WHERE id=".$this->id);
 			$this->isNew=true;
+	    $this->setMultiple(array(
+		    'cwd_id'   => 1,
+		    'language' => '',
+		    'user_id'  => 1,
+		    'username' => '',
+		    'password' => '',
+		    'loggedin' => 0,
+		    'theme'    => false
+	    ));
 		}
 		$this->key=$key;
 		$this->vars=array();
