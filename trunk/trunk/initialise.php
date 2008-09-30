@@ -120,7 +120,11 @@ $kfm->defaultSetting('slideshow_delay',4);
 
 if(!substr($kfm_userfiles_output,-1,1)=='/')$kfm_userfiles_output .= '/'; // Just convention, end with slash
 $kfm->defaultSetting('files_url',$kfm_userfiles_output);
-define('KFM_VERSION', rtrim(file_get_contents(KFM_BASE_PATH.'docs/version.txt')));
+// { KFM versions
+$versions=file(KFM_BASE_PATH.'docs/version.txt');
+define('KFM_VERSION', (int)trim($versions[0]));
+define('KFM_VERSION_DB', (int)trim($versions[1]));
+// }
 if (!isset($_SERVER['DOCUMENT_ROOT'])) { // fix for IIS
     $_SERVER['DOCUMENT_ROOT'] = preg_replace('/\/[^\/]*$/', '', str_replace('\\', '/', $_SERVER['SCRIPT_FILENAME']));
 }
@@ -259,7 +263,9 @@ $kfm->db = &$kfmdb; // Add database as reference to the kfm object
 $kfm_parameters = array();
 $rs = db_fetch_all("select * from ".KFM_DB_PREFIX."parameters");
 foreach($rs as $r)$kfm_parameters[$r['name']] = $r['value'];
-if ($kfm_parameters['version']!=KFM_VERSION && file_exists(KFM_BASE_PATH.'scripts/update.'.KFM_VERSION.'.php')) require KFM_BASE_PATH.'scripts/update.'.KFM_VERSION.'.php';
+if ($kfm_parameters['version']!=KFM_VERSION && file_exists(KFM_BASE_PATH.'scripts/update.'.KFM_VERSION.'.php'))
+    require KFM_BASE_PATH.'scripts/update.'.KFM_VERSION.'.php'; // deprecated. remove for 1.5 and clean up the /scripts/ directory
+if (!isset($kfm_parameters['version_db']) || $kfm_parameters['version_db']!=KFM_VERSION_DB) require KFM_BASE_PATH.'scripts/dbupdates.php';
 // }
 // { JSON
 if (!function_exists('json_encode')) { // php-json is not installed
