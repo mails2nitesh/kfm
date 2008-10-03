@@ -78,7 +78,8 @@ function kfm_createContextMenu(m,show_category_headers){
 		}
 		for(var i=0;i<cat_size;i++){
 			if(cat.items[i].nocontextmenu)continue;
-			li=$j('<li class="kfm_plugin_'+cat.items[i].name+'_contexticon kfm_plugin_'+cat.items[i].name+'_'+kfm_theme+'_contexticon '+lClass+'"><span>'+cat.items[i].title+'</span></li>');
+			li=$j('<li class="kfm_plugin_'+cat.items[i].name+'_contexticon kfm_plugin_'+cat.items[i].name+'_'+kfm_theme+'_contexticon '+lClass+'"></li>');
+			li[0].appendChild(_(cat.items[i].title));
 			$j.event.add(li[0],'mouseover',function(){
 				$j.className.add(this,'hover');
 				if(!this.hasActionEvents){ // no need to add the click/mouseout events until mouse is hovered
