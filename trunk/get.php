@@ -22,6 +22,7 @@ if (isset($_SERVER['REDIRECT_QUERY_STRING'])&&$_SERVER['REDIRECT_QUERY_STRING'])
 }
 // { rebuild $_GET (in case it's been mangled by something)
 $uri   = $_SERVER['REQUEST_URI'];
+if (strpos($uri,'?')===false) $uri=str_replace('/get.php/','/get.php?',$uri);
 $uri2  = explode('?', $uri);
 $parts = explode('&', $uri2[1]);
 foreach ($parts as $part) {

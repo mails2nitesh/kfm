@@ -1,4 +1,14 @@
 // see ../license.txt for licensing
+function _(str,context){ // translations
+	if(typeof(str)!='string'){
+		context=str[1];
+		str=str[0];
+	}
+	if(!context)context='kfm';
+	var el=document.createElement('span');
+	el.appendChild(document.createTextNode(str));
+	return el;
+}
 function clearSelections(){
 	window.getSelection().removeAllRanges();
 }

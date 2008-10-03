@@ -441,6 +441,7 @@ function kfm_inArray(needle,haystack){
 	return false;
 }
 function kfm_log(msg){
+return; // delete this function in June 2009 if noone complains about this being broken
 	var wrapper=document.getElementById('kfm_logs_panel');
 	if(!wrapper){
 		if(msg.indexOf(kfm.lang.ErrorPrefix)!=0 && msg.indexOf('error: ')!=0)return;
@@ -450,7 +451,6 @@ function kfm_log(msg){
 		wrapper=document.getElementById('kfm_logs_panel');
 	}
 	wrapper.visible=1;
-alert("is this panel actually used by anyone?\nif so, please email kae@verens.com to tell him not to delete it");
 	var el=$E('#kfm_logs_panel div.kfm_panel_body'),p=document.createElement('p');
 	p.innerHTML=msg;
 	if(msg.indexOf(kfm.lang.ErrorPrefix)==0){

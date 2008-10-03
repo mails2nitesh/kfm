@@ -7,7 +7,7 @@ kfm_dir_bits={
 		var links=[],i,node_id=el.node_id;
 		if(kfm_vars.permissions.dir.ed)context_categories['edit'].add({
 			name:'directory_rename',
-			title:kfm.lang.RenameDir,
+			title:['rename','directory'],
 			category:'edit',
 			doFunction:function(){kfm_renameDirectory(node_id)}
 		});
