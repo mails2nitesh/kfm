@@ -91,7 +91,7 @@ UnknownPanelState:
 	"Fejl: Ukendt Panel status.", 
 
 SetStylesError:
-	"Fejl: Kan ikke sætte \"%1\" til \"%2\.", 
+	"Fejl: Kan ikke sætte \"%1\" til \"%2.", 
 NoPanel:
 	"Fejl: Panelet \"%1\" eksisterer ikke.",
 FileSelected:

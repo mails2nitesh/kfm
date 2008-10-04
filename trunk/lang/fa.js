@@ -21,16 +21,16 @@ kfm.lang={
 	AskIfOverwrite          : "فایل \"%1\" هم‌اکنون وجود دارد. بازنویسی شود؟",//The file \"%1\" already exists. Overwrite?
 	Browse                  : "گشتن...",//Browse...
 	Cancel                  : "لغو",//cancel
-	CouldNotWriteFile       : "خطا: فایل \"%1\ ذخیره نشد.",//error: could not write file \"%1\".
+	CouldNotWriteFile       : "خطا: فایل \"%1\" ذخیره نشد.",//error: could not write file \"%1\".
 	CreateSubDir            : "ساختن پوشه فرزند",//create sub-directory
 	CurrentWorkingDir       : "پوشه فعال جاری : \"%1\"",//Current Working Directory: \"%1\"
 	CouldNotRemoveDir       : "نمی‌توان پوشه را حذف کرد.\nلطفا ازخالی بودن آن مطمئن شوید",//cannot remove directory.\nplease make sure it is empty
-	CouldNotDownloadFile    : "خطا: نمی‌توان فایل \"%1\ را بارگذاری کرد.",//error: could not download file \"%1\".
+	CouldNotDownloadFile    : "خطا: نمی‌توان فایل \"%1\" را بارگذاری کرد.",//error: could not download file \"%1\".
 	CouldntReadDir          : "خطا: نمی‌توان پوشه را خواند",//error: couldn't read directory
 	CreateEmptyFile         : "ساختن فایل خالی",//create empty file
 	CloseWithoutSavingQuestion: "مطمئن هستید که می‌خواهید بدون ذخیره پنجره را ببندید؟",//Are you sure you want to close without saving?
 	CloseWithoutSaving      : "بستن بدون ذخیره",//Close Without Saving
-	CannotRenameFile        : "خطا: نمی‌توان از \"%1\" به \"%2\ تغییرنام داد",//error: cannot rename \"%1\" to \"%2\"
+	CannotRenameFile        : "خطا: نمی‌توان از \"%1\" به \"%2\" تغییرنام داد",//error: cannot rename \"%1\" to \"%2\"
 	ChangeCaption           : "تغییر عنوان",//change caption
 	CreateDirMessage        : "ساختن یک پوشه فرزند برای \"%1\":",//Create a sub-directory of \"%1\":
 	CurrentSize             : "اندازه کنونی: \"%1\" x \"%2\"\n",//Current Size: \"%1\" x \"%2\"\n
@@ -45,7 +45,7 @@ kfm.lang={
 	DirEmpty                : "هیچ فایلی در \"%1\" وجود ندارد",//no files found in \"%1\"
 	DeleteDir               : "حذف",//delete
 	DelDirMessage           : "مطمئن هستید که می‌خواهید پوشه \"%1\" را حذف کنید؟",//Are you sure you want to delete the directory \"%1\"?
-	DelFileMessage          : "مطمئن هستید که می‌خواهید فایل \"%1\ را حذف کنید؟",//Are you sure you want to delete the file \"%1\"
+	DelFileMessage          : "مطمئن هستید که می‌خواهید فایل \"%1\" را حذف کنید؟",//Are you sure you want to delete the file \"%1\"
 	DelMultipleFilesMessage : "مطمئن هستید که می‌خواهید فایل‌های زیر را حذف کنید؟\n\n",//Are you sure you want to delete the following files?\n\n
 	DownloadFileFromMessage : "بارگذاری فایل از کجا؟",//Download file from where?
 	DirRefreshed            : "پوشه‌ها تازه‌سازی شدند",//directories refreshed.
@@ -103,17 +103,17 @@ kfm.lang={
 	RotateClockwise         : "چرخش ساعتگرد",//rotate clock-wise
 	RotateAntiClockwise     : "چرخش پادساعتگرد",//rotate anti-clockwise
 	ResizeImage             : "تغییر اندازه تصویر",//resize image
-	RenamedFile             : "تغییر نام فایل از \"%1\" به \"%2\.",//renaming file \"%1\" to \"%2\".
+	RenamedFile             : "تغییر نام فایل از \"%1\" به \"%2\".",//renaming file \"%1\" to \"%2\".
 	Restore                 : "واگردانی",//restore
 	ReturnThumbnailToOpener : "بازگرداندن تصویر بندانگشتی به ویرایشگر",//return thumbnail to editor
 	RenameOnlyOneFile       : "شما تنها می‌توانید نام یک فایل را در هر لحظه عوض کنید",//You can only rename one file at a time
 	RecursiveDeleteWarning  : "\"%1\" خالی نیست\n آیا مطمئن هستید که مایلبه حذف آن و تمام محتویاتش هستید؟\n*هشدار*: این کار برگشت‌پذیر نیست",//\"%1\" is not empty\nAre you sure you want to delete it and all its contents?\n*WARNING* THIS IS NOT REVERSIBLE
-	RmdirFailed             : "تلاش برای حذف پوشه \"%1\ بی‌نتیجه ماند",//failed to delete directory \"%1\"
+	RmdirFailed             : "تلاش برای حذف پوشه \"%1\" بی‌نتیجه ماند",//failed to delete directory \"%1\"
 	RenamedDirectoryAs      : "تغییر نام از '%1' به '%2'",//Renamed '%1' as '%2'
 	RenameFileToWhat        : "تغییر نام فایل \"%1\" به چه نامی؟",//Rename the file \"%1\" to what?
 	RenameTheDirectoryToWhat: "تغییر نام پوشه \"%1\" به چه نامی؟",//Rename the directory '%1' to what?
 	RemoveTagsFromFiles     : "برداشتن تگ‌ها از فایل‌ها",//remove tags from file(s)
-	SetStylesError          : "خطا: نمی‌توان \"%1\" را به \"%2\ تنظیم کرد.",//error: cannot set \"%1\" to \"%2\.
+	SetStylesError          : "خطا: نمی‌توان \"%1\" را به \"%2\" تنظیم کرد.",//error: cannot set \"%1\" to \"%2\.
 	SaveThenClose           : "ذخیره، سپس بستن",//Save, then Close
 	SaveThenCloseQuestion   : "آیا مطمئن هستید که میخواهید تغییرات داده شده را ذخیره نمایید؟",//Are you sure you want to save the changes you made?
 	SelectAll               : "انتخاب همه",//select all

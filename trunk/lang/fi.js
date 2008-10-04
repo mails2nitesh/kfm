@@ -100,7 +100,7 @@ UnknownPanelState:
 // MissingDirWrapper:
 // 	"error: puuttuva tiedoston wrapperi: \"kfm_directories%1\".",
 SetStylesError:
-	"virhe:  \"%1\" ei voi asettaa \"%2\:ksi.",
+	"virhe:  \"%1\" ei voi asettaa \"%2:ksi.",
 NoPanel:
 	"virhe: panelia \"%1\" ei ole.",
 FileSelected:
