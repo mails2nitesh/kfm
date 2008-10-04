@@ -26,13 +26,13 @@ ErrorPrefix:
 Directories:
 	"Dossiers",
 CurrentWorkingDir:
-	'Dossier Actuel: "%1"',
+	"Dossier Actuel: \"%1\"",
 Logs:
 	"Messages",
 FileUpload:
 	"Envoi de fichier",
 DirEmpty:
-	'aucun fichier dans "%1"',
+	"aucun fichier dans \"%1\"",
 
 CreateSubDir:
 	"nouveau sous-dossier",
@@ -57,16 +57,16 @@ ChangeCaption:
 WhatFilenameToCreateAs:
 	"Créer le fichier sous quel nom?",
 AskIfOverwrite:
-	'Le fichier "%1" existe déjà. Remplacer?',
+	"Le fichier \"%1\" existe déjà. Remplacer?",
 NoForwardslash:
 	"\nVous ne pouvez pas utiliser '/' dans le nom du fichier",
 
 CreateDirMessage:
-	'Créer un sous-dossier de "%1": ',
+	"Créer un sous-dossier de \"%1\": ",
 DelDirMessage:
-	'Etes-vous certain de vouloir supprimer le dossier "%1"?',
+	"Etes-vous certain de vouloir supprimer le dossier \"%1\"?",
 DelFileMessage:
-	'Etes-vous certain de vouloir supprimer le fichier "%1"?',
+	"Etes-vous certain de vouloir supprimer le fichier \"%1\"?",
 DelMultipleFilesMessage:
 	"Etes-vous certain de vouloir supprimer les fichiers suivants?\n\n'",
 DownloadFileFromMessage:
@@ -75,18 +75,18 @@ FileSavedAsMessage:
 	"Sous quel nom désirez-vous enregistrer le fichier?",
 
 CurrentSize:
-	'Taille Actuelle: "%1" x "%2"\n',
+	"Taille Actuelle: \"%1\" x \"%2\"\n",
 NewWidth:
 	"Nouvelle Largeur?",
 NewWidthConfirmTxt:
-	'Nouvelle Largeur: "%1"\n',
+	"Nouvelle Largeur: \"%1\"\n",
 NewHeight:
 	"Nouvelle Hauteur?",
 NewHeightConfirmTxt:
-	'Nouvelle Hauteur: "%1"\n\nLes informations sont-elles exactes?',
+	"Nouvelle Hauteur: \"%1\"\n\nLes informations sont-elles exactes?",
 
 RenamedFile:
-	'fichier "%1" renommé en "%2".',
+	"fichier \"%1\" renommé en \"%2\".",
 DirRefreshed:
 	"dossiers actualisés.",
 FilesRefreshed:
@@ -96,38 +96,38 @@ NotMoreThanOneFile:
 UnknownPanelState:
 	"erreur: état du panneau inconnu.",
 MissingDirWrapper:
-	'erreur: dossier parent manquant: "kfm_directories%1".',
+	"erreur: dossier parent manquant: \"kfm_directories%1\".",
 SetStylesError:
-	'erreur: impossible d\'attribuer "%2" à "%1".',
+	"erreur: impossible d\'attribuer \"%2\" à \"%1\".",
 NoPanel:
-	'erreur: le panneau "%1" n\'existe pas.',
+	"erreur: le panneau \"%1\" n\'existe pas.",
 FileSelected:
-	'fichier sélectionné: "%1"',
+	"fichier sélectionné: \"%1\"",
 Log_ChangeCaption:
-	'titre de "%1" modifié en "%2"',
+	"titre de \"%1\" modifié en \"%2\"",
 UrlNotValidLog:
-	'erreur: l\'URL doit commencer par "http:"',
+	"erreur: l\'URL doit commencer par \"http:\"",
 MovingFilesTo:
-	'fichiers ["%1"] déplacés dans "%2"',
+	"fichiers [\"%1\"] déplacés dans \"%2\"",
 
 DirectoryNameExists:
 	"un dossier de ce nom existe déjà.",
 FileNameNotAllowd:
 	"erreur: nom de fichier incorrect",
 CouldNotWriteFile:
-	'erreur: impossible d\'écrire le fichier "%1".',
+	"erreur: impossible d\'écrire le fichier \"%1\".",
 CouldNotRemoveDir:
 	"Impossible de supprimer le dossier.\nAssurez-vous qu'il est vide",
 UrlNotValid:
-	'erreur: l\'URL doit commencer par "http:"',
+	"erreur: l\'URL doit commencer par \"http:\"",
 CouldNotDownloadFile:
-	'erreur: impossible de télécharger le fichier "%1".',
+	"erreur: impossible de télécharger le fichier \"%1\".",
 FileTooLargeForThumb:
-	'erreur: "%1" est trop gros pour créer une vignette. Veuillez remplacer ce fichier par une version plus petite.',
+	"erreur: \"%1\" est trop gros pour créer une vignette. Veuillez remplacer ce fichier par une version plus petite.",
 CouldntReadDir:
 	"erreur: impossible de lire ce dossier",
 CannotRenameFile:
-	'erreur: impossible de renommer "%1" en "%2"',
+	"erreur: impossible de renommer \"%1\" en \"%2\"",
 FilenameAlreadyExists:
 	"erreur: un fichier de ce nom existe déjà",
 
