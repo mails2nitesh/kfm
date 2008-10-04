@@ -66,7 +66,7 @@ kfm.lang=
 	FilesRefreshed           : "Dateien neu geladen.",
 	NotMoreThanOneFile       : "Fehler: Sie können nicht mehr als eine Datei auf einmal wählen.",
 	UnknownPanelState        : "Fehler: Unbekannter Panel Status.",
-	SetStylesError           : "Fehler: Kann nicht \"%1\" auf \"%2\ setzen.",
+	SetStylesError           : "Fehler: Kann nicht \"%1\" auf \"%2\" setzen.",
 	NoPanel                  : "Fehler: Panel \"%1\" existiert nicht.",
 	FileSelected             : "Datei ausgewählt: \"%1\"",
 	Log_ChangeCaption: "Verändere Bildunterschrift von \"%1\" nach \"%2\"",
