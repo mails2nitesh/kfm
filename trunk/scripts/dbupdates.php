@@ -21,6 +21,14 @@ if($dbv==1){
 	}
 	$dbv=2;
 }
+if($dbv==2){
+	if($kfm_db_type=='pgsql'){
+		$kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."users( id serial, username varchar(16), password varchar(40), status INTEGER default 2)");
+		$kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."settings( id serial, name varchar(128), value varchar(256), user_id INTEGER, usersetting INTEGER default 0)");
+		$kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."plugin_extensions( id serial, extension varchar(64), plugin varchar(64), user_id INTEGER)");
+	}
+	$dbv=3;
+}
 
 $kfmdb->query("update ".KFM_DB_PREFIX."parameters set value='$dbv' where name='version_db'");
 echo '<p>Database updated. Please reload page.</p>';
