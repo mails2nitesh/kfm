@@ -1,4 +1,4 @@
-﻿/*
+/*
  * File Name: de.js
  * 	German language file.
  *
