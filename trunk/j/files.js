@@ -123,7 +123,7 @@ function kfm_filesLoader(){
 	$j('<img src="themes/'+kfm_theme+'/small_loader.gif" alt=""/>').appendTo('#documents_loader');
 }
 function kfm_files_reflowIcons(){
-	var el,panel,els,k,F;
+	var el,panel,els,k;
 	panel=document.getElementById('documents_body');
 	if(panel.contentMode!='file_icons')return;
 	k=0;

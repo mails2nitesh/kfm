@@ -156,7 +156,7 @@ function _renameFile($fid,$newfilename,$refreshFiles=true){
 	if($refreshFiles)return kfm_loadFiles($kfm_session->get('cwd_id'));
 }
 function _renameFiles($files,$template){
-	global $kfm_session;
+	global $kfm_session,$kfm;
 	$cwd_id=$kfm_session->get('cwd_id');
 	if(!$kfm->setting('allow_file_edit'))return kfm_error(kfm_lang('permissionDeniedEditFile'));
 	$prefix=preg_replace('/\*.*/','',$template);
