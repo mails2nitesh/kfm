@@ -45,15 +45,10 @@ File.prototype.setThumbnailBackground=function(el,reset){
 		$j.event.add(this.thumb_image,'load',function(){
 			el.style.backgroundImage='url("'+thumb_url+'")';
 			this.icon_loaded=true;
+			el.icon_loaded=true;
 		});
 		this.thumb_image.src=thumb_url;
 	}
-	/*
-	if(this.icon_loaded && !reset)el.style.backgroundImage='url("'+this.icon_url+'")';
-	else{
-		File_ThumbnailsQueue.push([el,this.id]);
-		if(!window.File_ThumbnailsTimeout)window.File_ThumbnailsTimeout=setTimeout(File.prototype.iterateThumbnailQueue,1);
-	}*/
 }
 File.prototype.iterateThumbnailQueue=function(){
 	if(!File_ThumbnailsQueue.length){

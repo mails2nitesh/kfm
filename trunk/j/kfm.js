@@ -313,6 +313,7 @@ KFM.prototype.build=function(){
 	$j.event.add(document,'keyup',kfm.keyup);
 	$j.event.add(window,'resize',kfm_resizeHandler);
 	kfm_contextmenuinit();
+	$j.event.add(documents_body,'scroll',kfm_setThumbnails);
 };
 KFM.prototype.confirm=function(txt){
 	window.inPrompt=1;

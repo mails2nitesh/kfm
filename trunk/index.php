@@ -175,6 +175,7 @@ if ($last_registration!=$today) {
 // }}}
 ?>
         <script type="text/javascript" src="j/mootools.v1.11/mootools.v1.11.js"></script>
+				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>
         <script type="text/javascript" src="j/jquery/all.php"></script>
 <?php // {{{ set up JavaScript environment variables ?>
         <script type="text/javascript">
