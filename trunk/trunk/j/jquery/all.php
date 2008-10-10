@@ -8,8 +8,7 @@ header('Expires: '.gmdate("D, d M Y H:i:s", time() + 3600*24*365).' GMT');
 $md5path=WORKPATH.md5_of_dir(KFM_BASE_PATH.'j/jquery/');
 if(file_exists($md5path))readfile($md5path);
 else{
-	$js=file_get_contents('http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js');
-	$js.=file_get_contents('jquery.dimensions.pack.js');
+	$js=file_get_contents('jquery.dimensions.pack.js');
 	$js.=file_get_contents('jquery.impromptu.js');
 	$js.=file_get_contents('jquery.iutil.pack.js');
 	$js.=file_get_contents('jquery.idrag.js');

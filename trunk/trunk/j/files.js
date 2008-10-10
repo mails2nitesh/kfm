@@ -123,19 +123,31 @@ function kfm_filesLoader(){
 	$j('<img src="themes/'+kfm_theme+'/small_loader.gif" alt=""/>').appendTo('#documents_loader');
 }
 function kfm_files_reflowIcons(){
-	var el,panel,els,k;
+	var el,panel,els,k,F;
 	panel=document.getElementById('documents_body');
 	if(panel.contentMode!='file_icons')return;
 	k=0;
 	els=$j('#documents_body .kfm_file_icon');
 	els.each(function(){
 		if(!this)return;
-		el=$j(this);
-		el.css({'clear':'none'});
-		if(k&&els[k-1].offsetLeft>=el.offsetLeft)el.css({'clear':'left'});
+		ej=$j(this);
+		ej.css({'clear':'none'});
+		if(k&&els[k-1].offsetLeft>=this.offsetLeft)ej.css({'clear':'left'});
 		++k;
 	});
 	kfm_show_number_of_files(k);
+	kfm_setThumbnails();
+}
+function kfm_setThumbnails(){
+	var els,F,d,fold;
+	fold = $j(window).height() + $j(window).scrollTop();
+	els=$j('#documents_body .kfm_file_icon');
+	els.each(function(){
+		F=File_getInstance(this.file_id);
+		if(F.width && !this.icon_loaded && fold>=getOffset(this,'Top')){
+			F.setThumbnailBackground(this);
+		}
+	});
 }
 function kfm_getCachedIcon(type){
 	if(window.kfm_file_bits.cacheableIcons[type])return window.kfm_file_bits.cacheableIcons[type];
@@ -175,11 +187,6 @@ function kfm_incrementalFileDisplay(refresh_count){
 		var writable=fdata.writable;
 		// {{{ file attributes
 		el.file_id=id;
-		if(!kfm_listview && fdata.width){
-			F.setThumbnailBackground(el);
-			/* add as active file */
-			// if(!F.icon_loaded)kfm_vars.files.active[refresh_count].push(F);
-		}
 		wrapper.files[a]=el;
 		// }}}
 		el.appendChild(nameEl);
@@ -215,7 +222,6 @@ function kfm_incrementalFileDisplay(refresh_count){
 		if(a&&document.getElementById('kfm_file_icon_'+fsdata[a-1].id).offsetLeft>=el.offsetLeft)el.style.clear='left';
 		window.kfm_incrementalFileDisplay_vars.at=a+1;
 	}while(a+1<fsdata.length && (a+1)%kfm_show_files_in_groups_of);
-	//if(a+1<fsdata.length)window.kfm_incrementalFileDisplay_loader=setTimeout(kfm_incrementalFileDisplay,1);
 	if(a+1<fsdata.length)kfm_incrementalFileDisplay(refresh_count);
 	else{ // finished displaying icons
 		kdnd_makeDraggable('kfm_file');
@@ -232,6 +238,7 @@ function kfm_incrementalFileDisplay(refresh_count){
 				widgets:['zebra']
 			});
 		}
+		else kfm_files_reflowIcons();
 		$j('#documents_loader').html('&nbsp;');
 		if(kfm_vars.startup_selectedFiles){
 			for(var i=0;i<kfm_vars.startup_selectedFiles.length;++i)kfm_addToSelection(kfm_vars.startup_selectedFiles[i]);
