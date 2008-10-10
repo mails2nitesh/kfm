@@ -123,13 +123,19 @@ function kfm_filesLoader(){
 	$j('<img src="themes/'+kfm_theme+'/small_loader.gif" alt=""/>').appendTo('#documents_loader');
 }
 function kfm_files_reflowIcons(){
-	var panel=document.getElementById('documents_body');
+	var el,panel,els,k;
+	panel=document.getElementById('documents_body');
 	if(panel.contentMode!='file_icons')return;
-	$j('#documents_body .kfm_file_icon').each(function(el){
-		if(!el || !el.style)return;
-		el.style.clear='none';
-		if(i&&els[i-1].offsetLeft>=el.offsetLeft)el.style.clear='left';
+	k=0;
+	els=$j('#documents_body .kfm_file_icon');
+	els.each(function(){
+		if(!this)return;
+		el=$j(this);
+		el.css({'clear':'none'});
+		if(k&&els[k-1].offsetLeft>=el.offsetLeft)el.css({'clear':'left'});
+		++k;
 	});
+	kfm_show_number_of_files(k);
 }
 function kfm_getCachedIcon(type){
 	if(window.kfm_file_bits.cacheableIcons[type])return window.kfm_file_bits.cacheableIcons[type];
@@ -246,32 +252,8 @@ function kfm_fileIcon_addEvents(icon){
 }
 function kfm_refreshFiles(res){
 	if(!res.files)return;
-	$j('#folder_info').text(res.files.length+(res.files.length==1?' file':' files')); //TODO new string
-	kdnd_addDropHandler('kfm_file','.kfm_directory_link',function(e){
-		dir_over=e.targetElement.node_id;
-		var mv='x_kfm_moveFiles(['+selectedFiles.join(',')+'],'+dir_over+',function(e){if($type(e)=="string")return alert(kfm.lang.CouldNotMoveFiles);kfm_removeFilesFromView(['+selectedFiles.join(',')+'])});kfm_selectNone()';
-		var cp='x_kfm_copyFiles(['+selectedFiles.join(',')+'],'+dir_over+',kfm_showMessage);kfm_selectNone()';
-		if(kfm_vars.files.drags_move_or_copy == 1)eval(mv); // always Move
-		else if(kfm_vars.files.drags_move_or_copy == 2)eval(cp); // always Copy
-		else{
-			var links=[];
-			//links.push([cp,kfm.lang.CopyFiles]);
-			context_categories['edit'].add({
-				name:'files_copy',
-				title:kfm.lang.CopyFiles,
-				category:'edit',
-				doFunction:function(){eval(cp);}
-			});
-			//links.push([mv,kfm.lang.MoveFiles,0,!kfm_vars.permissions.file.mv]);
-			context_categories['edit'].add({
-				name:'files_move',
-				title:kfm.lang.MoveFiles,
-				category:'edit',
-				doFunction:function(){eval(mv)}
-			});
-			kfm_createContextMenu(e.page,false);
-		}
-	});
+	kfm_show_number_of_files(res.files.length);
+	kdnd_addDropHandler('kfm_file','.kfm_directory_link',kfm_files_dragToDirectory);
 	if(window.kfm_incrementalFileDisplay_loader){
 		clearTimeout(window.kfm_incrementalFileDisplay_loader);
 		window.kfm_incrementalFileDisplay_vars=null;
@@ -333,6 +315,34 @@ function kfm_refreshFiles(res){
 		kfm_vars.files.refresh_count++;
 		// kfm_vars.files.active[kfm_vars.files.refresh_count]=[]; // initialise new array
 		kfm_incrementalFileDisplay(kfm_vars.files.refresh_count);
+	}
+}
+function kfm_show_number_of_files(num){
+	$j('#folder_info').text(num+(num==1?' file':' files')); //TODO new string
+}
+function kfm_files_dragToDirectory(e){
+	dir_over=e.targetElement.node_id;
+	var mv='x_kfm_moveFiles(['+selectedFiles.join(',')+'],'+dir_over+',function(e){if($type(e)=="string")return alert(kfm.lang.CouldNotMoveFiles);kfm_removeFilesFromView(['+selectedFiles.join(',')+'])});kfm_selectNone()';
+	var cp='x_kfm_copyFiles(['+selectedFiles.join(',')+'],'+dir_over+',kfm_showMessage);kfm_selectNone()';
+	if(kfm_vars.files.drags_move_or_copy == 1)eval(mv); // always Move
+	else if(kfm_vars.files.drags_move_or_copy == 2)eval(cp); // always Copy
+	else{
+		var links=[];
+		//links.push([cp,kfm.lang.CopyFiles]);
+		context_categories['edit'].add({
+			name:'files_copy',
+			title:kfm.lang.CopyFiles,
+			category:'edit',
+			doFunction:function(){eval(cp);}
+		});
+		//links.push([mv,kfm.lang.MoveFiles,0,!kfm_vars.permissions.file.mv]);
+		context_categories['edit'].add({
+			name:'files_move',
+			title:kfm.lang.MoveFiles,
+			category:'edit',
+			doFunction:function(){eval(mv)}
+		});
+		kfm_createContextMenu(e.page,false);
 	}
 }
 function kfm_removeFilesFromView(files){
