@@ -67,7 +67,6 @@ klass.prototype = properties;
 klass.constructor = Class;
 return klass;
 };
-Class.empty = function(){};
 Class.prototype = {
 extend: function(properties){
 var proto = new this(null);
@@ -96,24 +95,12 @@ case 'object': return $merge(previous, current);
 return current;
 };
 var Events = new Class({
-addEvent: function(type, fn){
-if (fn != Class.empty){
-this.$events = this.$events || {};
-this.$events[type] = this.$events[type] || [];
-this.$events[type].include(fn);
-}
-return this;
-},
 fireEvent: function(type, args, delay){
 if (this.$events && this.$events[type]){
 this.$events[type].each(function(fn){
 fn.create({'bind': this, 'delay': delay, 'arguments': args})();
 }, this);
 }
-return this;
-},
-removeEvent: function(type, fn){
-if (this.$events && this.$events[type]) this.$events[type].remove(fn);
 return this;
 }
 });
@@ -153,19 +140,6 @@ length = length || (this.length - start);
 var newArray = [];
 for (var i = 0; i < length; i++) newArray[i] = this[start++];
 return newArray;
-},
-remove: function(item){
-var i = 0;
-var len = this.length;
-while (i < len){
-if (this[i] === item){
-this.splice(i, 1);
-len--;
-} else {
-i++;
-}
-}
-return this;
 },
 contains: function(item, from){
 return this.indexOf(item, from) != -1;
@@ -219,10 +193,6 @@ rgbToHex: function(array){
 var rgb = this.match(/\d{1,3}/g);
 return (rgb) ? rgb.rgbToHex(array) : false;
 },
-hexToRgb: function(array){
-var hex = this.match(/^#?(\w{1,2})(\w{1,2})(\w{1,2})$/);
-return (hex) ? hex.slice(1).hexToRgb(array) : false;
-},
 contains: function(string, s){
 return (s) ? (s + this + s).indexOf(s + string + s) > -1 : this.indexOf(string) > -1;
 }
@@ -237,14 +207,6 @@ var bit = (this[i] - 0).toString(16);
 hex.push((bit.length == 1) ? '0' + bit : bit);
 }
 return array ? hex : '#' + hex.join('');
-},
-hexToRgb: function(array){
-if (this.length != 3) return false;
-var rgb = [];
-for (var i = 0; i < 3; i++){
-rgb.push(parseInt((this[i].length == 1) ? this[i] + this[i] : this[i], 16));
-}
-return array ? rgb : 'rgb(' + rgb.join(',') + ')';
 }
 });
 Function.extend({
@@ -324,7 +286,6 @@ $extend(el, Element.prototype);
 el.htmlElement = function(){};
 return Garbage.collect(el);
 };
-document.getElementsBySelector = document.getElementsByTagName;
 function $$(){
 var elements = [];
 for (var i = 0, j = arguments.length; i < j; i++){
@@ -333,7 +294,7 @@ switch($type(selector)){
 case 'element': elements.push(selector);
 case 'boolean': break;
 case false: break;
-case 'string': selector = document.getElementsBySelector(selector, true);
+case 'string': selector = document.getElementsByTagName(selector, true);
 default: elements.extend(selector);
 }
 }
@@ -380,83 +341,10 @@ for (var prop in props){
 var val = props[prop];
 switch(prop){
 case 'styles': this.setStyles(val); break;
-case 'events': if (this.addEvents) this.addEvents(val); break;
 case 'properties': Element.setMany(this, 'setProperty', val); break;
 default: this.setProperty(prop, val);
 }
 }
-return this;
-},
-inject: function(el, where){
-el = $(el);
-switch(where){
-case 'before': el.parentNode.insertBefore(this, el); break;
-case 'after':
-var next = el.getNext();
-if (!next) el.parentNode.appendChild(this);
-else el.parentNode.insertBefore(this, next);
-break;
-case 'top':
-var first = el.firstChild;
-if (first){
-el.insertBefore(this, first);
-break;
-}
-default: el.appendChild(this);
-}
-return this;
-},
-injectBefore: function(el){
-return this.inject(el, 'before');
-},
-injectAfter: function(el){
-return this.inject(el, 'after');
-},
-injectInside: function(el){
-return this.inject(el, 'bottom');
-},
-injectTop: function(el){
-return this.inject(el, 'top');
-},
-adopt: function(){
-var elements = [];
-$each(arguments, function(argument){
-elements = elements.concat(argument);
-});
-$$(elements).inject(this);
-return this;
-},
-remove: function(){
-return this.parentNode.removeChild(this);
-},
-clone: function(contents){
-var el = $(this.cloneNode(contents !== false));
-if (!el.$events) return el;
-el.$events = {};
-for (var type in this.$events) el.$events[type] = {
-'keys': $A(this.$events[type].keys),
-'values': $A(this.$events[type].values)
-};
-return el.removeEvents();
-},
-replaceWith: function(el){
-el = $(el);
-this.parentNode.replaceChild(el, this);
-return el;
-},
-appendText: function(text){
-this.appendChild(document.createTextNode(text));
-return this;
-},
-hasClass: function(className){
-return this.className.contains(className, ' ');
-},
-addClass: function(className){
-if (!this.hasClass(className)) this.className = (this.className + ' ' + className).replace(/\s{2,}/g, ' ').replace(/^\s+|\s+$/g, '');
-return this;
-},
-removeClass: function(className){
-this.className = this.className.replace(new RegExp('(^|\\s)' + className + '(?:\\s|$)'), '$1').replace(/\s{2,}/g, ' ').replace(/^\s+|\s+$/g, '');
 return this;
 },
 setStyle: function(property, value){
@@ -533,42 +421,10 @@ return color.rgbToHex();
 }
 return result;
 },
-getStyles: function(){
-var result = {};
-$each(arguments, function(key){
-result[key] = this.getStyle(key);
-});
-return result;
-},
-walk: function(brother, start){
-brother += 'Sibling';
-var el = (start) ? this[start] : this[brother];
-while (el && $type(el) != 'element') el = el[brother];
-return $(el);
-},
-getNext: function(){
-return this.walk('next');
-},
-hasChild: function(el){
-return !!$A(this.getElementsByTagName('*')).contains(el);
-},
-getProperty: function(property){
-var index = Element.Properties[property];
-if (index) return this[index];
-var flag = Element.PropertiesIFlag[property] || 0;
-if (!window.ie || flag) return this.getAttribute(property, flag);
-var node = this.attributes[property];
-return (node) ? node.nodeValue : null;
-},
 setProperty: function(property, value){
 var index = Element.Properties[property];
 if (index) this[index] = value;
 else this.setAttribute(property, value);
-return this;
-},
-empty: function(){
-Garbage.trash(this.getElementsByTagName('*'));
-this.innerHTML='';
 return this;
 }
 });
@@ -604,18 +460,6 @@ Element.Properties = new Abstract({
 Element.PropertiesIFlag = {
 'href': 2, 'src': 2
 };
-Element.Methods = {
-Listeners: {
-addListener: function(type, fn){
-if (this.addEventListener) this.addEventListener(type, fn, false);
-else this.attachEvent('on' + type, fn);
-return this;
-}
-}
-};
-window.extend(Element.Methods.Listeners);
-document.extend(Element.Methods.Listeners);
-Element.extend(Element.Methods.Listeners);
 var Garbage = {
 elements: [],
 collect: function(el){
@@ -628,24 +472,13 @@ return el;
 trash: function(elements){
 for (var i = 0, j = elements.length, el; i < j; i++){
 if (!(el = elements[i]) || !el.$tmp) continue;
-if (el.$events) el.fireEvent('trash').removeEvents();
 for (var p in el.$tmp) el.$tmp[p] = null;
 for (var d in Element.prototype) el[d] = null;
 Garbage.elements[Garbage.elements.indexOf(el)] = null;
 el.htmlElement = el.$tmp = el = null;
 }
-Garbage.elements.remove(null);
-},
-empty: function(){
-Garbage.collect(window);
-Garbage.collect(document);
-Garbage.trash(Garbage.elements);
 }
 };
-window.addListener('beforeunload', function(){
-window.addListener('unload', Garbage.empty);
-if (window.ie) window.addListener('unload', CollectGarbage);
-});
 var Event = new Class({
 initialize: function(event){
 if (event && event.$extended) return event;
@@ -659,7 +492,7 @@ this.shift = event.shiftKey;
 this.control = event.ctrlKey;
 this.alt = event.altKey;
 this.meta = event.metaKey;
-if (['DOMMouseScroll', 'mousewheel'].contains(this.type)){
+if (['DOMMouseScroll'].contains(this.type)){
 this.wheel = (event.wheelDelta) ? event.wheelDelta / 120 : -(event.detail || 0) / 3;
 } else if (this.type.contains('key')){
 this.code = event.which || event.keyCode;
@@ -715,307 +548,3 @@ relatedTargetGecko: function(){
 try {Event.fix.relatedTarget.call(this);} catch(e){this.relatedTarget = this.target;}
 }
 };
-Event.keys = new Abstract({
-'enter': 13,
-'up': 38,
-'down': 40,
-'left': 37,
-'right': 39,
-'esc': 27,
-'space': 32,
-'backspace': 8,
-'tab': 9,
-'delete': 46
-});
-Element.Methods.Events = {
-addEvent: function(type, fn){
-this.$events = this.$events || {};
-this.$events[type] = this.$events[type] || {'keys': [], 'values': []};
-if (this.$events[type].keys.contains(fn)) return this;
-this.$events[type].keys.push(fn);
-var realType = type;
-var custom = Element.Events[type];
-if (custom){
-if (custom.add) custom.add.call(this, fn);
-if (custom.map) fn = custom.map;
-if (custom.type) realType = custom.type;
-}
-if (!this.addEventListener) fn = fn.create({'bind': this, 'event': true});
-this.$events[type].values.push(fn);
-return (Element.NativeEvents.contains(realType)) ? this.addListener(realType, fn) : this;
-},
-removeEvent: function(type, fn){
-if (!this.$events || !this.$events[type]) return this;
-var pos = this.$events[type].keys.indexOf(fn);
-if (pos == -1) return this;
-var key = this.$events[type].keys.splice(pos,1)[0];
-var value = this.$events[type].values.splice(pos,1)[0];
-var custom = Element.Events[type];
-if (custom){
-if (custom.remove) custom.remove.call(this, fn);
-if (custom.type) type = custom.type;
-}
-if(Element.NativeEvents.contains(type)){
-if (this.removeEventListener) this.removeEventListener(type, value, false);
-else this.detachEvent('on' + type, value);
-return this;
-}
-else return this;
-},
-addEvents: function(source){
-return Element.setMany(this, 'addEvent', source);
-},
-removeEvents: function(type){
-if (!this.$events) return this;
-if (!type){
-for (var evType in this.$events) this.removeEvents(evType);
-this.$events = null;
-} else if (this.$events[type]){
-this.$events[type].keys.each(function(fn){
-this.removeEvent(type, fn);
-}, this);
-this.$events[type] = null;
-}
-return this;
-},
-fireEvent: function(type, args, delay){
-if (this.$events && this.$events[type]){
-this.$events[type].keys.each(function(fn){
-fn.create({'bind': this, 'delay': delay, 'arguments': args})();
-}, this);
-}
-return this;
-}
-};
-window.extend(Element.Methods.Events);
-document.extend(Element.Methods.Events);
-Element.extend(Element.Methods.Events);
-Element.Events = new Abstract({
-'mouseenter': {
-type: 'mouseover',
-map: function(event){
-event = new Event(event);
-if (event.relatedTarget != this && !this.hasChild(event.relatedTarget)) this.fireEvent('mouseenter', event);
-}
-},
-'mouseleave': {
-type: 'mouseout',
-map: function(event){
-event = new Event(event);
-if (event.relatedTarget != this && !this.hasChild(event.relatedTarget)) this.fireEvent('mouseleave', event);
-}
-},
-'mousewheel': {
-type: (window.gecko) ? 'DOMMouseScroll' : 'mousewheel'
-}
-});
-Element.NativeEvents = [
-'click', 'dblclick', 'mouseup', 'mousedown', //mouse buttons
-'mousewheel', 'DOMMouseScroll', //mouse wheel
-'mouseover', 'mouseout', 'mousemove', //mouse movement
-'keydown', 'keypress', 'keyup', //keys
-'load', 'unload', 'beforeunload', 'resize', 'move', //window
-'focus', 'blur', 'change', 'submit', 'reset', 'select', //forms elements
-'error', 'abort', 'contextmenu', 'scroll' //misc
-];
-Elements.extend({
-filterByClass: function(className, nocash){
-var elements = this.filter(function(el){
-return (el.className && el.className.contains(className, ' '));
-});
-return (nocash) ? elements : new Elements(elements);
-},
-filterById: function(id, nocash){
-var elements = this.filter(function(el){
-return (el.id == id);
-});
-return (nocash) ? elements : new Elements(elements);
-},
-filterByAttribute: function(name, operator, value, nocash){
-var elements = this.filter(function(el){
-var current = Element.getProperty(el, name);
-if (!current) return false;
-if (!operator) return true;
-switch(operator){
-case '=': return (current == value);
-case '*=': return (current.contains(value));
-case '^=': return (current.substr(0, value.length) == value);
-case '$=': return (current.substr(current.length - value.length) == value);
-case '!=': return (current != value);
-case '~=': return current.contains(value, ' ');
-}
-return false;
-});
-return (nocash) ? elements : new Elements(elements);
-}
-});
-function $E(selector, filter){
-return ($(filter) || document).getElement(selector);
-};
-$$.shared = {
-'regexp': /^(\w*|\*)(?:#([\w-]+)|\.([\w-]+))?(?:\[(\w+)(?:([!*^$]?=)["']?([^"'\]]*)["']?)?])?$/,
-'xpath': {
-getParam: function(items, context, param, i){
-var temp = [context.namespaceURI ? 'xhtml:' : '', param[1]];
-if (param[2]) temp.push('[@id="', param[2], '"]');
-if (param[3]) temp.push('[contains(concat(" ", @class, " "), " ', param[3], ' ")]');
-if (param[4]){
-if (param[5] && param[6]){
-switch(param[5]){
-case '*=': temp.push('[contains(@', param[4], ', "', param[6], '")]'); break;
-case '^=': temp.push('[starts-with(@', param[4], ', "', param[6], '")]'); break;
-case '$=': temp.push('[substring(@', param[4], ', string-length(@', param[4], ') - ', param[6].length, ' + 1) = "', param[6], '"]'); break;
-case '=': temp.push('[@', param[4], '="', param[6], '"]'); break;
-case '!=': temp.push('[@', param[4], '!="', param[6], '"]');
-}
-} else {
-temp.push('[@', param[4], ']');
-}
-}
-items.push(temp.join(''));
-return items;
-},
-getItems: function(items, context, nocash){
-var elements = [];
-var xpath = document.evaluate('.//' + items.join('//'), context, $$.shared.resolver, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
-for (var i = 0, j = xpath.snapshotLength; i < j; i++) elements.push(xpath.snapshotItem(i));
-return (nocash) ? elements : new Elements(elements.map($));
-}
-},
-'normal': {
-getParam: function(items, context, param, i){
-if (i == 0){
-if (param[2]){
-var el = context.getElementById(param[2]);
-if (!el || ((param[1] != '*') && (el.tagName.toLowerCase() != param[1]))) return false;
-items = [el];
-} else {
-items = $A(context.getElementsByTagName(param[1]));
-}
-} else {
-items = $$.shared.getElementsByTagName(items, param[1]);
-if (param[2]) items = Elements.filterById(items, param[2], true);
-}
-if (param[3]) items = Elements.filterByClass(items, param[3], true);
-if (param[4]) items = Elements.filterByAttribute(items, param[4], param[5], param[6], true);
-return items;
-},
-getItems: function(items, context, nocash){
-return (nocash) ? items : $$.unique(items);
-}
-},
-resolver: function(prefix){
-return (prefix == 'xhtml') ? 'http://www.w3.org/1999/xhtml' : false;
-},
-getElementsByTagName: function(context, tagName){
-var found = [];
-for (var i = 0, j = context.length; i < j; i++) found.extend(context[i].getElementsByTagName(tagName));
-return found;
-}
-};
-$$.shared.method = (window.xpath) ? 'xpath' : 'normal';
-Element.Methods.Dom = {
-getElements: function(selector, nocash){
-var items = [];
-selector = selector.replace(/^\s+|\s+$/g, '').split(' ');
-for (var i = 0, j = selector.length; i < j; i++){
-var sel = selector[i];
-var param = sel.match($$.shared.regexp);
-if (!param) break;
-param[1] = param[1] || '*';
-var temp = $$.shared[$$.shared.method].getParam(items, this, param, i);
-if (!temp) break;
-items = temp;
-}
-return $$.shared[$$.shared.method].getItems(items, this, nocash);
-},
-getElement: function(selector){
-return $(this.getElements(selector, true)[0] || false);
-},
-getElementsBySelector: function(selector, nocash){
-var elements = [];
-selector = selector.split(',');
-for (var i = 0, j = selector.length; i < j; i++) elements = elements.concat(this.getElements(selector[i], true));
-return (nocash) ? elements : $$.unique(elements);
-}
-};
-Element.extend({
-getElementById: function(id){
-var el = document.getElementById(id);
-if (!el) return false;
-for (var parent = el.parentNode; parent != this; parent = parent.parentNode){
-if (!parent) return false;
-}
-return el;
-}/*compatibility*/,
-getElementsByClassName: function(className){ 
-return this.getElements('.' + className); 
-}
-});
-document.extend(Element.Methods.Dom);
-Element.extend(Element.Methods.Dom);
-Element.extend({
-getSize: function(){
-return {
-'scroll': {'x': this.scrollLeft, 'y': this.scrollTop},
-'size': {'x': this.offsetWidth, 'y': this.offsetHeight},
-'scrollSize': {'x': this.scrollWidth, 'y': this.scrollHeight}
-};
-},
-getPosition: function(overflown){
-overflown = overflown || [];
-var el = this, left = 0, top = 0;
-do {
-left += el.offsetLeft || 0;
-top += el.offsetTop || 0;
-el = el.offsetParent;
-} while (el);
-overflown.each(function(element){
-left -= element.scrollLeft || 0;
-top -= element.scrollTop || 0;
-});
-return {'x': left, 'y': top};
-},
-getTop: function(overflown){
-return this.getPosition(overflown).y;
-},
-getLeft: function(overflown){
-return this.getPosition(overflown).x;
-}
-});
-window.extend({
-getWidth: function(){
-if (this.webkit419) return this.innerWidth;
-if (this.opera) return document.body.clientWidth;
-return document.documentElement.clientWidth;
-},
-getHeight: function(){
-if (this.webkit419) return this.innerHeight;
-if (this.opera) return document.body.clientHeight;
-return document.documentElement.clientHeight;
-},
-getScrollWidth: function(){
-if (this.ie) return Math.max(document.documentElement.offsetWidth, document.documentElement.scrollWidth);
-if (this.webkit) return document.body.scrollWidth;
-return document.documentElement.scrollWidth;
-},
-getScrollHeight: function(){
-if (this.ie) return Math.max(document.documentElement.offsetHeight, document.documentElement.scrollHeight);
-if (this.webkit) return document.body.scrollHeight;
-return document.documentElement.scrollHeight;
-},
-getScrollLeft: function(){
-return this.pageXOffset || document.documentElement.scrollLeft;
-},
-getScrollTop: function(){
-return this.pageYOffset || document.documentElement.scrollTop;
-},
-getSize: function(){
-return {
-'size': {'x': this.getWidth(), 'y': this.getHeight()},
-'scrollSize': {'x': this.getScrollWidth(), 'y': this.getScrollHeight()},
-'scroll': {'x': this.getScrollLeft(), 'y': this.getScrollTop()}
-};
-},
-getPosition: function(){return {'x': 0, 'y': 0};}
-});

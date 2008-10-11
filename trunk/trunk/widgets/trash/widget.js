@@ -26,6 +26,6 @@ kdnd_addDropHandler('kfm_file','.widget_trash',function(e){
 	e.targetElement.action(selectedFiles,[]);
 });
 kdnd_addDropHandler('kfm_dir_name','.widget_trash',function(e){
-	var dir_from=parseInt($E('.kfm_directory_link',e.sourceElement).node_id);
+	var dir_from=parseInt($j('.kfm_directory_link',e.sourceElement)[0].node_id);
 	e.targetElement.action([],[dir_from]);
 });

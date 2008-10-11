@@ -25,7 +25,7 @@ function kdnd_unmakeDraggable(source_class){
 		el.kdnd_applied=false;
 		if(!el.dragevents)el.dragevents=[];
 		if(!el.dragevents[source_class])el.dragevents[source_class]=kdnd_dragInit(el,source_class);
-		el.removeEvent('mousedown',el.dragevents[source_class]);
+		$j.event.remove(el,'mousedown',el.dragevents[source_class]);
 	}
 }
 function kdnd_drag(e){
@@ -64,8 +64,8 @@ function kdnd_dragFinish(e,notest){
 	}
 	{ // cleanup
 		window.kdnd_dragging=false;
-		document.removeEvent('mousemove',kdnd_drag);
-		document.removeEvent('mouseup',kdnd_dragFinish);
+		$j.event.remove(document,'mousemove',kdnd_drag);
+		$j.event.remove(document,'mouseup',kdnd_dragFinish);
 		$j(window.kdnd_drag_wrapper).remove();
 		window.kdnd_drag_wrapper=null;
 		window.kdnd_source_el=null;

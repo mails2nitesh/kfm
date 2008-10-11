@@ -9,6 +9,12 @@ function _(str,context){ // translations
 	el.appendChild(document.createTextNode(str));
 	return el;
 }
+function array_remove_values(arr,vals){
+	if($type(vals)!='array')vals=[vals];
+	var i,tmp=[];
+	for(i=0;i<arr.length;++i)if(!vals.contains(arr[i]))tmp.push(arr[i]);
+	return tmp;
+}
 function clearSelections(){
 	window.getSelection().removeAllRanges();
 }
@@ -105,7 +111,7 @@ function loadJS(url,id,lang,onload){
 		};
 	}
 	el.src=url;
-	$E('head').appendChild(el);
+	document.getElementById('head').appendChild(el);
 	return 1;
 }
 function newForm(action,method,enctype,target){

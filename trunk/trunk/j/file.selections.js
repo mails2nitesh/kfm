@@ -63,7 +63,7 @@ function kfm_selectNone(){
 }
 function kfm_selectionCheck(){
 	if(selectedFiles.length==1){
-		var el=$E('#kfm_file_details_panel div.kfm_panel_body');
+		var el=$j('#kfm_file_details_panel div.kfm_panel_body')[0];
 		if(el)el.innerHTML='loading';
 		kfm_run_delayed('file_details','if(selectedFiles.length==1)kfm_showFileDetails(selectedFiles[0]);');
 	}
@@ -94,8 +94,8 @@ function kfm_selection_dragFinish(e){
 	setTimeout('window.dragType=0;',1); // pause needed for IE
 	$j(window.drag_wrapper).remove();
 	window.drag_wrapper=null;
-	document.removeEvent('mousemove',kfm_selection_drag);
-	document.removeEvent('mouseup',kfm_selection_dragFinish);
+	$j.event.remove(document,'mousemove',kfm_selection_drag);
+	$j.event.remove(document,'mouseup',kfm_selection_dragFinish);
 	var fileids=right_column.fileids;
 	kfm_selectNone();
 	for(var i=0;i<fileids.length;++i){
@@ -110,7 +110,6 @@ function kfm_selection_dragStart(e){
 	if(window.dragType)return;
 	if (!kfm_vars.use_templates && window.mouseAt.x > document.getElementById('kfm_right_column').scrollWidth + document.getElementById('kfm_left_column').scrollWidth - 15) return;
 	window.dragType=2;
-	var w=window.getSize().size;
 	$j.event.add(document,'mouseup',kfm_selection_dragFinish);
 	window.drag_wrapper=document.createElement('div');
 	window.drag_wrapper.id='kfm_selection_drag_wrapper';

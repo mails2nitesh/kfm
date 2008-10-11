@@ -436,12 +436,12 @@ if(this.isIE){
 fixEl=this.selArea;
 }else{
 if(this.isWebKit){
-fixEl=document.getElementsByClassName("imgCrop_marqueeSouth",this.imgWrap)[0];
+fixEl=$j(".imgCrop_marqueeSouth")[0];
 d=Builder.node("div","");
 d.style.visibility="hidden";
 var _4e=["SE","S","SW"];
 for(i=0;i<_4e.length;i++){
-el=document.getElementsByClassName("imgCrop_handle"+_4e[i],this.selArea)[0];
+el=$j(".imgCrop_handle"+_4e[i])[0];
 if(el.childNodes.length){
 el.removeChild(el.childNodes[0]);
 }

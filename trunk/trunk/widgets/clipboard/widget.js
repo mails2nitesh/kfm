@@ -106,13 +106,12 @@ kdnd_addDropHandler('kfm_file','.widget_clipboard',function(e){
 	e.targetElement.action(selectedFiles,[]);
 });
 kdnd_addDropHandler('kfm_dir_name','.widget_clipboard',function(e){
-	var dir_from=parseInt($E('.kfm_directory_link',e.sourceElement).node_id);
+	var dir_from=parseInt($j('.kfm_directory_link',e.sourceElement)[0].node_id);
 	e.targetElement.action([],[dir_from]);
 });
 kdnd_addDropHandler('widget_clipboard','.kfm_dir_name',function(e){
 	if(!e.sourceElement.files.length)return;
-		//dir_over=e.targetElement.node_id;
-	var dir_over=parseInt($E('.kfm_directory_link',e.targetElement).node_id);
+	var dir_over=parseInt($j('.kfm_directory_link',e.targetElement)[0].node_id);
 		var links=[];
 		links.push(['x_kfm_copyFiles(['+e.sourceElement.files.join(',')+'],'+dir_over+',kfm_showMessage);kfm_selectNone()','copy files']);
 		links.push(['x_kfm_moveFiles(['+e.sourceElement.files.join(',')+'],'+dir_over+',function(e){if($type(e)=="string")return alert("error: could not move file[s]");kfm_removeFilesFromView(['+selectedFiles.join(',')+'])});kfm_selectNone()','move files',0,!kfm_vars.permissions.file.mv]); // TODO: new string
