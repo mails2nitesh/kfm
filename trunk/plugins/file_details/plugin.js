@@ -85,7 +85,7 @@ function kfm_showFileDetails(id){
 		kfm_addPanel(document.getElementById('kfm_left_column'),'kfm_file_details_panel');
 		kfm_refreshPanels(el);
 	}
-	var body=$E('#kfm_file_details_panel div.kfm_panel_body').empty();
+	var body=$j('#kfm_file_details_panel div.kfm_panel_body').html('')[0];
 	if(!res){
 		body.innerHTML=kfm.lang.NoFilesSelected;
 		return;

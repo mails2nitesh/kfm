@@ -107,6 +107,7 @@ KFM.prototype.switchFilesMode=function(m){
 	x_kfm_loadFiles(kfm_cwd_id,true,kfm_refreshFiles);
 };
 KFM.prototype.build=function(){
+	var form_panel,form,right_column,directories,logs,logHeight=64,j,i,w,win,dirs,j,tmp,links;
 	kfm_addHook({name:"download", mode:0,"extensions":"all", writable:2, title:"download file", doFunction:function(files){
 			kfm_downloadSelectedFiles(files[0]);
 		}
@@ -124,13 +125,14 @@ KFM.prototype.build=function(){
 			kfm_renameFile(files[0]);
 		}
 	});
-	var form_panel,form,right_column,directories,logs,logHeight=64,w=window.getSize().size,j,i;
+	win=$j(window);
+	w={x:win.width(),y:win.height()};
 	{ // extend language objects
-		for(var j in kfm.lang){
+		for(j in kfm.lang){
 			if(kfm_regexps.percent_numbers.test(kfm.lang[j])){
 				kfm.lang[j]=(function(str){
 					return function(){
-						var tmp=str;
+						tmp=str;
 						for(i=1;i<arguments.length+1;++i)tmp=tmp.replace("%"+i,arguments[i-1]);
 						return tmp;
 					};
@@ -143,8 +145,7 @@ KFM.prototype.build=function(){
 	$j(document.getElementById('removeme')).remove();
 	kfm_addContextMenu(document.body,function(e){
 		kfm_closeContextMenu();
-		var links=[['kfm.about()',kfm.lang.AboutKfm]];
-		var links=[{title:kfm.lang.AboutKfm, doFunction:function(){kfm.about();}}];
+		links=[{title:kfm.lang.AboutKfm, doFunction:function(){kfm.about();}}];
 		for(i=0;i<HooksGlobal.length;i++){
 			obj=HooksGlobal[i];
 			context_categories[obj.category].add(obj);
@@ -294,7 +295,7 @@ KFM.prototype.build=function(){
 		});
 		documents_body.parentResized=kfm_files_reflowIcons;
 	}
-	var dirs=document.getElementById('kfm_directories');
+	dirs=document.getElementById('kfm_directories');
 	if(dirs){
 		x_kfm_loadDirectories(kfm_vars.root_folder_id,kfm_refreshDirectories);
 		/*
@@ -441,26 +442,7 @@ function kfm_inArray(needle,haystack){
 	for(var i=0;i<haystack.length;++i)if(haystack[i]==needle)return true;
 	return false;
 }
-function kfm_log(msg){
-return; // delete this function in June 2009 if noone complains about this being broken
-	var wrapper=document.getElementById('kfm_logs_panel');
-	if(!wrapper){
-		if(msg.indexOf(kfm.lang.ErrorPrefix)!=0 && msg.indexOf('error: ')!=0)return;
-		if(kfm_inArray('kfm_logs_panel',kfm_hidden_panels))return kfm.alert(msg.replace(kfm.lang.ErrorPrefix,'').replace('error: ',''));
-		kfm_addPanel(document.getElementById('kfm_left_column'),'kfm_logs_panel');
-		kfm_refreshPanels('kfm_left_column');
-		wrapper=document.getElementById('kfm_logs_panel');
-	}
-	wrapper.visible=1;
-	var el=$E('#kfm_logs_panel div.kfm_panel_body'),p=document.createElement('p');
-	p.innerHTML=msg;
-	if(msg.indexOf(kfm.lang.ErrorPrefix)==0){
-		p.style.background='#ff0';
-		p.style.fontWeight='bold';
-		p.style.color='red';
-	}
-	kfm.addEl(el,p);
-	el.scrollTop=el.scrollTop+p.offsetHeight;
+function kfm_log(msg){ // remove in 2009
 }
 function kfm_prompt(txt,val,fn){
 	window.inPrompt=1;

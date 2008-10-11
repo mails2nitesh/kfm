@@ -1,11 +1,13 @@
 // see license.txt for licensing
 function kfm_resizeHandler(){
-	var w=window.getSize().size;
-	for(var i=0;i<kfm_resizeHandler_maxHeights.length;++i)if(document.getElementById(kfm_resizeHandler_maxHeights[i]))document.getElementById(kfm_resizeHandler_maxHeights[i]).style.height=w.y+'px';
-	for(var i=0;i<kfm_resizeHandler_maxWidths.length;++i)if(document.getElementById(kfm_resizeHandler_maxWidths[i]))document.getElementById(kfm_resizeHandler_maxWidths[i]).style.width=w.x+'px';
-	var el=document.getElementById('kfm_codepressTableCell');
+	var w,win,i,el,iframe;
+	win=$j(window);
+	w={x:win.width(),y:win.height()};
+	for(i=0;i<kfm_resizeHandler_maxHeights.length;++i)if(document.getElementById(kfm_resizeHandler_maxHeights[i]))document.getElementById(kfm_resizeHandler_maxHeights[i]).style.height=w.y+'px';
+	for(i=0;i<kfm_resizeHandler_maxWidths.length;++i)if(document.getElementById(kfm_resizeHandler_maxWidths[i]))document.getElementById(kfm_resizeHandler_maxWidths[i]).style.width=w.x+'px';
+	el=document.getElementById('kfm_codepressTableCell');
 	if(el){
-		var iframe=$E('iframe',el);
+		iframe=$j('iframe',el)[0];
 		if(iframe){
 			iframe.style.height=0;
 			iframe.style.width=0;
@@ -33,10 +35,10 @@ function kfm_resizeHandler_remove(name){
 	kfm_resizeHandler_removeMaxHeight(name);
 }
 function kfm_resizeHandler_removeMaxHeight(name){
-	if(!kfm_resizeHandler_maxHeights.contains(name))kfm_resizeHandler_maxHeights.remove(name);
+	if(!kfm_resizeHandler_maxHeights.contains(name))kfm_resizeHandler_maxHeights=array_remove_values(kfm_resizeHandler_maxHeights,name);
 }
 function kfm_resizeHandler_removeMaxWidth(name){
-	if(!kfm_resizeHandler_maxWidths.contains(name))kfm_resizeHandler_maxWidths.remove(name);
+	if(!kfm_resizeHandler_maxWidths.contains(name))kfm_resizeHandler_maxWidths=array_remove_values(kfm_resizeHandler_maxWidths,name);
 }
 var kfm_resizeHandler_maxHeights=[];
 var kfm_resizeHandler_maxWidths=[];

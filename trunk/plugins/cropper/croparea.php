@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<script type="text/javascript" src="lib/prototype.js" language="javascript"></script>
-<script type="text/javascript" src="lib/scriptaculous.js?load=builder,dragdrop" language="javascript"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/prototype/1.6.0.3/prototype.js" language="javascript"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/scriptaculous/1.8.1/scriptaculous.js?load=effects,builder,dragdrop" language="javascript"></script>
 <script type="text/javascript" src="cropper.js" language="javascript"></script>
 <script type="text/javascript" language="javascript">
 var imageid=<?php print $_GET['id'];?>;

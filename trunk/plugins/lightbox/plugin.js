@@ -30,7 +30,9 @@ function kfm_img_startLightbox(id){
 		document.title='KFM Slideshow: '+window.kfm_slideshow.at;
 		id=window.kfm_slideshow.ids[window.kfm_slideshow.at%window.kfm_slideshow.ids.length];
 	}
-	var el,data=File_getInstance(id),ws=window.getSize().size,oldEl=$('kfm_lightboxImage'),wrapper=$('kfm_lightboxWrapper');
+	var el,data=File_getInstance(id),oldEl=$('kfm_lightboxImage'),wrapper=$('kfm_lightboxWrapper'),ws,win;
+	win=$j(window);
+	ws={x:win.width(),y:win.height()};
 	if(!wrapper){
 		wrapper=document.createElement('div');
 		wrapper.id='kfm_lightboxWrapper';
@@ -54,7 +56,7 @@ function kfm_img_startLightbox(id){
 		$j(el).css('opacity',0.7);
 		wrapper.appendChild(el);
 	}
-	if(oldEl)oldEl.remove();
+	if(oldEl)$j(oldEl).remove();
 	var w=data.width,h=data.height,url='get.php?id='+id,r=0;
 	if(!w||!h){
 		kfm_log(kfm.lang.NotAnImageOrImageDimensionsNotReported);
@@ -95,8 +97,6 @@ function kfm_img_startLightbox(id){
 function kfm_img_stopLightbox(e){
 	e=new Event(e);
 	if(e.rightClick)return;
-	//var wrapper=$('kfm_lightboxWrapper');
-	//if(wrapper)wrapper.remove();
 	$j("#kfm_lightboxWrapper").remove();
 	window.kfm_slideshow=window.kfm_slideshow_stopped=null;
 	if(window.lightbox_slideshowTimer)clearTimeout(window.lightbox_slideshowTimer);

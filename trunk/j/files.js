@@ -362,8 +362,8 @@ function kfm_removeFilesFromView(files){
 			if(kfm_listview)el.parentNode.parentNode.removeChild(el.parentNode);
 			else el.parentNode.removeChild(el);
 		}
-		right_column.fileids.remove(files[i]);
 	}
+	right_column.fileids=array_remove_values(right_column.fileids,files);
 	kfm_files_reflowIcons();
 }
 function kfm_renameFile(id){
@@ -389,13 +389,20 @@ function kfm_renameFiles(nameTemplate){
 	});
 }
 function kfm_showToolTip(id){
+	var ws,win,F,icon,table,l,t,w,h;
 	if(!id || kfm_listview)return;
-	var F=File_getInstance(id);
-	var table=kfm_buildFileDetailsTable(F),icon=document.getElementById('kfm_file_icon_'+id);
+	F=File_getInstance(id);
+	table=kfm_buildFileDetailsTable(F);
+	icon=document.getElementById('kfm_file_icon_'+id);
 	if(!icon||contextmenu)return;
 	table.id='kfm_tooltip';
 	kfm.addEl(document.body,table);
-	var l=getOffset(icon,'Left'),t=getOffset(icon,'Top'),w=icon.offsetWidth,h=icon.offsetHeight,ws=window.getSize().size;
+	l=getOffset(icon,'Left');
+	t=getOffset(icon,'Top');
+	w=icon.offsetWidth;
+	h=icon.offsetHeight;
+	win=$j(window);
+	ws={x:win.width(),y:win.height()};
 	l=(l+(w/2)>ws.x/2)?l-table.offsetWidth:l+w;
 	table.style.position  ='absolute';
 	table.style.top       =t+'px';
