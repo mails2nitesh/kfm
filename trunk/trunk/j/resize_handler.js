@@ -25,20 +25,20 @@ function kfm_resizeHandler_add(name){
 	kfm_resizeHandler_addMaxHeight(name);
 }
 function kfm_resizeHandler_addMaxHeight(name){
-	if(!kfm_resizeHandler_maxHeights.contains(name))kfm_resizeHandler_maxHeights.push(name);
+	if(kfm_resizeHandler_maxHeights.indexOf(name)==-1)kfm_resizeHandler_maxHeights.push(name);
 }
 function kfm_resizeHandler_addMaxWidth(name){
-	if(!kfm_resizeHandler_maxWidths.contains(name))kfm_resizeHandler_maxWidths.push(name);
+	if(kfm_resizeHandler_maxWidths.indexOf(name)==-1)kfm_resizeHandler_maxWidths.push(name);
 }
 function kfm_resizeHandler_remove(name){
 	kfm_resizeHandler_removeMaxWidth(name);
 	kfm_resizeHandler_removeMaxHeight(name);
 }
 function kfm_resizeHandler_removeMaxHeight(name){
-	if(!kfm_resizeHandler_maxHeights.contains(name))kfm_resizeHandler_maxHeights=array_remove_values(kfm_resizeHandler_maxHeights,name);
+	if(kfm_resizeHandler_maxHeights.indexOf(name)!=-1)kfm_resizeHandler_maxHeights=array_remove_values(kfm_resizeHandler_maxHeights,name);
 }
 function kfm_resizeHandler_removeMaxWidth(name){
-	if(!kfm_resizeHandler_maxWidths.contains(name))kfm_resizeHandler_maxWidths=array_remove_values(kfm_resizeHandler_maxWidths,name);
+	if(kfm_resizeHandler_maxWidths.indexOf(name)!=-1)kfm_resizeHandler_maxWidths=array_remove_values(kfm_resizeHandler_maxWidths,name);
 }
 var kfm_resizeHandler_maxHeights=[];
 var kfm_resizeHandler_maxWidths=[];

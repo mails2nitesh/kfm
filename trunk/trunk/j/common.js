@@ -12,7 +12,7 @@ function _(str,context){ // translations
 function array_remove_values(arr,vals){
 	if($type(vals)!='array')vals=[vals];
 	var i,tmp=[];
-	for(i=0;i<arr.length;++i)if(!vals.contains(arr[i]))tmp.push(arr[i]);
+	for(i=0;i<arr.length;++i)if(vals.indexOf(arr[i])==-1)tmp.push(arr[i]);
 	return tmp;
 }
 function clearSelections(){
@@ -113,15 +113,6 @@ function loadJS(url,id,lang,onload){
 	el.src=url;
 	document.getElementById('head').appendChild(el);
 	return 1;
-}
-function newForm(action,method,enctype,target){
-	if(window.ie)return document.createElement('<form action="'+action+'" method="'+method+'" enctype="'+enctype+'" target="'+target+'">');
-	var form=document.createElement('form');
-	form.action=action;
-	form.method=method;
-	form.enctype=enctype;
-	form.target=target;
-	return form;
 }
 function newInput(n,t,v,cl){
 	var b;

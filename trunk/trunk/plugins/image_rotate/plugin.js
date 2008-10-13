@@ -19,7 +19,7 @@ function kfm_rotateImage(id,direction){
 	var F=File_getInstance(id);
 	kfm_fileLoader(id);
 	x_kfm_rotateImage(id,direction,function(id){
-		if($type(id)=='string')return kfm_log(id);
+		if($type(id)=='string')return;
 		x_kfm_getFileDetails(id,function(res){
 			File_setData(res);
 			F.setThumbnailBackground(document.getElementById('kfm_file_icon_'+id));

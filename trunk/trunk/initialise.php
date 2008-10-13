@@ -458,12 +458,10 @@ if ($kfm_language=='')foreach($kfm_preferred_languages as $lang)if (in_array($la
 // }
 // { common functions
 function kfm_checkAddr($addr) {
+    $addr=trim($addr);
     return (
-        strpos($addr, '..')===false&&
-        strpos($addr, '.')!==0&&
-        strlen($addr)>0&&
-        $addr[strlen($addr)-1]!=' '&&
-        strpos($addr, '/.')===false&&
+        strlen($addr)>0 &&
+        !preg_match('#^\.|\.$|\.\.|/\.#',$addr) &&
         !in_array(preg_replace('/.*\./', '', $addr), $GLOBALS['kfm_banned_extensions'])
     );
 }
