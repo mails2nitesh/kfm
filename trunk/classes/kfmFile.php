@@ -254,9 +254,9 @@ class kfmFile extends kfmObject{
 	function checkName($filename=false){
 		global $kfm;
 		if($filename===false)$filename=$this->name;
+		$filename=trim($filename);
 		if($filename=='' || 
-			trim($filename)!=$filename ||
-			strpos($filename,'/')!==false ||
+			preg_match('#/|\.$#',$filename) || 
 			in_array(kfmFile::getExtension($filename),$kfm->setting('banned_extensions'))
 		)return false;
 		

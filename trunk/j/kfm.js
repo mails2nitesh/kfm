@@ -167,7 +167,7 @@ KFM.prototype.build=function(){
 		{ // create left column
 			var left_column=kfm_createPanelWrapper('kfm_left_column');
 			kfm_resizeHandler_addMaxHeight('kfm_left_column');
-			$each(['kfm_directories_panel','kfm_widgets_panel','kfm_search_panel','kfm_directory_properties_panel','kfm_logs_panel'],function(panel){
+			$each(['kfm_directories_panel','kfm_widgets_panel','kfm_search_panel','kfm_directory_properties_panel'],function(panel){
 				if(!kfm_inArray(panel,kfm_hidden_panels))kfm_addPanel(left_column,panel);
 			});
 			left_column.panels_unlocked=1;
@@ -441,8 +441,6 @@ function kfm_delete(cm){
 function kfm_inArray(needle,haystack){
 	for(var i=0;i<haystack.length;++i)if(haystack[i]==needle)return true;
 	return false;
-}
-function kfm_log(msg){ // remove in 2009
 }
 function kfm_prompt(txt,val,fn){
 	window.inPrompt=1;

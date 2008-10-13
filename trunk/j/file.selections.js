@@ -1,10 +1,9 @@
 // see ../license.txt for licensing
 function kfm_addToSelection(id){
 	id=parseInt(id);
-	if(!id || selectedFiles.contains(id))return;
+	if(!id || selectedFiles.indexOf(id)!=-1)return;
 	selectedFiles.push(id);
 	document.getElementById('kfm_file_icon_'+id).className+=' selected';
-	if(kfm_log_level>0)kfm_log(kfm.lang.FileSelected(id));
 	kfm_selectionCheck();
 }
 function kfm_chooseFile(){

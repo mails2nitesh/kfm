@@ -13,7 +13,7 @@ function plugin_file_details(){
 kfm_addHook(new plugin_file_details());
 
 function kfm_buildFileDetailsTable(res){
-	if(!res)return kfm_log('error: missing file details?');
+	if(!res)return;
 	var table=document.createElement('table'),r,s;
 	if(res.name){ // filename
 		r=kfm.addRow(table);

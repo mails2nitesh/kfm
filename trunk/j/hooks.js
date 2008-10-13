@@ -164,7 +164,8 @@ function kfm_getLinks(files,nocontext){
 		if(window[HooksArray][ext] && typeof(window[HooksArray][ext][category])!='undefined')hookObjects.extend(window[HooksArray][ext][category]);
 	}
 	if(!nocontext){
-		hookObjects.forEach(function(item, index){
+		for(j=0;j<hookObjects.length;++j){
+			item=hookObjects[j];
 			if(kfm_vars.associations[F.ext] && kfm_vars.associations[F.ext]==item.name){ // Create an open object
 				context_categories['main'].add({
 					name:'open',
@@ -176,7 +177,7 @@ function kfm_getLinks(files,nocontext){
 			}
 			item.doParameter=[F.id];
 			context_categories[item.category].add(item);
-		});
+		};
 	}
 	return hookObjects;
 }

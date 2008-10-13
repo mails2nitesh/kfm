@@ -70,9 +70,9 @@ function kfm_textfile_initEditor(res,readonly){
 	var r2=kfm.addRow(t),c=0;
 	kfm.addCell(r2,c++,1,res.name);
 	if(!readonly){ /* show option to save edits */
-		kfm.addCell(r2,c++,1,newLink('javascript:new Notice("saving file...");document.getElementById("edit-start").value=codepress.getCode();x_kfm_saveTextFile('+res.id+',document.getElementById("edit-start").value,kfm_showMessage);','Save',0,'button'));
+		kfm.addCell(r2,c++,1,$j('<a href="javascript:new Notice(\\"saving file...\\");document.getElementById(\\"edit-start\\").value=codepress.getCode();x_kfm_saveTextFile('+res.id+',document.getElementById(\\"edit-start\\").value,kfm_showMessage);" class="button">Save</a>'));
 	}
-	kfm.addCell(r2,c++,1,newLink('javascript:kfm_textfile_close()',kfm.lang.Close,0,'button'));
+	kfm.addCell(r2,c++,1,$j('<a href="javascript:kfm_textfile_close()" class="button">'+kfm.lang.Close+'</a>'));
 	var row=kfm.addRow(t);
 	r3=kfm.addCell(row,0,c);
 	r3.id='kfm_codepressTableCell';

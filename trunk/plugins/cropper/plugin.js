@@ -29,7 +29,7 @@ function plugin_cropper(){
 		var F=File_getInstance(id);
 		kfm_pluginIframeHide();
 		x_kfm_cropToOriginal(id, coords.x1, coords.y1, dimensions.width, dimensions.height, function(id){
-			if($type(id)=='string')return kfm_log(id);
+			if($type(id)=='string')return;
 			F.setThumbnailBackground($('kfm_file_icon_'+id),true);
 		});
 	}

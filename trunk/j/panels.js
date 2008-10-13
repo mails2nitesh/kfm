@@ -30,16 +30,8 @@ function kfm_addPanel(wrapper,panel){
 	else if(panel=='kfm_file_details_panel')el=kfm_createFileDetailsPanel();
 	else if(panel=='kfm_file_upload_panel')el=kfm_createFileUploadPanel();
 	else if(panel=='kfm_search_panel')el=kfm_createSearchPanel();
-	else if(panel=='kfm_logs_panel'){
-		var p=document.createElement('p');
-		p.innerHTML=kfm.lang.LoadingKFM;
-		el=kfm_createPanel( kfm.lang.Logs, 'kfm_logs_panel', p, {order:100});
-	}
 	else if(panel=='kfm_widgets_panel')el=kfm_createWidgetsPanel();
-	else{
-		kfm_log(kfm.lang.NoPanel(panel));
-		return;
-	}
+	else return;
 	if(!wrapper.panels)wrapper.panels=[];
 	wrapper.panels[wrapper.panels.length]=panel;
 	wrapper.appendChild(el);
@@ -65,10 +57,17 @@ function kfm_createFileUploadPanel(contentsonly){
 		document.getElementById('kfm_copyForm').style.display=copy?'block':'none';
 	});
 	// {{{ upload from computer
-	var wrapper=document.createElement('div');
+	var wrapper=document.createElement('div'),f1;
 	wrapper.id='kfm_uploadWrapper';
 	// {{{ normal single-file upload form
-	var f1=newForm('upload.php','POST','multipart/form-data','kfm_iframe');
+	if(window.ie)f1=document.createElement('<form action="upload.php" method="POST" enctype="multipart/form-data" target="kfm_iframe">');
+	else{
+		f1=document.createElement('form');
+		f1.action='upload.php';
+		f1.method='POST';
+		f1.enctype='multipart/form-data';
+		f1.target='kfm_iframe';
+	}
 	f1.id='kfm_uploadForm';
 	var iframe=document.createElement('iframe');
 	iframe.id='kfm_iframe';
@@ -231,7 +230,13 @@ function kfm_createPanel(title,id,subels,vars){
 			addRestoreButton:function(){this.addButton('restorePanel','','r',kfm.lang.Restore)},
 			addButton:function(f,p,b,t){
 				if(this.abilities==-1 || !this.childNodes[0])return;
-				this.childNodes[0].appendChild(newLink('javascript:kfm_'+f+'(document.getElementById("'+this.parentNode.id+'"),document.getElementById("'+this.id+'")'+p+')','['+b+']',0,'kfm_panel_header_'+b,t));
+				this.childNodes[0].appendChild(newLink(
+					'javascript:kfm_'+f+'(document.getElementById("'+this.parentNode.id+'"),document.getElementById("'+this.id+'")'+p+')',
+					'['+b+']',
+					0,
+					'kfm_panel_header_'+b,
+					t
+					));
 			}
 		}
 	);
@@ -312,7 +317,6 @@ function kfm_refreshPanels(wrapper){
 				case 1: maximised[maximised.length]=ps[i]; break;
 				case 2: fixed_height[fixed_height.length]=ps[i]; break;
 				case 3: fixed_height_maxed[fixed_height_maxed.length]=ps[i]; break;
-				default: kfm_log(kfm.lang.UnknownPanelState+el.state);
 			}
 		}
 		else el.style.display='none';
