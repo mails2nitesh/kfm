@@ -353,11 +353,9 @@ foreach($kfm_editable_extensions as $v)if (!in_array($v, $kfm_viewable_extension
 function kfm_checkAddr($addr)
 {
     return (
-        strpos($addr, '..')===false&&
-        strpos($addr, '.')!==0&&
+        !preg_match('#^\.|\.$|\.\.|/\.#',$addr) &&
         strlen($addr)>0&&
         $addr[strlen($addr)-1]!=' '&&
-        strpos($addr, '/.')===false&&
         !in_array(preg_replace('/.*\./', '', $addr), $GLOBALS['kfm_banned_extensions'])
     );
 }
