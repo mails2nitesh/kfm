@@ -483,7 +483,7 @@ function kfm_pluginIframeButton(code,text){
 	var hdr=document.getElementById('plugin_iframe_header');
 	if(!hdr)return;
 	if(code=='close'){
-		btn=$j('<img src="themes/'+kfm_theme+'/icons/remove.png"/>').click(function(){parent.kfm_pluginIframeHide();});
+		btn=$j('<img src="themes/'+kfm_theme+'/icons/remove.png"/>').click(function(){kfm_pluginIframeHide();});
 		btn.css({'float':'right'});
 	}else{
 		btn=$j('<span class="kfm_plugin_iframe_button"></span>').click(function(){eval(code);});
