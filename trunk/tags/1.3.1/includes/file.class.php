@@ -246,11 +246,18 @@ class kfmFile extends kfmObject{
 	 */
 	function checkName($filename=false){
 		if($filename===false)$filename=$this->name;
-		if($filename=='' || 
-			trim($filename)!=$filename ||
-			strpos($filename,'/')!==false ||
-			in_array(kfmFile::getExtension($filename),$GLOBALS['kfm_banned_extensions'])
+
+		if( 
+			$filename=='' ||
+			preg_match('#/|\.$#',$filename) 
 		)return false;
+
+		$exts=explode('.',$filename); 
+		for($i=1;$i<count($exts);++$i){ 
+			$ext=$exts[$i];
+			if(in_array($ext,$GLOBALS['kfm_banned_extensions']))return false; 
+		}
+
 		
 		foreach($GLOBALS['kfm_banned_files'] as $ban){
 			if(($ban[0]=='/' || $ban[0]=='@')&&preg_match($ban,$filename))return false;
