@@ -457,14 +457,6 @@ if ($kfm_language=='')foreach($kfm_preferred_languages as $lang)if (in_array($la
 // }
 // }
 // { common functions
-function kfm_checkAddr($addr) {
-    $addr=trim($addr);
-    return (
-        strlen($addr)>0 &&
-        !preg_match('#^\.|\.$|\.\.|/\.#',$addr) &&
-        !in_array(preg_replace('/.*\./', '', $addr), $GLOBALS['kfm_banned_extensions'])
-    );
-}
 function kfm_error($message,$level=3){
     global $kfm_errors;
     $kfm_errors[]=array('message'=>$message,'level'=>$level);

@@ -255,10 +255,17 @@ class kfmFile extends kfmObject{
 		global $kfm;
 		if($filename===false)$filename=$this->name;
 		$filename=trim($filename);
-		if($filename=='' || 
-			preg_match('#/|\.$#',$filename) || 
-			in_array(kfmFile::getExtension($filename),$kfm->setting('banned_extensions'))
+
+		if(
+			$filename=='' || 
+			preg_match('#/|\.$#',$filename)
 		)return false;
+
+		$exts=explode('.',$filename);
+		for($i=1;$i<count($exts);++$i){
+			$ext=$exts[$i];
+			if(in_array($ext,$kfm->setting('banned_extensions')))return false;
+		}
 		
 		foreach($kfm->setting('banned_files') as $ban){
 			if(($ban[0]=='/' || $ban[0]=='@')&&preg_match($ban,$filename))return false;
