@@ -350,14 +350,18 @@ if ($kfm_language=='')foreach($kfm_preferred_languages as $lang)if (in_array($la
 foreach($kfm_editable_extensions as $v)if (!in_array($v, $kfm_viewable_extensions))$kfm_viewable_extensions[] = $v;
 // }}}
 // {{{ common functions
-function kfm_checkAddr($addr)
+function kfm_checkAddr($addr='')
 {
-    return (
-        !preg_match('#^\.|\.$|\.\.|/\.#',$addr) &&
-        strlen($addr)>0&&
-        $addr[strlen($addr)-1]!=' '&&
-        !in_array(preg_replace('/.*\./', '', $addr), $GLOBALS['kfm_banned_extensions'])
-    );
+    if(
+        $filename=='' || 
+        preg_match('#^ |^\.|\.$| $|\.\.|/\.#',$filename)
+    )return false;
+    $exts=explode('.',$filename);
+    for($i=1;$i<count($exts);++$i){
+        $ext=$exts[$i];
+        if(in_array($ext,$GLOBALS['kfm_banned_extensions']))return false;
+    }
+		return true;
 }
 function get_mimetype($f)
 {
