@@ -440,8 +440,8 @@ if (isset($_REQUEST['lang'])&&$_REQUEST['lang']&&in_array($_REQUEST['lang'], $kf
 if ($kfm_language=='') {
     if (!isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))$_SERVER['HTTP_ACCEPT_LANGUAGE'] = '';
     $langs = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-    foreach($langs as $lang)if (in_array(preg_replace('/;.*/','',trim($lang)), $kfm_available_languages)) {
-        $kfm_language = preg_replace('/;.*/','',trim($lang));
+    foreach($langs as $lang)if (in_array(preg_replace('/[-;].*/','',trim($lang)), $kfm_available_languages)) {
+        $kfm_language = preg_replace('/[-;].*/','',trim($lang));
         break;
     }
 }

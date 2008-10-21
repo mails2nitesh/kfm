@@ -10,8 +10,8 @@ $name=md5_of_dir(KFM_BASE_PATH.'j/');
 if(file_exists(WORKPATH.$name))readfile(WORKPATH.$name);
 else{ // build cacheable js file
 	$js='';
-	$js.=file_get_contents('common.js');
 	$js.=file_get_contents('variables.js');
+	$js.=file_get_contents('common.js');
 	$js.=file_get_contents('notice.js');
 	$js.=file_get_contents('kfm.js');
 	$js.=file_get_contents('alerts.js');
