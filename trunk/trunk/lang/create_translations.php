@@ -36,7 +36,7 @@ while($file=readdir($h)){
 	foreach($f as $name=>$text){
 		$orig=addslashes($name);
 		$tran=addslashes($text);
-		$kfm->db->query("INSERT INTO kfm_translations(original,translation,language) VALUES ('$orig','$tran','$lang')");
+		$kfm->db->query("INSERT INTO kfm_translations(original,translation,language,context,found) VALUES ('$orig','$tran','$lang','kfm',1)");
 	}
 }
 foreach($en as $name=>$text){
@@ -44,15 +44,3 @@ foreach($en as $name=>$text){
 	$tran=addslashes($text);
 	$kfm->db->query("update kfm_translations set original='$tran' where original='$orig'");
 }
-/*
-mysql> describe kfm_translations;
-+-------------+------------+------+-----+---------+-------+
-| Field       | Type       | Null | Key | Default | Extra |
-+-------------+------------+------+-----+---------+-------+
-| original    | text       | YES  |     | NULL    |       | 
-| translation | text       | YES  |     | NULL    |       | 
-| language    | varchar(2) | YES  |     | NULL    |       | 
-| calls       | int(11)    | YES  |     | 0       |       | 
-| found       | int(11)    | YES  |     | 1       |       | 
-+-------------+------------+------+-----+---------+-------+
-*/
