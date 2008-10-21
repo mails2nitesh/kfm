@@ -15,7 +15,7 @@ function kfm_translate($str,$context,$lang){
 	$context=addslashes($context);
 	$lang=addslashes($lang);
 	$r=db_fetch_row("SELECT translation FROM ".KFM_DB_PREFIX."translations WHERE original='$str' AND language='$lang' AND context='$context'");
-	if(count($r))return $r['translation'];
+	if(is_array($r) && count($r))return $r['translation'];
 	$GLOBALS['kfmdb']->query("INSERT INTO ".KFM_DB_PREFIX."translations (original,translation,language,context,found) VALUES ('$str','$str','$lang','$context',0)");
 	return $str;
 }

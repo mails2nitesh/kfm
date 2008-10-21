@@ -191,6 +191,8 @@ td.listview_icon_bz2{background-image:url(icons/16x16/mimetypes/bz2.png)}
 .listview_icon_htm{background-image:url(icons/16x16/mimetypes/html.png)}
 .listview_icon_php{background-image:url(icons/16x16/mimetypes/php.png)}
 .listview_icon_rb{background-image:url(icons/16x16/mimetypes/ruby.png)}
+#listview_headers_size, #listview_headers_type { width: 72px }
+#listview_headers_lastmodified { width: 142px }
 
 #kfm_directories,#kfm_directories table{border-spacing:0;margin:0;width:100%}
 #kfm_directories td{padding:0}

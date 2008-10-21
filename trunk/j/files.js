@@ -304,8 +304,12 @@ function kfm_refreshFiles(res){
 			var listview_table=document.createElement('table');
 			listview_table.id='kfm_files_listview_table';
 			wrapper.appendChild(listview_table);
-			$j(listview_table).html('<thead><tr class="listview_headers"><th>&nbsp;</th><th>'+kfm.lang.name+'</th><th style="width:72px">'+kfm.lang.size+'</th><th style="width:72px">'+kfm.lang.type+'</th><th style="width:142px">'+kfm.lang.LastModified+'</th></tr></thead><tbody></tbody>');
-				$j(listview_table).css('width','99%');
+			$j(listview_table).html('<thead><tr class="listview_headers"><th>&nbsp;</th><th id="listview_headers_name"></th><th id="listview_headers_size"></th><th id="listview_headers_type"></th><th id="listview_headers_lastmodified"></th></tr></thead><tbody></tbody>');
+			document.getElementById('listview_headers_name').appendChild(_('Name'));
+			document.getElementById('listview_headers_size').appendChild(_('Size'));
+			document.getElementById('listview_headers_type').appendChild(_('Type'));
+			document.getElementById('listview_headers_lastmodified').appendChild(_('Last Modified'));
+			$j(listview_table).css('width','99%');
 		}
 		/* Clear active files that are still loading */
 		/*
