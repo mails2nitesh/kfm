@@ -1,7 +1,8 @@
 // see license.txt for licensing
 var KFM=function(){
 };
-KFM.prototype.about=function(){
+var kfm=new KFM();
+kfm.about=function(){
 	var div=document.createElement('div');
 	div.style.width='400px';
 	var html='<h1>KFM '+kfm_vars.version+'</h1>';
@@ -44,14 +45,14 @@ KFM.prototype.about=function(){
 	div.innerHTML=html;
 	kfm_modal_open(div,kfm.lang.AboutKfm);
 };
-KFM.prototype.addCell=function(o,colNum,colSpan,subEls,className){
+kfm.addCell=function(o,colNum,colSpan,subEls,className){
 	var f=o.insertCell(+colNum);
 	if(colSpan)f.colSpan=colSpan;
 	if(subEls)kfm.addEl(f,subEls);
 	if(className)f.className=className;
 	return f;
 };
-KFM.prototype.addEl=function(o,a){
+kfm.addEl=function(o,a){
 	if(!o)return;
 	if(!a)return o;
 	if($type(a)!='array')a=[a];
@@ -67,19 +68,19 @@ KFM.prototype.addEl=function(o,a){
 	}
 	return o;
 };
-KFM.prototype.addRow=function(t,p,c){
+kfm.addRow=function(t,p,c){
 	if(p)var position=p;
 	else var position=-1;
 	var o=t.insertRow(position);
 	if(c && c!=undefined)o.className=c;
 	return o;
 };
-KFM.prototype.alert=function(txt){
+kfm.alert=function(txt){
 	window.inPrompt=1;
 	alert(txt);
 	setTimeout('window.inPrompt=0',1);
 };
-KFM.prototype.showErrors=function(errors){
+kfm.showErrors=function(errors){
 	var div=document.createElement('div');
 	div.style.width='400px';
 	var html='';
@@ -95,18 +96,18 @@ KFM.prototype.showErrors=function(errors){
 	div.innerHTML=html;
 	kfm_modal_open(div,kfm.lang.Errors);
 };
-KFM.prototype.showMessages=function(messages){
+kfm.showMessages=function(messages){
 	var message='';
 	for(var i=0;i<messages.length;i++){
 		message+=messages[i].message+'<hr>';
 	}
 	new Notice(message);
 };
-KFM.prototype.switchFilesMode=function(m){
+kfm.switchFilesMode=function(m){
 	kfm_listview = +m;
 	x_kfm_loadFiles(kfm_cwd_id,true,kfm_refreshFiles);
 };
-KFM.prototype.build=function(){
+kfm.build=function(){
 	var form_panel,form,right_column,directories,logs,logHeight=64,j,i,w,win,dirs,j,tmp,links;
 	kfm_addHook({name:"download", mode:0,"extensions":"all", writable:2, title:"download file", doFunction:function(files){
 			kfm_downloadSelectedFiles(files[0]);
@@ -316,23 +317,23 @@ KFM.prototype.build=function(){
 	kfm_contextmenuinit();
 	$j.event.add(documents_body,'scroll',kfm_setThumbnails);
 };
-KFM.prototype.confirm=function(txt){
+kfm.confirm=function(txt){
 	window.inPrompt=1;
 	var ret=confirm(txt);
 	setTimeout('window.inPrompt=0',1);
 	return ret;
 };
-KFM.prototype.getContainer=function(p,c){
+kfm.getContainer=function(p,c){
 	for(var i=0;i<c.length;++i){
 		var a=c[i],x=getOffset(a,'Left'),y=getOffset(a,'Top');
 		if(x<p.x&&y<p.y&&x+a.offsetWidth>p.x&&y+a.offsetHeight>p.y)return a;
 	}
 };
-KFM.prototype.getParentEl=function(c,t){
+kfm.getParentEl=function(c,t){
 	while(c.tagName!=t&&c)c=c.parentNode;
 	return c;
 };
-KFM.prototype.keyup=function(e){
+kfm.keyup=function(e){
 	var e=new Event(e);
 	var key=e.code;
 	var cm=document.getElementById('documents_body').contentMode;
@@ -547,7 +548,6 @@ var kfm_regexps={
 	plus:/\+/g,
 	remove_filename_extension:/\.[^.]*$/
 }
-var kfm=new KFM();
 $j(document).ready(function(){
 	kfm.build();
 });

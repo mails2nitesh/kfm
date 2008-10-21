@@ -1,12 +1,32 @@
 // see ../license.txt for licensing
-function _(str,context){ // translations
-	if(typeof(str)!='string'){
+function _(str,context,vars){ // translations
+	if(typeof(str)=='array'){
 		context=str[1];
+		vars=str[2];
 		str=str[0];
 	}
 	if(!context)context='kfm';
+	if(!vars)vars=[];
+	if(!window.lang)window.lang=[];
+	if(!window.lang[kfm_vars.lang])window.lang[kfm_vars.lang]=[];
 	var el=document.createElement('span');
-	el.appendChild(document.createTextNode(str));
+	el.className='kfmlang kfmlang_'+str.toLowerCase().replace(/[^a-z0-9]/g,'');
+	el.original=[str,context,vars];
+	if(window.lang[kfm_vars.lang][str]){
+		el.appendChild(document.createTextNode(window.lang[kfm_vars.lang][str].text));
+		window.lang[kfm_vars.lang][str].requested=1;
+	}
+	else{
+		el.appendChild(document.createTextNode('...'));
+		x_kfm_translate(str,context,kfm_vars.lang,function(res){
+			if(window.lang[kfm_vars.lang][str])return; // in case the string is requested multiple times
+			window.lang[kfm_vars.lang][str]={
+				'text':res,
+				'requested':1
+			}
+			$j('.kfmlang_'+str.toLowerCase().replace(/[^a-z0-9]/g,'')).text(window.lang[kfm_vars.lang][str].text);
+		});
+	}
 	return el;
 }
 function array_remove_values(arr,vals){

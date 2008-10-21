@@ -35,6 +35,10 @@ if($dbv==3){
 	}
 	$dbv=4;
 }
+if($dbv==4){
+	$kfmdb->query("ALTER TABLE ".KFM_DB_PREFIX."translations ADD context text");
+	$dbv=5;
+}
 
 $kfmdb->query("update ".KFM_DB_PREFIX."parameters set value='$dbv' where name='version_db'");
 echo '<p>Database updated. Please reload page.</p>';
