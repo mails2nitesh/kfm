@@ -29,6 +29,12 @@ if($dbv==2){
 	}
 	$dbv=3;
 }
+if($dbv==3){
+	if($kfm_db_type=='mysql'){
+		$kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."translations(original TEXT,translation TEXT,language VARCHAR(2),calls INT DEFAULT 0,found INT DEFAULT 1)DEFAULT CHARSET=utf8");
+	}
+	$dbv=4;
+}
 
 $kfmdb->query("update ".KFM_DB_PREFIX."parameters set value='$dbv' where name='version_db'");
 echo '<p>Database updated. Please reload page.</p>';
