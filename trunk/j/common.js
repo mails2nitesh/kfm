@@ -1,10 +1,11 @@
 // see ../license.txt for licensing
 function _(str,context,vars){ // translations
-	if(typeof(str)=='array'){
+	if(typeof(str)=='array' || typeof(str)=='object'){
 		context=str[1];
 		vars=str[2];
 		str=str[0];
 	}
+	if(typeof(str)!='string')alert(typeof(str)+"\n"+str);
 	if(!context)context='kfm';
 	if(!vars)vars=[];
 	if(!window.lang)window.lang=[];

@@ -187,6 +187,7 @@ function kfm_incrementalFileDisplay(refresh_count){
 			var rows=listview_table.rows.length;
 			var row=listview_table.insertRow(rows);
 			row.fileid=F.id;
+			row.id='kfm_files_listview_table_row'+F.id;
 			cell=row.insertCell(cs++);
 			cell.className='listview_icon listview_icon_'+ext;
 			cell.innerHTML='&nbsp;';
@@ -354,11 +355,8 @@ function kfm_removeFilesFromView(files){
 	if($type(files)!='array' || !files.length)return;
 	var i=0,right_column=document.getElementById('documents_body');
 	for(var i=0;i<files.length;++i){
-		var el=document.getElementById('kfm_file_icon_'+files[i]);
-		if(el){
-			if(kfm_listview)el.parentNode.parentNode.removeChild(el.parentNode);
-			else el.parentNode.removeChild(el);
-		}
+		if(kfm_listview)$j('#kfm_files_listview_table_row'+files[i]).remove();
+		else $j('#kfm_file_icon_'+files[i]).remove();
 	}
 	right_column.fileids=array_remove_values(right_column.fileids,files);
 	kfm_files_reflowIcons();
