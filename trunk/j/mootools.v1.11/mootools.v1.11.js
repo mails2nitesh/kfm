@@ -46,7 +46,6 @@ window.xpath=!!(document.evaluate);
 if(window.ActiveXObject)window.ie=window[window.XMLHttpRequest ? 'ie7':'ie6']=true;
 else if(document.childNodes && !document.all && !navigator.taintEnabled)window.webkit=window[window.xpath ? 'webkit420':'webkit419']=true;
 else if(document.getBoxObjectFor != null)window.gecko=true;
-window.khtml=window.webkit;
 Object.extend=$extend;
 if(typeof HTMLElement=='undefined'){
 var HTMLElement=function(){};
@@ -201,10 +200,7 @@ Element.extend({
 set: function(props){
 for(var prop in props){
 var val=props[prop];
-switch(prop){
-case 'properties': Element.setMany(this, 'setProperty', val); break;
-default: this.setProperty(prop, val);
-}
+this.setProperty(prop, val);
 }
 return this;
 },
@@ -271,19 +267,12 @@ Element.Styles={'border': [], 'padding': [], 'margin': []};
 for(var style in Element.Styles)Element.Styles[style].push(style+direction);
 });
 Element.borderShort=['borderWidth', 'borderStyle', 'borderColor'];
-Element.setMany=function(el, method, pairs){
-for(var key in pairs)el[method](key, pairs[key]);
-return el;
-};
 Element.Properties=new Abstract({
 'class': 'className', 'for': 'htmlFor', 'colspan': 'colSpan', 'rowspan': 'rowSpan',
 'accesskey': 'accessKey', 'tabindex': 'tabIndex', 'maxlength': 'maxLength',
 'readonly': 'readOnly', 'frameborder': 'frameBorder', 'value': 'value',
 'disabled': 'disabled', 'checked': 'checked', 'multiple': 'multiple', 'selected': 'selected'
 });
-Element.PropertiesIFlag={
-'href': 2, 'src': 2
-};
 var Garbage={
 elements: [],
 collect: function(el){
@@ -341,12 +330,6 @@ this.client={
 'y': event.pageY ? event.pageY - window.pageYOffset:event.clientY
 };
 this.rightClick=(event.which==3)||(event.button==2);
-switch(this.type){
-case 'mouseover': this.relatedTarget=event.relatedTarget||event.fromElement; break;
-case 'mouseout': this.relatedTarget=event.relatedTarget||event.toElement;
-}
-if(window.gecko)Event.fix.relatedTargetGecko();
-else            Event.fix.relatedTarget();
 }
 return this;
 },
@@ -364,11 +347,3 @@ else this.event.returnValue=false;
 return this;
 }
 });
-Event.fix={
-relatedTarget: function(){
-if(this.relatedTarget && this.relatedTarget.nodeType==3)this.relatedTarget=this.relatedTarget.parentNode;
-},
-relatedTargetGecko: function(){
-try {Event.fix.relatedTarget.call(this);} catch(e){this.relatedTarget=this.target;}
-}
-};

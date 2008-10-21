@@ -131,7 +131,7 @@ function loadJS(url,id,lang,onload){
 		};
 	}
 	el.src=url;
-	document.getElementById('head').appendChild(el);
+	document.getElementsByTagName('HEAD')[0].appendChild(el);
 	return 1;
 }
 function newInput(n,t,v,cl){

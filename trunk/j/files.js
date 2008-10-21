@@ -167,26 +167,20 @@ function kfm_incrementalFileDisplay(refresh_count){
 		if(refresh_count!=kfm_vars.files.refresh_count){ // a new refresh is fired
 			return;
 		}
-		var a,fdata,name,F,nameEl,el,fullfilename,id;
+		var a,fdata,name,F,el,id;
 		a=b.at;
 		fdata=fsdata[a];
 		name=fdata.name;
-		fullfilename=kfm_cwd_name+'/'+name;
 		id=fdata.id;
 		F=File_getInstance(id,fdata);
 		ext=fdata.ext;
-		nameEl=F.getText('name');
 		el=icon.cloneNode(true);
 		kfm_fileIcon_addEvents(el);
-		if(!kfm_listview)el.className+=' kfm_icontype_'+ext;
 		el.id='kfm_file_icon_'+id;
 		el.dragDisplay=kfm_file_bits.dragDisplay;
-		var writable=fdata.writable;
-		// {{{ file attributes
 		el.file_id=id;
 		wrapper.files[a]=el;
-		// }}}
-		el.appendChild(nameEl);
+		el.appendChild(F.getText('name'));
 		if(kfm_listview){
 			var cs=0,cell;
 			var listview_table=$j('#kfm_files_listview_table tbody').get(0);
@@ -215,7 +209,10 @@ function kfm_incrementalFileDisplay(refresh_count){
 				cell.appendChild(F.getText('modified'));
 			}
 		}
-		else wrapper.appendChild(el);
+		else{
+			el.className+=' kfm_icontype_'+ext;
+			wrapper.appendChild(el);
+		}
 		if(a&&document.getElementById('kfm_file_icon_'+fsdata[a-1].id).offsetLeft>=el.offsetLeft)el.style.clear='left';
 		window.kfm_incrementalFileDisplay_vars.at=a+1;
 	}while(a+1<fsdata.length && (a+1)%kfm_show_files_in_groups_of);
