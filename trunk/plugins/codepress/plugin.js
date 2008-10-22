@@ -1,6 +1,6 @@
 function plugin_codepress(){
 	this.name='codepress';
-	this.title=kfm.lang.EditTextFile;
+	this.title="edit text file";
 	this.mode=0; //only one file
 	this.defaultOpener=1;
 	this.writable=2;
