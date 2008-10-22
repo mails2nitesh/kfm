@@ -11,11 +11,17 @@ function kfm_lang($str,$v1='',$v2='',$v3=''){
 	return utf8_encode($str);
 }
 function kfm_translate($str,$context,$lang){
-	$str=addslashes($str);
-	$context=addslashes($context);
-	$lang=addslashes($lang);
-	$r=db_fetch_row("SELECT translation FROM ".KFM_DB_PREFIX."translations WHERE original='$str' AND language='$lang' AND context='$context'");
+	$_str=addslashes($str);
+	mail('kae@localhost','test1',$str);
+	$_context=addslashes($context);
+	$_lang=addslashes($lang);
+	$r=db_fetch_row("SELECT translation FROM ".KFM_DB_PREFIX."translations WHERE original='$_str' AND language='$_lang' AND context='$_context'");
 	if(is_array($r) && count($r))return $r['translation'];
-	$GLOBALS['kfmdb']->query("INSERT INTO ".KFM_DB_PREFIX."translations (original,translation,language,context,found) VALUES ('$str','$str','$lang','$context',0)");
-	return $str;
+	// { retrieve translation from kfm.verens.com
+	$trans=file_get_contents('http://kfm.verens.com/extras/translate.php?str='.urlencode($str).'&lang='.urlencode($lang).'&context='.urlencode($context));
+	$_trans=addslashes($trans);
+	$GLOBALS['kfmdb']->query("INSERT INTO ".KFM_DB_PREFIX."translations (original,translation,language,context,found) VALUES ('$_str','$_trans','$_lang','$_context',0)");
+	mail('kae@localhost','test',"INSERT INTO ".KFM_DB_PREFIX."translations (original,translation,language,context,found) VALUES ('$_str','$_trans','$_lang','$_context',0)");
+	return $trans;
+	// }
 }
