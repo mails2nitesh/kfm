@@ -1,5 +1,6 @@
 // see ../license.txt for licensing
-function _(str,context,vars){ // translations
+function _(str,context,vars,htmlonly){ // translations
+	var el;
 	if(typeof(str)=='array' || typeof(str)=='object'){
 		context=str[1];
 		vars=str[2];
@@ -10,15 +11,24 @@ function _(str,context,vars){ // translations
 	if(!vars)vars=[];
 	if(!window.lang)window.lang=[];
 	if(!window.lang[kfm_vars.lang])window.lang[kfm_vars.lang]=[];
-	var el=document.createElement('span');
-	el.className='kfmlang kfmlang_'+str.toLowerCase().replace(/[^a-z0-9]/g,'');
-	el.original=[str,context,vars];
-	if(window.lang[kfm_vars.lang][str]){
-		el.appendChild(document.createTextNode(window.lang[kfm_vars.lang][str].text));
-		window.lang[kfm_vars.lang][str].requested=1;
+	if(htmlonly){
+		if(window.lang[kfm_vars.lang][str]){
+			el='<span class="kfmlang kfmlang_'+str.toLowerCase().replace(/[^a-z0-9]/g,'')+'">'+window.lang[kfm_vars.lang][str]+'</span>';
+			window.lang[kfm_vars.lang][str].requested=1;
+		}
+		else el='<span class="kfmlang kfmlang_'+str.toLowerCase().replace(/[^a-z0-9]/g,'')+'">...</span>';
 	}
 	else{
-		el.appendChild(document.createTextNode('...'));
+		el=document.createElement('span');
+		el.className='kfmlang kfmlang_'+str.toLowerCase().replace(/[^a-z0-9]/g,'');
+		el.original=[str,context,vars];
+		if(window.lang[kfm_vars.lang][str]){
+			el.appendChild(document.createTextNode(window.lang[kfm_vars.lang][str].text));
+			window.lang[kfm_vars.lang][str].requested=1;
+		}
+		else el.appendChild(document.createTextNode('...'));
+	}
+	if(!window.lang[kfm_vars.lang][str]){
 		x_kfm_translate(str,context,kfm_vars.lang,function(res){
 			if(window.lang[kfm_vars.lang][str])return; // in case the string is requested multiple times
 			window.lang[kfm_vars.lang][str]={

@@ -13,19 +13,19 @@ kfm_dir_bits={
 		});
 		if(kfm_vars.permissions.dir.mk)context_categories['main'].add({
 			name:'directory_new',
-			title:kfm.lang.CreateSubDir,
+			title:"create sub-directory",
 			category:'main',
 			doFunction:function(){kfm_createDirectory(node_id)}
 		});
 		if(node_id!=1 && kfm_vars.permissions.dir.rm)context_categories['edit'].add({
 			name:'directory_delete',
-			title:kfm.lang.DeleteDir,
+			title:"delete",
 			category:'edit',
 			doFunction:function(){kfm_deleteDirectory(node_id)}
 		});
 		if(kfm_return_directory)context_categories['returning'].add({
 			name:'directory_return',
-			title:kfm.lang.SendToCms,
+			title:"send to CMS",
 			doFunction:function(){
 				setTimeout("window.close()",1);
 				window.opener.SetUrl(kfm_directories[node_id].realpath+'/');
@@ -85,13 +85,13 @@ function kfm_changeDirectory(id, nofiles){
 	setTimeout('x_kfm_loadDirectories(kfm_cwd_id,kfm_refreshDirectories);',20);
 }
 function kfm_createDirectory(id){
-	if(!kfm_vars.permissions.dir.mk)return kfm.alert('permission denied: cannot create directory');
-	kfm_prompt(kfm.lang.CreateDirMessage(kfm_directories[id].path),kfm.lang.NewDirectory,function(newName){
+	if(!kfm_vars.permissions.dir.mk)return kfm.alert(_('permission denied: cannot create directory'));
+	kfm_prompt(kfm.lang.CreateDirMessage(kfm_directories[id].path),'',function(newName){
 		if(newName&&newName!=''&&!/\/|^\./.test(newName))x_kfm_createDirectory(id,newName,kfm_refreshDirectories);
 	});
 }
 function kfm_deleteDirectory(id){
-	if(!kfm_vars.permissions.dir.rm)return kfm.alert('permission denied: cannot delete directory');
+	if(!kfm_vars.permissions.dir.rm)return kfm.alert(_('permission denied: cannot delete directory'));
 	if(!kfm.confirm(kfm.lang.DelDirMessage(kfm_directories[id].path)))return;
 	if(kfm_directories[id].hasChildren && !kfm.confirm(kfm.lang.RecursiveDeleteWarning(kfm_directories[id].name)))return;
 	x_kfm_deleteDirectory(id,kfm_deleteDirectoryCheck);
@@ -179,7 +179,7 @@ function kfm_dir_dropHandler(e){
 	if(dir_from==1)return;
 	var dir_to=parseInt($j('.kfm_directory_link',e.targetElement).attr('node_id'));
 	if(dir_to==0||dir_to==dir_from)return;
-	if(!kfm_vars.permissions.dir.mv)return kfm.alert(kfm.lang.CannotMoveDirectory);
+	if(!kfm_vars.permissions.dir.mv)return kfm.alert(_("permission denied cannot move directory",0,0,1));
 	x_kfm_moveDirectory(dir_from,dir_to,kfm_refreshDirectories);
 	kfm_selectNone();
 }
@@ -187,7 +187,7 @@ function kfm_dir_openNode(dir){
 	var node=document.getElementById('kfm_dir_node_'+dir);
 	node.className='kfm_dir_node_opened';
 	if(node.href)node.href=node.href.replace(/open/,'close');
-	document.getElementById('kfm_directories_subdirs_'+dir).innerHTML=kfm.lang.Loading;
+	document.getElementById('kfm_directories_subdirs_'+dir).innerHTML=_("loading",0,0,1);
 	x_kfm_loadDirectories(dir,kfm_refreshDirectories);
 }
 function kfm_dir_closeNode(dir){
@@ -274,7 +274,7 @@ function kfm_setDirectoryProperties(properties){
 	wrapper.properties=properties;
 	var table=document.createElement('table'),row,cell,i;
 	{ // directory name
-		i=properties.allowed_file_extensions.length?properties.allowed_file_extensions.join(', '):kfm.lang.NoRestrictions;
+		i=properties.allowed_file_extensions.length?properties.allowed_file_extensions.join(', '):_("no restrictions",0,0,1);
 		row=kfm.addRow(table);
 		var nameEl=document.createElement('strong');
 		nameEl.innerHTML=kfm.lang.Name;
@@ -282,10 +282,10 @@ function kfm_setDirectoryProperties(properties){
 		kfm.addCell(row,1,0,'/'+kfm_cwd_name);
 	}
 	{ // allowed file extensions
-		i=properties.allowed_file_extensions.length?properties.allowed_file_extensions.join(', '):kfm.lang.NoRestrictions;
+		i=properties.allowed_file_extensions.length?properties.allowed_file_extensions.join(', '):_("no restrictions",0,0,1);
 		row=kfm.addRow(table);
 		var extensionsEl=document.createElement('strong');
-		extensionsEl.innerHTML=kfm.lang.AllowedFileExtensions;
+		extensionsEl.innerHTML=_("allowed file extensions",0,0,1);
 		kfm.addCell(row,0,0,extensionsEl);
 		kfm.addCell(row,1,0,i);
 	}

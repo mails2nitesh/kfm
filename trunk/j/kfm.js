@@ -76,9 +76,12 @@ kfm.addRow=function(t,p,c){
 	return o;
 };
 kfm.alert=function(txt){
-	window.inPrompt=1;
-	alert(txt);
-	setTimeout('window.inPrompt=0',1);
+	if(typeof(txt)=='string'){
+		var el=document.createElement('span');
+		el.innerHTML=txt;
+		txt=el;
+	}
+	kfm_modal_open(txt,_('Alert',0,0,1));
 };
 kfm.showErrors=function(errors){
 	var div=document.createElement('div');
@@ -421,11 +424,11 @@ kfm.keyup=function(e){
 		}
 		case 113:{ // f2
 			if(cm!='file_icons')return;
-			if(!selectedFiles.length)return kfm.alert(kfm.lang.PleaseSelectFileBeforeRename);
+			if(!selectedFiles.length)return kfm.alert(_("Please select a file before you try to rename it"));
 			if(selectedFiles.length==1){
 				kfm_renameFile(selectedFiles[0]);
 			}
-			else kfm.alert(kfm.lang.RenameOnlyOneFile);
+			else kfm.alert(_("You can only rename one file at a time"));
 			break;
 		}
 		case 127:{ // backspace

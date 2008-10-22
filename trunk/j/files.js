@@ -51,14 +51,14 @@ var kfm_file_bits={
 	padding:0
 }
 function kfm_deleteFile(id){
-	if(!kfm_vars.permissions.file.rm)return kfm.alert(kfm.lang.PermissionDeniedCannotDeleteFile);
+	if(!kfm_vars.permissions.file.rm)return kfm.alert(_("permission denied: cannot delete file"));
 	var filename=File_getInstance(id).name;
 	if(kfm.confirm(kfm.lang.DelFileMessage(filename))){
 		x_kfm_rm([id],kfm_removeFilesFromView);
 	}
 }
 function kfm_deleteSelectedFiles(){
-	if(!kfm_vars.permissions.file.rm)return kfm.alert('permission denied: cannot delete files');
+	if(!kfm_vars.permissions.file.rm)return kfm.alert(_("permission denied: cannot delete files"));
 	kfm_deleteFiles(selectedFiles);
 }
 function kfm_deleteFiles(files){
@@ -305,11 +305,7 @@ function kfm_refreshFiles(res){
 			var listview_table=document.createElement('table');
 			listview_table.id='kfm_files_listview_table';
 			wrapper.appendChild(listview_table);
-			$j(listview_table).html('<thead><tr class="listview_headers"><th>&nbsp;</th><th id="listview_headers_name"></th><th id="listview_headers_size"></th><th id="listview_headers_type"></th><th id="listview_headers_lastmodified"></th></tr></thead><tbody></tbody>');
-			document.getElementById('listview_headers_name').appendChild(_('Name'));
-			document.getElementById('listview_headers_size').appendChild(_('Size'));
-			document.getElementById('listview_headers_type').appendChild(_('Type'));
-			document.getElementById('listview_headers_lastmodified').appendChild(_('Last Modified'));
+			$j(listview_table).html('<thead><tr class="listview_headers"><th>&nbsp;</th><th id="listview_headers_name">'+_('Name',0,0,1)+'</th><th id="listview_headers_size">'+_('Size',0,0,1)+'</th><th id="listview_headers_type">'+_('Type',0,0,1)+'</th><th id="listview_headers_lastmodified">'+_('Last Modified',0,0,1)+'</th></tr></thead><tbody></tbody>');
 			$j(listview_table).css('width','99%');
 		}
 		/* Clear active files that are still loading */

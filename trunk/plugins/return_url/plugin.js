@@ -7,7 +7,7 @@ function plugin_return_url(){
 	this.extensions='all';
 	this.doFunction=function(files){
 		if(!window.opener){
-			kfm.alert("There is no KFM opener to return to");
+			kfm.alert(_("There is no KFM opener to return to",0,0,0));
 			return;
 		}
 		x_kfm_getFileUrls(selectedFiles,function(urls){
