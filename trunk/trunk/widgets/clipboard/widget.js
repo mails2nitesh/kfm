@@ -68,7 +68,7 @@ function Clipboard(){
 				kfm_showMessage(m);
 				x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);
 			});
-			if(this.folders.length)kfm.alert('paste of folders is not complete'); //TODO: complete
+			if(this.folders.length)kfm.alert(_("paste of folders is not complete. please post a request at http://mantis.verens.com/ if you need this")); //TODO: complete
 			this.clearContents();
 		};
 		kfm_addContextMenu(el,function(e){
