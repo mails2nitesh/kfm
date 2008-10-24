@@ -40,6 +40,9 @@ function _(str,context,vars,htmlonly){ // translations
 	}
 	return el;
 }
+function kfm_addWidget(obj){
+	kfm_widgets.push(obj);
+}
 function array_remove_values(arr,vals){
 	if($type(vals)!='array')vals=[vals];
 	var i,tmp=[];

@@ -10,6 +10,24 @@ $name=md5_of_dir(KFM_BASE_PATH.'j/');
 if(file_exists(WORKPATH.$name))readfile(WORKPATH.$name);
 else{ // build cacheable js file
 	$js='';
+
+	// { mootools
+	$js.=file_get_contents('mootools.v1.11/mootools.v1.11.js');
+	// }
+	// { jquery scripts
+	$js.=file_get_contents('jquery/jquery.dimensions.pack.js');
+	$js.=file_get_contents('jquery/jquery.impromptu.js');
+	$js.=file_get_contents('jquery/jquery.iutil.pack.js');
+	$js.=file_get_contents('jquery/jquery.idrag.js');
+	$js.=file_get_contents('jquery/jquery.grid.columnSizing.js');
+	$js.=file_get_contents('jquery/jquery.tablesorter.js');
+	$js.=file_get_contents('jquery/setup.js');
+	// }
+	// { swfupload
+	$js.=file_get_contents('swfupload-2.1.0b2/swfupload.js');
+	$js.=file_get_contents('swfupload-2.1.0b2/swfupload.swfobject.js');
+	// }
+	// { main files
 	$js.=file_get_contents('variables.js');
 	$js.=file_get_contents('common.js');
 	$js.=file_get_contents('notice.js');
@@ -28,6 +46,7 @@ else{ // build cacheable js file
 	$js.=file_get_contents('files.js');
 	$js.=file_get_contents('resize_handler.js');
 	$js.=file_get_contents('search.js');
+	// }
 	if(isset($_REQUEST['minify'])){
 		require '../includes/jsmin-1.1.1.php';
 		$js=JSMin::minify($js);

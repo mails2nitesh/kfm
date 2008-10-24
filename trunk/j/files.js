@@ -142,7 +142,7 @@ function kfm_setThumbnails(){
 	els.each(function(){
 		F=File_getInstance(this.file_id);
 		if(F.width && !this.icon_loaded && fold>=getOffset(this,'Top')){
-			F.setThumbnailBackground(this);
+			F.setThumbnailBackground(this.imageHolder);
 		}
 	});
 }
@@ -175,6 +175,12 @@ function kfm_incrementalFileDisplay(refresh_count){
 		F=File_getInstance(id,fdata);
 		ext=fdata.ext;
 		el=icon.cloneNode(true);
+		if(!kfm_listview){ // add icon holder
+			var img=document.createElement('span');
+			img.className='img_holder';
+			el.appendChild(img);
+			el.imageHolder=img;
+		}
 		kfm_fileIcon_addEvents(el);
 		el.id='kfm_file_icon_'+id;
 		el.dragDisplay=kfm_file_bits.dragDisplay;
@@ -308,13 +314,7 @@ function kfm_refreshFiles(res){
 			$j(listview_table).html('<thead><tr class="listview_headers"><th>&nbsp;</th><th id="listview_headers_name">'+_('Name',0,0,1)+'</th><th id="listview_headers_size">'+_('Size',0,0,1)+'</th><th id="listview_headers_type">'+_('Type',0,0,1)+'</th><th id="listview_headers_lastmodified">'+_('Last Modified',0,0,1)+'</th></tr></thead><tbody></tbody>');
 			$j(listview_table).css('width','99%');
 		}
-		/* Clear active files that are still loading */
-		/*
-			foreach(kfm_vars.files.active[kfm_vars.files.refresh_count] as F)if(!F.icon_loaded)F.thumb_image=nil;
-			kfm_vars.files.active[kfm_vars.files.refresh_count]=[]; //free memory
-		*/
 		kfm_vars.files.refresh_count++;
-		// kfm_vars.files.active[kfm_vars.files.refresh_count]=[]; // initialise new array
 		kfm_incrementalFileDisplay(kfm_vars.files.refresh_count);
 	}
 }
