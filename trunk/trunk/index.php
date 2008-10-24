@@ -124,18 +124,17 @@ if(!empty($_POST['kaejax']))kfm_kaejax_handle_client_request();
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
-		<style type="text/css">@import "themes/<?php echo $kfm->setting('theme'); ?>/css.php";</style>
+		<style type="text/css">@import "themes/<?php echo $kfm->setting('theme'); ?>/css.php"; </style>
+		<style type="text/css">@import "plugins/css.php"; </style>
 		<title>KFM - Kae's File Manager</title>
-<?php // { get list of plugins and show their CSS files
+<?php // { get list of plugins
 $plugins = array();
 $h	   = opendir(KFM_BASE_PATH.'plugins');
 $tmp='';
 while (false!==($plugin=readdir($h))) {
-	if($plugin[0]=='.')continue;
-  	$plugins[] = $plugin;
-	if(file_exists(KFM_BASE_PATH.'plugins/'.$plugin.'/plugin.css'))$tmp.=file_get_contents('plugins/'.$plugin.'/plugin.css');
+	if($plugin[0]=='.' || !is_dir($h.'/'.$plugin))continue;
+ 	$plugins[] = $plugin;
 }	
-if($tmp!='')echo "<style type=\"text/css\">$tmp</style>";
 // } ?>
 	</head>
 	<body>
@@ -174,48 +173,15 @@ if ($last_registration!=$today) {
 }
 // }
 ?>
-		<script type="text/javascript" src="j/mootools.v1.11/mootools.v1.11.js"></script>
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>
-		<script type="text/javascript" src="j/jquery/all.php"></script>
 <?php // { set up JavaScript environment variables ?>
 		<script type="text/javascript">
-			var $j = jQuery.noConflict();
-			$j.tablesorter.addParser({ 
-				id: 'kfmobject', 
-				is: function(s) { 
-					return false; 
-				}, 
-				format: function(s) {
-					return $j(s).text().toLowerCase();
-				}, 
-				type: 'text' 
-			}); 
 			var kfm_vars={
-			   files:{
-					name_length_displayed:<?php echo $kfm->setting('files_name_length_displayed'); ?>,
-					name_length_in_list:<?php echo $kfm->setting('files_name_length_in_list'); ?>,
-					return_id_to_cms:<?php echo $kfm->setting('return_file_id_to_cms')?'true':'false'; ?>,
-					allow_multiple_returns:<?php echo $kfm->setting('allow_multiple_file_returns')?'true':'false'; ?>,
-						drags_move_or_copy:<?php echo $kfm->setting('folder_drag_action'); ?>,
-						refresh_count:0
-				},
+				files:{ name_length_displayed:<?php echo $kfm->setting('files_name_length_displayed'); ?>, name_length_in_list:<?php echo $kfm->setting('files_name_length_in_list'); ?>, return_id_to_cms:<?php echo $kfm->setting('return_file_id_to_cms')?'true':'false'; ?>, allow_multiple_returns:<?php echo $kfm->setting('allow_multiple_file_returns')?'true':'false'; ?>, drags_move_or_copy:<?php echo $kfm->setting('folder_drag_action'); ?>, refresh_count:0 },
 				get_params:"<?php echo GET_PARAMS; ?>",
 				permissions:{
-					dir:{
-						ed:<?php echo $kfm->setting('allow_directory_edit'); ?>,
-						mk:<?php echo $kfm->setting('allow_directory_create'); ?>,
-						mv:<?php echo $kfm->setting('allow_directory_move'); ?>,
-						rm:<?php echo $kfm->setting('allow_directory_delete'); ?>
-					},
-					file:{
-						rm:<?php echo $kfm->setting('allow_file_delete'); ?>,
-						ed:<?php echo $kfm->setting('allow_file_edit'); ?>,
-						mk:<?php echo $kfm->setting('allow_file_create'); ?>,
-						mv:<?php echo $kfm->setting('allow_file_move'); ?>
-					},
-					image:{
-						manip:<?php echo $kfm->setting('allow_image_manipulation'); ?>
-					}
+					dir:{ ed:<?php echo $kfm->setting('allow_directory_edit'); ?>, mk:<?php echo $kfm->setting('allow_directory_create'); ?>, mv:<?php echo $kfm->setting('allow_directory_move'); ?>, rm:<?php echo $kfm->setting('allow_directory_delete'); ?> },
+					file:{ rm:<?php echo $kfm->setting('allow_file_delete'); ?>, ed:<?php echo $kfm->setting('allow_file_edit'); ?>, mk:<?php echo $kfm->setting('allow_file_create'); ?>, mv:<?php echo $kfm->setting('allow_file_move'); ?> },
+					image:{ manip:<?php echo $kfm->setting('allow_image_manipulation'); ?> }
 				},
 				root_folder_name:"<?php echo $kfm->setting('root_folder_name'); ?>",
 				root_folder_id:<?php echo $kfm->setting('root_folder_id'); ?>,
@@ -232,11 +198,24 @@ if ($last_registration!=$today) {
 				version:'<?php echo KFM_VERSION; ?>'
 			};
 			var kfm_widgets=[];
-			function kfm_addWidget(obj){
-				kfm_widgets.push(obj);
-			}
+			var phpsession = "<?php echo session_id(); ?>";
+			var session_key="<?php echo $kfm_session->key; ?>";
+			var starttype="<?php echo isset($_GET['type'])?$_GET['type']:''; ?>";
+			var fckroot="<?php echo $kfm->setting('userfiles_address'); ?>";
+			var fckrootOutput="<?php echo $kfm->setting('userfiles_output'); ?>";
+			var kfm_file_handler="<?php echo $kfm->setting('file_handler'); ?>";
+			var kfm_return_directory=<?php echo isset($_GET['return_directory'])?'1':'0'; ?>;
+			var kfm_theme="<?php echo $kfm->setting('theme'); ?>";
+			var kfm_hidden_panels="<?php echo join(',',$kfm->setting('hidden_panels')); ?>".split(',');
+			var kfm_show_files_in_groups_of=<?php echo $kfm->setting('show_files_in_groups_of'); ?>;
+			var kfm_slideshow_delay=<?php echo ((int)$kfm->setting('slideshow_delay'))*1000; ?>;
+			var kfm_listview=<?php echo $kfm->setting('listview');?>;
+			var kfm_startup_sequence_index = 0;
+			var kfm_cwd_id=<?php echo $kfm->setting('startupfolder_id'); ?>;
+			for(var i = 0;i<kfm_hidden_panels.length;++i)kfm_hidden_panels[i] = 'kfm_'+kfm_hidden_panels[i]+'_panel';
 		</script>
 <?php // } ?>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>
 		<script type="text/javascript" src="j/all.php"></script>
 		<script type="text/javascript" src="lang/<?php echo $kfm_language; ?>.js"></script>
 <?php // { widgets and plugins
@@ -257,25 +236,8 @@ foreach ($kfm->plugins as $plugin) {
 if($pluginssrc!='')echo "<script type=\"text/javascript\"><!--\n$pluginssrc\n--></script>";
 // }
 // } ?>
-		<script type="text/javascript" src="j/swfupload-2.1.0b2/swfupload.js"></script>
-		<script type="text/javascript" src="j/swfupload-2.1.0b2/swfupload.swfobject.js"></script>
 <?php // { more JavaScript environment variables. These should be merged into the above set whenever possible ?>
 		<script type="text/javascript">
-			var phpsession = "<?php echo session_id(); ?>";
-			var session_key="<?php echo $kfm_session->key; ?>";
-			var starttype="<?php echo isset($_GET['type'])?$_GET['type']:''; ?>";
-			var fckroot="<?php echo $kfm->setting('userfiles_address'); ?>";
-			var fckrootOutput="<?php echo $kfm->setting('userfiles_output'); ?>";
-			var kfm_file_handler="<?php echo $kfm->setting('file_handler'); ?>";
-			var kfm_return_directory=<?php echo isset($_GET['return_directory'])?'1':'0'; ?>;
-			var kfm_theme="<?php echo $kfm->setting('theme'); ?>";
-			var kfm_hidden_panels="<?php echo join(',',$kfm->setting('hidden_panels')); ?>".split(',');
-			var kfm_show_files_in_groups_of=<?php echo $kfm->setting('show_files_in_groups_of'); ?>;
-			var kfm_slideshow_delay=<?php echo ((int)$kfm->setting('slideshow_delay'))*1000; ?>;
-			var kfm_listview=<?php echo $kfm->setting('listview');?>;
-			var kfm_startup_sequence_index = 0;
-			var kfm_cwd_id=<?php echo $kfm->setting('startupfolder_id'); ?>;
-			for(var i = 0;i<kfm_hidden_panels.length;++i)kfm_hidden_panels[i] = 'kfm_'+kfm_hidden_panels[i]+'_panel';
 			<?php echo kfm_kaejax_get_javascript(); ?>
 			<?php if(isset($_GET['kfm_caller_type']))echo 'window.kfm_caller_type="'.addslashes($_GET['kfm_caller_type']).'";'; ?>
 		</script>

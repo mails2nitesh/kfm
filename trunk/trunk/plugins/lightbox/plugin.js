@@ -12,6 +12,9 @@ function plugin_lightbox(){
 }
 kfm_addHook(new plugin_lightbox());
 kfm_addHook(new plugin_lightbox(),{mode:0,title:kfm.lang.ViewImage});
+function $(id){
+	return document.getElementById(id);
+}
 function kfm_img_startLightbox(id){
 	window.lightbox_oldCM=$('documents_body').contentMode;
 	$('documents_body').contentMode='lightbox';

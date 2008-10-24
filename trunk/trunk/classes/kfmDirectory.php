@@ -82,6 +82,43 @@ class kfmDirectory extends kfmObject{
 		}
 		return $files;
 	}
+	function getCssSprites(){
+		$groupby=16;
+		$thumbsize=64;
+		$files=$this->getFiles();
+		$images=array();
+		$i=-1;
+		$j=0;
+		if(!is_dir(WORKPATH.'css_sprites'))mkdir(WORKPATH.'css_sprites');
+		foreach($files as $file){
+			if(!$file->isImage())continue;
+			if(!($j%$groupby)){
+				$i++;
+				$images[$i]=array();
+				$j=0;
+			}
+			$images[$i][$j]=$file->id;
+			$j++;
+		}
+		$sprites=array();
+		foreach($images as $igroup){
+			$md5=md5($this->id.'_'.join(',',$igroup));
+			$sprites[]=array('sprite'=>$md5,'files'=>$igroup);
+			if(!file_exists(WORKPATH.'css_sprites/'.$md5.'.png')){
+				$thumbs=array();
+				for($i=0;$i<count($igroup);++$i){
+					$fid=$igroup[$i];
+					$file=kfmFile::getInstance($fid);
+					$file->setThumbnail($thumbsize,$thumbsize);
+					$thumbs[]="'".$file->thumb_path."'";
+				}
+				$cli="/usr/bin/montage -background transparent -geometry $thumbsize".'x'."$thumbsize -tile $groupby"."x1 ".join(' ',$thumbs).' '.WORKPATH.'css_sprites/'.$md5.'.png';
+				$arr=array();
+				exec($cli,$arr,$retval);
+			}
+		}
+		return $sprites;
+	}
 	function getInstance($id=1){
 		$id=(int)$id;
 		if($id<1)return;

@@ -37,17 +37,12 @@ File.prototype.setText=function(el,varname){
 	$j(el).text(v);
 };
 File.prototype.setThumbnailBackground=function(el,reset){
-	if(this.icon_loaded)el.style.backgroundImage='url("'+this.icon_url+'")';
-	else{
-		el.style.backgroundImage='url("themes/'+kfm_theme+'/icons/64x64/loader.gif")';
-		this.thumb_image=document.createElement('img');
-		var thumb_url=this.icon_url;
-		$j.event.add(this.thumb_image,'load',function(){
-			el.style.backgroundImage='url("'+thumb_url+'")';
-			this.icon_loaded=true;
-			el.icon_loaded=true;
-		});
-		this.thumb_image.src=thumb_url;
+	var fsdata=window.kfm_incrementalFileDisplay_vars.data.sprites;
+	var id=this.id;
+	css_sprite=[];
+	for(var i=0;i<fsdata.length;++i)if(fsdata[i].files.indexOf(id)!=-1){
+		el.style.backgroundImage='url("sprite.php?md5='+fsdata[i].sprite+'")';
+		el.style.backgroundPosition=-64*fsdata[i].files.indexOf(id)+'px top';
 	}
 }
 File.prototype.iterateThumbnailQueue=function(){
@@ -65,6 +60,7 @@ File.prototype.iterateThumbnailQueue=function(){
 		$j.event.add(img,'load',function(){
 			el.style.backgroundImage='url("'+url+'")';
 			var F=File_getInstance(id);
+			F.id=id;
 			F.icon_loaded=1;
 			F.icon_url=url;
 			$j(this).remove();

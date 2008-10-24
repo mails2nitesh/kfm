@@ -493,6 +493,12 @@ function kfm_deleteDirectory($id, $recursive = 0) {
     include_once KFM_BASE_PATH.'includes/directories.php';
     return _deleteDirectory($id, $recursive);
 }
+function kfm_getCssSprites($id=0) {
+	$id=(int)$id;
+	if($id<1)$id=1;
+	$dir=kfmDirectory::getInstance($id);
+	return $dir->getCssSprites();
+}
 function kfm_getDirectoryDbInfo($id) {
     include_once KFM_BASE_PATH.'includes/directories.php';
     return _getDirectoryDbInfo($id);
