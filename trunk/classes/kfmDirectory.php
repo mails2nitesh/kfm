@@ -9,11 +9,32 @@ class kfmDirectory extends kfmObject{
 		$res=db_fetch_row("SELECT * FROM ".KFM_DB_PREFIX."directories WHERE id=".$this->id);
 		if(!$res)return $this->id=0;
 		$this->name=$res['name'];
-		$this->pid=$res['parent'];
+		$this->pid=(int)$res['parent'];
 		$this->path=$this->getPath();
+		$this->maxWidth=(int)$res['maxwidth'];
+		$this->maxHeight=(int)$res['maxheight'];
 	}
 	function __construct($id=1){
 		$this->kfmDirectory($id);
+	}
+	function addFile($file){
+		global $kfm;
+		if(!$kfm->setting('allow_file_create'))return $this->error(kfm_lang('permissionDeniedCreateFile'));
+		if(is_numeric($file))$file=kfmFile::getInstance($file);
+		if(!$this->isWritable())return $this->error(kfm_lang('fileNotCreatedDirUnwritable',$file->name));
+		copy($file->path,$this->path.'/'.$file->name);
+		$id=$file->addToDb($file->name,$this->id);
+		if($file->isImage()){
+			$file=kfmImage::getInstance($file->id);
+			$newFile=kfmImage::getInstance($id);
+			$newFile->setCaption($file->caption);
+			if($this->maxWidth>0 && $this->maxHeight>0 && ($newFile->width>$this->maxWidth || $newFile->height>$this->maxHeight)){
+				$newFile->resize($this->maxWidth,$this->maxHeight);
+			}
+		}
+		else $newFile=kfmFile::getInstance($id);
+		$newFile->setTags($file->getTags());
+		return true;
 	}
 	function addSubdirToDb($name){
 		global $kfm;
@@ -25,6 +46,25 @@ class kfmDirectory extends kfmObject{
 			strpos($addr,'..')===false&&
 			strpos($addr,'.')!==0&&
 			strpos($addr,'/.')===false);
+	}
+	function checkName($file=false){
+		global $kfm;
+		if($file===false)$file=$this->name;
+		if(trim($file)==''|| trim($file)!=$file)return false;
+		if($file=='.'||$file=='..')return false;
+		foreach($kfm->setting('banned_folders') as $ban){
+			if(($ban[0]=='/' || $ban[0]=='@')&&preg_match($ban,$file))return false;
+			elseif($ban==strtolower(trim($file)))return false;
+		}
+		if(count($kfm->setting('allowed_folders'))){
+			foreach($kfm->setting('allowed_folders') as $allow){
+				if($allow[0]=='/' || $allow[0]=='@'){
+					if(preg_match($allow, $file))return true;
+				}else if($allow==strtolower($file)) return true;
+			}
+			return false;
+		}
+		return true;
 	}
 	function createSubdir($name){
 		global $kfm;
@@ -63,25 +103,6 @@ class kfmDirectory extends kfmObject{
 		$kfm->db->exec("delete from ".KFM_DB_PREFIX."directories where id=".$this->id);
 		return true;
 	}
-	function getFiles(){
-		$this->handle=opendir($this->path);
-		if(!$this->handle)return $this->error('unable to open directory');
-		$filesdb=db_fetch_all("select * from ".KFM_DB_PREFIX."files where directory=".$this->id);
-		$fileshash=array();
-		if(is_array($filesdb))foreach($filesdb as $r)$fileshash[$r['name']]=$r['id'];
-		$files=array();
-		while(false!==($filename=readdir($this->handle))){
-			if(is_file($this->path.$filename)&&kfmFile::checkName($filename)){
-				if(!isset($fileshash[$filename]))$fileshash[$filename]=kfmFile::addToDb($filename,$this->id);
-				$file=kfmFile::getInstance($fileshash[$filename]);
-				if(!$file)continue;
-				if($file->isImage())$file=kfmImage::getInstance($fileshash[$filename]);
-				$files[]=$file;
-				unset($fileshash[$filename]);
-			}
-		}
-		return $files;
-	}
 	function getCssSprites(){
 		$groupby=16;
 		$thumbsize=64;
@@ -119,6 +140,30 @@ class kfmDirectory extends kfmObject{
 		}
 		return $sprites;
 	}
+	function getFiles(){
+		$this->handle=opendir($this->path);
+		if(!$this->handle)return $this->error('unable to open directory');
+		$filesdb=db_fetch_all("select * from ".KFM_DB_PREFIX."files where directory=".$this->id);
+		$fileshash=array();
+		if(is_array($filesdb))foreach($filesdb as $r)$fileshash[$r['name']]=$r['id'];
+		$files=array();
+		while(false!==($filename=readdir($this->handle))){
+			if(is_file($this->path.$filename)&&kfmFile::checkName($filename)){
+				if(!isset($fileshash[$filename]))$fileshash[$filename]=kfmFile::addToDb($filename,$this->id);
+				$file=kfmFile::getInstance($fileshash[$filename]);
+				if(!$file)continue;
+				if($file->isImage()){
+					$file=kfmImage::getInstance($fileshash[$filename]);
+					if($this->maxWidth>0 && $this->maxHeight>0 && ($file->width>$this->maxWidth || $file->height>$this->maxHeight)){
+						$file->resize($this->maxWidth,$this->maxHeight);
+					}
+				}
+				$files[]=$file;
+				unset($fileshash[$filename]);
+			}
+		}
+		return $files;
+	}
 	function getInstance($id=1){
 		$id=(int)$id;
 		if($id<1)return;
@@ -146,8 +191,21 @@ class kfmDirectory extends kfmObject{
 			'name'                    => $this->name,
 			'path'                    => str_replace($_SERVER['DOCUMENT_ROOT'],'',$this->path),
 			'parent'                  => $this->pid,
-			'writable'             => $this->isWritable()
+			'writable'                => $this->isWritable(),
+			'maxWidth'                => $this->maxWidth,
+			'maxHeight'               => $this->maxHeight
 		);
+	}
+	function getSubdir($dirname){
+		global $kfm;
+		$res=db_fetch_row('select id from '.KFM_DB_PREFIX.'directories where name="'.$dirname.'" and parent='.$this->id);
+		if($res)return kfmDirectory::getInstance($res['id']);
+		else if(is_dir($this->path.$dirname)){
+			$this->addSubdirToDb($dirname);
+			$id=$kfm->db->lastInsertId(KFM_DB_PREFIX.'directories','id');
+			return kfmDirectory::getInstance($id);
+		}
+		return false;
 	}
 	function getSubdirs($oldstyle=false){
 		global $kfm;
@@ -178,17 +236,6 @@ class kfmDirectory extends kfmObject{
 		}else{
 			$this->error('Directory could not be opened');
 		}
-	}
-	function getSubdir($dirname){
-		global $kfm;
-		$res=db_fetch_row('select id from '.KFM_DB_PREFIX.'directories where name="'.$dirname.'" and parent='.$this->id);
-		if($res)return kfmDirectory::getInstance($res['id']);
-		else if(is_dir($this->path.$dirname)){
-			$this->addSubdirToDb($dirname);
-			$id=$kfm->db->lastInsertId(KFM_DB_PREFIX.'directories','id');
-			return kfmDirectory::getInstance($id);
-		}
-		return false;
 	}
 	function isWritable(){
 		return is_writable($this->path);	
@@ -226,39 +273,15 @@ class kfmDirectory extends kfmObject{
 		$this->path=$this->getPath();
 		$kfmDirectoryInstances[$this->id]=$this;
 	}
-	function checkName($file=false){
+	function setDirectoryMaxSizeImage($width=0,$height=0){
 		global $kfm;
-		if($file===false)$file=$this->name;
-		if(trim($file)==''|| trim($file)!=$file)return false;
-		if($file=='.'||$file=='..')return false;
-		foreach($kfm->setting('banned_folders') as $ban){
-			if(($ban[0]=='/' || $ban[0]=='@')&&preg_match($ban,$file))return false;
-			elseif($ban==strtolower(trim($file)))return false;
-		}
-		if(count($kfm->setting('allowed_folders'))){
-			foreach($kfm->setting('allowed_folders') as $allow){
-				if($allow[0]=='/' || $allow[0]=='@'){
-					if(preg_match($allow, $file))return true;
-				}else if($allow==strtolower($file)) return true;
-			}
-			return false;
-		}
-		return true;
-	}
-	function addFile($file){
-		global $kfm;
-		if(!$kfm->setting('allow_file_create'))return $this->error(kfm_lang('permissionDeniedCreateFile'));
-		if(is_numeric($file))$file=kfmFile::getInstance($file);
-		if(!$this->isWritable())return $this->error(kfm_lang('fileNotCreatedDirUnwritable',$file->name));
-		copy($file->path,$this->path.'/'.$file->name);
-		$id=$file->addToDb($file->name,$this->id);
-		if($file->isImage()){
-			$file=kfmImage::getInstance($file->id);
-			$newFile=kfmImage::getInstance($id);
-			$newFile->setCaption($file->caption);
-		}
-		else $newFile=kfmFile::getInstance($id);
-		$newFile->setTags($file->getTags());
-		return true;
+		$width=(int)$width;
+		$height=(int)$height;
+		if($width<0)$width=0;
+		if($height<0)$height=0;
+		if($width==$this->maxWidth && $height==$this->maxHeight)return;
+		$this->maxWidth=$width;
+		$this->maxHeight=$height;
+		$kfm->db->exec("UPDATE ".KFM_DB_PREFIX."directories SET maxwidth=$width,maxheight=$height WHERE id=".$this->id);
 	}
 }

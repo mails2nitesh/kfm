@@ -527,6 +527,10 @@ function kfm_rmdir($dir) {
     include_once KFM_BASE_PATH.'includes/directories.php';
     return _rmdir($dir);
 }
+function kfm_setDirectoryMaxSizeImage($dir,$width,$height){
+    include_once KFM_BASE_PATH.'includes/directories.php';
+    return _setDirectoryMaxSizeImage($dir,$width,$height);
+}
 // }
 // { file functions
 function kfm_copyFiles($files, $dir_id) {

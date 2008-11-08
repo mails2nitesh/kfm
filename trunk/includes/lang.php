@@ -16,7 +16,10 @@ function kfm_translate($str,$context,$lang){
 	$_context=addslashes($context);
 	$_lang=addslashes($lang);
 	$r=db_fetch_row("SELECT translation FROM ".KFM_DB_PREFIX."translations WHERE original='$_str' AND language='$_lang' AND context='$_context'");
-	if(is_array($r) && count($r))return $r['translation'];
+	if(is_array($r) && count($r)){
+		if($r['translation']!='')return $r['translation'];
+		$GLOBALS['kfmdb']->query("DELETE FROM ".KFM_DB_PREFIX."translations WHERE original='$_str' AND language='$_lang' AND context='$_context'");
+	}
 	// }
 	// { if not, retrieve from kfm.verens.com
 	$trans=file_get_contents('http://kfm.verens.com/extras/translate.php?str='.urlencode($str).'&lang='.urlencode($lang).'&context='.urlencode($context));

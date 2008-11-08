@@ -117,7 +117,8 @@ kfm_kaejax_export('kfm_changeCaption', 'kfm_copyFiles', 'kfm_createDirectory',
 	'kfm_loadFiles', 'kfm_moveDirectory', 'kfm_moveFiles', 'kfm_renameDirectory',
 	'kfm_renameFile', 'kfm_renameFiles', 'kfm_resizeImage', 'kfm_resizeImages', 'kfm_rm',
 	'kfm_rotateImage', 'kfm_cropToOriginal', 'kfm_cropToNew', 'kfm_saveTextFile',
-	'kfm_search', 'kfm_tagAdd', 'kfm_tagRemove', 'kfm_translate', 'kfm_zip');
+	'kfm_search', 'kfm_setDirectoryMaxSizeImage', 'kfm_tagAdd', 'kfm_tagRemove',
+	'kfm_translate', 'kfm_zip');
 if(!empty($_POST['kaejax']))kfm_kaejax_handle_client_request();
 // }
 ?>
