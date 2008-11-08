@@ -7,13 +7,15 @@ function _(str,context,vars,htmlonly){ // translations
 		str=str[0];
 	}
 	if(typeof(str)!='string')alert(typeof(str)+"\n"+str);
+	// { set up variables
 	if(!context)context='kfm';
 	if(!vars)vars=[];
 	if(!window.lang)window.lang=[];
 	if(!window.lang[kfm_vars.lang])window.lang[kfm_vars.lang]=[];
+	// }
 	if(htmlonly){
 		if(window.lang[kfm_vars.lang][str]){
-			el='<span class="kfmlang kfmlang_'+str.toLowerCase().replace(/[^a-z0-9]/g,'')+'">'+window.lang[kfm_vars.lang][str]+'</span>';
+			el='<span class="kfmlang kfmlang_'+str.toLowerCase().replace(/[^a-z0-9]/g,'')+'">'+window.lang[kfm_vars.lang][str].text+'</span>';
 			window.lang[kfm_vars.lang][str].requested=1;
 		}
 		else el='<span class="kfmlang kfmlang_'+str.toLowerCase().replace(/[^a-z0-9]/g,'')+'">...</span>';
@@ -223,31 +225,31 @@ function $defined(obj){
 return (obj != undefined);
 };
 function $pick(obj, picked){
-return $defined(obj) ? obj : picked;
-};
+	return $defined(obj) ? obj : picked;
+}
 function $type(obj){
-if (!$defined(obj)) return false;
-if (obj.htmlElement) return 'element';
-var type = typeof obj;
-if (type == 'object' && obj.nodeName){
-switch(obj.nodeType){
-case 1: return 'element';
-case 3: return (/\S/).test(obj.nodeValue) ? 'textnode' : 'whitespace';
+	if (!$defined(obj)) return false;
+	if (obj.htmlElement) return 'element';
+	var type = typeof obj;
+	if (type == 'object' && obj.nodeName){
+		switch(obj.nodeType){
+			case 1: return 'element';
+			case 3: return (/\S/).test(obj.nodeValue) ? 'textnode' : 'whitespace';
+		}
+	}
+	if (type == 'object' || type == 'function'){
+		switch(obj.constructor){
+			case Array: return 'array';
+			case RegExp: return 'regexp';
+			case Class: return 'class';
+		}
+		if (typeof obj.length == 'number'){
+			if (obj.item) return 'collection';
+			if (obj.callee) return 'arguments';
+		}
+	}
+	return type;
 }
-}
-if (type == 'object' || type == 'function'){
-switch(obj.constructor){
-case Array: return 'array';
-case RegExp: return 'regexp';
-case Class: return 'class';
-}
-if (typeof obj.length == 'number'){
-if (obj.item) return 'collection';
-if (obj.callee) return 'arguments';
-}
-}
-return type;
-};
 if(window.ie){
 	XMLHttpRequest=function(){
 		var l=(ScriptEngineMajorVersion()>=5)?"Msxml2":"Microsoft";

@@ -38,7 +38,7 @@ function _loadDirectories($pid,$oldpid=0){
 	$dir=kfmDirectory::getInstance($pid);
 	$pdir=str_replace($GLOBALS['rootdir'],'',$dir->path);
 	$directories=array();
-	foreach($dir->getSubdirs() as $subDir)$directories[]=array($subDir->name,$subDir->hasSubdirs(),$subDir->id);
+	foreach($dir->getSubdirs() as $subDir)$directories[]=array($subDir->name,$subDir->hasSubdirs(),$subDir->id,$subDir->maxWidth,$subDir->maxHeight);
 	sort($directories);
 	return array(
 		'parent'=>$pid,
@@ -65,6 +65,10 @@ function _renameDirectory($fid,$newname){
 }
 function _rmdir($pid){
 	return _deleteDirectory($pid);
+}
+function _setDirectoryMaxSizeImage($fid,$width,$height){
+	$dir=kfmDirectory::getInstance($fid);
+	$dir->setDirectoryMaxSizeImage($width,$height);
 }
 function kfm_rmMixed($files=array(), $directories=array()){
 	$filecount=0;

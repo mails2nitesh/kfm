@@ -43,6 +43,11 @@ if($dbv==5){
 	$kfmdb->query("DELETE FROM ".KFM_DB_PREFIX."translations");
 	$dbv=6;
 }
+if($dbv==6){
+	$kfmdb->query("ALTER TABLE ".KFM_DB_PREFIX."directories ADD maxwidth INT DEFAULT 0");
+	$kfmdb->query("ALTER TABLE ".KFM_DB_PREFIX."directories ADD maxheight INT DEFAULT 0");
+	$dbv=7;
+}
 
 $kfmdb->query("update ".KFM_DB_PREFIX."parameters set value='$dbv' where name='version_db'");
 echo '<p>Database updated. Please reload page.</p>';

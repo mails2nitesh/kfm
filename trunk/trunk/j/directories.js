@@ -5,23 +5,31 @@ kfm_dir_bits={
 		while(el&&!el.node_id)el=el.parentNode;
 		if(!el)return;
 		var links=[],i,node_id=el.node_id;
-		if(kfm_vars.permissions.dir.ed)context_categories['edit'].add({
-			name:'directory_rename',
-			title:['rename','directory'],
-			category:'edit',
-			doFunction:function(){kfm_renameDirectory(node_id)}
-		});
+		if(kfm_vars.permissions.dir.ed){ // rename, set max size images
+			context_categories['edit'].add({
+				name:'directory_rename',
+				title:['rename','directory'],
+				category:'edit',
+				doFunction:function(){kfm_renameDirectory(node_id);}
+			});
+			context_categories['edit'].add({
+				name:'directory_set_max_image_size',
+				title:['set maximum image size','directory'],
+				category:'edit',
+				doFunction:function(){kfm_setDirectoryMaximumImageSize(node_id);}
+			});
+		}
 		if(kfm_vars.permissions.dir.mk)context_categories['main'].add({
 			name:'directory_new',
 			title:"create sub-directory",
 			category:'main',
-			doFunction:function(){kfm_createDirectory(node_id)}
+			doFunction:function(){kfm_createDirectory(node_id);}
 		});
 		if(node_id!=1 && kfm_vars.permissions.dir.rm)context_categories['edit'].add({
 			name:'directory_delete',
 			title:"delete",
 			category:'edit',
-			doFunction:function(){kfm_deleteDirectory(node_id)}
+			doFunction:function(){kfm_deleteDirectory(node_id);}
 		});
 		if(kfm_return_directory)context_categories['returning'].add({
 			name:'directory_return',
@@ -229,7 +237,9 @@ function kfm_refreshDirectories(res){
 			'path':res.reqdir+dir[0],
 			'realpath':res.properties.path+dir[0]+'/',
 			'hasChildren':dir[1],
-			'writable':res.properties.writable
+			'writable':res.properties.writable,
+			'maxWidth':dir[3],
+			'maxHeight':dir[4]
 		};
 	});
 	if(d!=''){
@@ -290,4 +300,23 @@ function kfm_setDirectoryProperties(properties){
 		kfm.addCell(row,1,0,i);
 	}
 	wrapper.appendChild(table);
+}
+function kfm_setDirectoryMaximumImageSize(id){
+	var dir,txt;
+	dir=kfm_directories[id];
+	if(dir.maxWidth==0 || dir.maxHeight==0)txt=_('No maximum image width or height has been set on this directory yet.',0,0,1);
+	else txt=_('Current maximum image width and height: ',0,0,1)+dir.maxWidth+'x'+dir.maxHeight;
+	kfm_prompt(txt+"\n\n"+_('Please enter the new maximum width, or 0 for none.',0,0,1),dir.maxWidth,function(x){
+		x=parseInt(x);
+		if(!x)return x_kfm_setDirectoryMaxSizeImage(id,x,0,null);
+		kfm_prompt(_('Please enter the new maximum height.',0,0,1),dir.maxHeight,function(y){
+			y=parseInt(y);
+			x_kfm_setDirectoryMaxSizeImage(id,x,y,function(){
+				if(!x || !y) return;
+				kfm.alert(_('The new maximum image size has been set.'));
+				kfm_directories[id].maxWidth=x;
+				kfm_directories[id].maxHeight=y;
+			});
+		});
+	});
 }

@@ -27,11 +27,12 @@ kfm.about=function(){
 		html+='en (English): Kae Verens<br />';
 		html+='es (Spanish): Ramón Ramos<br />';
 		html+='fa (Persion/Farsi): Ghassem Tofighi<br />';
-		html+='fi (Finnish): Hannu (hlpilot)</td><td>';
-		html+='fr (French): Hubert Garrido<br />';
+		html+='fi (Finnish): Hannu (hlpilot)<br />';
+		html+='fr (French): Hubert Garrido</td><td>';
 		html+='ga (Irish): Kae Verens<br />';
 		html+='hu (Hungarian): Ujj-Mészáros István<br />';
 		html+='it (Italian): Stefano Luchetta<br />';
+		html+='jp (Japanese): S. Higashi<br />';
 		html+='nl (Dutch): Roy Lubbers<br />';
 		html+='pl (Polish): Jan Kurek<br />';
 		html+='ro (Romanian): Andrei Suscov<br />';
@@ -450,9 +451,9 @@ function kfm_prompt(txt,val,fn){
 	window.inPrompt=1;
 	var table=document.createElement('table');
 	table.id='kfm_prompt_table';
-	var row=table.insertRow(0),inp=newInput('kfm_prompt',0,val);
-	row.insertCell(0).innerHTML=txt.replace(/\n/g,'<br />');
-	row.insertCell(1).appendChild(inp);
+	var inp=newInput('kfm_prompt',0,val);
+	table.insertRow(0).insertCell(0).innerHTML=txt.replace(/\n/g,'<br />');
+	table.insertRow(1).insertCell(0).appendChild(inp);
 	kfm_modal_open(table,'prompt',[[kfm.lang.Ok,function(){
 		var v=document.getElementById('kfm_prompt').value;
 		kfm_modal_close();

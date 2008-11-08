@@ -43,17 +43,16 @@ return obj;
 var Window=new Abstract(window);
 var Document=new Abstract(document);
 window.xpath=!!(document.evaluate);
-if(window.ActiveXObject)window.ie=window[window.XMLHttpRequest ? 'ie7':'ie6']=true;
-else if(document.childNodes && !document.all && !navigator.taintEnabled)window.webkit=window[window.xpath ? 'webkit420':'webkit419']=true;
+if(window.ActiveXObject)window.ie=true;
+else if(document.childNodes && !document.all && !navigator.taintEnabled)window.webkit=true;
 else if(document.getBoxObjectFor != null)window.gecko=true;
 Object.extend=$extend;
 if(typeof HTMLElement=='undefined'){
 var HTMLElement=function(){};
-if(window.webkit)document.createElement("iframe"); //fixes safari
+if(window.webkit)document.createElement("iframe");
 HTMLElement.prototype=(window.webkit)? window["[[DOMElement.prototype]]"]:{};
 }
 HTMLElement.prototype.htmlElement=function(){};
-if(window.ie6)try {document.execCommand("BackgroundImageCache", false, true);} catch(e){};
 var Class=function(properties){
 var klass=function(){
 return(arguments[0] !== null && this.initialize && $type(this.initialize)=='function')? this.initialize.apply(this, arguments): this;
@@ -204,43 +203,6 @@ this.setProperty(prop, val);
 }
 return this;
 },
-getStyle: function(property){
-property=property.camelCase();
-var result=this.style[property];
-if(!$chk(result)){
-if(property=='opacity')return this.$tmp.opacity;
-result=[];
-for(var style in Element.Styles){
-if(property==style){
-Element.Styles[style].each(function(s){
-var style=this.getStyle(s);
-result.push(parseInt(style)? style:'0px');
-}, this);
-return result.join(' ');
-}
-}
-if(property.contains('border')){
-if(Element.Styles.border.contains(property)){
-return ['Width', 'Style', 'Color'].map(function(p){
-return this.getStyle(property+p);
-}, this).join(' ');
-} else if(Element.borderShort.contains(property)){
-return ['Top', 'Right', 'Bottom', 'Left'].map(function(p){
-return this.getStyle('border'+p+property.replace('border', ''));
-}, this).join(' ');
-}
-}
-if(document.defaultView)result=document.defaultView.getComputedStyle(this, null).getPropertyValue(property.hyphenate());
-else if(this.currentStyle)result=this.currentStyle[property];
-}
-if(window.ie)result=Element.fixStyle(property, result, this);
-if(result && property.test(/color/i)&& result.contains('rgb')){
-return result.split('rgb').splice(1,4).map(function(color){
-return color.rgbToHex();
-}).join(' ');
-}
-return result;
-},
 setProperty: function(property, value){
 var index=Element.Properties[property];
 if(index)this[index]=value;
@@ -248,25 +210,6 @@ else this.setAttribute(property, value);
 return this;
 }
 });
-Element.fixStyle=function(property, result, element){
-if($chk(parseInt(result)))return result;
-if(['height', 'width'].contains(property)){
-var values=(property=='width')? ['left', 'right']:['top', 'bottom'];
-var size=0;
-values.each(function(value){
-size += parseInt(element.getStyle('border-'+value+'-width'),10)+ parseInt(element.getStyle('padding-'+value),10);
-});
-return element['offset'+property.capitalize()] - size+'px';
-} else if(property.test(/border(.+)Width|margin|padding/)){
-return '0px';
-}
-return result;
-};
-Element.Styles={'border': [], 'padding': [], 'margin': []};
-['Top', 'Right', 'Bottom', 'Left'].each(function(direction){
-for(var style in Element.Styles)Element.Styles[style].push(style+direction);
-});
-Element.borderShort=['borderWidth', 'borderStyle', 'borderColor'];
 Element.Properties=new Abstract({
 'class': 'className', 'for': 'htmlFor', 'colspan': 'colSpan', 'rowspan': 'rowSpan',
 'accesskey': 'accessKey', 'tabindex': 'tabIndex', 'maxlength': 'maxLength',

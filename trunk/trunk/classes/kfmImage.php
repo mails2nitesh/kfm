@@ -103,8 +103,11 @@ class kfmImage extends kfmFile{
 		if($this->hasErrors())return false;
 		$this->deleteThumbs();
 		if($new_height==-1)$new_height=$this->height*$new_width/$this->width;
-		if($kfm->setting('use_imagemagick') && !$this->useImageMagick($this->path,'resize '.$new_width.'x'.$new_height,$this->path))return;
-		$this->createResizedCopy($this->path,$new_width,$new_height);
+		if(!($kfm->setting('use_imagemagick') && !$this->useImageMagick($this->path,'resize '.$new_width.'x'.$new_height,$this->path))){ // try image magick first
+			$this->createResizedCopy($this->path,$new_width,$new_height);
+		}
+		$this->width=$new_width;
+		$this->height=$new_height;
 	}
 	function rotate($direction){
 		global $kfm;
