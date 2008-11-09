@@ -18,6 +18,10 @@ function js_array($a,$quotes=true){
 	}
 	return '[]';
 }
+function kfm_getJsFunction($name){
+	if(preg_replace('/[0-9a-zA-Z_.]/g','',$name)!='')return 'alert("no hacking!");';
+	return file_get_contents('j/functions/'.$name.'.js');
+}
 // }
 // { setup
 error_reporting(E_ALL);
@@ -113,7 +117,7 @@ header('Content-type: text/html; Charset = utf-8');
 kfm_kaejax_export('kfm_changeCaption', 'kfm_copyFiles', 'kfm_createDirectory',
 	'kfm_createEmptyFile', 'kfm_deleteDirectory', 'kfm_downloadFileFromUrl', 
 	'kfm_extractZippedFile', 'kfm_getFileDetails', 'kfm_getFileUrl', 'kfm_getFileUrls',
-	'kfm_getTagName', 'kfm_getTextFile', 'kfm_getThumbnail', 'kfm_loadDirectories',
+	'kfm_getJsFunction', 'kfm_getTagName', 'kfm_getTextFile', 'kfm_getThumbnail', 'kfm_loadDirectories',
 	'kfm_loadFiles', 'kfm_moveDirectory', 'kfm_moveFiles', 'kfm_renameDirectory',
 	'kfm_renameFile', 'kfm_renameFiles', 'kfm_resizeImage', 'kfm_resizeImages', 'kfm_rm',
 	'kfm_rotateImage', 'kfm_cropToOriginal', 'kfm_cropToNew', 'kfm_saveTextFile',
