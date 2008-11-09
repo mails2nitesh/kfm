@@ -24,8 +24,8 @@ else{ // build cacheable js file
 	$js.=file_get_contents('jquery/setup.js');
 	// }
 	// { swfupload
-	$js.=file_get_contents('swfupload-2.1.0b2/swfupload.js');
-	$js.=file_get_contents('swfupload-2.1.0b2/swfupload.swfobject.js');
+	$js.=file_get_contents('../third-party/swfupload/swfupload.js');
+	$js.=file_get_contents('../third-party/swfupload/plugins/swfupload.swfobject.js');
 	// }
 	// { main files
 	$js.=file_get_contents('variables.js');
@@ -55,7 +55,7 @@ else{ // build cacheable js file
 		exit;
 	}
 	else{
-		$js.="setTimeout(function(){var a=document.createElement('img');a.src='j/all.php?minify=1';a.style.display='none';document.body.appendChild(a);},5000);";
+//		$js.="setTimeout(function(){var a=document.createElement('img');a.src='j/all.php?minify=1';a.style.display='none';document.body.appendChild(a);},5000);";
 	}
 	echo $js;
 }

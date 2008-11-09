@@ -274,7 +274,7 @@ if (!function_exists('json_encode')) { // php-json is not installed
 }
 // }
 // { start session
-$session_id  = (isset($_GET['kfm_session']))?$_GET['kfm_session']:'';
+$session_id  = (isset($_REQUEST['kfm_session']))?$_REQUEST['kfm_session']:'';
 $kfm_session = new kfmSession($session_id);
 if (isset($_GET['logout'])||isset($_GET['log_out'])) $kfm_session->set('loggedin',0);
 $kfm->defaultSetting('kfm_session_id', $kfm_session->key);
@@ -447,7 +447,7 @@ if ($kfm_language=='') {
 }
 // }
 // {  check the kfm_preferred_languages
-if ($kfm_language=='')foreach($kfm_preferred_languages as $lang)if (in_array($lang, $kfm_available_languages)) {
+if ($kfm_language=='' && isset($kfm_preferred_languages))foreach($kfm_preferred_languages as $lang)if (in_array($lang, $kfm_available_languages)) {
     $kfm_language = $lang;
     break;
 }
