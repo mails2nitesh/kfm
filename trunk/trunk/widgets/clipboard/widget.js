@@ -51,10 +51,10 @@ function Clipboard(){
 		}
 		el.action=function(files,folders){
 			for(var i=0;i<files.length;i++){
-				if(!this.files.contains(files[i]))this.files.push(files[i]);
+				if(!kfm_inArray(files[i],this.files))this.files.push(files[i]);
 			}
 			for(var i=0;i<folders.length;i++){
-				if(!this.folders.contains(folders[i]))this.folders.push(folders[i]);
+				if(!kfm_inArray(folders[i],this.folders))this.folders.push(folders[i]);
 			}
 			this.setAppearance();
 		};

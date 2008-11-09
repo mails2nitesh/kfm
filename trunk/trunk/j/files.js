@@ -160,15 +160,18 @@ function kfm_isFileInCWD(id){
 	return false;
 }
 function kfm_incrementalFileDisplay(refresh_count){
-	var b=window.kfm_incrementalFileDisplay_vars,fsdata=b.data.files,wrapper=document.getElementById('documents_body');
+	if(refresh_count!=kfm_vars.files.refresh_count){ // a new refresh is fired
+		return;
+	}
+	var a,b,fsdata,wrapper,fdata,name,F,el,id,prevEl;
+	b=window.kfm_incrementalFileDisplay_vars;
+	fsdata=b.data.files;
+	wrapper=document.getElementById('documents_body');
 	if(wrapper.contentMode!='file_icons')return (window.kfm_incrementalFileDisplay_vars=null);
 	icon=kfm_getCachedIcon(kfm_listview);
+	a=b.at;
+	if(a)prevEl=document.getElementById('kfm_file_icon_'+fsdata[a-1].id);
 	do{
-		if(refresh_count!=kfm_vars.files.refresh_count){ // a new refresh is fired
-			return;
-		}
-		var a,fdata,name,F,el,id;
-		a=b.at;
 		fdata=fsdata[a];
 		name=fdata.name;
 		id=fdata.id;
@@ -183,7 +186,6 @@ function kfm_incrementalFileDisplay(refresh_count){
 		}
 		kfm_fileIcon_addEvents(el);
 		el.id='kfm_file_icon_'+id;
-		el.dragDisplay=kfm_file_bits.dragDisplay;
 		el.file_id=id;
 		wrapper.files[a]=el;
 		el.appendChild(F.getText('name'));
@@ -219,11 +221,13 @@ function kfm_incrementalFileDisplay(refresh_count){
 		else{
 			el.className+=' kfm_icontype_'+ext;
 			wrapper.appendChild(el);
+			if(a&&prevEl.offsetLeft>=el.offsetLeft)el.style.clear='left';
 		}
-		if(a&&document.getElementById('kfm_file_icon_'+fsdata[a-1].id).offsetLeft>=el.offsetLeft)el.style.clear='left';
-		window.kfm_incrementalFileDisplay_vars.at=a+1;
-	}while(a+1<fsdata.length && (a+1)%kfm_show_files_in_groups_of);
-	if(a+1<fsdata.length)kfm_incrementalFileDisplay(refresh_count);
+		prevEl=el;
+		++a;
+	}while(a<fsdata.length && a%kfm_show_files_in_groups_of);
+	window.kfm_incrementalFileDisplay_vars.at=a;
+	if(a<fsdata.length)kfm_incrementalFileDisplay(refresh_count);
 	else{ // finished displaying icons
 		kdnd_makeDraggable('kfm_file');
 		if(kfm_listview){
@@ -256,6 +260,7 @@ function kfm_fileIcon_addEvents(icon){
 		if(!kfm_listview)$j.event.add(this,'mouseout',window.kfm_file_bits.infoTooltipStop);
 		kfm_addContextMenu(icon,window.kfm_file_bits.contextMenu);
 		this.hasActionEvents=true;
+		this.dragDisplay=kfm_file_bits.dragDisplay;
 	});
 }
 function kfm_refreshFiles(res){
