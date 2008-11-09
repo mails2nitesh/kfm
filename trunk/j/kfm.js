@@ -444,8 +444,7 @@ function kfm_delete(cm){
 	else kfm_deleteFile(selectedFiles[0]);
 }
 function kfm_inArray(needle,haystack){
-	for(var i=0;i<haystack.length;++i)if(haystack[i]==needle)return true;
-	return false;
+	return haystack.indexOf(needle)!=-1;
 }
 function kfm_prompt(txt,val,fn){
 	window.inPrompt=1;

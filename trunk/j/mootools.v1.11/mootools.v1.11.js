@@ -119,40 +119,6 @@ Array.prototype.test=Array.prototype.contains;
 String.extend({
 test: function(regex, params){
 return(($type(regex)=='string')? new RegExp(regex, params): regex).test(this);
-},
-camelCase: function(){
-return this.replace(/-\D/g, function(match){
-return match.charAt(1).toUpperCase();
-});
-},
-hyphenate: function(){
-return this.replace(/\w[A-Z]/g, function(match){
-return(match.charAt(0)+ '-'+match.charAt(1).toLowerCase());
-});
-},
-capitalize: function(){
-return this.replace(/\b[a-z]/g, function(match){
-return match.toUpperCase();
-});
-},
-rgbToHex: function(array){
-var rgb=this.match(/\d{1,3}/g);
-return(rgb)? rgb.rgbToHex(array): false;
-},
-contains: function(string, s){
-return(s)?(s+this+s).indexOf(s+string+s)> -1:this.indexOf(string)> -1;
-}
-});
-Array.extend({
-rgbToHex: function(array){
-if(this.length < 3)return false;
-if(this.length==4 && this[3]==0 && !array)return 'transparent';
-var hex=[];
-for(var i=0; i < 3; i++){
-var bit=(this[i] - 0).toString(16);
-hex.push((bit.length==1)? '0'+bit:bit);
-}
-return array ? hex:'#'+hex.join('');
 }
 });
 var Element=new Class({
@@ -174,7 +140,7 @@ return(!props||!el)? el:el.set(props);
 function $(el){
 if(!el)return null;
 if(el.htmlElement)return Garbage.collect(el);
-if([window, document].contains(el))return el;
+if(kfm_inArray(el,[window, document]))return el;
 var type=$type(el);
 if(type=='string'){
 el=document.getElementById(el);
@@ -182,7 +148,7 @@ type=(el)? 'element':false;
 }
 if(type != 'element')return null;
 if(el.htmlElement)return Garbage.collect(el);
-if(['object', 'embed'].contains(el.tagName.toLowerCase()))return el;
+if(kfm_inArray(el.tagName.toLowerCase(),['object', 'embed']))return el;
 $extend(el, Element.prototype);
 el.htmlElement=function(){};
 return Garbage.collect(el);
@@ -248,9 +214,7 @@ this.shift=event.shiftKey;
 this.control=event.ctrlKey;
 this.alt=event.altKey;
 this.meta=event.metaKey;
-if(['DOMMouseScroll'].contains(this.type)){
-this.wheel=(event.wheelDelta)? event.wheelDelta / 120:-(event.detail||0)/ 3;
-} else if(this.type.contains('key')){
+if(this.type.indexOf('key')>-1){
 this.code=event.which||event.keyCode;
 for(var name in Event.keys){
 if(Event.keys[name]==this.code){
