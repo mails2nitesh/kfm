@@ -37,15 +37,7 @@ function kfm_addPanel(wrapper,panel){
 	wrapper.appendChild(el);
 }
 function kfm_createFileUploadPanel(contentsonly){
-	// {{{ create form
-	var kfm_uploadPanel_checkForZip=function(e){
-		e=new Event(e);
-		e.stopPropagation();
-		var v=this.value;
-		var h=(v.indexOf('.')==-1||v.replace(/.*(\.[^.]*)/,'$1')!='.zip');
-		document.getElementById('kfm_unzip1').style.visibility=h?'hidden':'visible';
-		document.getElementById('kfm_unzip2').style.visibility=h?'hidden':'visible';
-	}
+	// { create form
 	var sel=newSelectbox('uploadType',[kfm.lang.Upload,kfm.lang.CopyFromURL],0,0,function(){
 		var copy=parseInt(this.selectedIndex);
 		var unzip1=document.getElementById('kfm_unzip1'),unzip2=document.getElementById('kfm_unzip2'),file=document.getElementById('kfm_file'),url=document.getElementById('kfm_url');
@@ -56,10 +48,41 @@ function kfm_createFileUploadPanel(contentsonly){
 		document.getElementById('kfm_uploadWrapper').style.display=copy?'none':'block';
 		document.getElementById('kfm_copyForm').style.display=copy?'block':'none';
 	});
-	// {{{ upload from computer
+	// { upload from computer
 	var wrapper=document.createElement('div'),f1;
 	wrapper.id='kfm_uploadWrapper';
-	// {{{ normal single-file upload form
+	var iframe=document.createElement('iframe');
+	iframe.id='kfm_iframe';
+	iframe.name='kfm_iframe';
+	iframe.src='javascript:false';
+	iframe.style.display='none';
+	wrapper.appendChild(kfm_vars.use_multiple_file_upload ?
+		kfm_fileUploadForm_multiple() :
+		kfm_fileUploadForm_single()
+	);
+	// }
+	// { copy from URL
+	var f2=document.createElement('div');
+	f2.id='kfm_copyForm';
+	f2.style.display='none';
+	var submit2=newInput('upload','submit',kfm.lang.CopyFromURL);
+	var inp2=newInput('kfm_url',0,0,0,0,'width:100%');
+	inp2.onkeyup=kfm_uploadPanel_checkForZip;
+	inp2.onchange=kfm_uploadPanel_checkForZip;
+	submit2.onclick=kfm_downloadFileFromUrl;
+	var unzip2=document.createElement('span');
+	unzip2.id='kfm_unzip2';
+	unzip2.className='kfm_unzipWhenUploaded';
+	unzip2.style.visibility='hidden';
+	kfm.addEl(unzip2,[newInput('kfm_unzipWhenUploaded','checkbox'),kfm.lang.ExtractAfterUpload]);
+	kfm.addEl(f2,[inp2,submit2,unzip2]);
+	// }
+	// }
+	var contents=[sel,wrapper,iframe,f2];
+	return contentsonly?contents:kfm_createPanel(kfm.lang.FileUpload,'kfm_file_upload_panel',contents,{maxedState:3,state:3,order:2});
+}
+function kfm_fileUploadForm_single(){
+	var f1;
 	if(window.ie)f1=document.createElement('<form action="upload.php" method="POST" enctype="multipart/form-data" target="kfm_iframe">');
 	else{
 		f1=document.createElement('form');
@@ -69,11 +92,6 @@ function kfm_createFileUploadPanel(contentsonly){
 		f1.target='kfm_iframe';
 	}
 	f1.id='kfm_uploadForm';
-	var iframe=document.createElement('iframe');
-	iframe.id='kfm_iframe';
-	iframe.name='kfm_iframe';
-	iframe.src='javascript:false';
-	iframe.style.display='none';
 	var max_upload_size=document.createElement('input');
 	max_upload_size.id='MAX_FILE_SIZE';
 	max_upload_size.name='MAX_FILE_SIZE';
@@ -94,51 +112,68 @@ function kfm_createFileUploadPanel(contentsonly){
 	unzip1.style.visibility='hidden';
 	kfm.addEl(unzip1,[newInput('kfm_unzipWhenUploaded','checkbox'),kfm.lang.ExtractAfterUpload]);
 	kfm.addEl(f1,[input,max_upload_size,submit,unzip1]);
-	wrapper.appendChild(f1);
-	// }}}
-	if(kfm_vars.use_multiple_file_upload){ // load multi-upload thing if possible
-		// {{{ form
-		var t=document.createElement('table');
-		t.id='kfm_uploadFormSwf';
-		t.style.display='none';
-		var r=t.insertRow(0);
-		var c=r.insertCell(0);
-		var b1=document.createElement('input');
-		b1.type='button';
-		b1.value=kfm.lang.Browse;
-		c.appendChild(b1);
-		c=r.insertCell(1);
-		var b2=document.createElement('input');
-		b2.id='kfm_fileUploadSWFCancel';
-		b2.type='button';
-		b2.value=kfm.lang.Cancel;
-		b2.disabled='disabled';
-		c.appendChild(b2);
-		r=t.insertRow(1);
-		c=r.insertCell(0);
-		c.colSpan=2;
-		c.id='kfm_uploadProgress';
-		c.innerHTML='&nbsp;';
-		wrapper.appendChild(t);
-		// }}}
-		window.swfUpload=new SWFUpload({
-			upload_url:"../../upload.php?swf=1&kfm_session="+window.session_key+"&PHPSESSID="+window.phpsession, // relative to the flash
-			upload_cookies:["kfm_session"],
-			flash_url : "j/swfupload-2.1.0b2/swfupload_f9.swf",
-			file_size_limit : "9999999999",
+	return f1;
+}
+function kfm_fileUploadForm_multiple(){
+	// { form
+	var t=document.createElement('table');
+	t.id='kfm_uploadFormSwf';
+	var r=t.insertRow(0);
+	var c=r.insertCell(0);
+	var b1=document.createElement('span');
+	b1.id='swfupload_browse_button';
+	c.style.background='#ddd';
+	c.style.border='1px solid #333';
+	c.appendChild(b1);
+	c=r.insertCell(1);
+	var b2=document.createElement('input');
+	b2.id='kfm_fileUploadSWFCancel';
+	b2.type='button';
+	b2.value=kfm.lang.Cancel;
+	b2.disabled='disabled';
+	c.appendChild(b2);
+	r=t.insertRow(1);
+	c=r.insertCell(0);
+	c.colSpan=2;
+	c.id='kfm_uploadProgress';
+	c.innerHTML='&nbsp;';
+	// }
+	setTimeout(function(){ // delay the creation of the swfupload object, until the browser registers #swfupload_browse_button
+		window.swfUpload = new SWFUpload({
+			// { Backend Settings
+			upload_url: "../../../upload.php",	// Relative to the SWF file or absolute
+			post_params: {
+				"PHPSESSID"  : window.phpsession,
+				"swf"        : 1,
+				"kfm_session": window.session_key
+			},
+			// }
+			// { File Upload Settings
+			file_size_limit : "9999 MB",	// 2MB
+			file_types : "*.*",
+			file_types_description : "All Files",
+			file_upload_limit : "0",
+			// }
+			// { Event handlers
+			file_queue_error_handler : function(a){
+				alert(a);
+			},
 			file_dialog_complete_handler:function(a){
+				var stats=this.getStats();
+				if(!stats.files_queued)return;
 				document.getElementById('kfm_fileUploadSWFCancel').disabled=null;
 				this.kfm_file_at=1;
 				this.settings.upload_progress_handler({'size':1},0);
 				this.startUpload();
 			},
+			swfupload_loaded_handler:function(){
+			},
 			upload_progress_handler:function(file,bytes_uploaded){
 				var percent=Math.ceil((bytes_uploaded/file.size)*100);
 				document.getElementById('kfm_uploadProgress').innerHTML='file '+window.swfUpload.kfm_file_at+' :'+percent+'%';
 			},
-			file_cancelled_handler:function(a){
-				document.getElementById('kfm_uploadProgress').innerHTML='&nbsp;';
-				document.getElementById('kfm_fileUploadSWFCancel').disabled='disabled';
+			upload_error_handler : function(a){
+				for(i in a)alert(i+"\n"+a[i]);
 			},
 			upload_success_handler:function(a,sdata){
 				++window.swfUpload.kfm_file_at;
@@ -150,51 +185,34 @@ function kfm_createFileUploadPanel(contentsonly){
 				document.getElementById('kfm_uploadProgress').innerHTML='&nbsp;';
 				document.getElementById('kfm_fileUploadSWFCancel').disabled='disabled';
 			},
-			swfupload_pre_load_handler:function(){},
-			swfupload_loaded_handler:function(){
-				var f=document.getElementById('kfm_uploadForm');
-				f.parentNode.removeChild(f);
-				document.getElementById('kfm_uploadFormSwf').style.display='block';
+			// }
+			// { Button Settings
+			button_placeholder_id : "swfupload_browse_button",
+			button_width: 90,
+			button_height: 18,
+			button_text : '<span class="button">Browse...</span>',
+			button_text_style : '.button { font-family: Helvetica, Arial, sans-serif; font-size: 12pt; } .buttonSmall { font-size: 10pt; }',
+			button_text_left_padding: 18,
+			button_window_mode: SWFUpload.WINDOW_MODE.TRANSPARENT,
+			button_cursor: SWFUpload.CURSOR.HAND,
+			// }
+			// { Flash Settings
+			flash_url : "third-party/swfupload/Flash/swfupload.swf",
+			custom_settings : {
+				upload_target : "kfm_iframe"
 			},
-			error_handler:function(a){
-				alert(a);
-			},
-			minimum_flash_version : "9.0.28",
-			ui_container_id : "kfm_uploadFormSwf",
-			degraded_container_id : "kfm_uploadForm",
-			debug:false
+			// }
+			// { Debug Settings
+			debug: false
+			// }
 		});
-		$j.event.add(b1,'click',function(e){
-			e=new Event(e);
-			if(e.rightClick)return;
-			window.swfUpload.selectFiles();
-		});
-		$j.event.add(b2,'click',function(e){
-			e=new Event(e);
-			if(e.rightClick)return;
-			window.swfUpload.cancelUpload();
-		});
-	}
-	// }}}
-	// {{{ copy from URL
-	var f2=document.createElement('div');
-	f2.id='kfm_copyForm';
-	f2.style.display='none';
-	var submit2=newInput('upload','submit',kfm.lang.CopyFromURL);
-	var inp2=newInput('kfm_url',0,0,0,0,'width:100%');
-	inp2.onkeyup=kfm_uploadPanel_checkForZip;
-	inp2.onchange=kfm_uploadPanel_checkForZip;
-	submit2.onclick=kfm_downloadFileFromUrl;
-	var unzip2=document.createElement('span');
-	unzip2.id='kfm_unzip2';
-	unzip2.className='kfm_unzipWhenUploaded';
-	unzip2.style.visibility='hidden';
-	kfm.addEl(unzip2,[newInput('kfm_unzipWhenUploaded','checkbox'),kfm.lang.ExtractAfterUpload]);
-	kfm.addEl(f2,[inp2,submit2,unzip2]);
-	// }}}
-	// }}}
-	var contents=[sel,wrapper,iframe,f2];
-	return contentsonly?contents:kfm_createPanel(kfm.lang.FileUpload,'kfm_file_upload_panel',contents,{maxedState:3,state:3,order:2});
+	},1);
+	$j.event.add(b2,'click',function(e){
+		e=new Event(e);
+		if(e.rightClick)return;
+		window.swfUpload.cancelUpload();
+	});
+	return t;
 }
 function kfm_createFileDetailsPanel(){
 	return kfm_createPanel(kfm.lang.FileDetails,'kfm_file_details_panel',0,{abilities:1,order:4});
@@ -202,21 +220,21 @@ function kfm_createFileDetailsPanel(){
 function kfm_createPanel(title,id,subels,vars){
 	// states:    0=minimised,1=maximised,2=fixed-height, 3=fixed-height-maxed
 	// abilities: -1=disabled,0=not closable,1=closable
-	// {{{ panel element
+	// { panel element
 	var panelEl=document.createElement('div');
 	panelEl.id=id;
 	panelEl.className='kfm_panel';
-	// {{{ title
+	// { title
 	var titleEl=document.createElement('div');
 	titleEl.className='kfm_panel_header';
 	titleEl.innerHTML=title;
-	// }}}
-	// {{{ body
+	// }
+	// { body
 	var bodyEl=document.createElement('div');
 	bodyEl.className='kfm_panel_body';
 	kfm.addEl(bodyEl,subels);
-	// }}}
-	// }}}
+	// }
+	// }
 	kfm.addEl(panelEl, [ titleEl,bodyEl ]);
 	var el=$extend(
 		panelEl,
@@ -432,4 +450,12 @@ function kfm_togglePanelsUnlocked(){
 	var el=document.getElementById('kfm_left_column');
 	el.panels_unlocked=1-el.panels_unlocked;
 	kfm_refreshPanels('kfm_left_column');
+}
+function kfm_uploadPanel_checkForZip(e){
+	e=new Event(e);
+	e.stopPropagation();
+	var v=this.value;
+	var h=(v.indexOf('.')==-1||v.replace(/.*(\.[^.]*)/,'$1')!='.zip');
+	document.getElementById('kfm_unzip1').style.visibility=h?'hidden':'visible';
+	document.getElementById('kfm_unzip2').style.visibility=h?'hidden':'visible';
 }
