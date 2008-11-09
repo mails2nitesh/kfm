@@ -46,6 +46,7 @@ else{ // build cacheable js file
 	$js.=file_get_contents('files.js');
 	$js.=file_get_contents('resize_handler.js');
 	$js.=file_get_contents('search.js');
+	$js.=file_get_contents('lazyload_functions.js');
 	// }
 	if(isset($_REQUEST['minify'])){
 		require '../includes/jsmin-1.1.1.php';
@@ -55,7 +56,7 @@ else{ // build cacheable js file
 		exit;
 	}
 	else{
-//		$js.="setTimeout(function(){var a=document.createElement('img');a.src='j/all.php?minify=1';a.style.display='none';document.body.appendChild(a);},5000);";
+		$js.="setTimeout(function(){var a=document.createElement('img');a.src='j/all.php?minify=1';a.style.display='none';document.body.appendChild(a);},5000);";
 	}
 	echo $js;
 }
