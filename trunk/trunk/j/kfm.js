@@ -317,7 +317,7 @@ kfm.build=function(){
 	}
 	x_kfm_loadFiles(kfm_vars.startupfolder_id,kfm_refreshFiles);
 	$j.event.add(document,'keyup',kfm.keyup);
-	$j.event.add(window,'resize',kfm_resizeHandler);
+	$j.event.add(window,'resize',function(){kfm_resizeHandler();});
 	kfm_contextmenuinit();
 	$j.event.add(documents_body,'scroll',kfm_setThumbnails);
 };
