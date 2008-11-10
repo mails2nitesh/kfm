@@ -19,7 +19,7 @@ function js_array($a,$quotes=true){
 	return '[]';
 }
 function kfm_getJsFunction($name){
-	if(preg_replace('/[0-9a-zA-Z_.]/g','',$name)!='')return 'alert("no hacking!");';
+	if(preg_replace('/[0-9a-zA-Z_.]/','',$name)!='')return 'alert("no hacking!");';
 	$js=file_get_contents('j/functions/'.$name.'.js');
 	if(!$js)return 'alert("could not find function \''.addslashes($name).'\' on the server-side!");';
 	return $js;
