@@ -199,6 +199,7 @@ td.listview_icon_bz2{background-image:url(icons/16x16/mimetypes/bz2.png)}
 #kfm_directories,#kfm_directories table{border-spacing:0;margin:0;width:100%}
 #kfm_directories td{padding:0}
 #kfm_directories *{line-height:14px;font:12px sans-serif}
+#kfm_directories .constrainedSize{font-style:italic}
 #kfm_directories .kfm_dir_lines_child{width:16px;height:18px;background:url(folders.gif) -16px 0 no-repeat}
 #kfm_directories .kfm_dir_lines_child a{font-size:0;text-indent:-4000px;display:block;width:16px;height:18px;background:url(folders.gif) -32px -18px}
 #kfm_directories .kfm_dir_lines_child a.kfm_dir_node_closed{background:url(folders.gif) -32px 0}
