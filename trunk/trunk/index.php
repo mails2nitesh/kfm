@@ -20,7 +20,9 @@ function js_array($a,$quotes=true){
 }
 function kfm_getJsFunction($name){
 	if(preg_replace('/[0-9a-zA-Z_.]/g','',$name)!='')return 'alert("no hacking!");';
-	return file_get_contents('j/functions/'.$name.'.js');
+	$js=file_get_contents('j/functions/'.$name.'.js');
+	if(!$js)return 'alert("could not find function \''.addslashes($name).'\' on the server-side!");';
+	return $js;
 }
 // }
 // { setup
