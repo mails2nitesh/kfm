@@ -19,3 +19,6 @@ for(i=0;i<llStubs.length;++i){
 	funcs.push('window.'+fname+'=function(){var ps=arguments;x_kfm_getJsFunction("'+fname+'",function(js){lazyload_replace_stub("'+fname+'",js,ps);});};');
 }
 eval(funcs.join("\n"));
+funcs=null;
+i=null;
+fname=null;
