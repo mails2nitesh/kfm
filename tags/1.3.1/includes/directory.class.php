@@ -78,6 +78,7 @@ class kfmDirectory extends kfmObject{
 				unset($fileshash[$filename]);
 			}
 		}
+		closedir($this->handle);
 		return $files;
 	}
 	function getInstance($id=1){
@@ -126,6 +127,7 @@ class kfmDirectory extends kfmObject{
 				unset($dirshash[$file]);
 			}
 		}
+		closedir($this->handle);
 		return $directories;
 	}
 	function hasSubdirs(){
@@ -134,6 +136,7 @@ class kfmDirectory extends kfmObject{
 			while(false!==($file=readdir($this->handle))){
 				if($this->checkName($file) && is_dir($this->path.$file)) return true;
 			}
+			closedir($this->handle);
 			return false;
 		}else{
 			$this->error('Directory could not be opened');
