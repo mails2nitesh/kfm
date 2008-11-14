@@ -1,7 +1,11 @@
 // see license.txt for licensing
 var kfm_file_bits={
 	dragDisplay:function(){
-		kfm_addToSelection(this.file_id);
+		window.dragAddedFileToSelection=false;
+		if(!kfm_isFileSelected(this.file_id)){
+			kfm_addToSelection(this.file_id);
+			window.dragAddedFileToSelection=true;
+		}
 		var drag_wrapper=new Element('div',{
 			'id':'kfm_drag_wrapper',
 			styles:{
