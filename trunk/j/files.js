@@ -10,7 +10,11 @@ var kfm_file_bits={
 	},
 	dragDisplay:function(){
 		var i;
-		kfm_addToSelection(this.file_id);
+		window.dragAddedFileToSelection=false;
+		if(!kfm_isFileSelected(this.file_id)){
+			kfm_addToSelection(this.file_id);
+			window.dragAddedFileToSelection=true;
+		}
 		var drag_wrapper=document.createElement('div');
 		drag_wrapper.id='kfm_drag_wrapper';
 		drag_wrapper.style.minWidth='100px';
