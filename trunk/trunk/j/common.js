@@ -177,9 +177,7 @@ function newInput(n,t,v,cl){
 		if(t=='checkbox'){
 			$extend(b,{checked:'checked',defaultChecked:'checked'});
 		}
-		else if(t!='datetime'){
-			b.value=v;
-		}
+		else b.value=v;
 	}
 	if(cl)b.className=cl;
 	return b;
@@ -222,8 +220,8 @@ function newText(a){
 	return document.createTextNode(a);
 }
 function $defined(obj){
-return (obj != undefined);
-};
+	return (obj != undefined);
+}
 function $pick(obj, picked){
 	return $defined(obj) ? obj : picked;
 }

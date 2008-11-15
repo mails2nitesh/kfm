@@ -13,9 +13,10 @@ function _copyFiles($files,$dir_id){
 }
 function _createEmptyFile($cwd,$filename){
 	global $kfm;
+	if($cwd==0)$cwd=1;
 	if($cwd==$kfm->setting('root_folder_id') && !$kfm->setting('allow_files_in_root'))return kfm_error(kfm_lang('files are not allowed to be create, moved or copied into root'));
 	$dir=kfmDirectory::getInstance($cwd);
-	$path=$dir->path;
+	$path=$dir->getPath();
 	if(!kfmFile::checkName($filename))return kfm_error(kfm_lang('illegalFileName',$filename));
 	if(in_array(kfmFile::getExtension($filename),$kfm->setting('banned_upload_extensions')))return kfm_error(kfm_lang('illegalFileName',$filename));
 	$success=touch($path.$filename);
