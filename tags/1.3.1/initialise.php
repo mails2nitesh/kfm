@@ -350,7 +350,7 @@ if ($kfm_language=='')foreach($kfm_preferred_languages as $lang)if (in_array($la
 foreach($kfm_editable_extensions as $v)if (!in_array($v, $kfm_viewable_extensions))$kfm_viewable_extensions[] = $v;
 // }}}
 // {{{ common functions
-function kfm_checkAddr($addr='')
+function kfm_checkAddr($filename='')
 {
     if(
         $filename=='' || 
