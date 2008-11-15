@@ -6,26 +6,7 @@ function kfm_addToSelection(id){
 	document.getElementById('kfm_file_icon_'+id).className+=' selected';
 	kfm_selectionCheck();
 }
-function kfm_chooseFile(){
-	if(selectedFiles.length>1 && !kfm_vars.files.allow_multiple_returns)return kfm.alert(_("error: you cannot choose more than one file at a time"));
-	x_kfm_getFileUrls(selectedFiles,function(urls){
-		if(copy_to_clipboard)copy_to_clipboard(urls.join("\n"));
-		if(!window.opener || kfm_file_handler=='download'){
-			for(var i=0;i<urls.length;++i){
-				var url=urls[i];
-				if(/get.php/.test(url))url+='&forcedownload=1';
-				document.location=url;
-			}
-			return;
-		}
-		if(selectedFiles.length==1&&File_getInstance(selectedFiles[0]).width)window.opener.SetUrl(urls[0].replace(/([^:]\/)\//g,'$1'),0,0,File_getInstance(selectedFiles[0]).caption);
-		else{
-			if(selectedFiles.length==1)window.opener.SetUrl(urls[0]);
-			else window.opener.SetUrl('"'+urls.join('","')+'"');
-		}
-		setTimeout('window.close()',1);
-	});
-}
+llStubs.push('kfm_chooseFile');
 function kfm_isFileSelected(filename){
 	return kfm_inArray(filename,selectedFiles);
 }
@@ -84,27 +65,7 @@ function kfm_selection_drag(e){
 	window.drag_wrapper.style.height =(y2-y1)+'px';
 	window.drag_wrapper.style.zIndex =4;
 }
-function kfm_selection_dragFinish(e){
-	e=new Event(e);
-	clearTimeout(window.dragSelectionTrigger);
-	if(!window.drag_wrapper)return;
-	var right_column=document.getElementById('documents_body'),p1=e.page,p2=window.drag_wrapper.orig,offset=right_column.scrollTop;
-	var x1=p1.x>p2.x?p2.x:p1.x, x2=p2.x>p1.x?p2.x:p1.x, y1=p1.y>p2.y?p2.y:p1.y, y2=p2.y>p1.y?p2.y:p1.y;
-	setTimeout('window.dragType=0;',1); // pause needed for IE
-	$j(window.drag_wrapper).remove();
-	window.drag_wrapper=null;
-	$j.event.remove(document,'mousemove',kfm_selection_drag);
-	$j.event.remove(document,'mouseup',kfm_selection_dragFinish);
-	var fileids=right_column.fileids;
-	kfm_selectNone();
-	for(var i=0;i<fileids.length;++i){
-		var curIcon=document.getElementById('kfm_file_icon_'+fileids[i]);
-		var curTop=getOffset(curIcon,'Top');
-		var curLeft=getOffset(curIcon,'Left');
-		if((curLeft+curIcon.offsetWidth)>x1&&curLeft<x2&&(curTop+curIcon.offsetHeight)>y1&&curTop<y2)kfm_addToSelection(fileids[i]);
-	}
-	kfm_selectionCheck();
-}
+llStubs.push('kfm_selection_dragFinish');
 function kfm_selection_dragStart(e){
 	if(window.dragType)return;
 	if (!kfm_vars.use_templates && window.mouseAt.x > document.getElementById('kfm_right_column').scrollWidth + document.getElementById('kfm_left_column').scrollWidth - 15) return;
