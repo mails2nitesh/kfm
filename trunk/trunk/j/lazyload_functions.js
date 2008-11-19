@@ -11,7 +11,7 @@
 function lazyload_replace_stub(fname,js,ps){ // replace stub with function, then call function with original parameters
 document.title=fname;
 	eval(js);
-	(eval(fname))(ps[0],ps[1],ps[2],ps[3]); // hacky method... replace when a better idea comes along
+	(eval(fname)).apply(this,ps);
 }
 
 var i,funcs=[],fname;
