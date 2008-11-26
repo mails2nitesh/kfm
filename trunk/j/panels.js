@@ -164,6 +164,7 @@ function kfm_fileUploadForm_multiple(){
 				document.getElementById('kfm_fileUploadSWFCancel').disabled=null;
 				this.kfm_file_at=1;
 				this.settings.upload_progress_handler({'size':1},0);
+				this.settings.post_params.cwd=kfm_cwd_id;
 				this.startUpload();
 			},
 			swfupload_loaded_handler:function(){

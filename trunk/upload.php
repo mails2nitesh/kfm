@@ -19,6 +19,7 @@ if ($kfm->setting('allow_file_upload')) {
 	$filename = $file['name'];
 	$tmpname  = $file['tmp_name'];
 	$cwd      = $kfm_session->get('cwd_id');
+	if(isset($_REQUEST['cwd']) && $_REQUEST['cwd']>0)$cwd=$_REQUEST['cwd'];
 	if(!$cwd) $errors[] = kfm_lang('CWD not set');
 	else {
 		$toDir = kfmDirectory::getInstance($cwd);
