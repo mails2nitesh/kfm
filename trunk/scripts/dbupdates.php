@@ -7,17 +7,13 @@ if($dbv==0){
 }
 if($dbv==1){
 	switch($kfm_db_type){
-		case 'mysql':{
-			$kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."translations(original TEXT INDEXED,translation TEXT,language VARCHAR(2),calls INT DEFAULT 0,found INT DEFAULT 1)DEFAULT CHARSET=utf8");
-			break;
-		}
-		case 'pgsql':{
-			$kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."translations(original text,translation text,language varchar(2),calls INTEGER DEFAULT 0,found INTEGER DEFAULT 0)");
-			break;
-		}
-		case 'sqlite': case 'sqlitepdo':{
-			$kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."translations(original TEXT,translation TEXT,language VARCHAR(2),calls INTEGER DEFAULT 0,found INTEGER DEFAULT 0)");
-		}
+		case 'mysql': // {
+		$kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."translations(original TEXT INDEXED,translation TEXT,language VARCHAR(2),calls INT DEFAULT 0,found INT DEFAULT 1)DEFAULT CHARSET=utf8");
+		break;
+		// }
+		case 'pgsql': case 'sqlite': case 'sqlitepdo': // {
+		$kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."translations(original TEXT,translation TEXT,language VARCHAR(2),calls INTEGER DEFAULT 0,found INTEGER DEFAULT 0)");
+		// }
 	}
 	$dbv=2;
 }
@@ -47,6 +43,18 @@ if($dbv==6){
 	$kfmdb->query("ALTER TABLE ".KFM_DB_PREFIX."directories ADD maxwidth INT DEFAULT 0");
 	$kfmdb->query("ALTER TABLE ".KFM_DB_PREFIX."directories ADD maxheight INT DEFAULT 0");
 	$dbv=7;
+}
+if($dbv==7){
+	switch($kfm_db_type){
+		case 'mysql': // {
+		$kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."_settings ( `id` int(11) NOT NULL auto_increment, `name` varchar(128) default NULL, `value` varchar(256) default NULL, `user_id` int(8) default NULL, `usersetting` int(1) default '0', PRIMARY KEY  (`id`))DEFAULT CHARSET=utf8");
+		break;
+		// }
+		case 'pgsql': case 'sqlite': case 'sqlitepdo': // {
+		$kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."_settings ( `id` INTEGER NOT NULL auto_increment, `name` varchar(128) default NULL, `value` varchar(256) default NULL, `user_id` INTEGER default NULL, `usersetting` INTEGER default '0', PRIMARY KEY  (`id`))");
+		// }
+	}
+	$dbv=8;
 }
 
 $kfmdb->query("update ".KFM_DB_PREFIX."parameters set value='$dbv' where name='version_db'");
