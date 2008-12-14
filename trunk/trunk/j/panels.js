@@ -122,8 +122,6 @@ function kfm_fileUploadForm_multiple(){
 	var c=r.insertCell(0);
 	var b1=document.createElement('span');
 	b1.id='swfupload_browse_button';
-	c.style.background='#ddd';
-	c.style.border='1px solid #333';
 	c.appendChild(b1);
 	c=r.insertCell(1);
 	var b2=document.createElement('input');
@@ -189,11 +187,12 @@ function kfm_fileUploadForm_multiple(){
 			// }
 			// { Button Settings
 			button_placeholder_id : "swfupload_browse_button",
-			button_width: 90,
-			button_height: 18,
+			button_width: 61,
+			button_height: 22,
 			button_text : '<span class="button">Browse...</span>',
-			button_text_style : '.button { font-family: Helvetica, Arial, sans-serif; font-size: 12pt; } .buttonSmall { font-size: 10pt; }',
-			button_text_left_padding: 18,
+			button_text_style : '.button { font-family: Helvetica, Arial, sans-serif; font-size: 12pt; } .buttonSmall { font-size: 12pt; }',
+			button_image_url: './themes/default/bitsandpieces/XPButtonNoText_61x22.png',
+			button_text_left_padding: 2,
 			button_window_mode: SWFUpload.WINDOW_MODE.TRANSPARENT,
 			button_cursor: SWFUpload.CURSOR.HAND,
 			// }

@@ -23,10 +23,6 @@ else{ // build cacheable js file
 	$js.=file_get_contents('jquery/jquery.tablesorter.js');
 	$js.=file_get_contents('jquery/setup.js');
 	// }
-	// { swfupload
-	$js.=file_get_contents('../third-party/swfupload/swfupload.js');
-	$js.=file_get_contents('../third-party/swfupload/plugins/swfupload.swfobject.js');
-	// }
 	// { main files
 	$js.=file_get_contents('variables.js');
 	$js.=file_get_contents('common.js');

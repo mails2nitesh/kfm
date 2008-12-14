@@ -223,6 +223,7 @@ if ($last_registration!=$today) {
 		</script>
 <?php // } ?>
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>
+		<script type="text/javascript" src="third-party/swfupload/swfupload.js"></script>
 		<script type="text/javascript" src="j/all.php"></script>
 		<script type="text/javascript" src="lang/<?php echo $kfm_language; ?>.js"></script>
 <?php // { widgets and plugins
