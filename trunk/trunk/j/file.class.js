@@ -39,11 +39,16 @@ File.prototype.setText=function(el,varname){
 File.prototype.setThumbnailBackground=function(el,reset){
 	var fsdata=window.kfm_incrementalFileDisplay_vars.data.sprites;
 	var id=this.id;
-	css_sprite=[];
-	for(var i=0;i<fsdata.length;++i)if(fsdata[i].files.indexOf(id)!=-1){
-		el.style.backgroundImage='url("sprite.php?md5='+fsdata[i].sprite+'")';
-		el.style.backgroundPosition=-64*fsdata[i].files.indexOf(id)+'px top';
+	if(fsdata){ // sprites exist
+		css_sprite=[];
+		for(var i=0;i<fsdata.length;++i)if(fsdata[i].files.indexOf(id)!=-1){
+			el.style.backgroundImage='url("sprite.php?md5='+fsdata[i].sprite+'")';
+			el.style.backgroundPosition=-64*fsdata[i].files.indexOf(id)+'px top';
+			return;
+		}
 	}
+	// sprite doesn't exist, or image is not in a CSS sprite
+	el.style.background='url(get.php?id='+id+'&width=64&height=64) center top no-repeat';
 }
 File.prototype.iterateThumbnailQueue=function(){
 	if(!File_ThumbnailsQueue.length){
