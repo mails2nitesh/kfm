@@ -35,12 +35,14 @@ $kfm_db_port     = '';
  */
 $use_kfm_security=false;
 
-// where on the machine are the files located? if the first two characters are './', then the
-//   files are relative to the directory that KFM is in.
-// Here are some examples:
-// $kfm_userfiles_address = '/home/kae/userfiles'; # absolute address in Linux
-// $kfm_userfiles_address = 'D:/Files';            # absolute address in Windows
-// $kfm_userfiles_address = './uploads';           # relative address
+/**
+ * where on the server should the uploaded files be kept?
+ * if the first two characters of this setting are './', then the files are relative to the directory that KFM is in.
+ * Here are some examples:
+ *    $kfm_userfiles_address = '/home/kae/userfiles'; # absolute address in Linux
+ *    $kfm_userfiles_address = 'D:/Files';            # absolute address in Windows
+ *    $kfm_userfiles_address = './uploads';           # relative address
+ */
 $kfm_userfiles_address = '/home/kae/Desktop/userfiles';
 
 // where should a browser look to find the files?

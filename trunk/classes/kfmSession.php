@@ -70,4 +70,10 @@ class kfmSession extends kfmObject{
 		}
 		return null;
 	}
+	function logout(){
+		global $kfm;
+		$kfm->db->query("DELETE FROM ".KFM_DB_PREFIX."session_vars WHERE session_id=".$this->id);
+		$kfm->db->query("DELETE FROM ".KFM_DB_PREFIX."session WHERE id=".$this->id);
+		$this->loggedin=0;
+	}
 }
