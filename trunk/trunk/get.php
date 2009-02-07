@@ -24,7 +24,7 @@ if (isset($_SERVER['REDIRECT_QUERY_STRING'])&&$_SERVER['REDIRECT_QUERY_STRING'])
 $uri   = $_SERVER['REQUEST_URI'];
 if (strpos($uri,'?')===false) $uri=str_replace('/get.php/','/get.php?',$uri);
 $uri2  = explode('?', $uri);
-$parts = explode('&', $uri2[1]);
+$parts = count($uri2)>1 ? explode('&', $uri2[1]) : array();
 foreach ($parts as $part) {
     $arr = explode('=', $part);
     if (!(count($arr)>1)) continue;
