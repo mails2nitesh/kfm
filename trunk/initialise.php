@@ -9,11 +9,13 @@
  * @license  docs/license.txt for licensing
  * @link     http://kfm.verens.com/
  */
-define('KFM_BASE_PATH', dirname(__FILE__).'/');
+if(!defined('KFM_BASE_PATH'))define('KFM_BASE_PATH', dirname(__FILE__).'/');
 
 // { load classes and helper functions
-function __autoload($class_name) {
-    require_once KFM_BASE_PATH . 'classes/' . $class_name . '.php';
+if(!function_exists('__autoload')){
+	function __autoload($class_name) {
+		require_once KFM_BASE_PATH . 'classes/' . $class_name . '.php';
+	}
 }
 require KFM_BASE_PATH.'includes/lang.php';
 require KFM_BASE_PATH.'includes/db.php';
@@ -37,7 +39,6 @@ function sql_escape($sql) {
 }
 // }
 if (get_magic_quotes_gpc()) require 'includes/remove_magic_quotes.php';
-set_include_path(KFM_BASE_PATH.'includes/pear'.PATH_SEPARATOR.get_include_path());
 // { check for fatal errors
 if (ini_get('safe_mode')){
     echo '<html><body><p>KFM does not work if you have <code>safe_mode</code> enabled. This is not a bug - please see <a href="http://ie.php.net/features.safe-mode">PHP.net\'s safe_mode page</a> for details</p></body></html>';
@@ -51,11 +52,6 @@ if (!file_exists(KFM_BASE_PATH.'configuration.php')) {
 require_once KFM_BASE_PATH.'configuration.php';
 // { defines
 define('KFM_DB_PREFIX', $kfm_db_prefix);
-// }
-// { API - for programmers only
-if (file_exists(KFM_BASE_PATH.'api/config.php')) require KFM_BASE_PATH.'api/config.php';
-if (file_exists(KFM_BASE_PATH.'api/cms_hooks.php')) require KFM_BASE_PATH.'api/cms_hooks.php';
-else require KFM_BASE_PATH.'api/cms_hooks.php.dist';
 // }
 // { variables
 // structure
@@ -118,6 +114,7 @@ $kfm->defaultSetting('return_file_id_to_cms',0); // Should be deprecated in favo
 $kfm->defaultSetting('allow_multiple_file_returns',0); // Should be deprecated in favour of plugin
 $kfm->defaultSetting('slideshow_delay',4);
 
+if(!$kfm_use_servers_pear)set_include_path(KFM_BASE_PATH.'includes/pear'.PATH_SEPARATOR.get_include_path());
 if(!substr($kfm_userfiles_output,-1,1)=='/')$kfm_userfiles_output .= '/'; // Just convention, end with slash
 $kfm->defaultSetting('files_url',$kfm_userfiles_output);
 // { KFM versions
@@ -143,6 +140,11 @@ define('IMAGEMAGICK_PATH', isset($kfm_imagemagick_path)?$kfm_imagemagick_path:'/
 $cache_directories = array();
 $kfm_errors        = array();
 $kfm_messages      = array();
+// }
+// { API - for programmers only
+if (file_exists(KFM_BASE_PATH.'api/config.php')) require KFM_BASE_PATH.'api/config.php';
+if (file_exists(KFM_BASE_PATH.'api/cms_hooks.php')) require KFM_BASE_PATH.'api/cms_hooks.php';
+else require KFM_BASE_PATH.'api/cms_hooks.php.dist';
 // }
 // { work directory
 if ($kfm_workdirectory[0]=='/') {
@@ -313,8 +315,8 @@ if(is_array($admin_settings)){
 }
 if($uid!=1){
     $user_settings=db_fetch_all('SELECT name, value FROM '.KFM_DB_PREFIX.'settings WHERE user_id='.$uid.' AND usersetting=1');
-    foreach($user_settings as $setting){
-        $settings[$setting['name']]=$setting['value'];
+    if(is_array($user_settings)){
+			foreach($user_settings as $setting)$settings[$setting['name']]=$setting['value'];
     }
 }
 if(isset($settings['disabled_plugins'])){

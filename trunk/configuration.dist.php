@@ -67,6 +67,9 @@ $kfm_workdirectory = '.files';
 // where is the 'convert' program kept, if you have it installed?
 $kfm_imagemagick_path = '/usr/bin/convert';
 
+// use server's version of Pear?
+$kfm_use_servers_pear = false;
+
 // we would like to keep track of installations, to see how many there are, and what versions are in use.
 // if you do not want us to have this information, then set the following variable to '1'.
 $kfm_dont_send_metrics = 0;
