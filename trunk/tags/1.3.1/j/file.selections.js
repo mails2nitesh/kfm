@@ -105,6 +105,7 @@ function kfm_selection_dragFinish(e){
 	document.removeEvent('mousemove',kfm_selection_drag);
 	document.removeEvent('mouseup',kfm_selection_dragFinish);
 	var fileids=right_column.fileids;
+	kfm_selectNone();
 	for(var i=0;i<fileids.length;++i){
 		var curIcon=$('kfm_file_icon_'+fileids[i]);
 		var curTop=getOffset(curIcon,'Top');

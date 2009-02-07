@@ -60,6 +60,7 @@ function _renameDirectory($fid,$newname){
 	global $kfm_allow_directory_edit;
 	if(!$kfm_allow_directory_edit)return 'error: '.kfm_lang('permissionDeniedEditDirectory');
 	$dir=kfmDirectory::getInstance($fid);
+	if(!$dir)return 'error: directory not found';
 	$dir->rename($newname);
 	return _loadDirectories($dir->pid);
 }

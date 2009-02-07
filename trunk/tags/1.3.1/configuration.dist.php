@@ -155,6 +155,9 @@ $kfm_use_imagemagick = 1;
 // where is the 'convert' program kept, if you have it installed?
 $kfm_imagemagick_path = '/usr/bin/convert';
 
+// use server's version of Pear?
+$kfm_use_servers_pear = false;
+
 // show files in groups of 'n', where 'n' is a number (helps speed up files display - use low numbers for slow machines)
 $kfm_show_files_in_groups_of = 10;
 
