@@ -242,6 +242,7 @@ function kfm_refreshFiles(res){
 		}
 	}
 	for(a=0;a<res.files.length;++a)wrapper.fileids[a]=res.files[a].id;
+	kfm_directories[kfm_cwd_id].hasChildren=res.files.length;
 	document.title='KFM: '+res.reqdir;
 	kfm_lastClicked=null;
 	if(res.uploads_allowed)kfm_addPanel(document.getElementById('kfm_left_column'),'kfm_file_upload_panel');
