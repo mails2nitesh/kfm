@@ -126,47 +126,13 @@ function kfm_deleteDirectoryCheck(res){
 		kfm_refreshDirectories(res);
 	}
 }
-function kfm_dir_addLink(t,parent_addr,is_last,data){
-	var r,c,pdir,name,name_text,el,openerEl,name,has_node_control,parent,has_size_constraint;
-	name=data[0];
-	has_node_control=data[1];
-	parent=data[2];
-	r=kfm.addRow(t);
-	pdir=parent_addr+name;
-	name=(name==''?kfm_vars.root_folder_name:name);
-	// {{{ directory element
-	el=document.createElement('div');
-	el.id='kfm_directory_icon_'+parent;
-	el.className='kfm_directory_link '+(kfm_cwd_name==pdir?'':'kfm_directory_open');
-	// {{{ name
-	name_text=document.createElement('span');
-	name_text.id='directory_name_'+parent;
-	name_text.innerHTML='0';
-	// }}}
-	el.appendChild(name_text);
-	el.kfm_directoryname=pdir;
-	el.node_id=parent;
-	el.style.cursor=window.ie?'hand':'pointer';
-	kfm_addContextMenu(el,window.kfm_dir_bits.contextMenu);
-	// }}}
-	// {{{ create table elements
-	if(has_node_control){
-		openerEl=$j('<a href="javascript:kfm_dir_openNode('+parent+')" id="kfm_dir_node_'+parent+'" class="kfm_dir_node_closed">[+]</a>')[0];
-	}
-	else{
-		openerEl=document.createElement('span');
-		openerEl.id='kfm_dir_node_'+parent;
-		openerEl.innerHTML='&nbsp;';
-	}
-	var cell=kfm.addCell(r,0,0,openerEl,'kfm_dir_lines_'+(is_last?'lastchild':'child'));
-	cell.style.width='16px';
-	cell=kfm.addCell(r,1,0,el,'kfm_dir_name');
-	if(window.webkit){ // fix cell width for konqueror
-		cell.style.width=(t.offsetWidth-16)+'px';
-	}
-	// }}}
-	$j.event.add(el,'mouseover',window.kfm_dir_bits.addHover);
-	{ // fix name width
+function kfm_dir_setName(el,parent,name){
+	var closure=function(){
+		name_text=document.createElement('span');
+		name_text.id='directory_name_'+parent;
+		name_text.innerHTML='0';
+		el.appendChild(name_text);
+		el.style.cursor=window.ie?'hand':'pointer';
 		var reqHeight=name_text.offsetHeight;
 		name_text.innerHTML='. '+name;
 		el=name_text;
@@ -178,15 +144,49 @@ function kfm_dir_addLink(t,parent_addr,is_last,data){
 		else el.innerHTML=name;
 		if(!window.ie)el.style.position='inherit';
 	}
+	return closure;
+}
+function kfm_dir_addLink(t,parent_addr,is_last,data){
+	var r,c,pdir,name,name_text,el,openerEl,name,has_node_control,parent,has_size_constraint;
+	name=data[0];
+	has_node_control=data[1];
+	parent=data[2];
+	r=kfm.addRow(t);
+	pdir=parent_addr+name;
+	name=(name==''?kfm_vars.root_folder_name:name);
+	// { directory element
+	el=document.createElement('div');
+	el.id='kfm_directory_icon_'+parent;
+	el.className='kfm_directory_link '+(kfm_cwd_name==pdir?'':'kfm_directory_open');
+	setTimeout(kfm_dir_setName(el,parent,name),1);
+	el.kfm_directoryname=pdir;
+	el.node_id=parent;
+	kfm_addContextMenu(el,window.kfm_dir_bits.contextMenu);
+	// }
+	// { create table elements
+	if(has_node_control){
+		openerEl=$j('<a href="javascript:kfm_dir_openNode('+parent+')" id="kfm_dir_node_'+parent+'" class="kfm_dir_node_closed">[+]</a>')[0];
+	}
+	else{
+		openerEl=$j('<span id="kfm_dir_node_'+parent+'">&nbsp;</span>')[0];
+	}
+	var cell=kfm.addCell(r,0,0,openerEl,'kfm_dir_lines_'+(is_last?'lastchild':'child'));
+	cell.style.width='16px';
+	cell=kfm.addCell(r,1,0,el,'kfm_dir_name');
+	if(window.webkit){ // fix cell width for konqueror
+		cell.style.width=(t.offsetWidth-16)+'px';
+	}
+	// }
+	$j.event.add(el,'mouseover',window.kfm_dir_bits.addHover);
 	if(data[3] || data[4]){ // constrained size
 		el.title+="\n"+data[3]+"x"+data[4];
 		el.className+=" constrainedSize";
 	}
-	{ // subdir holder
-		r=kfm.addRow(t);
-		kfm.addCell(r,0,0,' ',is_last?0:'kfm_dir_lines_nochild');
-		kfm.addCell(r,1).id='kfm_directories_subdirs_'+parent;
-	}
+	// { subdir holder
+	r=kfm.addRow(t);
+	kfm.addCell(r,0,0,' ',is_last?0:'kfm_dir_lines_nochild');
+	kfm.addCell(r,1).id='kfm_directories_subdirs_'+parent;
+	// }
 	kdnd_makeDraggable('kfm_dir_name');
 	kdnd_addDropHandler('kfm_dir_name','.kfm_dir_name',kfm_dir_dropHandler);
 	return t;
@@ -240,7 +240,7 @@ function kfm_refreshDirectories(res){
 	var dirs=res.directories;
 	dirs.each(function(dir,a){
 		kfm_dir_addLink(t,res.reqdir,l=(a==dirs.length-1),dir);
-		if(!kfm_directories[dir[2]])kfm_directories[dir[2]]={
+		kfm_directories[dir[2]]={
 			'parent':res.parent,
 			'name':dir[0],
 			'path':res.reqdir+dir[0],
