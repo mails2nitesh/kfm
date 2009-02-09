@@ -52,7 +52,7 @@ class kfmImage extends kfmFile{
 			$kfm->db->exec("INSERT INTO ".KFM_DB_PREFIX."files_images_thumbs (image_id,width,height) VALUES(".$this->id.",".$thumb_width.",".$thumb_height.")");
 			$id=$kfm->db->lastInsertId(KFM_DB_PREFIX.'files_images_thumbs','id');
 		}
-		$file=WORKPATH.'thumbs/'.$id.'.png';
+		$file=WORKPATH.'thumbs/'.$id.'.jpg';
 		if(!$kfm->setting('use_imagemagick') || $this->useImageMagick($this->path,'resize '.$thumb_width.'x'.$thumb_height.' -flatten',$file))$this->createResizedCopy($file,$thumb_width,$thumb_height);
 		return $id;
 	}
@@ -161,14 +161,14 @@ class kfmImage extends kfmFile{
 		$r=db_fetch_row("SELECT id FROM ".KFM_DB_PREFIX."files_images_thumbs WHERE image_id=".$this->id." and width<=".$width." and height<=".$height." and (width=".$width." or height=".$height.")");
 		if($r){
 			$id=$r['id'];
-			if(!file_exists(WORKPATH.'thumbs/'.$id.'.png'))$this->createThumb($width,$height,$id); // missing thumb file - recreate it
+			if(!file_exists(WORKPATH.'thumbs/'.$id.'.jpg'))$this->createThumb($width,$height,$id); // missing thumb file - recreate it
 		}
 		else{
 			$id=$this->createThumb($width,$height);
 		}
 		$this->thumb_url='get.php?type=thumb&id='.$id.GET_PARAMS;
 		$this->thumb_id=$id;
-		$this->thumb_path=str_replace('//','/',WORKPATH.'thumbs/'.$id.'.png');
+		$this->thumb_path=str_replace('//','/',WORKPATH.'thumbs/'.$id.'.jpg');
 		if(!file_exists($this->thumb_path)){
 			copy(WORKPATH.'thumbs/'.$id.'.'.preg_replace('/.*\//','',$this->info['mime']),$this->thumb_path);
 			unlink(WORKPATH.'thumbs/'.$id.'.'.preg_replace('/.*\//','',$this->info['mime']));
