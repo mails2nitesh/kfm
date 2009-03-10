@@ -17,9 +17,10 @@ $getparams=rtrim($getparams,'& ');
 <link rel="stylesheet" href="../themes/<?php echo $kfm->setting('theme');?>/css.php" type="text/css">
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>
-<script type="text/javascript" src="../j/jquery/all.php"></script>
+<script type="text/javascript" src="../j/all.php"></script>
 <script type="text/javascript" src="../j/jquery/tabs/ui.tabs.js"></script>
 <script type="text/javascript">
+$ = $j;
 $(function(){
 	$('#tabscontainer > ul').tabs();
 });
