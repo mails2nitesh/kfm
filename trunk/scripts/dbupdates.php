@@ -47,11 +47,11 @@ if($dbv==6){
 if($dbv==7){
 	switch($kfm_db_type){
 		case 'mysql': // {
-		$kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."_settings ( `id` int(11) NOT NULL auto_increment, `name` varchar(128) default NULL, `value` varchar(256) default NULL, `user_id` int(8) default NULL, `usersetting` int(1) default '0', PRIMARY KEY  (`id`))DEFAULT CHARSET=utf8");
+		$kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."settings ( `id` int(11) NOT NULL auto_increment, `name` varchar(128) default NULL, `value` varchar(256) default NULL, `user_id` int(8) default NULL, `usersetting` int(1) default '0', PRIMARY KEY  (`id`))DEFAULT CHARSET=utf8");
 		break;
 		// }
 		case 'pgsql': case 'sqlite': case 'sqlitepdo': // {
-		$kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."_settings ( `id` INTEGER NOT NULL auto_increment, `name` varchar(128) default NULL, `value` varchar(256) default NULL, `user_id` INTEGER default NULL, `usersetting` INTEGER default '0', PRIMARY KEY  (`id`))");
+		$kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."settings ( `id` INTEGER NOT NULL auto_increment, `name` varchar(128) default NULL, `value` varchar(256) default NULL, `user_id` INTEGER default NULL, `usersetting` INTEGER default '0', PRIMARY KEY  (`id`))");
 		// }
 	}
 	$dbv=8;
