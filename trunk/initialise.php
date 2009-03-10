@@ -449,7 +449,7 @@ if ($kfm_language=='') {
 }
 // }
 // {  check the kfm_preferred_languages
-if ($kfm_language=='' && isset($kfm_preferred_languages))foreach($kfm_preferred_languages as $lang)if (in_array($lang, $kfm_available_languages)) {
+if ($kfm_language=='')foreach($kfm->setting('preferred_languages') as $lang)if (in_array($lang, $kfm_available_languages)) {
     $kfm_language = $lang;
     break;
 }
