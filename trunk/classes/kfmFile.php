@@ -113,7 +113,8 @@ class kfmFile extends kfmObject{
 			$url=$kfm->setting('files_url').str_replace($kfm->setting('files_root_path'),'',$this->path);
 			//else $url=$kfm_userfiles_output.'/'.$cwd.'/'.$this->name; # TODO: check this line - $cwd may be incorrect if the requested file is from a search
 		}
-		return preg_replace('/([^:])?\/{2,}/','$1/',$url);
+		//return $url;
+		return preg_replace('/([^:])\/{2,}/','$1/',$url);
 	}
 
 	/**
