@@ -213,7 +213,7 @@ td.listview_icon_bz2{background-image:url(icons/16x16/mimetypes/bz2.png)}
 #kfm_directories .kfm_dir_name.kfm_directory_open div{background:#9cf}
 #kfm_directories .kfm_dir_name div:hover{color:red}
 #message{top:2px; right:3px; position:absolute; z-index:10000; background-color: #f00; color: #000; font-weight:bold;}
-.button{margin-left:15px;color:#fff;background:#666;font-weight:bold;text-decoration:none;padding:2px 4px;display:block;text-align:center;border:2px solid;border-color:#ccc #999 #999 #ccc}
+.button{margin-left:15px;color:#fff;background:#666;font-weight:bold;text-decoration:none;padding:2px 4px;text-align:center;border:2px solid;border-color:#ccc #999 #999 #ccc;cursor:pointer}
 .button:hover{color:#f00;background:#fff}
 
 /* IE-specific crap */
