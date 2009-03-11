@@ -133,7 +133,7 @@ class kfmDirectory extends kfmObject{
 					$file->setThumbnail($thumbsize,$thumbsize);
 					$thumbs[]="'".$file->thumb_path."'";
 				}
-				$cli="/usr/bin/montage -background transparent -geometry $thumbsize".'x'."$thumbsize -tile $groupby"."x1 ".join(' ',$thumbs).' '.WORKPATH.'css_sprites/'.$md5.'.png';
+				$cli=dirname(IMAGEMAGICK_PATH)."/montage -background transparent -geometry $thumbsize".'x'."$thumbsize -tile $groupby"."x1 ".join(' ',$thumbs).' '.WORKPATH.'css_sprites/'.$md5.'.png';
 				$arr=array();
 				exec($cli,$arr,$retval);
 			}
