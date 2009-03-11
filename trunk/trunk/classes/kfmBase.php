@@ -87,6 +87,12 @@ class kfmBase extends kfmObject{
 	function addUserSetting($name){
 		if(!$this->isUserSetting($name))$this->user_settings[]=$name;
 	}
+
+	/**
+	 * This function adds a setting definition. The first parameter is the setting name,
+	 * the second the setting information and the third optional one sets the default value.
+	 * Look in the documentation for the setting information.
+	 */
 	function addSdef($name,$def, $value='ste.325#new'){
 		$this->sdef[$name]=$def;
 		if($value!='ste.325#new')$this->defaultSetting($name,$value);
