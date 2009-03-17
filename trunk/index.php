@@ -55,34 +55,20 @@ if ($kfm->setting('startup_folder')) {
 }
 $kfm->setting('startupfolder_id',$kfm_startupfolder_id);
 // }
-// { file associations
-$ass_arr=array();
-function addAssociations($associations){
-	global $ass_arr;
-	if(!is_array($associations))return;
-	foreach($associations as $association){
-		if(strpos($association['extension'],',')!==false){
-			$exts=split(',',$association['extension']);
-			foreach($exts as $ext) $ass_arr[trim($ext)]=trim($association['plugin']);
-		}else{
-			$ass_arr[trim($association['extension'])]=trim($association['plugin']);
-		}
-	}
-}
 
 // First the user defined file associations
 if($kfm->user_id!=1 || $kfm->isAdmin() || !$kfm->setting('allow_user_file_associations')){
 	$associations=db_fetch_all('SELECT extension, plugin FROM '.KFM_DB_PREFIX.'plugin_extensions WHERE user_id='.$kfm->user_id);
-	addAssociations($associations);
+	$kfm->addAssociations($associations);
 }
 
-// Now the default file associations
+// Now overwrite users file associations with the default file associations
 $associations=db_fetch_all('SELECT extension, plugin FROM '.KFM_DB_PREFIX.'plugin_extensions WHERE user_id=1');
-addAssociations($associations);
+$kfm->addAssociations($associations);
 
 // To javascript object
 $ass_str='{';
-foreach($ass_arr as $ext=>$plugin)$ass_str.='"'.$ext.'":"'.$plugin.'",';
+foreach($kfm->associations as $ext=>$plugin)$ass_str.='"'.$ext.'":"'.$plugin.'",';
 $ass_str=rtrim($ass_str,', ').'}';
 // }
 // { startup selected files
