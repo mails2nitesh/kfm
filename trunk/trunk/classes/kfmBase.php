@@ -9,6 +9,7 @@ class kfmBase extends kfmObject{
 	var $themes=array();
 	var $user_settings=array();
 	var $admin_tabs=array();
+	var $associations=array();
 	//Settings definition
 	var $sdef=array(
 		'Structure settings'=>array( 'type'=>'group_header'),
@@ -195,5 +196,31 @@ class kfmBase extends kfmObject{
 		$message="Only the admin user can use this";
 		if($ajax)$message='error("'.str_replace('"','\"',$message).'");';
 		die($message);
+	}
+
+	/* Add an array of associations. This are associations between plugins and extensions. It should be in the form of
+	 *	array(
+	 *		array( 'plugin' => 'my_image_viewer_plugin', 'extension' => 'jpg, png, gif'),
+	 *		array( 'plugin' => 'download', 'extension' => 'pdf' )
+	 *	)
+	 */
+	function addAssociations($associations){
+		if(!is_array($associations))return;
+		foreach($associations as $association){
+			if(strpos($association['extension'],',')!==false){
+				$exts=split(',',$association['extension']);
+				foreach($exts as $ext) $this->associations[trim($ext)]=trim($association['plugin']);
+			}else{
+				$this->associations[trim($association['extension'])]=trim($association['plugin']);
+			}
+		}
+	}
+
+	/* Add an association to kfm. This associates a plugin with an extension.
+	 * It should be something like:
+	 *	array( 'plugin' => 'download', 'extension' => 'pdf' )
+	 */
+	function addAssociation($plugin, $extensions){
+		$this->addAssociations(array('plugin'=>$plugin, 'extension'=>$extensions));
 	}
 }
