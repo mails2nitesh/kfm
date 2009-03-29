@@ -3,7 +3,7 @@ require_once('initialise.php');
 foreach($kfm->plugins as $plugin){
 	foreach($plugin->admin_tabs as $tab){
 		if(!empty($tab['requirements']['user_ids']) && !in_array($kfm->user_id, $tab['requirements']['user_ids'])) continue;
-		$kfm->addAdminTab($plugin->title,$plugin->url.$tab['file']);
+		$kfm->addAdminTab(isset($tab['title'])? $tab['title'] : $plugin->title, $plugin->url.$tab['file'], isset($tab['stylesheet'])? $plugin->url.$tab['stylesheet'] : false);
 	}
 }
 $getparams='?';

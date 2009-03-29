@@ -63,6 +63,7 @@ class kfmPlugin extends kfmObject{
 			if(in_array($options, array('admin_user', 'user_admin', 'admin'))) array_push($tab["requirements"]["user_ids"], 1);
 		}
 		if(is_array($options)){
+			$tab = array_merge($options, $tab);
 			if(isset($options["user_id"])) $tab["requirements"]['user_ids'][] = $options["user_id"];
 		}
 		$this->admin_tabs[]=$tab;
