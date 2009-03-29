@@ -295,7 +295,6 @@ class kfmFile extends kfmObject{
 		}
 
 		if(count($kfm->setting('allowed_files'))){
-			$this->error('found allowed files');
 			foreach($kfm->setting('allowed_files') as $allow){
 				if($allow[0]=='/' || $allow[0]=='@'){
 					if(preg_match($allow, $filename))return true;
