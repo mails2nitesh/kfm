@@ -15,16 +15,10 @@ require_once 'initialise.php';
 <head>
 <title>KFM-maintenance</title>
 <link rel="stylesheet" href="themes/<?php echo $kfm->setting('theme'); ?>/prompt.css" />
-<script type="text/javascript" src="j/jquery/all.php"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>
 <script type="text/javascript">
 	var $j = jQuery.noConflict();
 	$j(document).ready(function(){
-		$j.prompt($j('#maintenance_complete_html').html(),{
-			buttons:{'Show messages':false,'Go to the file manager':true},
-			callback:function(v,m){
-				if(v)window.location='index.php';
-			}
-		});
 	});
 </script>
 <style type="text/css">

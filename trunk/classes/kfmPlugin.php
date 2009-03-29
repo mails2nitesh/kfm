@@ -55,7 +55,16 @@ class kfmPlugin extends kfmObject{
 	/**
 	 * This function add a tab to the admin section. The file will be the content of this tab
 	 */
-	function adminTab($file){
-		$this->admin_tabs[]=$file;
+	function adminTab($file, $options=array()){
+		$tab = array("file" => $file);
+		$tab["requirements"] = is_array($options) && isset($options['requirements']) ? $options['requirements'] : array();
+		if(!isset($tab["requirements"]["user_ids"]))$tab["requirements"]["user_ids"] = array();
+		if(is_string($options)){
+			if(in_array($options, array('admin_user', 'user_admin', 'admin'))) array_push($tab["requirements"]["user_ids"], 1);
+		}
+		if(is_array($options)){
+			if(isset($options["user_id"])) $tab["requirements"]['user_ids'][] = $options["user_id"];
+		}
+		$this->admin_tabs[]=$tab;
 	}
 }
