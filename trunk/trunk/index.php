@@ -120,15 +120,6 @@ if(!empty($_POST['kaejax']))kfm_kaejax_handle_client_request();
 		<style type="text/css">@import "themes/<?php echo $kfm->setting('theme'); ?>/css.php"; </style>
 		<style type="text/css">@import "plugins/css.php"; </style>
 		<title>KFM - Kae's File Manager</title>
-<?php // { get list of plugins
-$plugins = array();
-$h	   = opendir(KFM_BASE_PATH.'plugins');
-$tmp='';
-while (false!==($plugin=readdir($h))) {
-	if($plugin[0]=='.' || !is_dir($h.'/'.$plugin))continue;
- 	$plugins[] = $plugin;
-}	
-// } ?>
 	</head>
 	<body>
 		<div id="removeme">
@@ -156,7 +147,6 @@ if ($last_registration!=$today) {
 		echo '<img src="http://kfm.verens.com/extras/register.php?version='.urlencode(KFM_VERSION).
 			'&amp;domain_name='.urlencode($_SERVER['SERVER_NAME']).
 			'&amp;db_type='.$kfm_db_type.
-			'&amp;plugins='.join(',',$plugins).
 		'" />';
 	}
 // }
