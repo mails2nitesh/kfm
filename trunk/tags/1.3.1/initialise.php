@@ -253,7 +253,8 @@ $kfm->db = &$kfmdb; // Add database as reference to the kfm object
 // {{{ get kfm parameters and check for updates
 $kfm_parameters = array();
 $rs = db_fetch_all("select * from ".KFM_DB_PREFIX."parameters");
-foreach($rs as $r)$kfm_parameters[$r['name']] = $r['value'];
+if(count($rs))foreach($rs as $r)$kfm_parameters[$r['name']] = $r['value'];
+if(!isset($kfm_parameters['version']))$kfm_parameters['version']=0;
 if ($kfm_parameters['version']!=KFM_VERSION && file_exists(KFM_BASE_PATH.'scripts/update.'.KFM_VERSION.'.php')) require KFM_BASE_PATH.'scripts/update.'.KFM_VERSION.'.php';
 // }}}
 // {{{ JSON
