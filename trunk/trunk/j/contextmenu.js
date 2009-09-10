@@ -27,3 +27,5 @@ kfm.cm={
 }
 llStubs.push('kfm_closeContextMenu');
 llStubs.push('kfm_createContextMenu');
+// fix to hide normal context menu in Safari/Chrome
+document.oncontextmenu = function(e){return false;}

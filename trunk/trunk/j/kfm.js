@@ -187,8 +187,9 @@ kfm.build=function(){
 				var ps=left_column.panels;
 				for(var i=0;i<ps.length;++i){
 					var p=document.getElementById(ps[i]);
+          var panel_name=ps[i];
 					if(!p.visible && !kfm_inArray(ps[i],kfm_hidden_panels))links.push({title:'Show panel '+p.panel_title, doFunction:function(){
-							kfm_addPanel(document.getElementById('kfm_left_column'),ps[i]);
+							kfm_addPanel(document.getElementById('kfm_left_column'),panel_name);
 						}
 					});
 				}
