@@ -139,7 +139,7 @@ function kfm_fileUploadForm_multiple(){
 	setTimeout(function(){ // delay the creation of the swfupload object, until the browser registers #swfupload_browse_button
 		window.swfUpload = new SWFUpload({
 			// { Backend Settings
-			upload_url: "../../../upload.php",	// Relative to the SWF file or absolute
+			upload_url: "upload.php",	// Relative to the SWF file or absolute
 			post_params: {
 				"PHPSESSID"  : window.phpsession,
 				"swf"        : 1,
