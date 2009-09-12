@@ -37,9 +37,11 @@ var kfm_file_bits={
 		kfm_addToSelection(id);
 		var openingHook=kfm_getDefaultOpener([id]);
 		if(openingHook)openingHook.doFunction([id]);
+    /* depricated since 1.4
 		if(!openingHook){
 			kfm_chooseFile();
 		}
+    */
 	},
 	infoTooltipStart:function(e){ // initialise info tooltip
 		if(window.kfm_tooltipInit)clearTimeout(window.kfm_tooltipInit);
