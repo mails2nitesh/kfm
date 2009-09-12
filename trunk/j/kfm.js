@@ -113,14 +113,6 @@ kfm.switchFilesMode=function(m){
 };
 kfm.build=function(){
 	var form_panel,form,right_column,directories,logs,logHeight=64,j,i,w,win,dirs,j,tmp,links;
-	kfm_addHook({name:"download", mode:0,"extensions":"all", writable:2, title:"download file", doFunction:function(files){
-			kfm_downloadSelectedFiles(files[0]);
-		}
-	});
-	if(!window.ie)kfm_addHook({name:"download", mode:1,"extensions":"all", writable:2, title:"download selected files", doFunction:function(files){
-			kfm_downloadSelectedFiles();
-		}
-	});
 	if(kfm_vars.permissions.file.rm)kfm_addHook({name:"remove", mode:2,extensions:"all", writable:1,title:kfm.lang.DeleteFile, doFunction:function(files){
 			if(files.length>1)kfm_deleteSelectedFiles();
 			else kfm_deleteFile(files[0]);
