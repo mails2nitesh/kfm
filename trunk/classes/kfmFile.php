@@ -117,13 +117,16 @@ class kfmFile extends kfmObject{
 		//$this->url=$this->directory==$kfm->setting('files_root_path')?'':str_replace($rootdir,'',$this->directory);
 		//global $rootdir, $kfm_userfiles_output,$kfm_workdirectory;
 		if(!$this->exists())return 'javascript:alert("missing file")';
-		/*
+		/* The following if should be depricated in the future in favor of the secure method.
+       The url can be constructed since kfm_url should be given and get.php is in that root */
+    global $kfm_userfiles_output;
 		if(preg_replace('/.*(get\.php)$/','$1',$kfm_userfiles_output)=='get.php'){
 			if($kfm_userfiles_output=='get.php')$url=preg_replace('/\/[^\/]*$/','/get.php?id='.$this->id.GET_PARAMS,$_SERVER['REQUEST_URI']);
 			else $url=$kfm_userfiles_output.'?id='.$this->id;
 			if($x&&$y)$url.='&width='.$x.'&height='.$y;
-		}*/
-		if($this->isImage()&&$x&&$y){
+		}
+    /* end deprication block */
+		if($this->isImage()&&$x&&$y){ // thumbnail is requested
 			$img=kfmImage::getInstance($this);
 			$img->setThumbnail($x,$y);
 			return WORKPATH.'thumbs/'.$img->thumb_id;
