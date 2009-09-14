@@ -219,7 +219,11 @@ kfm.build=function(){
 			var header=document.createElement('div');
 			header.className='kfm_panel_header';
 			header.id='kfm_panel_header';
-			header.innerHTML='<span id="documents_loader"></span><span id="cwd_display"></span><span id="folder_info"></span>';
+      hhtml = '<span id="documents_loader"></span>' +
+        '<span id="cwd_display"></span>' + 
+        '<span id="folder_info"></span>' +
+        '<a href="admin/" id="admin_panel_link">Admin panel</a>';
+			header.innerHTML= hhtml;
 			var documents_body=document.createElement('div');
 			documents_body.id='documents_body';
 			right_column.appendChild(lselect);
