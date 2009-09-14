@@ -88,7 +88,7 @@ function getSyntax($ext){
       <?php foreach($file_ids as $fid){
         $f = kfmFile::getInstance($fid);
         print "
-        editAreaLoader.openFile('editareacontent', {id:$fid,text:'".str_replace("'", "\\'", $f->getContent())."',syntax:'".getSyntax($f->getExtension())."',title:'".$f->name."'});";
+        editAreaLoader.openFile('editareacontent', {id:$fid,text:".json_encode($f->getContent()).",syntax:'".getSyntax($f->getExtension())."',title:'".$f->name."'});";
       }?>
     }
     function close_ea_file(f){
