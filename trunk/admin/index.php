@@ -19,6 +19,10 @@ $getparams=rtrim($getparams,'& ');
 <link rel="stylesheet" href="../themes/<?php echo $kfm->setting('theme');?>/css.php" type="text/css">
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js"></script>
+<script type="text/javascript">
+// ugly fix for variable.js call to kfm_vars
+kfm_vars={};
+</script>
 <script type="text/javascript" src="../j/all.php"></script>
 <script type="text/javascript" src="../j/jquery/tabs/ui.tabs.js"></script>
 <script type="text/javascript">
@@ -142,8 +146,9 @@ foreach($kfm->admin_tabs as $tab){
 }
 .help_close{
 	position:absolute;
-	right:5;
-	top:5;
+  display:block;
+  right: 5px;
+	top:5px;
 	border:1px solid #bbb;
 	background-color:#777;
 	color:white;

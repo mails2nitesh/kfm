@@ -154,7 +154,7 @@ function kfm_fileUploadForm_multiple(){
 			// }
 			// { Event handlers
 			file_queue_error_handler : function(a){
-				alert(a);
+				kfm_showMessage("error: "+a.name+"could not be oploaded");
 			},
 			file_dialog_complete_handler:function(a){
 				var stats=this.getStats();

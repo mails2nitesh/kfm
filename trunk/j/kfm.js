@@ -548,6 +548,3 @@ var kfm_regexps={
 	plus:/\+/g,
 	remove_filename_extension:/\.[^.]*$/
 }
-$j(document).ready(function(){
-	kfm.build();
-});
