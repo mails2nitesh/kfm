@@ -32,10 +32,10 @@ function setting_help(setting_name, caller){
 	var title=$("<div class=\"help_title\"><h1>"+setting_name+"</h1></div>");
 	var help="<img src=\"/themes/<?php echo $kfm->setting('theme');?>/large_loader.gif\" alt=\"loading...\" />";
 	var hbody=$("<div class=\"help_body\">"+help+"</div>");
-	var close=$("<span class=\"help_close\" onclick=\"setting_help_close('"+setting_name+"')\">x</span>");
+	var close=$("<div class=\"help_close\" onclick=\"setting_help_close('"+setting_name+"')\">x</span>");
+	cont.append(close);
 	cont.append(title);
 	cont.append(hbody);
-	cont.append(close);
 	cont.Draggable({handle:'h1'});
 	$("#settings_container").append(cont);
 	var calpos=$(caller).offset();

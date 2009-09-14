@@ -222,6 +222,9 @@ if($pluginssrc!='')echo "<script type=\"text/javascript\"><!--\n$pluginssrc\n-->
 // } ?>
 <?php // { more JavaScript environment variables. These should be merged into the above set whenever possible ?>
 		<script type="text/javascript">
+      $j(document).ready(function(){
+	      kfm.build();
+      });
 			<?php echo kfm_kaejax_get_javascript(); ?>
 			<?php if(isset($_GET['kfm_caller_type']))echo 'window.kfm_caller_type="'.addslashes($_GET['kfm_caller_type']).'";'; ?>
 		</script>

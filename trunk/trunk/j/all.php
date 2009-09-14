@@ -15,8 +15,8 @@ else{ // build cacheable js file
 	$js.=file_get_contents('mootools.v1.11/mootools.v1.11.js');
 	// }
 	// { jquery scripts
-	$js.=file_get_contents('jquery/jquery.dimensions.pack.js');
-	$js.=file_get_contents('jquery/jquery.impromptu.js');
+	//$js.=file_get_contents('jquery/jquery.dimensions.pack.js');
+  $js.=file_get_contents('jquery/jquery-impromptu.2.7.min.js');
 	$js.=file_get_contents('jquery/jquery.iutil.pack.js');
 	$js.=file_get_contents('jquery/jquery.idrag.js');
 	$js.=file_get_contents('jquery/jquery.grid.columnSizing.js');
