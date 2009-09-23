@@ -163,6 +163,7 @@ class kfmDirectory extends kfmObject{
 			}
 		}
 		closedir($this->handle);
+    //TODO: "DELETE FROM ".KFM_DB_PREFIX."files WHERE id IN (".implode(array_values($fileshash)).")";
 		return $files;
 	}
 	function getInstance($id=1){

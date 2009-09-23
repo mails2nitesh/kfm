@@ -101,7 +101,8 @@ function kfm_fileUploadForm_single(){
 	if(!window.ie)$j.event.add(submit,'click',function(e){
 		e=new Event(e);
 		if(e.rightClick)return;
-		setTimeout('document.getElementById("kfm_file").type="text";document.getElementById("kfm_file").type="file"',1);
+		//setTimeout('document.getElementById("kfm_file").type="text";document.getElementById("kfm_file").type="file"',1);
+		setTimeout('document.getElementById("kfm_file").type="text";$j("#kfm_file").attr("type","file");',1);
 	});
 	var input=newInput('kfm_file','file');
 	$j.event.add(input,'keyup',kfm_uploadPanel_checkForZip);
