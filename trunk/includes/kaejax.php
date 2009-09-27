@@ -54,4 +54,3 @@ function kfm_decode_unicode_url($str){
 	}
 	return $res.substr($str, $i);
 }
-?>
