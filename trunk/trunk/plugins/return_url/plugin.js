@@ -1,5 +1,6 @@
 function plugin_return_url(){
 	this.name='return_url';
+	this.isDefault=true;
 	this.title='return url';
 	this.mode=2;
 	this.writable=2;

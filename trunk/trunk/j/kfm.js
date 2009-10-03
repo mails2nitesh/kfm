@@ -221,8 +221,8 @@ kfm.build=function(){
 			header.id='kfm_panel_header';
       hhtml = '<span id="documents_loader"></span>' +
         '<span id="cwd_display"></span>' + 
-        '<span id="folder_info"></span>' +
-        '<a href="admin/" id="admin_panel_link">Admin panel</a>';
+        '<span id="folder_info"></span>';
+			if(kfm_vars.show_admin_link) hhtml+='<a href="admin/" id="admin_panel_link">Admin panel</a>';
 			header.innerHTML= hhtml;
 			var documents_body=document.createElement('div');
 			documents_body.id='documents_body';
@@ -300,17 +300,6 @@ kfm.build=function(){
 	dirs=document.getElementById('kfm_directories');
 	if(dirs){
 		x_kfm_loadDirectories(kfm_vars.root_folder_id,kfm_refreshDirectories);
-		/*
-		kfm_addContextMenu(dirs.parentNode,function(e){
-			var links=[];
-			links.push(['kfm_createDirectory(1)',kfm.lang.CreateSubDir,'folder_new',!kfm_vars.permissions.dir.mk]);
-			if(kfm_return_directory)links.push(['setTimeout("window.close()",1);window.opener.SetUrl("'+kfm_directories[node_id].realpath+'/");',kfm.lang.SendToCms]);
-			if(!window.contextmenu){
-				e=new Event(e);
-				//kfm_createContextMenu(e.page,links);
-			}
-		});
-		*/
 	}
 	x_kfm_loadFiles(kfm_vars.startupfolder_id,kfm_refreshFiles);
 	$j.event.add(document,'keyup',kfm.keyup);
@@ -448,7 +437,8 @@ function kfm_prompt(txt,val,fn){
 	var table=document.createElement('table');
 	table.id='kfm_prompt_table';
 	var inp=newInput('kfm_prompt',0,val);
-	table.insertRow(0).insertCell(0).innerHTML=txt.replace(/\n/g,'<br />');
+	if($type(txt)=='element')table.insertRow(0).insertCell(0).appendChild(txt);
+	else table.insertRow(0).insertCell(0).innerHTML=txt.replace(/\n/g,'<br />');
 	table.insertRow(1).insertCell(0).appendChild(inp);
 	kfm_modal_open(table,'prompt',[[kfm.lang.Ok,function(){
 		var v=document.getElementById('kfm_prompt').value;

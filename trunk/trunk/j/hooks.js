@@ -9,7 +9,7 @@ for(i=0;i<HookCategories.length;i++){
 	var cat=new kfm_context_category(catname);
 	context_categories[catname]=cat;
 }
-var kfm_imageExtensions=['jpg','png','gif'];
+var kfm_imageExtensions=['jpg','png','gif','jpeg'];
 /* initialize arrays */
 var HooksSingleReadonly={};
 var HooksSingleWritable={};

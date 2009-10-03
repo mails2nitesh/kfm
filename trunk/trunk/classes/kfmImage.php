@@ -18,7 +18,8 @@ class kfmImage extends kfmFile{
 		}
 		$this->image_id=$this->getImageId();
 		if($this->getSize()){
-			$this->info=getimagesize($this->path);
+			$this->info=@getimagesize($this->path);
+			if(!$this->info)$this->info=array(0,0,'mime'=>'not/an-image');
 			$this->type=str_replace('image/','',$this->info['mime']);
 			$this->width=$this->info[0];
 			$this->height=$this->info[1];
@@ -42,18 +43,24 @@ class kfmImage extends kfmFile{
 		imagedestroy($imresized);
 		imagedestroy($im);
 	}
-	function createThumb($width=64,$height=64,$id=0){
-		global $kfm,$kfm;
+	function createThumb($width=64,$height=64,$id=0,$hue=0,$saturation=0,$lightness=0){
+		global $kfm,$kfm_thumb_format;
 		if(!is_dir(WORKPATH.'thumbs'))mkdir(WORKPATH.'thumbs');
 		$ratio=min($width/$this->width,$height/$this->height);
-		$thumb_width=$this->width*$ratio;
-		$thumb_height=$this->height*$ratio;
+		$thumb_width=(int)($this->width*$ratio);
+		$thumb_height=(int)($this->height*$ratio);
 		if(!$id){
 			$kfm->db->exec("INSERT INTO ".KFM_DB_PREFIX."files_images_thumbs (image_id,width,height) VALUES(".$this->id.",".$thumb_width.",".$thumb_height.")");
 			$id=$kfm->db->lastInsertId(KFM_DB_PREFIX.'files_images_thumbs','id');
 		}
-		$file=WORKPATH.'thumbs/'.$id.'.jpg';
-		if(!$kfm->setting('use_imagemagick') || $this->useImageMagick($this->path,'resize '.$thumb_width.'x'.$thumb_height.' -flatten',$file))$this->createResizedCopy($file,$thumb_width,$thumb_height);
+		$hsl='';
+		$hslparam='';
+		if($hue||$saturation||$lightness){
+			$hsl=' -modulate '.($lightness+100).','.($saturation+100).','.(100+(int)($hue/1.8)).' ';
+			$hslparam=',h'.$hue.',s'.$saturation.',l'.$lightness;
+		}
+		$file=WORKPATH.'thumbs/'.$id.$hslparam.$kfm_thumb_format;
+		if(!$kfm->setting('use_imagemagick') || $this->useImageMagick($this->path,'resize '.$thumb_width.'x'.$thumb_height.$hsl,$file))$this->createResizedCopy($file,$thumb_width,$thumb_height);
 		return $id;
 	}
 	function delete(){
@@ -155,20 +162,31 @@ class kfmImage extends kfmFile{
 		$kfm->db->exec("UPDATE ".KFM_DB_PREFIX."files_images SET caption='".sql_escape($caption)."' WHERE file_id=".$this->id);
 		$this->caption=$caption;
 	}
-	function setThumbnail($width=64,$height=64){
+	function setThumbnail($width=64,$height=64,$hue=0,$saturation=0,$lightness=0){
+		global $kfm_thumb_format;
 		$thumbname=$this->id.' '.$width.'x'.$height.' '.$this->name;
 		if(!isset($this->info['mime'])||!in_array($this->info['mime'],array('image/jpeg','image/gif','image/png')))return false;
 		$r=db_fetch_row("SELECT id FROM ".KFM_DB_PREFIX."files_images_thumbs WHERE image_id=".$this->id." and width<=".$width." and height<=".$height." and (width=".$width." or height=".$height.")");
 		if($r){
 			$id=$r['id'];
-			if(!file_exists(WORKPATH.'thumbs/'.$id.'.jpg'))$this->createThumb($width,$height,$id); // missing thumb file - recreate it
+			if(!file_exists(WORKPATH.'thumbs/'.$id.$kfm_thumb_format))$this->createThumb($width,$height,$id); // missing thumb file - recreate it
 		}
 		else{
 			$id=$this->createThumb($width,$height);
 		}
+		$hslparam='';
+		if($hue||$saturation||$lightness){
+			$hue=(int)$hue;
+			$saturation=(int)$saturation;
+			$lightness=(int)$lightness;
+			if($hue||$saturation||$lightness){
+				$hslparam=',h'.$hue.',s'.$saturation.',l'.$lightness;
+				if(!file_exists(WORKPATH.'thumbs/'.$id.$hslparam.$kfm_thumb_format))$this->createThumb($width,$height,$id,$hue,$saturation,$lightness);
+			}
+		}
 		$this->thumb_url='get.php?type=thumb&id='.$id.GET_PARAMS;
 		$this->thumb_id=$id;
-		$this->thumb_path=str_replace('//','/',WORKPATH.'thumbs/'.$id.'.jpg');
+		$this->thumb_path=str_replace('//','/',WORKPATH.'thumbs/'.$id.$hslparam.$kfm_thumb_format);
 		if(!file_exists($this->thumb_path)){
 			copy(WORKPATH.'thumbs/'.$id.'.'.preg_replace('/.*\//','',$this->info['mime']),$this->thumb_path);
 			unlink(WORKPATH.'thumbs/'.$id.'.'.preg_replace('/.*\//','',$this->info['mime']));

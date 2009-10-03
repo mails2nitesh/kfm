@@ -45,11 +45,19 @@ if (ini_get('safe_mode')){
     exit;
 }
 if (!file_exists(KFM_BASE_PATH.'configuration.php')) {
-    echo '<em>Missing <code>configuration.php</code>!</em><p>If this is a fresh installation of KFM, then please copy <code>configuration.dist.php</code> to <code>configuration.php</code>, remove the settings you don\'t want to change, and edit the rest to your needs.</p><p>For examples of configuration, please visit http://kfm.verens.com/configuration</p>';
+    echo '<em>Missing <code>configuration.php</code>!</em><p>If this is a fresh installation of KFM, then please <strong>copy</strong> <code>configuration.dist.php</code> to <code>configuration.php</code>, remove the settings you don\'t want to change, and edit the rest to your needs.</p><p>For examples of configuration, please visit http://kfm.verens.com/configuration</p>';
     exit;
 }
 // }
+// { load the default config first, then load the custome config over it
+if(file_exists(KFM_BASE_PATH.'configuration.dist.php'))include KFM_BASE_PATH.'configuration.dist.php';
 require_once KFM_BASE_PATH.'configuration.php';
+if(!function_exists('kfm_admin_check')){
+	function kfm_admin_check(){
+		return true;
+	}
+}
+// }
 // { defines
 define('KFM_DB_PREFIX', $kfm_db_prefix);
 // }
@@ -125,6 +133,11 @@ define('KFM_VERSION_DB', (int)trim($versions[1]));
 if (!isset($_SERVER['DOCUMENT_ROOT'])) { // fix for IIS
     $_SERVER['DOCUMENT_ROOT'] = preg_replace('/\/[^\/]*$/', '', str_replace('\\', '/', $_SERVER['SCRIPT_FILENAME']));
 }
+// { API - for programmers only
+if (file_exists(KFM_BASE_PATH.'api/config.php')) require KFM_BASE_PATH.'api/config.php';
+if (file_exists(KFM_BASE_PATH.'api/cms_hooks.php')) require KFM_BASE_PATH.'api/cms_hooks.php';
+else require KFM_BASE_PATH.'api/cms_hooks.php.dist';
+// }
 $rootdir = strpos($kfm_userfiles_address, './')===0?KFM_BASE_PATH.$kfm_userfiles_address:$kfm_userfiles_address.'/';
 
 if (!is_dir($rootdir))mkdir($rootdir, 0755);
@@ -140,11 +153,6 @@ define('IMAGEMAGICK_PATH', isset($kfm_imagemagick_path)?$kfm_imagemagick_path:'/
 $cache_directories = array();
 $kfm_errors        = array();
 $kfm_messages      = array();
-// }
-// { API - for programmers only
-if (file_exists(KFM_BASE_PATH.'api/config.php')) require KFM_BASE_PATH.'api/config.php';
-if (file_exists(KFM_BASE_PATH.'api/cms_hooks.php')) require KFM_BASE_PATH.'api/cms_hooks.php';
-else require KFM_BASE_PATH.'api/cms_hooks.php.dist';
 // }
 // { work directory
 if ($kfm_workdirectory[0]=='/') {

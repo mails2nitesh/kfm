@@ -16,10 +16,31 @@ $errors = array();
 if ($kfm->setting('allow_file_upload')) {
 	$file     = isset($_FILES['kfm_file'])?$_FILES['kfm_file']:$_FILES['Filedata'];
 	$replace  = isset($_REQUEST['fid'])?(int)$_REQUEST['fid']:0;
-	$filename = $file['name'];
 	$tmpname  = $file['tmp_name'];
-	$cwd      = $kfm_session->get('cwd_id');
+	// { filename
+	$filename = $file['name'];
+	if(isset($_REQUEST['rename_to']))$filename=$_REQUEST['rename_to'];
+	// }
+	// { directory
+	if(isset($_REQUEST['directory_name'])){
+		$dirs				   = explode(DIRECTORY_SEPARATOR, trim($_REQUEST['directory_name'], ' '.DIRECTORY_SEPARATOR));
+		$subdir				 = $user_root_dir;
+		$startup_sequence_array = array();
+		foreach ($dirs as $dirname) {
+			$parent=$subdir;
+			$subdir = $parent->getSubdir($dirname);
+			if(!$subdir){
+				kfm_createDirectory($parent->id,$dirname);
+				$subdir=$parent->getSubdir($dirname);
+			}
+			$kfm_startupfolder_id	 = $subdir->id;
+		}
+		$kfm_session->set('cwd_id', $kfm_startupfolder_id);
+		$cwd=$kfm_startupfolder_id;
+	}
+	else $cwd = $kfm_session->get('cwd_id');
 	if(isset($_REQUEST['cwd']) && $_REQUEST['cwd']>0)$cwd=$_REQUEST['cwd'];
+	// }
 	if(!$cwd) $errors[] = kfm_lang('CWD not set');
 	else {
 		$toDir = kfmDirectory::getInstance($cwd);
@@ -36,6 +57,14 @@ if ($kfm->setting('allow_file_upload')) {
 		else if(in_array(kfmFile::getExtension($filename),$kfm->setting('banned_upload_extensions'))){
 			$errors[] = 'The extension: '.kfmFile::getExtension($filename).' is not allowed';
 		}
+		// { check to see if it's an image, and if so, is it bloody massive
+		if(in_array(kfmFile::getExtension($filename),array('jpg', 'jpeg', 'gif', 'png', 'bmp'))){
+			list($width, $height, $type, $attr)=getimagesize($tmpname);
+			if($width>$kfm_max_image_upload_width || $height>$kfm_max_image_upload_height){
+				$errors[] = 'Please do not upload images which are larger than '.$kfm_max_image_upload_width.'x'.$kfm_max_image_upload_height;
+			}
+		}
+		// }
 	}
 	if ($cwd==$kfm->setting('root_folder_id') && !$kfm->setting('allow_files_in_root')) $errors[] = 'Cannot upload files to the root directory';
 	if (!$replace && file_exists($to)) $errors[] = 'File already exists'; // TODO new string
@@ -48,11 +77,9 @@ if ($kfm->setting('allow_file_upload')) {
 		}
 		else {
 			chmod($to, octdec('0'.$kfm->setting('default_upload_permission')));
-      if(!$replace){
-			  $fid  = kfmFile::addToDb($filename, $kfm_session->get('cwd_id'));
-			  $file = kfmFile::getInstance($fid);
-      }
-      if (function_exists('exif_imagetype')) {
+			$fid  = kfmFile::addToDb($filename, $kfm_session->get('cwd_id'));
+			$file = kfmFile::getInstance($fid);
+			if (function_exists('exif_imagetype')) {
 				$imgtype = @exif_imagetype($to);
 				if ($imgtype) {
 					$file    = kfmImage::getInstance($file);

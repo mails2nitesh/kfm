@@ -19,7 +19,7 @@ class kfmFile extends kfmObject{
 		global $kfm;
 		if(func_num_args()==1){
 			$this->id=(int)func_get_arg(0);
-			parent::kfmObject();
+			parent::__construct();
 			$filedata=db_fetch_row("SELECT id,name,directory FROM ".KFM_DB_PREFIX."files WHERE id=".$this->id);
 			$this->name=$filedata['name'];
 			$this->parent=$filedata['directory'];
@@ -137,8 +137,7 @@ class kfmFile extends kfmObject{
 			$url=$kfm->setting('files_url').str_replace($kfm->setting('files_root_path'),'',$this->path);
 			//else $url=$kfm_userfiles_output.'/'.$cwd.'/'.$this->name; # TODO: check this line - $cwd may be incorrect if the requested file is from a search
 		}
-		//return $url;
-		return preg_replace('/([^:])\/{2,}/','$1/',$url);
+		return preg_replace('/([^:])?\/{2,}/','$1/',$url);
 	}
 
 	/**
