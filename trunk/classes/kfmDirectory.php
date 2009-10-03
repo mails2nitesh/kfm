@@ -2,7 +2,7 @@
 class kfmDirectory extends kfmObject{
 	static $instances=array();
 	var $subDirs=array();
-	function kfmDirectory($id=1){
+	function __construct($id=1){
 		parent::__construct();
 		$this->id=$id;
 		if(!$id)return;
@@ -13,9 +13,6 @@ class kfmDirectory extends kfmObject{
 		$this->path=$this->getPath();
 		$this->maxWidth=(int)$res['maxwidth'];
 		$this->maxHeight=(int)$res['maxheight'];
-	}
-	function __construct($id=1){
-		$this->kfmDirectory($id);
 	}
 	function addFile($file){
 		global $kfm;
@@ -141,32 +138,36 @@ class kfmDirectory extends kfmObject{
 		return $sprites;
 	}
 	function getFiles(){
-		$this->handle=opendir($this->path);
-		if(!$this->handle)return $this->error('unable to open directory');
 		$filesdb=db_fetch_all("select * from ".KFM_DB_PREFIX."files where directory=".$this->id);
 		$fileshash=array();
 		if(is_array($filesdb))foreach($filesdb as $r)$fileshash[$r['name']]=$r['id'];
-		$files=array();
-		while(false!==($filename=readdir($this->handle))){
-			if(is_file($this->path.$filename)&&kfmFile::checkName($filename)){
-				if(!isset($fileshash[$filename]))$fileshash[$filename]=kfmFile::addToDb($filename,$this->id);
-				$file=kfmFile::getInstance($fileshash[$filename]);
-				if(!$file)continue;
-				if($file->isImage()){
-					$file=kfmImage::getInstance($fileshash[$filename]);
-					if($this->maxWidth>0 && $this->maxHeight>0 && ($file->width>$this->maxWidth || $file->height>$this->maxHeight)){
-						$file->resize($this->maxWidth,$this->maxHeight);
-					}
-				}
-				$files[]=$file;
-				unset($fileshash[$filename]);
-			}
+		// { get files from directoryIterator, then sort them
+		$tmp=array();
+		foreach(new directoryIterator($this->path) as $f){
+			if($f->isDot())continue;
+			if(is_file($this->path.$f) && kfmFile::checkName($f))$tmp[]=$f.'';
 		}
-		closedir($this->handle);
-    //TODO: "DELETE FROM ".KFM_DB_PREFIX."files WHERE id IN (".implode(array_values($fileshash)).")";
+		natsort($tmp);
+		// }
+		// { load file details from database
+		$files=array();
+		foreach($tmp as $filename){
+			if(!isset($fileshash[$filename]))$fileshash[$filename]=kfmFile::addToDb($filename,$this->id);
+			$file=kfmFile::getInstance($fileshash[$filename]);
+			if(!$file)continue;
+			if($file->isImage()){
+				$file=kfmImage::getInstance($fileshash[$filename]);
+				if($this->maxWidth>0 && $this->maxHeight>0 && ($file->width>$this->maxWidth || $file->height>$this->maxHeight)){
+					$file->resize($this->maxWidth,$this->maxHeight);
+				}
+			}
+			$files[]=$file;
+			unset($fileshash[$filename]);
+		}
+		// }
 		return $files;
 	}
-	function getInstance($id=1){
+	static function getInstance($id=1){
 		$id=(int)$id;
 		if($id<1)return;
 		if (!@array_key_exists($id,self::$instances)) {
@@ -185,7 +186,7 @@ class kfmDirectory extends kfmObject{
 			$pathTmp=$p->name.'/'.$pathTmp;
 			$pid=$p->pid;
 		}
-		return $GLOBALS['rootdir'].$pathTmp;
+		return $GLOBALS['rootdir'].'/'.$pathTmp;
 	}
 	function getProperties(){
 		return array(
@@ -209,24 +210,26 @@ class kfmDirectory extends kfmObject{
 		}
 		return false;
 	}
-	function getSubdirs($oldstyle=false){
+	function getSubdirs(){
 		global $kfm;
-		$this->handle=opendir($this->path);
+		$dir_iterator=new DirectoryIterator($this->path);
 		$dirsdb=db_fetch_all("select id,name from ".KFM_DB_PREFIX."directories where parent=".$this->id);
 		$dirshash=array();
 		if(is_array($dirsdb))foreach($dirsdb as $r)$dirshash[$r['name']]=$r['id'];
 		$directories=array();
-		while(false!==($file=readdir($this->handle))){
-			if(is_dir($this->path.$file)&&$this->checkName($file)){
-				if(!isset($dirshash[$file])){
-					$this->addSubdirToDb($file);
-					$dirshash[$file]=$kfm->db->lastInsertId(KFM_DB_PREFIX.'directories','id');
+		foreach($dir_iterator as $file){
+			if($file->isDot())continue;
+			if(!$file->isDir())continue;
+			$filename=$file->getFilename();
+			if(is_dir($this->path.$filename)&&$this->checkName($filename)){
+				if(!array_key_exists($filename,$dirshash)){
+					$this->addSubdirToDb($filename);
+					$dirshash[$filename]=$kfm->db->lastInsertId(KFM_DB_PREFIX.'directories','id');
 				}
-				$directories[]=kfmDirectory::getInstance($dirshash[$file]);
-				unset($dirshash[$file]);
+				$directories[]=kfmDirectory::getInstance($dirshash[$filename]);
+				unset($dirshash[$filename]);
 			}
 		}
-		closedir($this->handle);
 		return $directories;
 	}
 	function hasSubdirs(){

@@ -10,11 +10,21 @@ window.kfm_chooseFile=function(){
 			}
 			return;
 		}
-		if(selectedFiles.length==1&&File_getInstance(selectedFiles[0]).width)window.opener.SetUrl(urls[0].replace(/([^:]\/)\//g,'$1'),0,0,File_getInstance(selectedFiles[0]).caption);
+		if(selectedFiles.length==1&&File_getInstance(selectedFiles[0]).width)window.SetUrl(urls[0].replace(/([^:]\/)\//g,'$1'),0,0,File_getInstance(selectedFiles[0]).caption);
 		else{
-			if(selectedFiles.length==1)window.opener.SetUrl(urls[0]);
-			else window.opener.SetUrl('"'+urls.join('","')+'"');
+			if(selectedFiles.length==1)window.SetUrl(urls[0]);
+			else window.SetUrl('"'+urls.join('","')+'"');
 		}
 		setTimeout('window.close()',1);
 	});
+}
+window.SetUrl=function(file_url,b,c,caption){
+	// { FCKeditor
+	if(window.opener.SetUrl)return window.opener.SetUrl(fiile_url,b,c,caption);
+	// }
+	// { CKEditor
+	if(window.opener.CKEDITOR){
+		var funcnum=document.location.toString().replace(/.*CKEditorFuncNum=([0-9]*)[^0-9].*/,'$1');
+		window.opener.CKEDITOR.tools.callFunction(funcnum,file_url);
+	}
 }

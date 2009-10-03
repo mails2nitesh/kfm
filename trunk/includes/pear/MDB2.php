@@ -276,7 +276,7 @@ class MDB2
      *
      * @access  public
      */
-    function setOptions(&$db, $options)
+    static function setOptions(&$db, $options)
     {
         if (is_array($options)) {
             foreach ($options as $option => $value) {
@@ -301,7 +301,7 @@ class MDB2
      * @static
      * @access  public
      */
-    function classExists($classname)
+    static function classExists($classname)
     {
         if (version_compare(phpversion(), "5.0", ">=")) {
             return class_exists($classname, false);
@@ -322,15 +322,11 @@ class MDB2
      *
      * @access  public
      */
-    function loadClass($class_name, $debug)
+    static function loadClass($class_name, $debug)
     {
         if (!MDB2::classExists($class_name)) {
             $file_name = str_replace('_', DIRECTORY_SEPARATOR, $class_name).'.php';
-            if ($debug) {
-                $include = include_once($file_name);
-            } else {
-                $include = @include_once($file_name);
-            }
+            $include = include_once($file_name);
             if (!$include) {
                 if (!MDB2::fileExists($file_name)) {
                     $msg = "unable to find package '$class_name' file '$file_name'";
@@ -371,7 +367,7 @@ class MDB2
      *
      * @access  public
      */
-    function &factory($dsn, $options = false)
+    static function &factory($dsn, $options = false)
     {
         $dsninfo = MDB2::parseDSN($dsn);
         if (empty($dsninfo['phptype'])) {
@@ -387,7 +383,7 @@ class MDB2
             return $err;
         }
 
-        $db =& new $class_name();
+        $db =new $class_name();
         $db->setDSN($dsninfo);
         $err = MDB2::setOptions($db, $options);
         if (PEAR::isError($err)) {
@@ -428,7 +424,7 @@ class MDB2
      * @access  public
      * @see     MDB2::parseDSN
      */
-    function &connect($dsn, $options = false)
+    static function &connect($dsn, $options = false)
     {
         $db =& MDB2::factory($dsn, $options);
         if (PEAR::isError($db)) {
@@ -593,7 +589,7 @@ class MDB2
      */
     function isError($data, $code = null)
     {
-        if (is_a($data, 'MDB2_Error')) {
+        if ($data instanceof MDB2_Error) {
             if (is_null($code)) {
                 return true;
             } elseif (is_string($code)) {
@@ -620,7 +616,7 @@ class MDB2
      */
     function isConnection($value)
     {
-        return is_a($value, 'MDB2_Driver_Common');
+        return $value instanceof MDB2_Driver_Common;
     }
 
     // }}}
@@ -637,7 +633,7 @@ class MDB2
      */
     function isResult($value)
     {
-        return is_a($value, 'MDB2_Result');
+        return $value instanceof MDB2_Result;
     }
 
     // }}}
@@ -652,9 +648,9 @@ class MDB2
      *
      * @access  public
      */
-    function isResultCommon($value)
+    static function isResultCommon($value)
     {
-        return is_a($value, 'MDB2_Result_Common');
+        return $value instanceof MDB2_Result_Common;
     }
 
     // }}}
@@ -671,7 +667,7 @@ class MDB2
      */
     function isStatement($value)
     {
-        return is_a($value, 'MDB2_Statement');
+        return $value instanceof MDB2_Statement;
     }
 
     // }}}
@@ -788,7 +784,7 @@ class MDB2
      * @access  public
      * @author  Tomas V.V.Cox <cox@idecnet.com>
      */
-    function parseDSN($dsn)
+    static function parseDSN($dsn)
     {
         $parsed = $GLOBALS['_MDB2_dsninfo_default'];
 
@@ -1299,18 +1295,6 @@ class MDB2_Driver_Common extends PEAR
         $db_index = key($GLOBALS['_MDB2_databases']) + 1;
         $GLOBALS['_MDB2_databases'][$db_index] = &$this;
         $this->db_index = $db_index;
-    }
-
-    // }}}
-    // {{{ function MDB2_Driver_Common()
-
-    /**
-     * PHP 4 Constructor
-     */
-    function MDB2_Driver_Common()
-    {
-        $this->destructor_registered = false;
-        $this->__construct();
     }
 
     // }}}
@@ -1882,7 +1866,7 @@ class MDB2_Driver_Common extends PEAR
                     "unable to load module '$module' into property '$property'", __FUNCTION__);
                 return $err;
             }
-            $this->{$property} =& new $class_name($this->db_index);
+            $this->{$property} = new $class_name($this->db_index);
             $this->modules[$module] =& $this->{$property};
             if ($version) {
                 // this will be used in the connect method to determine if the module
@@ -2569,7 +2553,7 @@ class MDB2_Driver_Common extends PEAR
                     'result class does not exist '.$class_name, __FUNCTION__);
                 return $err;
             }
-            $result =& new $class_name($this, $result, $limit, $offset);
+            $result = new $class_name($this, $result, $limit, $offset);
             if (!MDB2::isResultCommon($result)) {
                 $err =& $this->raiseError(MDB2_ERROR_NOT_FOUND, null, null,
                     'result class is not extended from MDB2_Result_Common', __FUNCTION__);
@@ -2592,7 +2576,7 @@ class MDB2_Driver_Common extends PEAR
                     'result wrap class does not exist '.$result_wrap_class, __FUNCTION__);
                 return $err;
             }
-            $result =& new $result_wrap_class($result, $this->fetchmode);
+            $result = new $result_wrap_class($result, $this->fetchmode);
         }
         return $result;
     }
@@ -2937,7 +2921,7 @@ class MDB2_Driver_Common extends PEAR
         }
         $class_name = 'MDB2_Statement_'.$this->phptype;
         $statement = null;
-        $obj =& new $class_name($this, $statement, $positions, $query, $types, $result_types, $is_manip, $limit, $offset);
+        $obj = new $class_name($this, $statement, $positions, $query, $types, $result_types, $is_manip, $limit, $offset);
         $this->debug($query, __FUNCTION__, array('is_manip' => $is_manip, 'when' => 'post', 'result' => $obj));
         return $obj;
     }
@@ -3366,17 +3350,6 @@ class MDB2_Result_Common extends MDB2_Result
         $this->result =& $result;
         $this->offset = $offset;
         $this->limit = max(0, $limit - 1);
-    }
-
-    // }}}
-    // {{{ function MDB2_Result_Common(&$db, &$result, $limit = 0, $offset = 0)
-
-    /**
-     * PHP 4 Constructor
-     */
-    function MDB2_Result_Common(&$db, &$result, $limit = 0, $offset = 0)
-    {
-        $this->__construct($db, $result, $limit, $offset);
     }
 
     // }}}
@@ -3840,19 +3813,6 @@ class MDB2_Row
     }
 
     // }}}
-    // {{{ function MDB2_Row(&$row)
-
-    /**
-     * PHP 4 Constructor
-     *
-     * @param   resource    row data as array
-     */
-    function MDB2_Row(&$row)
-    {
-        $this->__construct($row);
-    }
-
-    // }}}
 }
 
 // }}}
@@ -3900,16 +3860,6 @@ class MDB2_Statement_Common
 
     // }}}
     // {{{ function MDB2_Statement_Common(&$db, &$statement, $positions, $query, $types, $result_types, $is_manip = false, $limit = null, $offset = null)
-
-    /**
-     * PHP 4 Constructor
-     */
-    function MDB2_Statement_Common(&$db, &$statement, $positions, $query, $types, $result_types, $is_manip = false, $limit = null, $offset = null)
-    {
-        $this->__construct($db, $statement, $positions, $query, $types, $result_types, $is_manip, $limit, $offset);
-    }
-
-    // }}}
     // {{{ function bindValue($parameter, &$value, $type = null)
 
     /**
@@ -4184,14 +4134,6 @@ class MDB2_Module_Common
 
     // }}}
     // {{{ function MDB2_Module_Common($db_index)
-
-    /**
-     * PHP 4 Constructor
-     */
-    function MDB2_Module_Common($db_index)
-    {
-        $this->__construct($db_index);
-    }
 
     // }}}
     // {{{ function &getDBInstance()

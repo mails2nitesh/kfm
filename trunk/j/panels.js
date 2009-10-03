@@ -101,7 +101,6 @@ function kfm_fileUploadForm_single(){
 	if(!window.ie)$j.event.add(submit,'click',function(e){
 		e=new Event(e);
 		if(e.rightClick)return;
-		//setTimeout('document.getElementById("kfm_file").type="text";document.getElementById("kfm_file").type="file"',1);
 		setTimeout('document.getElementById("kfm_file").type="text";$j("#kfm_file").attr("type","file");',1);
 	});
 	var input=newInput('kfm_file','file');
@@ -155,7 +154,7 @@ function kfm_fileUploadForm_multiple(){
 			// }
 			// { Event handlers
 			file_queue_error_handler : function(a){
-				kfm_showMessage("error: "+a.name+"could not be oploaded");
+				kfm_showMessage("error: "+a.name+" could not be uploaded");
 			},
 			file_dialog_complete_handler:function(a){
 				var stats=this.getStats();

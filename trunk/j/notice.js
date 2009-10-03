@@ -17,13 +17,22 @@ var Notice=new Class({
 		var notice_message=document.createElement('div');
 		notice_message.id='notice_message_'+id;
 		notice_message.className='notice';
-		$j(notice_message).css({opacity:0});
+		$jn=$j(notice_message);
+		$jn.css({opacity:0});
 		notice_message.innerHTML=message;
 		this.getWrapper().appendChild(notice_message);
-		$j(notice_message).animate({ opacity:1},1000,'linear',function(){
-			$j(notice_message).animate({ opacity:0 },2000,'linear',function(){
-				$j(notice_message).animate({ height:0 },3000,'linear',function(){
-					$j(notice_message).remove();
+		$jn.animate({ opacity:1},250,'linear',function(){
+			$jn.animate({ opacity:0},250,'linear',function(){
+				$jn.animate({ opacity:1},250,'linear',function(){
+					$jn.animate({ opacity:0},250,'linear',function(){
+						$jn.animate({ opacity:1},1000,'linear',function(){
+							$jn.animate({ opacity:1 },4000,'linear',function(){
+								$jn.animate({ height:0,opacity:0 },2000,'linear',function(){
+									$jn.remove();
+								});
+							});
+						});
+					});
 				});
 			});
 		});

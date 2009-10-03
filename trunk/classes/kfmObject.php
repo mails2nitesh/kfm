@@ -2,9 +2,6 @@
 class kfmObject{
 	var $error_array = array();
 	function __construct(){
-		$this->kfmObject();
-	}
-	function kfmObject(){
 		//global $kfmdb,$kfm_db_type;
 		//$this->db=&$kfmdb;
 		//$this->db_prefix=KFM_DB_PREFIX;

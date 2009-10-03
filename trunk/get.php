@@ -17,7 +17,7 @@ if (isset($_SERVER['REDIRECT_QUERY_STRING'])&&$_SERVER['REDIRECT_QUERY_STRING'])
     $arr = explode(',', $_SERVER['REDIRECT_QUERY_STRING']);
     foreach ($arr as $r) {
         $arr2           = explode('=', $r);
-        $_GET[$arr2[0]] = $arr2[1];
+        if(count($arr2)>1)$_GET[$arr2[0]] = $arr2[1];
     }
 }
 // { rebuild $_GET (in case it's been mangled by something)
@@ -32,7 +32,26 @@ foreach ($parts as $part) {
     $_GET[$varname]         = urldecode($varval);
 }
 // }
-$id = $_GET['id'];
+if(isset($_GET['uri'])){
+	$bits=explode('/',$_GET['uri']);
+	$fname=array_pop($bits);
+	$dir=0;
+	$dirs                   = explode(DIRECTORY_SEPARATOR, trim(join('/',$bits), ' '.DIRECTORY_SEPARATOR));
+	$subdir                 = kfmDirectory::getInstance(1);
+	$startup_sequence_array = array();
+	foreach ($dirs as $dirname) {
+		$subdir = $subdir->getSubdir($dirname);
+		if(!$subdir)break;
+		$dir= $subdir->id;
+	}
+	foreach($subdir->getFiles() as $file){
+		if($file->name==$fname){
+			$_GET['id']=$file->id;
+			break;
+		}
+	}
+}
+$id=@$_GET['id'];
 if (!is_numeric($id)) {
     echo kfm_lang('errorInvalidID');
     exit;
@@ -52,7 +71,11 @@ if (isset($_GET['type'])&&$_GET['type']=='thumb') {
         }
 				if($width>$image->width)$width=$image->width;
 				if($height>$image->height)$height=$image->height;
-        $image->setThumbnail($width, $height);
+				$h=0;$s=0;$l=0;
+				if(isset($_GET['hsl'])){
+					list($h,$s,$l)=explode(':',$_GET['hsl']);
+				}
+        $image->setThumbnail($width, $height,$h,$s,$l);
         $name      = $image->thumb_id;
         $path      = $image->thumb_path;
         $extension = $image->getExtension();
@@ -74,6 +97,7 @@ header('Cache-Control: max-age = 2592000');
 header('Expires-Active: On');
 header('Expires: Fri, 1 Jan 2500 01:01:01 GMT');
 header('Pragma:');
+$filesize=filesize($path);
 header('Content-Length: '.(string)(filesize($path)));
 if (isset($_GET['forcedownload'])) {
     header('Content-Type: force/download');
@@ -88,5 +112,5 @@ if ($file = fopen($path, 'rb')) { // send file
     }
     fclose($file);
 }
+if(file_exists('api/log_retrieved_file.php'))require 'api/log_retrieved_file.php';
 return((connection_status()==0) and !connection_aborted());
-?>
