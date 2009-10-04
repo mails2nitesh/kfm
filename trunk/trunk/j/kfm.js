@@ -529,6 +529,7 @@ function kfm_pluginIframeVar(varname){
 	var ifrvar=eval('ifr.contentWindow.'+varname);
 	return ifrvar;
 }
+/* End kfm plugin iframe functions */
 window.SetUrl=function(file_url,b,c,caption){
 	// { FCKeditor
 	if(window.opener.SetUrl)return window.opener.SetUrl(file_url,b,c,caption);
@@ -539,7 +540,6 @@ window.SetUrl=function(file_url,b,c,caption){
 		window.opener.CKEDITOR.tools.callFunction(funcnum,file_url);
 	}
 }
-/* End kfm plugin iframe functions */
 var kfm_regexps={
 	all_up_to_last_dot:/.*\./,
 	all_up_to_last_slash:/.*\//,
