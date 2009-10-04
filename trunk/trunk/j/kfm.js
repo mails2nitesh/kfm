@@ -339,6 +339,7 @@ kfm.keyup=function(e){
 				var openingHook=kfm_getDefaultOpener(files);
 				if(openingHook)openingHook.doFunction(files);
 			}else{
+				var id=selectedFiles[0];
 				var openingHook=kfm_getDefaultOpener([id]);
 				if(openingHook)openingHook.doFunction([id]);
 			}
@@ -527,6 +528,16 @@ function kfm_pluginIframeVar(varname){
 	if(!ifr) return null;
 	var ifrvar=eval('ifr.contentWindow.'+varname);
 	return ifrvar;
+}
+window.SetUrl=function(file_url,b,c,caption){
+	// { FCKeditor
+	if(window.opener.SetUrl)return window.opener.SetUrl(fiile_url,b,c,caption);
+	// }
+	// { CKEditor
+	if(window.opener.CKEDITOR){
+		var funcnum=document.location.toString().replace(/.*CKEditorFuncNum=([0-9]*)[^0-9].*/,'$1');
+		window.opener.CKEDITOR.tools.callFunction(funcnum,file_url);
+	}
 }
 /* End kfm plugin iframe functions */
 var kfm_regexps={

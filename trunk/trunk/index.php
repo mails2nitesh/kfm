@@ -68,6 +68,7 @@ $kfm->addAssociations($associations);
 
 // To javascript object
 $ass_str='{';
+if(!isset($kfm->associations['all']) && isset($kfm_default_file_selection_handler))$kfm->associations['all']=$kfm_default_file_selection_handler;
 foreach($kfm->associations as $ext=>$plugin)$ass_str.='"'.$ext.'":"'.$plugin.'",';
 $ass_str=rtrim($ass_str,', ').'}';
 // }

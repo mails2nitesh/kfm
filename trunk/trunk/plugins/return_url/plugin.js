@@ -12,10 +12,10 @@ function plugin_return_url(){
 			return;
 		}
 		x_kfm_getFileUrls(selectedFiles,function(urls){
-			if(files.length==1&&File_getInstance(files[0]).width)window.opener.SetUrl(urls[0].replace(/([^:]\/)\//g,'$1'),0,0,File_getInstance(files[0]).caption);
+			if(files.length==1&&File_getInstance(files[0]).width)window.SetUrl(urls[0].replace(/([^:]\/)\//g,'$1'),0,0,File_getInstance(files[0]).caption);
 			else{
-				if(files.length==1)window.opener.SetUrl(urls[0]);
-				else window.opener.SetUrl('"'+urls.join('","')+'"');
+				if(files.length==1)window.SetUrl(urls[0]);
+				else window.SetUrl('"'+urls.join('","')+'"');
 			}
 			setTimeout('window.close()',1);
 		});

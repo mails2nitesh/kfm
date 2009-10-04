@@ -18,13 +18,3 @@ window.kfm_chooseFile=function(){
 		setTimeout('window.close()',1);
 	});
 }
-window.SetUrl=function(file_url,b,c,caption){
-	// { FCKeditor
-	if(window.opener.SetUrl)return window.opener.SetUrl(fiile_url,b,c,caption);
-	// }
-	// { CKEditor
-	if(window.opener.CKEDITOR){
-		var funcnum=document.location.toString().replace(/.*CKEditorFuncNum=([0-9]*)[^0-9].*/,'$1');
-		window.opener.CKEDITOR.tools.callFunction(funcnum,file_url);
-	}
-}
