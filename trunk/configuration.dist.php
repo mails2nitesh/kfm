@@ -90,6 +90,9 @@ $kfm_max_image_upload_width=1024;
 // maximum uploadable image height
 $kfm_max_image_upload_height=768;
 
+// what plugin should handle double-clicks by default
+$kfm_default_file_selection_handler='return_url';
+
 /**
  * This function is called in the admin area. To specify your own admin requirements or security, un-comment and edit this function
  */
