@@ -63,7 +63,7 @@ define('KFM_DB_PREFIX', $kfm_db_prefix);
 // }
 // { variables
 // structure
-$kfm->defaultSetting('kfm_url','/');
+$kfm->defaultSetting('kfm_url','/'.str_replace($_SERVER['DOCUMENT_ROOT'],'',getcwd()).'/');
 $kfm->defaultSetting('file_url','secure');
 $kfm->defaultSetting('user_root_folder','');
 $kfm->defaultSetting('startup_folder','');

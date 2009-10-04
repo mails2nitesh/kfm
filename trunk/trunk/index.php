@@ -29,7 +29,11 @@ function kfm_getJsFunction($name){
 error_reporting(E_ALL);
 require_once 'initialise.php';
 require_once KFM_BASE_PATH.'includes/kaejax.php';
-$kfm_session->set('kfm_url',dirname((!empty($_SERVER['HTTPS'])) ? "https://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'] : "http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']).DIRECTORY_SEPARATOR);
+$tmp=str_replace($_SERVER['DOCUMENT_ROOT'],'',getcwd());
+$kfm_session->set('kfm_url',dirname((!empty($_SERVER['HTTPS'])) ?
+	"https://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'].DIRECTORY_SEPARATOR.$tmp :
+	"http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'].DIRECTORY_SEPARATOR.$tmp
+).DIRECTORY_SEPARATOR);
 // { root folder name
 if($kfm->setting('root_folder_name')=='foldername')$kfm->setting('root_folder_name',$user_root_dir->name);
 else{
