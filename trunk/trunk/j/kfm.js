@@ -531,7 +531,7 @@ function kfm_pluginIframeVar(varname){
 }
 window.SetUrl=function(file_url,b,c,caption){
 	// { FCKeditor
-	if(window.opener.SetUrl)return window.opener.SetUrl(fiile_url,b,c,caption);
+	if(window.opener.SetUrl)return window.opener.SetUrl(file_url,b,c,caption);
 	// }
 	// { CKEditor
 	if(window.opener.CKEDITOR){
