@@ -38,7 +38,7 @@ function _loadDirectories($pid,$oldpid=0){
 	$dir=kfmDirectory::getInstance($pid);
 	$pdir=str_replace($GLOBALS['rootdir'],'',$dir->path);
 	$directories=array();
-	foreach($dir->getSubdirs() as $subDir)$directories[]=array($subDir->name,$subDir->hasSubdirs(),$subDir->id,$subDir->maxWidth,$subDir->maxHeight);
+	foreach($dir->getSubdirs() as $subDir)$directories[]=array($subDir->name,$subDir->hasSubdirs(),$subDir->id,$subDir->maxWidth(),$subDir->maxHeight());
 	sort($directories);
 	return array(
 		'parent'=>$pid,

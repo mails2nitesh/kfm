@@ -2,6 +2,8 @@
 class kfmDirectory extends kfmObject{
 	static $instances=array();
 	var $subDirs=array();
+  private $maxWidth;
+  private $maxHeight;
 	function __construct($id=1){
 		parent::__construct();
 		$this->id=$id;
@@ -291,4 +293,18 @@ class kfmDirectory extends kfmObject{
 		$this->maxHeight=$height;
 		$kfm->db->exec("UPDATE ".KFM_DB_PREFIX."directories SET maxwidth=$width,maxheight=$height WHERE id=".$this->id);
 	}
+  /*
+   * Return the max image height for the directory if set, the default otherwise
+   */
+  function maxHeight(){
+    global $kfm;
+    return $this->maxHeight > 0 ? $this->maxHeight : $kfm->setting('max_image_upload_height');
+  }
+  /*
+   * Return the max image width for the directory if set, the default otherwise
+   */
+  function maxWidth(){
+    global $kfm;
+    return $this->maxWidth > 0 ? $this->maxWidth : $kfm->setting('max_image_upload_width');
+  }
 }

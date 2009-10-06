@@ -72,9 +72,10 @@ $kfm->defaultSetting('log_level', 0);
 $kfm->defaultSetting('file_handler','download');
 $kfm->defaultSetting('allow_user_file_associations',false);
 //display
+$kfm->defaultSetting('theme', false); // must be overwritten
+$kfm->defaultSetting('show_admin_link', true);
 $kfm->defaultSetting('time_format', '%T');
 $kfm->defaultSetting('date_format', '%x');
-$kfm->defaultSetting('theme', false); // must be overwritten
 $kfm->defaultSetting('listview',0);
 $kfm->defaultSetting('preferred_languages',array('en','de','da','es','fr','nl','ga'));
 //contextmenu
@@ -113,6 +114,8 @@ $kfm->defaultSetting('only_allow_image_upload',0);
 $kfm->defaultSetting('use_multiple_file_upload',1);
 $kfm->defaultSetting('default_upload_permission',644);
 $kfm->defaultSetting('banned_upload_extensions',array());
+$kfm->defaultSetting('max_image_upload_width', 1024);
+$kfm->defaultSetting('max_image_upload_height', 768);
 // plugins
 $kfm->defaultSetting('disabled_plugins',array());
 // depricated
