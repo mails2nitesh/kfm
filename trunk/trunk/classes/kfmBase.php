@@ -23,10 +23,11 @@ class kfmBase extends kfmObject{
 		'allow_user_file_associations'=>array('type'=>'bool'),
 		
 		'Display settings'=>array( 'type'=>'group_header'),
+		'theme'=>array('type'=>'choice_list','options'=>array()), // will be filled in initialise.php
+    'show_admin_link'=>array('type'=>'bool'),
 		'date_format'=>array( 'type'=>'text', 'properties'=>array('size'=>10,'maxsize'=>25)),
 		'time_format'=>array( 'type'=>'text', 'properties'=>array('size'=>10,'maxsize'=>25)),
 		'listview'=>array('type'=>'bool'),
-		'theme'=>array('type'=>'choice_list','options'=>array()), // will be filled in initialise.php
 		'preferred_languages'=>array('type'=>'array'),
 	
 		'Contextmenu settings'=>array('type'=>'group_header'),
@@ -72,6 +73,8 @@ class kfmBase extends kfmObject{
 		'use_multiple_file_upload'=>array('type'=>'bool'),
 		'default_upload_permission'=>array('type'=>'integer', 'properties'=>array('size'=>3,'maxsize'=>3)),
 		'banned_upload_extensions'=>array('type'=>'array'),
+    'max_image_upload_width'=>array('type'=>'integer'),
+    'max_image_upload_height'=>array('type'=>'integer'),
 		
 		'Plugin settings'=>array( 'type'=>'group_header'),
 		'disabled_plugins'=>array('type'=>'select_list'),

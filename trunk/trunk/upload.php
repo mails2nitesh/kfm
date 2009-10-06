@@ -60,8 +60,8 @@ if ($kfm->setting('allow_file_upload')) {
 		// { check to see if it's an image, and if so, is it bloody massive
 		if(in_array(kfmFile::getExtension($filename),array('jpg', 'jpeg', 'gif', 'png', 'bmp'))){
 			list($width, $height, $type, $attr)=getimagesize($tmpname);
-			if($width>$kfm_max_image_upload_width || $height>$kfm_max_image_upload_height){
-				$errors[] = 'Please do not upload images which are larger than '.$kfm_max_image_upload_width.'x'.$kfm_max_image_upload_height;
+			if($width>$toDir->maxWidth() || $height>$toDir->maxHeight()){
+				$errors[] = 'Please do not upload images which are larger than '.$toDir->maxWidth().'x'.$toDir->maxHeight();
 			}
 		}
 		// }
