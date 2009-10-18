@@ -10,3 +10,4 @@ Dual licensed under the MIT and GPL licenses:
 
 the following edits are by kae (kae@verens.com)
 to see the original file listing and source of jsTree, please download a full copy from http://www.jstree.com/
+see ../demos/jstree.html for an example of how to use this with KFM
