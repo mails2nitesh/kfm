@@ -4,7 +4,7 @@ function get_file_listing(){
 	$d=KFM_USERDIR .'/'. $req_dir;
 
 	if(preg_match('/\.\./',$d))die('{"error":1,"error_message":"no hacking please"}');
-	if(!file_exists($d))die('{"error":2,"error_message":directory <b>'.$d.'</b> does not exist"}');
+	if(!file_exists($d))die('{"error":2,"error_message":"directory <b>'.$d.'</b> does not exist"}');
 	if(!is_dir($d))die('{"error":3,"error_message":"requested directory is not a directory"}');
 
 	$files=array();
