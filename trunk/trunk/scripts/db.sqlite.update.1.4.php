@@ -1,24 +1,23 @@
 <?php
 $kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."users(
-	`id` int(11) NOT NULL auto_increment,
-	`username` varchar(16),
-	password varchar(40),
-	status INTEGER(1) default 2
+	id INTEGER PRIMARY KEY,
+	username text,
+	password text,
+	status INTEGER default 2
 )");
  
 $kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."settings(
-	id int(11) NOT NULL auto_increment,
-	name varchar(128),
-	value varchar(256),
-	user_id INTEGER(8),
-	usersetting INTEGER(1) default 0
+	id INTEGER PRIMARY KEY,
+	name text,
+	value text,
+	user_id INTEGER not null,
+	usersetting INTEGER default 0
 )");
-
 $kfmdb->query("CREATE TABLE ".KFM_DB_PREFIX."plugin_extensions(
-	id int(11) NOT NULL auto_increment,
-	extension varchar(64),
-	plugin varchar(64),
-	user_id INTEGER(8)
+	id INTEGER PRIMARY KEY,
+	extension text,
+	plugin text,
+	user_id INTEGER not null
 )");
 
 $kfmdb->query('INSERT INTO '.KFM_DB_PREFIX.'users (id, username, password, status) VALUES (1,"admin", "'.sha1('admin').'",1)');
