@@ -18,7 +18,7 @@ if($kfm->sdef[$sn]['type']=='select_list'){
 	$value=$sval;
 }
 $s=db_fetch_row('SELECT id, usersetting FROM '.KFM_DB_PREFIX.'settings WHERE name="'.$sn.'" and user_id='.$uid);
-if(count($s)){
+if($s && count($s)){
 	if(!$s['usersetting'] && $kfm->user_status !=1) die ('error("No rights to change this setting");');	
 	$kfmdb->query('UPDATE '.KFM_DB_PREFIX.'settings SET value="'.mysql_escape_string($value).'" WHERE name="'.$sn.'" AND user_id='.$uid);
 }else{
