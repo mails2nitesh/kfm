@@ -10,6 +10,7 @@
  * @link     http://kfm.verens.com/
  */
 if(!defined('KFM_BASE_PATH'))define('KFM_BASE_PATH', dirname(__FILE__).'/');
+if(function_exists("date_default_timezone_set") && function_exists("date_default_timezone_get"))@date_default_timezone_set(date_default_timezone_get());
 
 // { load classes and helper functions
 if(!function_exists('__autoload')){
