@@ -17,6 +17,15 @@ class kfmSession extends kfmObject{
 				$this->id=$res['id'];
 				$this->isNew=false;
 				$kfm->db->query("UPDATE ".KFM_DB_PREFIX."session SET last_accessed='".date('Y-m-d G:i:s')."' WHERE id='".$this->id."'");
+				// { clean up expired session data
+				$old_sessions=db_fetch_all("SELECT id FROM ".KFM_DB_PREFIX."session WHERE last_accessed<'".date('Y-m-d G:i:s',mktime(0, 0, 0, date('m'),date('d')-1,date('Y')))."'");
+				if($old_sessions && count($old_sessions)){
+					foreach($old_sessions as $r){
+						$kfm->db->query('DELETE FROM '.KFM_DB_PREFIX.'session_vars WHERE session_id='.$r['id']);
+						$kfm->db->query('DELETE FROM '.KFM_DB_PREFIX.'session WHERE id='.$r['id']);
+					}
+				}
+				// }
 			}
 		}
 		if($create){
@@ -61,7 +70,7 @@ class kfmSession extends kfmObject{
 	function get($name){
 		if(isset($this->vars[$name]))return $this->vars[$name];
 		$res=db_fetch_row("SELECT varvalue FROM ".KFM_DB_PREFIX."session_vars WHERE session_id=".$this->id." and varname='".sql_escape($name)."'");
-		if(count($res)){
+		if($res && count($res)){
 			$ret=json_decode('['.stripslashes($res['varvalue']).']',true);
 			if(count($ret))$ret=$ret[0];
 			else $ret='';
