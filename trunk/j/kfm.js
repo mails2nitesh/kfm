@@ -41,7 +41,7 @@ kfm.about=function(){
 	}
 	{ // bug testers
 		html+='<h2>Bug Testers</h2>';
-		html+='To many to mention! To report a bug, please <a href="http://mantis.verens.com/">go here</a>.';
+		html+='To many to mention! To report a bug, please <a href="http://code.google.com/p/kfm/issues/">go here</a>.';
 	}
 	div.innerHTML=html;
 	kfm_modal_open(div,kfm.lang.AboutKfm);
