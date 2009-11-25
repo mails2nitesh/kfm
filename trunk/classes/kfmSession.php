@@ -20,7 +20,9 @@ class kfmSession extends kfmObject{
 				// { clean up expired session data
 				$old_sessions=db_fetch_all("SELECT id FROM ".KFM_DB_PREFIX."session WHERE last_accessed<'".date('Y-m-d G:i:s',mktime(0, 0, 0, date('m'),date('d')-1,date('Y')))."'");
 				if($old_sessions && count($old_sessions)){
+					$old_done=0;
 					foreach($old_sessions as $r){
+						if($old_done++ == 10)break;
 						$kfm->db->query('DELETE FROM '.KFM_DB_PREFIX.'session_vars WHERE session_id='.$r['id']);
 						$kfm->db->query('DELETE FROM '.KFM_DB_PREFIX.'session WHERE id='.$r['id']);
 					}
