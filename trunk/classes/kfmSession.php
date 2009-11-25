@@ -59,15 +59,17 @@ class kfmSession extends kfmObject{
 		if (!@array_key_exists($id,self::$instances)) self::$instances[$id]=new kfmSession($id);
 		return self::$instances[$id];
 	}
-	function set($name='',$value=''){
+	function set($name='',$value='',$save_in_db=true){
 		global $kfm;
 		if(isset($this->vars[$name])&&$this->vars[$name]==$value)return;
 		$this->vars[$name]=$value;
-		$kfm->db->query("DELETE FROM ".KFM_DB_PREFIX."session_vars WHERE session_id=".$this->id." and varname='".sql_escape($name)."'");
-		$kfm->db->query("INSERT INTO ".KFM_DB_PREFIX."session_vars (session_id,varname,varvalue) VALUES (".$this->id.",'".sql_escape($name)."','".sql_escape(json_encode($value))."')");
+		if($save_in_db){
+			$kfm->db->query("DELETE FROM ".KFM_DB_PREFIX."session_vars WHERE session_id=".$this->id." and varname='".sql_escape($name)."'");
+			$kfm->db->query("INSERT INTO ".KFM_DB_PREFIX."session_vars (session_id,varname,varvalue) VALUES (".$this->id.",'".sql_escape($name)."','".sql_escape(json_encode($value))."')");
+		}
 	}
-	function setMultiple($vars){
-		foreach($vars as $key=>$val)$this->set($key,$val);
+	function setMultiple($vars,$save_in_db=true){
+		foreach($vars as $key=>$val)$this->set($key,$val,$save_in_db);
 	}
 	function get($name){
 		if(isset($this->vars[$name]))return $this->vars[$name];
