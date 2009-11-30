@@ -136,7 +136,9 @@ class kfmFile extends kfmObject{
 		}else{
 			$url=$kfm->setting('files_url').str_replace($kfm->setting('files_root_path'),'',$this->path);
 		}
-		return preg_replace('/([^:])?\/{2,}/','$1/',$url);
+		return $url; # this was "return preg_replace('/([^:])?\/{2,}/','$1/',$url);"
+		             # but that caused URLs such as "http:/example.com/test.jpg"
+								 # instead of "http://example.com/test.jpg"
 	}
 
 	/**
