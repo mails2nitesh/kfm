@@ -73,7 +73,7 @@ $kfm->defaultSetting('log_level', 0);
 $kfm->defaultSetting('file_handler','download');
 $kfm->defaultSetting('allow_user_file_associations',false);
 //display
-$kfm->defaultSetting('theme', false); // must be overwritten
+//$kfm->defaultSetting('theme', false); // must be overwritten
 $kfm->defaultSetting('show_admin_link', true);
 $kfm->defaultSetting('time_format', '%T');
 $kfm->defaultSetting('date_format', '%x');
@@ -327,7 +327,7 @@ if(is_array($admin_settings)){
     }
 }
 if($uid!=1){
-    $user_settings=db_fetch_all('SELECT name, value FROM '.KFM_DB_PREFIX.'settings WHERE user_id='.$uid.' AND usersetting=1');
+    $user_settings=db_fetch_all('SELECT name, value FROM '.KFM_DB_PREFIX.'settings WHERE user_id='.$uid);
     if(is_array($user_settings)){
 			foreach($user_settings as $setting)$settings[$setting['name']]=$setting['value'];
     }
@@ -373,7 +373,7 @@ foreach($kfm->sdef as $sname=>$sdef){
                 $value=$settings[$sname];
                 break;
         }
-        $kfm->defaultSetting($sname, $value);
+        $kfm->setting($sname, $value);
     }
 }
 // }
@@ -407,7 +407,7 @@ closedir($h);
 // }
 // { Setting the theme
 if(isset($_GET['theme']))$kfm_session->set('theme',$_GET['theme']);
-if($kfm_session->get('theme'))$kfm->defaultSetting('theme',$kfm_session->get('theme'));
+if($kfm_session->get('theme'))$kfm->setting('theme',$kfm_session->get('theme'));
 else if($kfm->setting('theme')) $kfm_session->set('theme',$kfm->setting('theme'));
 else{
     if(in_array('default',$kfm->themes)){

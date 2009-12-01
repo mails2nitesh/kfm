@@ -179,6 +179,10 @@ class kfmDirectory extends kfmObject{
 		}
 		return self::$instances[$id];
 	}
+
+  /**
+    Full path of directory
+    */
 	function getPath(){
 		$pathTmp=$this->name.'/';
 		$pid=$this->pid;
@@ -190,6 +194,21 @@ class kfmDirectory extends kfmObject{
 		}
 		return $GLOBALS['rootdir'].'/'.$pathTmp;
 	}
+  /**
+    Path of directory relative to root
+    */
+  function relativePath(){
+    if($this->id < 2) return '';
+		$pathTmp=$this->name.'';
+		$pid=$this->pid;
+		if(!$pid)return $pathTmp;
+		while($pid>1){
+			$p=kfmDirectory::getInstance($pid);
+			$pathTmp=$p->name.'/'.$pathTmp;
+			$pid=$p->pid;
+		}
+		return $pathTmp;
+  }
 	function getProperties(){
 		return array(
 			'allowed_file_extensions' => '',

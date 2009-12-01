@@ -138,8 +138,8 @@ kfm.build=function(){
 		}
 	}
 	kfm_cwd_name=starttype;
-	document.body.style.overflow='hidden';
 	$j(document.getElementById('removeme')).remove();
+	document.body.style.overflow='hidden';
 	kfm_addContextMenu(document.body,function(e){
 		kfm_closeContextMenu();
 		links=[{title:kfm.lang.AboutKfm, doFunction:function(){kfm.about();}}];

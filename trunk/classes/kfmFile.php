@@ -24,6 +24,7 @@ class kfmFile extends kfmObject{
 			$this->name=$filedata['name'];
 			$this->parent=$filedata['directory'];
 			$dir=kfmDirectory::getInstance($this->parent);
+      $this->dir = $dir;
 			$this->directory=$dir->path;
 			$this->path=$dir->path.'/'.$filedata['name'];
 			if(!$this->exists()){
@@ -134,7 +135,8 @@ class kfmFile extends kfmObject{
 		if($kfm->setting('file_url')=='secure'){
 			$url=$kfm->setting('kfm_url').'get.php?id='.$this->id.GET_PARAMS;
 		}else{
-			$url=$kfm->setting('files_url').str_replace($kfm->setting('files_root_path'),'',$this->path);
+      $url = $kfm->setting('files_url').$this->dir->relativePath().$this->name;
+			//$url=$kfm->setting('files_url').str_replace($kfm->setting('files_root_path'),'',$this->path);
 		}
 		return $url; # this was "return preg_replace('/([^:])?\/{2,}/','$1/',$url);"
 		             # but that caused URLs such as "http:/example.com/test.jpg"

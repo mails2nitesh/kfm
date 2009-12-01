@@ -16,7 +16,7 @@ class kfmPlugin extends kfmObject{
 		$this->title=$this->name;
 		$bt=debug_backtrace();
 		$this->path=dirname($bt[0]['file']).'/';
-		$this->url=$kfm->setting('kfm_url').'plugins/'.$name.'/';
+		//$this->url=$kfm->setting('kfm_url').'plugins/'.$name.'/';
 	}
 	
 	/**
@@ -25,6 +25,11 @@ class kfmPlugin extends kfmObject{
 	function addSetting($name, $definition, $default){
 		$this->settings[]=array('name'=>$name,'definition'=>$definition,'default'=>$default);
 	}
+
+  function url(){
+    global $kfm;
+    return $kfm->setting('kfm_url').'plugins/'.$this->name.'/';
+  }
 
 	function getJavascript(){
 		if($this->disabled)return '';

@@ -17,14 +17,14 @@ if($kfm->sdef[$sn]['type']=='select_list'){
 	$sval=trim($sval, ' ,');
 	$value=$sval;
 }
-$s=db_fetch_row('SELECT id, usersetting FROM '.KFM_DB_PREFIX.'settings WHERE name="'.$sn.'" and user_id='.$uid);
-if($s && count($s)){
-	if(!$s['usersetting'] && $kfm->user_status !=1) die ('error("No rights to change this setting");');	
-	$kfmdb->query('UPDATE '.KFM_DB_PREFIX.'settings SET value="'.mysql_escape_string($value).'" WHERE name="'.$sn.'" AND user_id='.$uid);
-}else{
-	if(!$kfm->isUserSetting($sn) && $kfm->user_status!=1) die ('error("No rights to change this setting");');	
-	$kfmdb->query('INSERT INTO '.KFM_DB_PREFIX.'settings (name, value, user_id, usersetting) VALUES ("'.$sn.'","'.mysql_escape_string($value).'", '.$uid.',1)');
-	if($kfm->user_id!=1) echo '$("#todefault_'.$sn.'").fadeIn();';
+if($kfm->isAdmin() || $kfm->isUserSetting($sn)){
+  $s=db_fetch_row('SELECT id FROM '.KFM_DB_PREFIX.'settings WHERE name="'.mysql_escape_string($sn).'" and user_id='.$uid);
+  if($s && count($s)){
+    $kfm->db->query('UPDATE '.KFM_DB_PREFIX.'settings SET value="'.mysql_escape_string($value).'" WHERE name="'.mysql_escape_string($sn).'" AND user_id='.$uid);
+  }else{
+    $kfm->db->query('INSERT INTO '.KFM_DB_PREFIX.'settings (name, value, user_id, usersetting) VALUES ("'.mysql_escape_string($sn).'","'.mysql_escape_string($value).'", '.$uid.',1)');
+	  if($kfm->user_id!=1) echo '$("#todefault_'.$sn.'").fadeIn();';
+  }
 }
 if($sn=='theme')$kfm_session->set('theme',$value);
 echo 'style_usersetting("'.$sn.'");';

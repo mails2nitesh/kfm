@@ -89,4 +89,17 @@ class kfmSession extends kfmObject{
 		$kfm->db->query("DELETE FROM ".KFM_DB_PREFIX."session WHERE id=".$this->id);
 		$this->loggedin=0;
 	}
+  /**
+    * Experimental, not tested
+    */
+  function setByName($name){
+		$res=db_fetch_row("SELECT * FROM ".KFM_DB_PREFIX."users WHERE name='".sql_escape($name)."'");
+    if($res && count($res)){
+      $this->loggedin = true;
+      $this->username = $res['username'];
+      $this->user_status = $res['user_status'];
+    }else{
+      $this->loggedin = false;
+    }
+  }
 }

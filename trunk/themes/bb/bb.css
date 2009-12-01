@@ -70,12 +70,14 @@
 /**
  * Hide some plugins
  */
+/* disabled
 .kfm_plugin_about_contexticon,
 .kfm_plugin_files_select_all_contexticon,
 .kfm_plugin_files_select_none_contexticon,
 .kfm_plugin_files_select_invert_contexticon,
 .kfm_plugin_file_new_contexticon,
 .kfm_plugin_files_zip_contexticon{display:none;}
+*/
 /**
  * Fixed page layout
  */
