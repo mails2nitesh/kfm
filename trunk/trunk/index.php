@@ -37,7 +37,7 @@ $kfm_session->set('kfm_url',dirname((!empty($_SERVER['HTTPS'])) ?
 // { root folder name
 if($kfm->setting('root_folder_name')=='foldername')$kfm->setting('root_folder_name',$user_root_dir->name);
 else{
-	$kfm->setting('root_folder_name',str_replace('username',$kfm->username,$kfm->setting('root_folder_name')));
+	$kfm->setting('root_folder_name',str_replace('username',$kfm->setting('username'),$kfm->setting('root_folder_name')));
 }
 // }
 // { startup folder

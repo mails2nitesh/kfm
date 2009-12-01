@@ -138,9 +138,18 @@ class kfmBase extends kfmObject{
 		$this->settings[$name]=$value;
 	}
 
+  /**
+   * Bulk update settings
+   */
+  function setSettings($settings = array()){
+    foreach($settings as $setting_name => $setting_value){
+      $this->settings[$setting_name] = $setting_value;
+    }
+  }
+
 	function defaultSetting($name, $value){
-		$this->settings[$name]=$value;
-		//if(!isset($this->settings[$name]))$this->settings[$name]=$value;
+		//$this->settings[$name]=$value;
+		if(!isset($this->settings[$name]))$this->settings[$name]=$value;
 	}
 	
 	function addAdminTab($name, $page,$stylesheet=false){
