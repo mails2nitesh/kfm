@@ -134,7 +134,8 @@ function _loadFiles($rootid=1,$setParent=false){
 	if($dir->hasErrors())return $dir->getErrors();
 	$files=array();
 	foreach($oFiles as $file)$files[]=_getFileDetails($file);
-	$root='/'.str_replace($GLOBALS['rootdir'],'',$dir->path);
+	//$root='/'.str_replace($GLOBALS['rootdir'],'',$dir->path);
+  $root = '/'.$dir->relativePath();
 	$kfm_session->set('cwd_id',$rootid);
 	$ret=array('reqdir'=>$root,'files'=>$files,'uploads_allowed'=>$kfm->setting('allow_file_upload'),'sprites'=>kfm_getCssSprites($rootid)); 
 	if($setParent)$ret['parent']=$rootid;
