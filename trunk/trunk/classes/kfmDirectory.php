@@ -299,7 +299,7 @@ class kfmDirectory extends kfmObject{
 		return is_writable($this->path);	
 	}
   function isLink(){
-    is_link($this->path());
+    return is_link($this->path());
   }
 	function moveTo($newParent){
 		global $kfm;
