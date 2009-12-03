@@ -4,7 +4,8 @@ class kfmDirectory extends kfmObject{
 	var $subDirs=array();
   private $maxWidth;
   private $maxHeight;
-  public $relpath = false;
+  public $relpath = false; // Cache for path relative to kfm root
+  public $relpath_user = false; // Cache for path relative to user root
 	function __construct($id=1){
 		parent::__construct();
 		$this->id=$id;
@@ -205,20 +206,35 @@ class kfmDirectory extends kfmObject{
     return $this->path;
   }
   /**
-    Path of directory relative to root
+    Path of directory relative to root.
+    If $to_user_root is set to true, support for custom root folders is activated.
+    The $to_user_root option should not be used for file retrieval but solely for display purposes.
     */
-  function relativePath(){
-    if($this->relpath) return $this->relpath;
-    if($this->id < 2) return '';
-		$pathTmp=$this->name.'';
+  function relativePath($to_user_root = false){
+    global $kfm;
+    // Determin root_id and check for cashed path
+    if($to_user_root){
+      if($this->relpath_user) return $this->relpath_user;
+      $root_id = $kfm->setting('root_folder_id');
+    }else{
+      if($this->relpath) return $this->relpath;
+      $root_id = 1;
+    }
+		$pathTmp=''; // Return empty if we are the root folder
 		$pid=$this->pid;
 		if(!$pid)return $pathTmp;
-		while($pid>1){
+    if($this->id == $root_id) return $pathTmp;
+    $pathTmp = $this->name; // If not root, we need our name
+		while($pid != $root_id ){
 			$p=kfmDirectory::getInstance($pid);
-			$pathTmp=$p->name.'/'.$pathTmp;
+			$pathTmp=$p->name.DIRECTORY_SEPARATOR.$pathTmp;
 			$pid=$p->pid;
 		}
-    $this->relpath = $pathTmp;
+    if($to_user_root){
+      $this->relpath_user = $pathTmp;
+    }else{
+      $this->relpath = $pathTmp;
+    }
 		return $pathTmp;
   }
 	function getProperties(){

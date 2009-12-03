@@ -380,7 +380,7 @@ foreach($kfm->sdef as $sname=>$sdef){
 // { (user) root folder
 $kfm_root_dir = kfmDirectory::getInstance(1);
 if ($kfm->user_id!=1 && $kfm->setting('user_root_folder')){
-    $kfm->defaultSetting('user_root_folder',str_replace('username',$kfm->username,$kfm->setting('user_root_folder')));
+    $kfm->setting('user_root_folder',str_replace('username',$kfm->username,$kfm->setting('user_root_folder')));
     $dirs   = explode(DIRECTORY_SEPARATOR, trim($kfm->setting('user_root_folder'), ' '.DIRECTORY_SEPARATOR));
     $subdir = $kfm_root_dir;
     foreach ($dirs as $dirname) {
