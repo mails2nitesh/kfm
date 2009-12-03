@@ -186,6 +186,7 @@ class kfmDirectory extends kfmObject{
     Full path of directory
     */
 	function getPath(){
+    global $kfm;
 		$pathTmp=$this->name.'/';
 		$pid=$this->pid;
 		if(!$pid)return $GLOBALS['rootdir'];
@@ -194,7 +195,8 @@ class kfmDirectory extends kfmObject{
 			$pathTmp=$p->name.'/'.$pathTmp;
 			$pid=$p->pid;
 		}
-		return $GLOBALS['rootdir'].'/'.$pathTmp;
+    return file_join($kfm->files_root_path, $pathTmp);
+		//return str_replace('//', '/', $GLOBALS['rootdir'].'/'.$pathTmp);
 	}
   /**
     * At the moment the path property is loaded for every directory instance. Maybe this is not required.
@@ -296,34 +298,39 @@ class kfmDirectory extends kfmObject{
 	function isWritable(){
 		return is_writable($this->path);	
 	}
+  function isLink(){
+    is_link($this->path());
+  }
 	function moveTo($newParent){
 		global $kfm;
 		if(is_numeric($newParent))$newParent=kfmDirectory::getInstance($newParent);
 		{ # check for errors
+      if($this->isLink()) return $this->error(kfm_lang('cannotMoveLink'));
 			if(!$kfm->setting('allow_directory_move'))return $this->error(kfm_lang('permissionDeniedMoveDirectory'));
 			if(strpos($newParent->path,$this->path)===0) return $this->error(kfm_lang('cannotMoveIntoSelf'));
-			if(file_exists($newParent->path.$this->name))return $this->error(kfm_lang('alreadyExists',$newParent->path.$this->name));
+			if(file_exists(file_join($newParent->path,$this->name)))return $this->error(kfm_lang('alreadyExists',$newParent->path.$this->name));
 			if(!$newParent->isWritable())return $this->error(kfm_lang('isNotWritable',$newParent->path));
 		}
 		{ # do the move and check that it was successful
-			rename($this->path,$newParent->path.'/'.$this->name);
+			rename(rtrim($this->path, ' /'),$newParent->path.'/'.$this->name);
 			if(!file_exists($newParent->path.$this->name))return $this->error(kfm_lang('couldNotMoveDirectory',$this->path,$newParent->path.$this->name));
 		}
 		{ # update database and kfmDirectory object
 			$kfm->db->exec("update ".KFM_DB_PREFIX."directories set parent=".$newParent->id." where id=".$this->id) or die('error: '.print_r($kfmdb->errorInfo(),true));
 			$this->pid=$newParent->id;
 			$this->path=$this->getPath();
-      $this->relpath = false; # remove relative path cache
+      $this->clearCache();
 		}
 	}
 	function rename($newname){
 		global $kfm,$kfmDirectoryInstances;
 		if(!$kfm->setting('allow_directory_edit'))return $this->error(kfm_lang('permissionDeniedEditDirectory'));
+    if($this->isLink()) return $this->error(kfm_lang('cannotRenameLink'));
 		if(!$this->isWritable())return $this->error(kfm_lang('permissionDeniedRename',$this->name));
 		if(!$this->checkName($newname))return $this->error(kfm_lang('cannotRenameFromTo',$this->name,$newname));
 		$parent=kfmDirectory::getInstance($this->pid);
 		if(file_exists($parent->path.$newname))return $this->error(kfm_lang('aDirectoryNamedAlreadyExists',$newname));
-		rename($this->path,$parent->path.$newname);
+		rename(rtrim($this->path,' /'),file_join($parent->path,rtrim($newname, ' /')));
 		if(file_exists($this->path))return $this->error(kfm_lang('failedRenameDirectory'));
 		$kfm->db->query("update ".KFM_DB_PREFIX."directories set name='".sql_escape($newname)."' where id=".$this->id);
 		$this->name=$newname;
@@ -354,5 +361,12 @@ class kfmDirectory extends kfmObject{
   function maxWidth(){
     global $kfm;
     return $this->maxWidth > 0 ? $this->maxWidth : $kfm->setting('max_image_upload_width');
+  }
+  /**
+    Clear cashed properties
+    */
+  function clearCache(){
+    $this->relpath = false; # remove relative path cache
+    $this->relpath_user = false;
   }
 }

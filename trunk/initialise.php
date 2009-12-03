@@ -38,6 +38,14 @@ function sql_escape($sql) {
     if ($kfm_db_type=='sqlite'||$kfm_db_type=='sqlitepdo')$sql = str_replace("\\'", "''", $sql);
     return $sql;
 }
+function file_join(){
+  $path = '';
+  foreach(func_get_args() as $pathSegment){
+    $path .= '/'.$pathSegment;
+  }
+  $path = str_replace(array('///','//'), '/', $path);
+  return $path;
+}
 // }
 if (get_magic_quotes_gpc()) require 'includes/remove_magic_quotes.php';
 // { check for fatal errors
@@ -151,7 +159,8 @@ if (!is_dir($rootdir)) {
     exit;
 }
 $rootdir = realpath($rootdir).'/';
-$kfm->defaultSetting('files_root_path',$rootdir);
+$kfm->defaultSetting('files_root_path',$rootdir); // This may be a security problem, don't use this property!!!
+$kfm->files_root_path = $rootdir; // Use this in stead
 define('KFM_DIR', dirname(__FILE__));
 if (!defined('GET_PARAMS')) define('GET_PARAMS', '');
 define('IMAGEMAGICK_PATH', isset($kfm_imagemagick_path)?$kfm_imagemagick_path:'/usr/bin/convert');

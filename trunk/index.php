@@ -36,8 +36,9 @@ $kfm_session->set('kfm_url',dirname((!empty($_SERVER['HTTPS'])) ?
 ).DIRECTORY_SEPARATOR);
 // { root folder name
 if($kfm->setting('root_folder_name')=='foldername')$kfm->setting('root_folder_name',$user_root_dir->name);
-else{
-	$kfm->setting('root_folder_name',str_replace('username',$kfm->setting('username'),$kfm->setting('root_folder_name')));
+elseif(strpos($kfm->setting('root_folder_name'), 'username') !== false){
+	if($kfm->user_id == 1) $kfm->setting('root_folder_name', 'root'); // Special default user case
+  else $kfm->setting('root_folder_name',str_replace('username',$kfm->setting('username'),$kfm->setting('root_folder_name')));
 }
 // }
 // { startup folder
