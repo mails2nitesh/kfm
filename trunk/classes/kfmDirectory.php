@@ -4,6 +4,7 @@ class kfmDirectory extends kfmObject{
 	var $subDirs=array();
   private $maxWidth;
   private $maxHeight;
+  public $relpath = false;
 	function __construct($id=1){
 		parent::__construct();
 		$this->id=$id;
@@ -195,9 +196,19 @@ class kfmDirectory extends kfmObject{
 		return $GLOBALS['rootdir'].'/'.$pathTmp;
 	}
   /**
+    * At the moment the path property is loaded for every directory instance. Maybe this is not required.
+    * A cached function should be more efficient for the future. Therefor every $dir->path call should be
+    * replaced by $dir->path();
+    */
+  function path(){
+    if(!$this->path) $this->path = $this->getPath();
+    return $this->path;
+  }
+  /**
     Path of directory relative to root
     */
   function relativePath(){
+    if($this->relpath) return $this->relpath;
     if($this->id < 2) return '';
 		$pathTmp=$this->name.'';
 		$pid=$this->pid;
@@ -207,13 +218,14 @@ class kfmDirectory extends kfmObject{
 			$pathTmp=$p->name.'/'.$pathTmp;
 			$pid=$p->pid;
 		}
+    $this->relpath = $pathTmp;
 		return $pathTmp;
   }
 	function getProperties(){
 		return array(
 			'allowed_file_extensions' => '',
 			'name'                    => $this->name,
-			'path'                    => str_replace($_SERVER['DOCUMENT_ROOT'],'',$this->path),
+			'path'                    => $this->relativePath(), #str_replace($_SERVER['DOCUMENT_ROOT'],'',$this->path),
 			'parent'                  => $this->pid,
 			'writable'                => $this->isWritable(),
 			'maxWidth'                => $this->maxWidth,
@@ -285,6 +297,7 @@ class kfmDirectory extends kfmObject{
 			$kfm->db->exec("update ".KFM_DB_PREFIX."directories set parent=".$newParent->id." where id=".$this->id) or die('error: '.print_r($kfmdb->errorInfo(),true));
 			$this->pid=$newParent->id;
 			$this->path=$this->getPath();
+      $this->relpath = false; # remove relative path cache
 		}
 	}
 	function rename($newname){
