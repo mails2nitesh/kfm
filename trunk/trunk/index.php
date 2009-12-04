@@ -184,7 +184,7 @@ if ($last_registration!=$today) {
 				lang:'<?php echo $kfm_language; ?>',
 				subcontext_categories:<?php echo js_array($kfm->setting('subcontext_categories'),true);?>,
 				subcontext_size:<?php echo $kfm->setting('subcontext_size');?>,
-				show_admin_link:<?php echo $kfm->setting('show_admin_link'); ?>,
+				show_admin_link:<?php echo ($kfm->setting('show_admin_link')?'true':'false'); ?>,
 				version:'<?php echo KFM_VERSION; ?>'
 			};
 			var kfm_widgets=[];
