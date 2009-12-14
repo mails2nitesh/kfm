@@ -298,7 +298,7 @@ function _zip($filename,$files){
 		$pdir=$cwd.'/';
 		$zipfile=$pdir.$filename;
 		for($i=0;$i<count($arr);++$i)$arr[$i]=str_replace($pdir,'',$arr[$i]);
-		exec('cd "'.$cwd.'" && zip -D "'.$zipfile.'" "'.join('" "',$arr).'"',$arr,$res);
+		exec('cd "'.escapeshellcmd($cwd).'" && zip -D "'.escapeshellcmd($zipfile).'" "'.join('" "',$arr).'"',$arr,$res);
 	}
 	if($res)return kfm_error(kfm_lang('noNativeZipCommand'));
 	return kfm_loadFiles($cwd_id);

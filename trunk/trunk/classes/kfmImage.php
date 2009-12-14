@@ -197,7 +197,7 @@ class kfmImage extends kfmFile{
 		if(!file_exists(IMAGEMAGICK_PATH))return true;
 		$retval=true;
 		$arr=array();
-		exec(IMAGEMAGICK_PATH.' "'.$from.'" -'.$action.' "'.$to.'"',$arr,$retval);
+		exec(IMAGEMAGICK_PATH.' "'.escapeshellcmd($from).'" -'.escapeshellcmd($action).' "'.escapeshellcmd($to).'"',$arr,$retval);
 		return $retval;
 	}
 }
