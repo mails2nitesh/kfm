@@ -106,7 +106,7 @@ if(count($kfm->setting('default_directories'))){
 }
 // }
 // } setup
-header('Content-type: text/html; Charset = utf-8');
+header('Content-type: text/html; charset=UTF-8');
 // { export kaejax stuff
 kfm_kaejax_export('kfm_changeCaption', 'kfm_copyFiles', 'kfm_createDirectory',
 	'kfm_createEmptyFile', 'kfm_deleteDirectory', 'kfm_downloadFileFromUrl', 
