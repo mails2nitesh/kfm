@@ -113,7 +113,7 @@ class kfmDirectory extends kfmObject{
 		$j=0;
 		if(!is_dir(WORKPATH.'css_sprites'))mkdir(WORKPATH.'css_sprites');
 		foreach($files as $file){
-			if(!$file->isImage())continue;
+			if(!$file->isImage() || !$file->thumb_path)continue;
 			if(!($j%$groupby)){
 				$i++;
 				$images[$i]=array();
