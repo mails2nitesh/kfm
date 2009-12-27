@@ -37,7 +37,9 @@ function _(str,context,vars,htmlonly){ // translations
 				'text':res,
 				'requested':1
 			}
-			$j('.kfmlang_'+str.toLowerCase().replace(/[^a-z0-9]/g,'')).text(window.lang[kfm_vars.lang][str].text);
+			setTimeout(function(){
+				$j('.kfmlang_'+str.toLowerCase().replace(/[^a-z0-9]/g,'')).text(window.lang[kfm_vars.lang][str].text);
+			},1);
 		});
 	}
 	return el;
