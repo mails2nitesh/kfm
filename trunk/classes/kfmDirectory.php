@@ -14,7 +14,6 @@ class kfmDirectory extends kfmObject{
 		if(!$res)return $this->id=0;
 		$this->name=$res['name'];
 		$this->pid=(int)$res['parent'];
-		$this->path=$this->path();
 		$this->maxWidth=(int)$res['maxwidth'];
 		$this->maxHeight=(int)$res['maxheight'];
 	}
@@ -242,7 +241,7 @@ class kfmDirectory extends kfmObject{
 		return array(
 			'allowed_file_extensions' => '',
 			'name'                    => $this->name,
-			'path'                    => $this->relativePath(), #str_replace($_SERVER['DOCUMENT_ROOT'],'',$this->path),
+			'path'                    => $this->relativePath(), #str_replace($_SERVER['DOCUMENT_ROOT'],'',$this->path()),
 			'parent'                  => $this->pid,
 			'writable'                => $this->isWritable(),
 			'maxWidth'                => $this->maxWidth,
@@ -283,19 +282,15 @@ class kfmDirectory extends kfmObject{
 		return $directories;
 	}
 	function hasSubdirs(){
-		$this->handle=opendir($this->path());
-		if($this->handle){
-			while(false!==($file=readdir($this->handle))){
-				if($this->checkName($file) && is_dir($this->path().$file)) return true;
-			}
-			closedir($this->handle);
-			return false;
-		}else{
-			$this->error('Directory could not be opened');
+		$dirs=new DirectoryIterator($this->path());
+		foreach($dirs as $dir){
+			if($dir->isDot())continue;
+			if($dir->isDir())return true;
 		}
+		return false;
 	}
 	function isWritable(){
-		return is_writable($this->path());	
+		return is_writable($this->path());
 	}
   function isLink(){
     return is_link($this->path());
