@@ -98,10 +98,9 @@ function kfm_fileUploadForm_single(){
 	max_upload_size.type='hidden';
 	max_upload_size.value='9999999999';
 	var submit=newInput('upload','submit',kfm.lang.Upload);
-	if(!window.ie)$j.event.add(submit,'click',function(e){
-		e=new Event(e);
-		if(e.rightClick)return;
-		setTimeout('document.getElementById("kfm_file").type="text";$j("#kfm_file").attr("type","file");',1);
+	$j.event.add(submit,'click',function(e){
+		if(e.button!=0)return; // only interested in left-clicks
+		setTimeout('$j("#kfm_file").replaceWith(\'<input name="kfm_file" id="kfm_file" type="file" />\');',1);
 	});
 	var input=newInput('kfm_file','file');
 	$j.event.add(input,'keyup',kfm_uploadPanel_checkForZip);
