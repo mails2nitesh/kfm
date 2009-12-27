@@ -16,7 +16,7 @@ function _createEmptyFile($cwd,$filename){
 	if($cwd==0)$cwd=1;
 	if($cwd==$kfm->setting('root_folder_id') && !$kfm->setting('allow_files_in_root'))return kfm_error(kfm_lang('files are not allowed to be create, moved or copied into root'));
 	$dir=kfmDirectory::getInstance($cwd);
-	$path=$dir->getPath();
+	$path=$dir->path();
 	if(!kfmFile::checkName($filename))return kfm_error(kfm_lang('illegalFileName',$filename));
 	if(in_array(kfmFile::getExtension($filename),$kfm->setting('banned_upload_extensions')))return kfm_error(kfm_lang('illegalFileName',$filename));
 	$success=touch($path.$filename);
@@ -30,7 +30,7 @@ function _downloadFileFromUrl($url,$filename){
 	global $kfm_session, $kfm;
 	$cwd_id=$kfm_session->get('cwd_id');
 	$dir=kfmDirectory::getInstance($cwd_id);
-	$cwd=$dir->getPath();
+	$cwd=$dir->path();
 	if(!kfmFile::checkName($filename))return kfm_error(kfm_lang('error: filename not allowed'));
 	if(substr($url,0,4)!='http')return kfm_error(kfm_lang('error: url must begin with http'));
 	$file=file_get_contents(str_replace(' ','%20',$url));
@@ -85,10 +85,12 @@ function _getFileDetails($fid){
 	if(!is_object($file))return kfm_lang('failedGetFileObject');
 	$fpath=$file->path;
 	if(!file_exists($fpath))return;
+#var_dump($file->dir); exit;
 	$details=array(
 		'id'=>$file->id,
 		'name'=>$file->name,
 		'filename'=>$file->name,
+		'dir'=>$file->dir->relativePath(),
 		'mimetype'=>$file->mimetype,
 		'filesize'=>$file->size2str(),
 		'filesize_raw'=>$file->getSize(),
@@ -134,7 +136,6 @@ function _loadFiles($rootid=1,$setParent=false){
 	if($dir->hasErrors())return $dir->getErrors();
 	$files=array();
 	foreach($oFiles as $file)$files[]=_getFileDetails($file);
-	//$root='/'.str_replace($GLOBALS['rootdir'],'',$dir->path);
   $root = '/'.$dir->relativePath(true);
 	$kfm_session->set('cwd_id',$rootid);
 	$ret=array('reqdir'=>$root,'files'=>$files,'uploads_allowed'=>$kfm->setting('allow_file_upload'),'sprites'=>kfm_getCssSprites($rootid)); 
@@ -283,7 +284,7 @@ function _zip($filename,$files){
 	global $kfm_session;
 	$cwd_id=$kfm_session->get('cwd_id');
 	$dir=kfmDirectory::getInstance($cwd_id);
-	$cwd=$dir->path;
+	$cwd=$dir->path();
 	if(!$kfm->setting('allow_file_create'))return kfm_error(kfm_lang('permissionDeniedCreateFile'));
 	global $rootdir;
 	if(!kfmFile::checkName($filename))return kfm_error(kfm_lang('illegalFileName',$filename));
