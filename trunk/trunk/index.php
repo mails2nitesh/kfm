@@ -101,7 +101,7 @@ if (isset($_GET['cwd']) && (int)$_GET['cwd']) {
 if(count($kfm->setting('default_directories'))){
 	foreach($kfm->setting('default_directories') as $dir){
 		$dir=trim($dir);
-		@mkdir($user_root_dir->path.$dir,0755);
+		@mkdir($user_root_dir->path().$dir,0755);
 	}
 }
 // }

@@ -49,7 +49,7 @@ if ($kfm->setting('allow_file_upload')) {
 			$to           = $replace_file->path;
 			if($replace_file->isImage()) $replace_file->deleteThumbs();
 		}
-		else $to = $toDir->path.'/'.$filename;
+		else $to = $toDir->path().'/'.$filename;
 		if (!is_file($tmpname)) $errors[] = 'No file uploaded';
 		else if (!kfmFile::checkName($filename)) {
 			$errors[] = 'The filename: '.$filename.' is not allowed';

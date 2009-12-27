@@ -15,12 +15,19 @@ kfm_addHook(new plugin_file_details());
 function kfm_buildFileDetailsTable(res){
 	if(!res)return;
 	var table=document.createElement('table'),r,s;
-	if(res.name){ // filename
+	if(res.name){     // filename
 		r=kfm.addRow(table);
 		s=document.createElement('strong');
 		s.innerHTML=kfm.lang.Filename;
 		kfm.addCell(r,0,0,s);
 		kfm.addCell(r,1,0,res.name);
+	}
+	if(res.dir){      // directory
+		r=kfm.addRow(table);
+		s=document.createElement('strong');
+		s.appendChild(_('directory'));
+		kfm.addCell(r,0,0,s);
+		kfm.addCell(r,1,0,'/'+res.dir);
 	}
 	if(res.filesize){ // filesize
 		r=kfm.addRow(table);
@@ -59,7 +66,7 @@ function kfm_buildFileDetailsTable(res){
 			}
 		}
 	}
-	if(res.ctime){ // last change time
+	if(res.ctime){    // last change time
 		r=kfm.addRow(table);
 		s=document.createElement('strong');
 		s.innerHTML=kfm.lang.LastModified;
