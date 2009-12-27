@@ -9,6 +9,7 @@
  * @license  docs/license.txt for licensing
  * @link     http://kfm.verens.com/
  */
+error_reporting(E_ERROR);
 if(!defined('KFM_BASE_PATH'))define('KFM_BASE_PATH', dirname(__FILE__).'/');
 if(function_exists("date_default_timezone_set") && function_exists("date_default_timezone_get"))@date_default_timezone_set(date_default_timezone_get());
 
@@ -39,10 +40,10 @@ function sql_escape($sql) {
     return $sql;
 }
 function file_join(){
-  $path = '';
-  foreach(func_get_args() as $pathSegment){
-    $path .= '/'.$pathSegment;
-  }
+  $path= (strtoupper (substr(PHP_OS, 0,3)) == 'WIN')
+    ?''
+    :'/';
+  $path.=join('/',func_get_args());
   $path = str_replace(array('///','//'), '/', $path);
   return $path;
 }

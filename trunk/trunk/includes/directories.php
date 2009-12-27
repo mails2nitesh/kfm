@@ -81,4 +81,4 @@ function kfm_rmMixed($files=array(), $directories=array()){
 		$dir=new kfmDirectory($did);
 		if($dir->delete())$dircount++;
 	}
-}	
+}
