@@ -153,7 +153,7 @@ else require KFM_BASE_PATH.'api/cms_hooks.php.dist';
 // }
 $rootdir = (strpos($kfm_userfiles_address, './')===0 || strpos($kfm_userfiles_address, '../')===0) ?KFM_BASE_PATH.$kfm_userfiles_address:$kfm_userfiles_address.'/';
 
-if (!is_dir($rootdir))mkdir($rootdir, 0755);
+if (!is_dir($rootdir))mkdir($rootdir, 0755, true);
 $rootdir = realpath($rootdir);
 if (!is_dir($rootdir)) {
     echo 'error: "'.htmlspecialchars($rootdir).'" could not be created';
