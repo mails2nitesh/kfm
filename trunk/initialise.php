@@ -43,7 +43,8 @@ function file_join(){
   $path= (strtoupper (substr(PHP_OS, 0,3)) == 'WIN')
     ?''
     :'/';
-  $path.=join('/',func_get_args());
+	$args=func_get_args();
+  $path.=join('/',$args);
   $path = str_replace(array('///','//'), '/', $path);
   return $path;
 }
