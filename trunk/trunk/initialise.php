@@ -251,7 +251,7 @@ case 'pgsql': // {
     break;
 // }
 case 'sqlite': // {
-	die("Sqlite is not longer supported! Please use sqlitepdo!");
+	die('<p>The embedded SQLite in PHP is version 2, but that is no longer supported by <a href="http://www.sqlite.org/download.html">SQLite</a>, <a href="http://php.net/manual/en/book.sqlite.php">PHP</a>, or <a href="http://kfm.verens.com/">KFM</a>. Please use the PDO SQLite driver instead.</p>');
 // }
 case 'sqlitepdo': // {
     $kfmdb_create = false;
