@@ -9,7 +9,7 @@
  * @license  docs/license.txt for licensing
  * @link     http://kfm.verens.com/
  */
-error_reporting(E_ERROR);
+error_reporting(E_PARSE | E_WARNING);
 if(!defined('KFM_BASE_PATH'))define('KFM_BASE_PATH', dirname(__FILE__).'/');
 if(function_exists("date_default_timezone_set") && function_exists("date_default_timezone_get"))@date_default_timezone_set(date_default_timezone_get());
 
