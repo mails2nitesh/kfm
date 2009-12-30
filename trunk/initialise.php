@@ -251,18 +251,7 @@ case 'pgsql': // {
     break;
 // }
 case 'sqlite': // {
-    include_once 'MDB2.php';
-    $kfmdb_create = false;
-    define('DBNAME', $kfm_db_name);
-    if (!file_exists(WORKPATH.DBNAME))$kfmdb_create = true;
-    $dsn   = array('phptype'=>'sqlite', 'database'=>WORKPATH.DBNAME, 'mode'=>'0644');
-    $kfmdb = &MDB2::connect($dsn);
-    kfm_dieOnError($kfmdb);
-    $kfmdb->setFetchMode(MDB2_FETCHMODE_ASSOC);
-     $kfmdb->setOption('portability',MDB2_PORTABILITY_ALL ^ MDB2_PORTABILITY_EMPTY_TO_NULL);
-    if ($kfmdb_create)include KFM_BASE_PATH.'scripts/db.sqlite.create.php';
-    $db_defined = 1;
-    break;
+	die("Sqlite is not longer supported! Please use sqlitepdo!");
 // }
 case 'sqlitepdo': // {
     $kfmdb_create = false;
