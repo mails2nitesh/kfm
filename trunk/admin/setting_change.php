@@ -22,7 +22,9 @@ if($kfm->isAdmin() || $kfm->isUserSetting($sn)){
   if($s && count($s)){
     $kfm->db->query('UPDATE '.KFM_DB_PREFIX.'settings SET value="'.mysql_escape_string($value).'" WHERE name="'.mysql_escape_string($sn).'" AND user_id='.$uid);
   }else{
-    $kfm->db->query('INSERT INTO '.KFM_DB_PREFIX.'settings (name, value, user_id, usersetting) VALUES ("'.mysql_escape_string($sn).'","'.mysql_escape_string($value).'", '.$uid.',1)');
+    if(!isset($_POST['usersetting'])) die ('error("Cannot determine if setting is usersetting")');
+    $usersetting = mysql_escape_string($_POST['usersetting']);
+    $kfm->db->query('INSERT INTO '.KFM_DB_PREFIX.'settings (name, value, user_id, usersetting) VALUES ("'.mysql_escape_string($sn).'","'.mysql_escape_string($value).'", '.$uid.','.$usersetting.')');
 	  if($kfm->user_id!=1) echo '$("#todefault_'.$sn.'").fadeIn();';
   }
 }

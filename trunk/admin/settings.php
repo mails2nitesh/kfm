@@ -9,7 +9,9 @@ foreach($mysets as &$myset)$myset=$myset['name'];
 <script type="text/javascript">
 var sprefix='<?php echo $sprefix;?>';
 function change_setting(name,value){
-	$.post('setting_change.php',{name:name,value:value},function(res){eval(res);});
+  var usersetting = $('#'+sprefix+name).val();
+  usersetting = usersetting ? usersetting : 0; // Non admin users will not have the choice
+	$.post('setting_change.php',{name:name,value:value,usersetting:usersetting},function(res){eval(res);});
 }
 function style_usersetting(name){
 	$('#desc_'+sprefix+name).removeClass().addClass('user_setting');
