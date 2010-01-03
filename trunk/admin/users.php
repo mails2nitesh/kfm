@@ -19,7 +19,7 @@ foreach($users as $user){
 	$lhtml.=user_row($user['id'],$user['username'],$user['status']);
 }
 $lhtml.="</tbody>\n</table>\n";
-if(count($users)==0)$lhtml='<span class="message">No users found</span>';
+//if(count($users)==0)$lhtml='<span class="message">No users found</span>';
 
 ?>
 <script type="text/javascript">
