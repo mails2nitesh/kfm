@@ -185,7 +185,12 @@ class kfmBase extends kfmObject{
 	/**
 	 * This function returns true if the user is an admin user, false if not
 	 */
-	function isAdmin(){
+	function isAdmin($uid = false){
+    if($uid){
+      $res=db_fetch_row('SELECT id, username, password, status FROM '.KFM_DB_PREFIX.'users WHERE id='.mysql_escape_string($uid));
+      if($res && $res['status'] == 1) return true;
+      else return false;
+    }
 		return $this->user_status==1;
 	}
 

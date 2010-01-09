@@ -9,17 +9,20 @@ foreach($kfm->plugins as $plugin){
 $getparams='?';
 foreach($_GET as $key => $value)$getparams.=urlencode($key).'='.urlencode($value).'&';
 $getparams=rtrim($getparams,'& ');
+$sprefix='kfm_setting_'; // Until now a dummy prefix for settings. Maybe needed for future things. Also in the settings.php
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <title>KFM admin</title>
 
-<link rel="stylesheet" href="../j/jquery/tabs/ui.tabs.css" type="text/css">
-<link rel="stylesheet" href="../themes/<?php echo $kfm->setting('theme');?>/css.php" type="text/css">
-
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+<link rel="stylesheet" href="../j/jquery/tabs/ui.tabs.css" type="text/css" />
+<link rel="stylesheet" href="../themes/<?php echo $kfm->setting('theme');?>/css.php" type="text/css" />
+<link type="text/css" rel="stylesheet" href="http://jqueryui.com/themes/base/ui.all.css" />
+<script src="http://www.google.com/jsapi"></script>
 <script type="text/javascript">
+google.load('jquery', '1');
+google.load('jqueryui', '1');
 // ugly fix for variable.js call to kfm_vars
 kfm_vars={};
 </script>
@@ -80,7 +83,7 @@ foreach($kfm->admin_tabs as $tab){
 #password_div label { position: absolute; text-align:left; width:222px; }
 #password_div input, textarea { margin-left: 140px; }
 
-#settings_container{
+.settings_container{
 	margin-left:60px;
 	margin-right:60px;
 	background-color:#eee;
@@ -156,6 +159,10 @@ foreach($kfm->admin_tabs as $tab){
 	cursor:pointer;
 }
 </style>
+<script type="text/javascript">
+var sprefix='<?php echo $sprefix;?>';
+</script>
+<script type="text/javascript" src="settings.js"></script>
 </head>
 <body>
 <div id="general_info">

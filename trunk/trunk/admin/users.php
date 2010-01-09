@@ -52,6 +52,22 @@ function delete_user(uid, username){
 		}
 	});
 }
+var testerbj = null;
+function edit_user_settings(uid, username){
+  $.post('settings.php',{uid:uid, ismodal:1}, function(data){
+     $('<div title="Settings for '+username+'">'+data+'</div>').dialog({
+        modal:true,
+        width:800,
+        close: function(event, ui){
+          $(this).parents('.ui-dialog').empty();
+        }
+     });
+     /*$.prompt(data,{
+       prefix:'jqisettings'
+     });
+     */
+  });
+}
 function user_status_change(uid, status){
 	$.post('user_status_change.php',{uid:uid,status:status},function(res){eval(res);});
 }
