@@ -32,3 +32,32 @@ div.jqi button{
 	padding: 3px 10px 3px 10px;
 	margin: 0 10px;
 }
+.jqisettingsfade{
+	position: absolute;
+	background-color: #333333;
+}
+div.jqisettings{
+	position: absolute;
+	background-color: #888;
+	padding: 10px; 
+	width: 90%;
+	text-align: left;
+}
+div.jqisettings .jqisettingscontainer{
+	background-color: #bbb;
+	padding: 5px; 
+	color: #ddd;
+	font-weight: bold;
+}
+div.jqisettings .jqisettingsmessage{
+	background-color: #555;
+	padding: 10px;
+}
+div.jqisettings .jqisettingsbuttons{
+	text-align: center;
+	padding: 5px 0 0 0;
+}
+div.jqisettings button{
+	padding: 3px 10px 3px 10px;
+	margin: 0 10px;
+}
