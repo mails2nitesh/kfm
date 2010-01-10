@@ -95,8 +95,7 @@ function kfm_img_startLightbox(id){
 	kfm_resizeHandler_add('kfm_lightboxWrapper');
 }
 function kfm_img_stopLightbox(e){
-	e=new Event(e);
-	if(e.rightClick)return;
+	if(e.button==2)return;
 	$j("#kfm_lightboxWrapper").remove();
 	window.kfm_slideshow=window.kfm_slideshow_stopped=null;
 	if(window.lightbox_slideshowTimer)clearTimeout(window.lightbox_slideshowTimer);

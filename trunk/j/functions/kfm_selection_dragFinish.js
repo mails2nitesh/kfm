@@ -1,8 +1,7 @@
 window.kfm_selection_dragFinish=function(e){
-	e=new Event(e);
 	clearTimeout(window.dragSelectionTrigger);
 	if(!window.drag_wrapper)return;
-	var right_column=document.getElementById('documents_body'),p1=e.page,p2=window.drag_wrapper.orig,offset=right_column.scrollTop;
+	var right_column=document.getElementById('documents_body'),p1={x:e.pageX,y:e.pageY},p2=window.drag_wrapper.orig,offset=right_column.scrollTop;
 	var x1=p1.x>p2.x?p2.x:p1.x, x2=p2.x>p1.x?p2.x:p1.x, y1=p1.y>p2.y?p2.y:p1.y, y2=p2.y>p1.y?p2.y:p1.y;
 	setTimeout('window.dragType=0;',1); // pause needed for IE
 	$j(window.drag_wrapper).remove();

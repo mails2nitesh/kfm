@@ -46,12 +46,9 @@ kfm_dir_bits={
 				context_categories[obj.category].add(obj);
 			}
 		}
-		//e=new Event(e);
-		//kfm_createContextMenu(e.page,links);
 	},
 	clickDir:function(e){
-		e=new Event(e);
-		if(e.rightClick)return;
+		if(e.type="contextmenu" || e.button==2)return;
 		kfm_changeDirectory(this.id);
 	},
 	removeHover:function(){

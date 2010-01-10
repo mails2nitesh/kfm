@@ -218,8 +218,7 @@ function kfm_fileUploadForm_flash(){
 		});
 	},1);
 	$j.event.add(b2,'click',function(e){
-		e=new Event(e);
-		if(e.rightClick)return;
+		if(e.button==2)return;
 		window.swfUpload.cancelUpload();
 	});
 	return t;
@@ -462,7 +461,6 @@ function kfm_togglePanelsUnlocked(){
 	kfm_refreshPanels('kfm_left_column');
 }
 function kfm_uploadPanel_checkForZip(e){
-	e=new Event(e);
 	e.stopPropagation();
 	var v=this.value;
 	var h=(v.indexOf('.')==-1||v.replace(/.*(\.[^.]*)/,'$1')!='.zip');
