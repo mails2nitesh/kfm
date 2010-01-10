@@ -20,6 +20,6 @@ window.kfm_files_dragToDirectory=function(e){
 			category:'edit',
 			doFunction:function(){eval(mv)}
 		});
-		kfm_createContextMenu(e.page,false);
+		kfm_createContextMenu({x:e.pageX,y:e.pageY},false);
 	}
 }

@@ -82,8 +82,7 @@ window.kfm_modal_open=function(form,title,actions){
 		wrapper.style.zIndex=3;
 	}
 	$j.event.add(wrapper,'keyup',function(e){
-		e=new Event(e);
-		e.stop();
+		e.stopPropagation();
 	});
 	$j(wrapper).Draggable({"handle":h2});
 }

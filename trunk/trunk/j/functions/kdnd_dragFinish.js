@@ -1,9 +1,8 @@
 window.kdnd_dragFinish=function(e,notest){
-	e=new Event(e);
 	clearTimeout(window.dragTrigger);
 	if(!window.kdnd_dragging)return;
 	if(!notest){ // check for targets and run functions if found
-		var a,b,els,m=e.page,el;
+		var a,b,els,m={x:e.pageX,y:e.pageY},el;
 		$each(kdnd_targets[window.kdnd_drag_class],function(fn,a){
 			$j(a).each(function(key,el){
 				if(getOffset(el,'Left')<=m.x&&m.x<getOffset(el,'Left')+el.offsetWidth&&getOffset(el,'Top')<=m.y&&m.y<getOffset(el,'Top')+el.offsetHeight){

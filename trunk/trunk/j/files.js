@@ -28,7 +28,6 @@ var kfm_file_bits={
 		return drag_wrapper;
 	},
 	dblclick:function(e){
-		e=new Event(e);
 		var el=e.target;
 		while(!el.file_id && el)el=el.parentNode;
 		if(!el)return;
@@ -41,7 +40,6 @@ var kfm_file_bits={
 	infoTooltipStart:function(e){ // initialise info tooltip
 		if(window.kfm_tooltipInit)clearTimeout(window.kfm_tooltipInit);
 		if(window.kdnd_dragging)return; // don't open if currently dragging files
-		e=new Event(e);
 		window.kfm_tooltipInit=setTimeout('kfm_showToolTip('+e.target.file_id+')',1000);
 	},
 	infoTooltipStop:function(){ // remove info tooltip

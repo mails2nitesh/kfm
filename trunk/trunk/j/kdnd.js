@@ -3,9 +3,8 @@ function kdnd_addDropHandler(source_class,target_selector,func){
 	kdnd_targets[source_class][target_selector]=func;
 }
 function kdnd_drag(e){
-	e=new Event(e);
 	if(!window.kdnd_dragging)return;
-	var m=e.page;
+	var m={x:e.pageX,y:e.pageY};
 	clearSelections();
 	window.kdnd_drag_wrapper.style.position='absolute';
 	window.kdnd_drag_wrapper.style.display ='block';
@@ -17,14 +16,13 @@ function kdnd_drag(e){
 }
 function kdnd_dragInit(el,source_class){
 	return function(e){
-		e=new Event(e);
-		if(e.rightClick)return;
+		if(e.type=="contextmenu" || e.button==2)return;
 		$j.event.add(document,'mouseup',function(e){kdnd_dragFinish(e);});
 		clearTimeout(window.dragTrigger);
 		window.dragTrigger=setTimeout(function(){
 			kdnd_dragStart(el,source_class);
 		},100);
-		window.kdnd_offset={'x':el.offsetLeft-e.page.x,'y':el.offsetTop-e.page.y};
+		window.kdnd_offset={'x':el.offsetLeft-e.pageX,'y':el.offsetTop-e.pageY};
 		e.stop();
 	};
 }

@@ -50,10 +50,9 @@ function kfm_selectionCheck(){
 	else kfm_run_delayed('file_details','if(!selectedFiles.length)kfm_showFileDetails();');
 }
 function kfm_selection_drag(e){
-	e=new Event(e);
 	if(!window.dragType||window.dragType!=2||!window.drag_wrapper)return;
 	clearSelections();
-	var p1=e.page,p2=window.drag_wrapper.orig;
+	var p1={x:e.pageX,y:e.pageY},p2=window.drag_wrapper.orig;
 	var x1=p1.x>p2.x?p2.x:p1.x;
 	var x2=p2.x>p1.x?p2.x:p1.x;
 	var y1=p1.y>p2.y?p2.y:p1.y;
@@ -105,8 +104,7 @@ function kfm_shiftFileSelectionUD(dir){
 }
 function kfm_toggleSelectedFile(e){
 	var row;
-	e=new Event(e);
-	if(e.rightClick)return;
+	if(e.type=="contextmenu" || e.button==2)return;
 	e.stopPropagation();
 	kfm_closeContextMenu();
 	if(window.dragAddedFileToSelection){
