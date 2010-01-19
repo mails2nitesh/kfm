@@ -48,7 +48,7 @@ kfm_dir_bits={
 		}
 	},
 	clickDir:function(e){
-		if(e.type="contextmenu" || e.button==2)return;
+		if(e.type=="contextmenu" || e.button==2)return;
 		kfm_changeDirectory(this.id);
 	},
 	removeHover:function(){
