@@ -15,8 +15,7 @@ function kfm_removeFromSelection(id){
 	var i;
 	for(i=0;i<selectedFiles.length;++i){
 		if(selectedFiles[i]==id){
-			var el=document.getElementById('kfm_file_icon_'+id);
-			if(el)$j.className.remove(el,'selected');
+			$j('#kfm_file_icon_'+id).removeClass('selected');
 			kfm_selectionCheck();
 			return selectedFiles.splice(i,1);
 		}
@@ -34,8 +33,7 @@ function kfm_selectInvert(){
 }
 function kfm_selectNone(){
 	if(kfm_lastClicked){
-		var el=document.getElementById('kfm_file_icon_'+kfm_lastClicked);
-		if(el)$j.className.remove(el,'last_clicked');
+		$j('#kfm_file_icon_'+kfm_lastClicked).removeClass('last_clicked');
 	}
 	for(var i=selectedFiles.length;i>-1;--i)kfm_removeFromSelection(selectedFiles[i]);
 	kfm_lastClicked=0;
@@ -121,7 +119,7 @@ function kfm_toggleSelectedFile(e){
 	}
 	if(kfm_lastClicked){
 		var el=document.getElementById('kfm_file_icon_'+kfm_lastClicked);
-		if(el)$j.className.remove(el,'last_clicked');
+		if(el)$j(el).removeClass('last_clicked');
 		else kfm_lastClicked=0;
 	}
 	if(kfm_lastClicked&&e.shift){

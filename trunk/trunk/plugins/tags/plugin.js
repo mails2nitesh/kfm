@@ -43,7 +43,7 @@ function kfm_tagDraw(id){
 	$j('span.kfm_unknown_tag').each(function(key,el){
 		if(el.innerHTML==id){
 			el.innerHTML=name;
-			$j.className.remove(el,'kfm_unknown_tag');
+			$j(el).removeClass('kfm_unknown_tag');
 		}
 	});
 }

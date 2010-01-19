@@ -56,10 +56,10 @@ window.kfm_createContextMenu=function(m,show_category_headers){
 			li=$j('<li class="kfm_plugin_'+cat.items[i].name+'_contexticon kfm_plugin_'+cat.items[i].name+'_'+kfm_theme+'_contexticon '+lClass+'"></li>');
 			li[0].appendChild(_(cat.items[i].title));
 			$j.event.add(li[0],'mouseover',function(){
-				$j.className.add(this,'hover');
+				$j(this).addClass('hover');
 				if(!this.hasActionEvents){ // no need to add the click/mouseout events until mouse is hovered
 					$j.event.add(this,'mouseout',function(){
-						$j.className.remove(this,'hover');
+						$j(this).removeClass('hover');
 					});
 					$j.event.add(this,'click',function(){
 						kfm_closeContextMenu();
