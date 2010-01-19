@@ -23,7 +23,7 @@ function kdnd_dragInit(el,source_class){
 			kdnd_dragStart(el,source_class);
 		},100);
 		window.kdnd_offset={'x':el.offsetLeft-e.pageX,'y':el.offsetTop-e.pageY};
-		e.stop();
+		e.stopPropagation();
 	};
 }
 function kdnd_dragStart(el,source_class){
