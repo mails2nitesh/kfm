@@ -16,10 +16,10 @@
  */
 
 // what type of database to use
-// values allowed: mysql, pgsql, sqlite, sqlitepdo
+// values allowed: mysql, pgsql, sqlitepdo
 $kfm_db_type = 'sqlitepdo';
 
-// the following options should only be filled if you are not using sqlite/sqlitepdo as the database
+// the following options should only be filled if you are not using sqlitepdo as the database
 $kfm_db_prefix   = 'kfm_';
 $kfm_db_host     = 'localhost';
 $kfm_db_name     = 'kfm';
