@@ -165,7 +165,7 @@ function kfm_getLinks(files,nocontext){
 	}
 	if(!nocontext){
 		for(j=0;j<hookObjects.length;++j){
-			item=hookObjects[j];
+			var item=hookObjects[j];
 			if(kfm_vars.associations[F.ext] && kfm_vars.associations[F.ext]==item.name){ // Create an open object
 				context_categories['main'].add({
 					name:'open',
