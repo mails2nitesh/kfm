@@ -12,7 +12,7 @@
 		<title>KFM - Kae's File Manager - Login</title>
 	</head>
 	<body>
-		<form method="post" action="./">
+		<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
 			<table>
 				<tr>
 					<th colspan="2">KFM Login</th>
