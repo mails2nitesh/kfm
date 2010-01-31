@@ -39,17 +39,17 @@ RenameDir:
 	"rinomina",
 
 // file
-DeleteFile:
+"delete file":
 	"elimina",
-RenameFile:
+"rename file":
 	"rinomina",
-RotateClockwise:
+"rotate clockwise":
 	"ruota in senso orario",
-RotateAntiClockwise:
+"rotate anti-clockwise":
 	"ruota in senso antiorario",
-ResizeImage:
+"resize image":
 	"ridimensiona immagine",
-ChangeCaption:
+"change caption":
 	"cambia descrizione",
 
 // create a file
@@ -129,8 +129,6 @@ FileTooLargeForThumb:
 	"errore: \"%1\" è troppo grande per creare una anteprima. Diminuire le dimensioni del file.",
 CouldntReadDir:
 	"errore: non posso leggere la cartella",
-CannotRenameFile:
-	"errore: non posso rinominare \"%1\" a \"%2\"",
 FilenameAlreadyExists:
 	"errore: un file con questo nome esiste già",
 
@@ -151,13 +149,13 @@ LockPanels:
 	"Blocca i pannelli",
 UnlockPanels:
 	"Sblocca i pannelli",
-CreateEmptyFile:
+"create empty file":
 	"Crea un file vuoto",
 DownloadFileFromUrl:
 	"Carica file da URL",
 DirectoryProperties:
 	"Proprietà cartella",
-SelectAll:
+"select all":
 	"seleziona tutto",
 SelectNone:
 	"deseleziona",
@@ -167,7 +165,7 @@ LoadingKFM:
 	"Carico KFM",
 Name:
 	"nome",
-FileDetails:
+"file details":
 	"Proprietà file",
 Search:
 	"Cerca",
@@ -181,7 +179,7 @@ DirNotInDb:
 	"la cartella non è nel database",
 ShowPanel:
 	"mostra pannello \"%1\"",
-ChangeCaption:
+"change caption":
 	"cambia descrizione",
 NewDirectory:
 	"Nuova cartella",
@@ -229,13 +227,13 @@ ExtractZippedFile:
 	"Extract zipped file",
 
 // new in 0.8
-ViewImage:
+"view image":
 	"view image",
-ReturnThumbnailToOpener:
+"return thumbnail to opener":
 	"return thumbnail to opener",
-AddTagsToFiles:
+"add tags to files":
 	"add tags to file(s)",
-RemoveTagsFromFiles:
+"remove tags from files":
 	"remove tags from file(s)",
 HowWouldYouLikeToRenameTheseFiles:
 	"How would you like to rename these files?\n\nexample: \"images-***.jpg\" will rename files to \"images-001.jpg\", \"images-002.jpg\", ...",
@@ -267,7 +265,6 @@ AndNMore: "...and %1 more...",
 Browse: "Browse...",
 ExtractAfterUpload: "extract after upload",
 NotAnImageOrImageDimensionsNotReported: "error: not an image, or image dimensions not reported",
-PermissionDeniedCannotDeleteFile: "permission denied: cannot delete file",
 RenameTheDirectoryToWhat: "Rename the directory '%1' to what?",
 RenamedDirectoryAs: "Renamed '%1' as '%2'",
 TheFilenameShouldEndWithN: "The filename should end with %1",
@@ -287,7 +284,7 @@ Cancel: "cancel"
 	CouldNotMoveFiles       : "error: could not move file[s]",
 	CopyFiles               : "copy files", // when dragging files to a directory, two choices appear - "copy files" and "move files"
 	MoveFiles               : "move files",
-	AboutKfm                : "about KFM",
+	"about KFM"                : "about KFM",
 	Errors                  : "Errors",
 	Ok                      : "OK" // as in "OK / Cancel"
 }

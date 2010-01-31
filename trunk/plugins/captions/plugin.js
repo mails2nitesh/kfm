@@ -1,6 +1,6 @@
 function kfm_plugin_captions(){
 	this.name='captions';
-	this.title="Change Caption";
+	this.title="change caption";
 	this.category='edit';
 	this.mode=0;
 	this.writable=2;
@@ -10,7 +10,7 @@ function kfm_plugin_captions(){
 kfm_addHook(new kfm_plugin_captions());
 
 function kfm_changeCaption(id){
-	kfm_prompt(_("Change Caption"),File_getInstance(id).caption,function(newCaption){
+	kfm_prompt(_("change caption"),File_getInstance(id).caption,function(newCaption){
 		x_kfm_changeCaption(id,newCaption,function(res){
 			File_getInstance(id).caption=newCaption;
 		});

@@ -27,12 +27,12 @@ DirEmpty: "no se encontraron archivos en \"%1\"",
 CreateSubDir: "crear sub-directorio",
 DeleteDir: "eliminar",
 RenameDir: "renombrar",
-DeleteFile: "eliminar",
-RenameFile: "renombrar",
-RotateClockwise: "girar en sentido a las manecillas del reloj",
-RotateAntiClockwise: "girar en sentido inverso a las manecillas del reloj",
-ResizeImage: "redimensionar imagen",
-ChangeCaption: "cambiar etiqueta",
+"delete file": "eliminar",
+"rename file": "renombrar",
+"rotate clockwise": "girar en sentido a las manecillas del reloj",
+"rotate anti-clockwise": "girar en sentido inverso a las manecillas del reloj",
+"resize image": "redimensionar imagen",
+"change caption": "cambiar etiqueta",
 FileName: "¿Nombre del nuevo archivo?",
 AskIfOverwrite: "El archivo \"%1\" ya existe. ¿Sobreescribir?",
 NoForwardslash: "\nNo puedes utilizar '/' en el nombre del archivo",
@@ -81,8 +81,6 @@ FileTooLargeForThumb:
 	"error: \"%1\" es muy grande para generar una miniatura. Porfavor reemplaza el archivo con una versión más pequeña.",
 CouldntReadDir:
 	"error: no se pudo leer el directorio",
-CannotRenameFile:
-	"error: no se pudo renombrar \"%1\" a \"%2\"",
 FilenameAlreadyExists:
 	"error: ya existe un archivo con ese nombre",
 
@@ -103,13 +101,13 @@ LockPanels:
 	"bloquear paneles",
 UnlockPanels:
 	"desbloquear paneles",
-CreateEmptyFile:
+"create empty file":
 	"crear archivo vacío",
 DownloadFileFromUrl:
 	"descargar archivo desde ubicación",
 DirectoryProperties:
 	"Propiedades de carpeta",
-SelectAll:
+"select all":
 	"seleccionar todo",
 SelectNone:
 	"deseleccionar",
@@ -119,7 +117,7 @@ LoadingKFM:
 	"cargando KFM",
 Name:
 	"nombre",
-FileDetails:
+"file details":
 	"Detalles de archivo",
 Search:
 	"Buscar",
@@ -133,7 +131,7 @@ DirNotInDb:
 	"directorio no se encuentra en la base de datos",
 ShowPanel:
 	"mostrar panel \"%1\"",
-ChangeCaption:
+"change caption":
 	"Cambiar etiqueta",
 NewDirectory:
 	"Nuevo directorio",
@@ -181,13 +179,13 @@ ExtractZippedFile:
 	"Extraer archivo comprimido",
 
 // new in 0.8
-ViewImage:
+"view image":
 	"ver imagen",
-ReturnThumbnailToOpener:
+"return thumbnail to opener":
 	"regresar miniatura a lanzador",
-AddTagsToFiles:
+"add tags to files":
 	"agregar tags de archivo(s)",
-RemoveTagsFromFiles:
+"remove tags from files":
 	"quitaqr tags de archivo(s)",
 HowWouldYouLikeToRenameTheseFiles:
 	"Como renombrar estos archivos?\n\nejemplo: \"imagenes-***.jpg\" se renombrarán a \"imagenes-001.jpg\", \"imagenes-002.jpg\", ...",
@@ -219,7 +217,6 @@ AndNMore: "...y %1 más...",
 Browse: "Examinar...",
 ExtractAfterUpload: "extraer despues de subir",
 NotAnImageOrImageDimensionsNotReported: "error: no es una imagen, o no se encuentran las dimensiones de la imagen",
-PermissionDeniedCannotDeleteFile: "permiso denegado: no se puede eliminar el archivo",
 RenameTheDirectoryToWhat: "¿Renombrar el directorio '%1' a que?",
 RenamedDirectoryAs: "'%1' renombrado como '%2'",
 TheFilenameShouldEndWithN: "El nombre de archivo debe terminar con %1",
@@ -239,7 +236,7 @@ Cancel: "cancelar"
 	CouldNotMoveFiles       : "error: could not move file[s]",
 	CopyFiles               : "copy files", // when dragging files to a directory, two choices appear - "copy files" and "move files"
 	MoveFiles               : "move files",
-	AboutKfm                : "about KFM",
+	"about KFM"                : "about KFM",
 	Errors                  : "Errors",
 	Ok                      : "OK" // as in "OK / Cancel"
 }

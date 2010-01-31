@@ -41,17 +41,16 @@ DeleteDir:
 RenameDir:
 	"renommer",
 
-DeleteFile:
+"delete file":
 	"supprimer",
-RenameFile:
-	"renommer",
-RotateClockwise:
+"rename file": "renommer",
+"rotate clockwise":
 	"rotation sens horaire",
-RotateAntiClockwise:
+"rotate anti-clockwise":
 	"rotation sens anti-horaire",
-ResizeImage:
+"resize image":
 	"redimensionner l'image",
-ChangeCaption:
+"change caption":
 	"modifier le titre",
 
 WhatFilenameToCreateAs:
@@ -126,8 +125,6 @@ FileTooLargeForThumb:
 	"erreur: \"%1\" est trop gros pour créer une vignette. Veuillez remplacer ce fichier par une version plus petite.",
 CouldntReadDir:
 	"erreur: impossible de lire ce dossier",
-CannotRenameFile:
-	"erreur: impossible de renommer \"%1\" en \"%2\"",
 FilenameAlreadyExists:
 	"erreur: un fichier de ce nom existe déjà",
 
@@ -148,13 +145,13 @@ LockPanels:
 	"verrouiller les panneaux",
 UnlockPanels:
 	"déverrouiller les panneaux",
-CreateEmptyFile:
+"create empty file":
 	"créer un fichier vide",
 DownloadFileFromUrl:
 	"télécharger un fichier",
 DirectoryProperties:
 	"Propriétés de Dossier",
-SelectAll:
+"select all":
 	"tout sélectionner",
 SelectNone:
 	"tout désélectionner",
@@ -164,7 +161,7 @@ LoadingKFM:
 	"chargement de KFM",
 Name:
 	"Nom",
-FileDetails:
+"file details":
 	"Propriétés de Fichier",
 Search:
 	"Chercher",
@@ -178,7 +175,7 @@ DirNotInDb:
 	"dossier inconnu dans la base de données",
 ShowPanel:
 	"afficher le panneau \"%1\"",
-ChangeCaption:
+"change caption":
 	"Changer le Titre",
 NewDirectory:
 	"Nouveau Dossier",
@@ -226,13 +223,13 @@ ExtractZippedFile:
 	"Décompresser le fichier",
 
 // new in 0.8
-ViewImage:
+"view image":
 	"voir l'image",
-ReturnThumbnailToOpener:
+"return thumbnail to opener":
 	"renvoyer une vignette à l'éditeur",
-AddTagsToFiles:
+"add tags to files":
 	"ajouter des libellés au(x) fichier(s)",
-RemoveTagsFromFiles:
+"remove tags from files":
 	"supprimer des libellés de ce(s) fichier(s)",
 HowWouldYouLikeToRenameTheseFiles:
 	"Comment souhaitez-vous renommer ces fichiers?\n\nexample: \"images-***.jpg\" les renommera en \"images-001.jpg\", \"images-002.jpg\", ...",
@@ -264,7 +261,6 @@ AndNMore: "...et %1 autres...",
 Browse: "Parcourir...",
 ExtractAfterUpload: "décompresser après envoi",
 NotAnImageOrImageDimensionsNotReported: "erreur: pas une image, ou impossible de déterminer ses dimensions",
-PermissionDeniedCannotDeleteFile: "permission refusée: impossible de supprimer le fichier",
 RenameTheDirectoryToWhat: "Renommer le dossier '%1' en?",
 RenamedDirectoryAs: "dossier '%1' renommé en '%2'",
 TheFilenameShouldEndWithN: "Le nom du fichier devrait finir par %1",
@@ -284,7 +280,7 @@ Cancel: "annuler"
 	CouldNotMoveFiles       : "error: could not move file[s]",
 	CopyFiles               : "copy files", // when dragging files to a directory, two choices appear - "copy files" and "move files"
 	MoveFiles               : "move files",
-	AboutKfm                : "about KFM",
+	"about KFM"                : "about KFM",
 	Errors                  : "Errors",
 	Ok                      : "OK" // as in "OK / Cancel"
 }
