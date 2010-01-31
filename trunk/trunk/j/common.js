@@ -64,23 +64,14 @@ function kfm_kaejax_do_call(func_name,args){
 	window.kfm_kaejax_timeouts[uri].callbacks[l]=args[args.length-1];
 }
 function kfm_kaejax_sendRequests(uri){
-	var t=window.kfm_kaejax_timeouts[uri],callbacks=window.kfm_kaejax_timeouts[uri].callbacks;
+	// { get the request queue for the uri, and clear the queue
+	var t=window.kfm_kaejax_timeouts[uri];
+	var callbacks=t.callbacks;
 	t.callbacks=null;
 	window.kfm_kaejax_timeouts[uri]=null;
-	var x=new XMLHttpRequest(),post_data="kaejax="+escape(Json.toString(t)).replace(kfm_regexps.plus,'%2B').replace(kfm_regexps.ascii_stuff,'%u00$1').replace(/\n/g,' ');
-	post_data=kfm_sanitise_ajax(post_data);
-	x.open('POST',uri,true);
-	x.setRequestHeader("Method","POST "+uri+" HTTP/1.1");
-	x.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-	x.onreadystatechange=function(){
-		if(x.readyState!=4){
-			return;
-		}
-		var r=x.responseText;
-		if(r.substring(0,5)=='error'){
-			return kfm.alert(r);
-		}
-		var v=eval('('+unescape(r)+')');
+	// }
+	// { send the requests to the server, and send the results back to the callbacks when the server's finished
+	$j.post(uri,{kaejax:Json.toString(t)},function(v){
 		var f,p,i;
 		if(v.errors.length)kfm.showErrors(v.errors);
 		if(v.messages.length)kfm.showMessages(v.messages);
@@ -93,8 +84,8 @@ function kfm_kaejax_sendRequests(uri){
 			}
 			f(v.results[i],p);
 		}
-	};
-	x.send(post_data);
+	},'json');
+	// }
 }
 function loadJS(url,id,lang,onload){
 	var i=0,el;

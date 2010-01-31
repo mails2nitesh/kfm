@@ -231,7 +231,7 @@ class kfmFile extends kfmObject{
 	function setContent($content){
 		global $kfm;
 		if(!$kfm->setting('allow_file_edit'))return $this->error(kfm_lang('permissionDeniedEditFile'));
-		$result=file_put_contents($this->path,utf8_decode($content));
+		$result=file_put_contents($this->path,$content);
 		if(!$result)return $this->error(kfm_lang('errorSettingFileContent'));
 		return true;
 	}
