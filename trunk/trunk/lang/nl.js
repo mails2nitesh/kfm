@@ -34,17 +34,16 @@ DeleteDir:
 RenameDir:
 	"map hernoemen",
 
-DeleteFile:
+"delete file":
 	"bestand verwijderen",
-RenameFile:
-	"bestand hernoemen",
-RotateClockwise:
+"rename file": "bestand hernoemen",
+"rotate clockwise":
 	"met de klok mee draaien",
-RotateAntiClockwise:
+"rotate anti-clockwise":
 	"tegen de klok in draaien",
-ResizeImage:
+"resize image":
 	"Formaat wijzigen",
-ChangeCaption:
+"change caption":
 	"Titel wijzigen",
 
 
@@ -121,8 +120,6 @@ FileTooLargeForThumb:
 	"Fout: De afbeelding \"%1\" is te groot om een thumbnail te maken. Vervang dit bestand voor een kleiner formaat.", 
 CouldntReadDir:
 	"Kan de map niet openen.",
-CannotRenameFile:
-	"Fout: Kan \"%1\" niet wijzigen in \"%2\".",
 FilenameAlreadyExists:
 	"Fout: Een bestand met dezelfde naam bestaat al.",
 
@@ -143,13 +140,13 @@ LockPanels:
 	"panelen vastzetten",
 UnlockPanels:
 	"panelen los maken",
-CreateEmptyFile:
+"create empty file":
 	"maak leeg bestand",
 DownloadFileFromUrl:
 	"download bestand van URL",
 DirectoryProperties:
 	"Map Eigenschappen",
-SelectAll:
+"select all":
 	"Alles selecteren",
 SelectNone:
 	"Niets selecteren",
@@ -159,7 +156,7 @@ LoadingKFM:
 	"laden KFM",
 Name:
 	"naam",
-FileDetails:
+"file details":
 	"Bestand Details",
 Search:
 	"Zoek",
@@ -173,7 +170,7 @@ DirNotInDb:
 	"map niet in database",
 ShowPanel:
 	"laat paneel \"%1\" zien",
-ChangeCaption:
+"change caption":
 	"Wijzig Titel",
 NewDirectory:
 	"Nieuwe Map",
@@ -221,13 +218,13 @@ ExtractZippedFile:
 	"Uitpakken zipbestand",
 
 // new in 0.8
-ViewImage:
+"view image":
 	"bekijk afbeelding",
-ReturnThumbnailToOpener:
+"return thumbnail to opener":
 	"breng thumbnail terug naar opener",
-AddTagsToFiles:
+"add tags to files":
 	"voeg labels toe aan bestand(en)",
-RemoveTagsFromFiles:
+"remove tags from files":
 	"verwijder labels van bestand(en)",
 HowWouldYouLikeToRenameTheseFiles:
 	"Hoe wilt u deze bestanden hernoemen?\n\nvoorbeeld: \"afbeelding-***.jpg\" zal bestanden hernoemen naar \"afbeelding-001.jpg\", \"afbeelding-002.jpg\", ...",
@@ -259,7 +256,6 @@ AndNMore: "...en %1 meer...",
 Browse: "Bladeren...",
 ExtractAfterUpload: "uitpakken na upload",
 NotAnImageOrImageDimensionsNotReported: "fout: geen afbeelding of geen bestandsdimensies aanwezig",
-PermissionDeniedCannotDeleteFile: "toegang geweigerd: kan bestand niet verwijderen",
 RenameTheDirectoryToWhat: "Hernoem map '%1' naar?",
 RenamedDirectoryAs: "'%1' hernoemd als '%2'",
 TheFilenameShouldEndWithN: "Bestandsnaam moet eindigen met %1",
@@ -279,7 +275,7 @@ Cancel: "annuleren"
 	CouldNotMoveFiles       : "fout: kan bestand[en] niet verplaatsen",
 	CopyFiles               : "bestanden kopieren", // when dragging files to a directory, two choices appear - "copy files" and "move files"
 	MoveFiles               : "bestanden verplaatsen",
-	AboutKfm                : "over KFM",
+	"about KFM"                : "over KFM",
 	Errors                  : "Fouten",
 	Ok                      : "OK" // as in "OK / Cancel"
 }

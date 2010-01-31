@@ -54,7 +54,7 @@ function plugin_cropper(){
 
 /* add plugins to the hook system */
 kfm_addHook(new plugin_cropper(),
-	{mode:0,"extensions":["jpg","png","gif"], "category":"edit", "writable":1, title:"Crop image", doFunction:"crop_image"}
+	{mode:0,"extensions":["jpg","png","gif"], "category":"edit", "writable":1, title:"crop image", doFunction:"crop_image"}
 );
 kfm_addHook(new plugin_cropper(),
 	{mode:0,"extensions":["jpg","png","gif"], "category":"edit", "writable":0, title:"Crop to new image", doFunction:"crop_to_new"}

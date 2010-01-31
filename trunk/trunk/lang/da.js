@@ -35,17 +35,16 @@ DeleteDir:
 RenameDir:
 	"Omdøb",
 
-DeleteFile:
+"delete file":
 	"Slet",
-RenameFile:
-	"Omdøb",
-RotateClockwise:
+"rename file": "Omdøb",
+"rotate clockwise":
 	"Rotér med uret",
-RotateAntiClockwise:
+"rotate anti-clockwise":
 	"Rotér mod uret",
-ResizeImage:
+"resize image":
 	"Skalér billede",
-ChangeCaption:
+"change caption":
 	"Rediger billedbeskrivelse",
 
 WhatFilenameToCreateAs:
@@ -119,8 +118,6 @@ FileTooLargeForThumb:
 	"Fejl: Billedet \"%1\" er for stort til at lave et ikon af. Erstat venligst filen med en mindre version.", 
 CouldntReadDir:
 	"Kunne ikke læse mappen",
-CannotRenameFile:
-	"Fejl: Kunne ikke omdøbe filen \"%1\" til \"%2\"",
 FilenameAlreadyExists:
 	"Fejl: En fil med samme navn eksisterer allerede",
 
@@ -141,13 +138,13 @@ LockPanels:
 	"Lås paneler",
 UnlockPanels:
 	"Lås paneler op",
-CreateEmptyFile:
+"create empty file":
 	"Opret tom fil",
 DownloadFileFromUrl:
 	"Hent fil fra URL",
 DirectoryProperties:
 	"Mappe egenskaber",
-SelectAll:
+"select all":
 	"Marker alle",
 SelectNone:
 	"Afmarker valgte",
@@ -157,7 +154,7 @@ LoadingKFM:
 	"Loader KFM",
 Name:
 	"Navn",
-FileDetails:
+"file details":
 	"Egenskaber",
 Search:
 	"Søg",
@@ -171,7 +168,7 @@ DirNotInDb:
 	"Mappen kunne ikke findes i databasen",
 ShowPanel:
 	"Vis panel \"%1\"",
-ChangeCaption:
+"change caption":
 	"Ret beskrivelse", 
 NewDirectory:
 	"Ny mappe",
@@ -219,13 +216,13 @@ ExtractZippedFile:
 	"Pak zip-fil ud",
 
 // new in 0.8
-ViewImage:
+"view image":
 	"Vis billede",
-ReturnThumbnailToOpener:
+"return thumbnail to opener":
 	"Returnér thumbnail til editor",
-AddTagsToFiles:
+"add tags to files":
 	"Tilføj tags til fil(er)",
-RemoveTagsFromFiles:
+"remove tags from files":
 	"Fjern tags fra fil(er)",
 HowWouldYouLikeToRenameTheseFiles:
 	"Ønsker du at omdøbe disse filer?\n\nEksempel: \"billede-***.jpg\" vil omdøbe filerne til \"billede-001.jpg\", \"billede-002.jpg\", ...",
@@ -257,7 +254,6 @@ AndNMore: "...and %1 more...",
 Browse: "Browse...",
 ExtractAfterUpload: "extract after upload",
 NotAnImageOrImageDimensionsNotReported: "error: not an image, or image dimensions not reported",
-PermissionDeniedCannotDeleteFile: "permission denied: cannot delete file",
 RenameTheDirectoryToWhat: "Rename the directory '%1' to what?",
 RenamedDirectoryAs: "Renamed '%1' as '%2'",
 TheFilenameShouldEndWithN: "The filename should end with %1",
@@ -277,7 +273,7 @@ Cancel: "cancel"
 	CouldNotMoveFiles       : "error: could not move file[s]",
 	CopyFiles               : "copy files", // when dragging files to a directory, two choices appear - "copy files" and "move files"
 	MoveFiles               : "move files",
-	AboutKfm                : "about KFM",
+	"about KFM"                : "about KFM",
 	Errors                  : "Errors",
 	Ok                      : "OK" // as in "OK / Cancel"
 }

@@ -1,6 +1,6 @@
 function plugin_image_resize(){
 	this.name='image_resize';
-	this.title=kfm.lang.ResizeImage;
+	this.title='resize image';
 	this.mode=0;//single files
 	this.writable=1;//writable files
 	this.category="edit";

@@ -10,37 +10,19 @@ function _(str,context,vars,htmlonly){ // translations
 	// { set up variables
 	if(!context)context='kfm';
 	if(!vars)vars=[];
-	if(!window.lang)window.lang=[];
-	if(!window.lang[kfm_vars.lang])window.lang[kfm_vars.lang]=[];
 	// }
+	if(!kfm.lang[str]){
+//		alert('missing language string\n------------\n'+str+'\n------------\nplease email kae@verens.com with the correct translation');
+		kfm.lang[str]=str;
+	}
 	if(htmlonly){
-		if(window.lang[kfm_vars.lang][str]){
-			el='<span class="kfmlang kfmlang_'+str.toLowerCase().replace(/[^a-z0-9]/g,'')+'">'+window.lang[kfm_vars.lang][str].text+'</span>';
-			window.lang[kfm_vars.lang][str].requested=1;
-		}
-		else el='<span class="kfmlang kfmlang_'+str.toLowerCase().replace(/[^a-z0-9]/g,'')+'">...</span>';
+		el='<span class="kfmlang kfmlang_'+str.toLowerCase().replace(/[^a-z0-9]/g,'')+'">'+kfm.lang[str]+'</span>';
 	}
 	else{
 		el=document.createElement('span');
 		el.className='kfmlang kfmlang_'+str.toLowerCase().replace(/[^a-z0-9]/g,'');
 		el.original=[str,context,vars];
-		if(window.lang[kfm_vars.lang][str]){
-			el.appendChild(document.createTextNode(window.lang[kfm_vars.lang][str].text));
-			window.lang[kfm_vars.lang][str].requested=1;
-		}
-		else el.appendChild(document.createTextNode('...'));
-	}
-	if(!window.lang[kfm_vars.lang][str]){
-		x_kfm_translate(str,context,kfm_vars.lang,function(res){
-			if(window.lang[kfm_vars.lang][str])return; // in case the string is requested multiple times
-			window.lang[kfm_vars.lang][str]={
-				'text':res,
-				'requested':1
-			}
-			setTimeout(function(){
-				$j('.kfmlang_'+str.toLowerCase().replace(/[^a-z0-9]/g,'')).text(window.lang[kfm_vars.lang][str].text);
-			},1);
-		});
+		el.appendChild(document.createTextNode(kfm.lang[str]));
 	}
 	return el;
 }

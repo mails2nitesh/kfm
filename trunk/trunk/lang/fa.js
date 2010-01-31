@@ -13,7 +13,7 @@
  */
 
 kfm.lang={
-	AddTagsToFiles          : "افزودن تگ به این فایل(ها)",//add tags to file(s)
+	"add tags to files"          : "افزودن تگ به این فایل(ها)",//add tags to file(s)
 	AllFiles                : "همه فایل‌ها",//all files
 	AllowedFileExtensions   : "پسوندهای مجاز برای فایل",//allowed file extensions
 	AndNMore                : "...و %1 بیشتر...",//...and %1 more...
@@ -27,21 +27,20 @@ kfm.lang={
 	CouldNotRemoveDir       : "نمی‌توان پوشه را حذف کرد.\nلطفا ازخالی بودن آن مطمئن شوید",//cannot remove directory.\nplease make sure it is empty
 	CouldNotDownloadFile    : "خطا: نمی‌توان فایل \"%1\" را بارگذاری کرد.",//error: could not download file \"%1\".
 	CouldntReadDir          : "خطا: نمی‌توان پوشه را خواند",//error: couldn't read directory
-	CreateEmptyFile         : "ساختن فایل خالی",//create empty file
+	"create empty file"         : "ساختن فایل خالی",//create empty file
 	CloseWithoutSavingQuestion: "مطمئن هستید که می‌خواهید بدون ذخیره پنجره را ببندید؟",//Are you sure you want to close without saving?
 	CloseWithoutSaving      : "بستن بدون ذخیره",//Close Without Saving
-	CannotRenameFile        : "خطا: نمی‌توان از \"%1\" به \"%2\" تغییرنام داد",//error: cannot rename \"%1\" to \"%2\"
-	ChangeCaption           : "تغییر عنوان",//change caption
+	"change caption"           : "تغییر عنوان",//change caption
 	CreateDirMessage        : "ساختن یک پوشه فرزند برای \"%1\":",//Create a sub-directory of \"%1\":
 	CurrentSize             : "اندازه کنونی: \"%1\" x \"%2\"\n",//Current Size: \"%1\" x \"%2\"\n
-	ChangeCaption           : "تغییر عنوان",//Change Caption
+	"change caption"           : "تغییر عنوان",//Change Caption
 	Close                   : "بستن",//close
 	Caption                 : "عنوان",//caption
 	CommaSeparated          : "جدا کردن با کاما",//comma-separated
 	CopyFromURL             : "بارگذاری با URL",//Copy from URL
 	Dir                     : "rtl",//ltr // language direction
 	Directories             : "پوشه ها",//Directories
-	DeleteFile              : "حذف",//delete
+	"delete file"              : "حذف",//delete
 	DirEmpty                : "هیچ فایلی در \"%1\" وجود ندارد",//no files found in \"%1\"
 	DeleteDir               : "حذف",//delete
 	DelDirMessage           : "مطمئن هستید که می‌خواهید پوشه \"%1\" را حذف کنید؟",//Are you sure you want to delete the directory \"%1\"?
@@ -64,7 +63,7 @@ kfm.lang={
 	FileNameNotAllowd       : "خطا: نام غیرمجاز برای فایل",//error: filename not allowed
 	FileTooLargeForThumb    : "خطا: \"%1\" برای ساختن تصویر بندانگشتی بسیار بزرگ است.لطفا فایل کوچکتری را جایگزین کنید.",//error: \"%1\" is too large to make a thumbnail. Please replace the file with a smaller version.
 	FilenameAlreadyExists   : "خطا: در حال حاضر یک فایل با آن نام وجود دارد",//error: a file of that name already exists
-	FileDetails             : "جزییات فایل",//File Details
+	"file details"             : "جزییات فایل",//File Details
 	Filename                : "نام فایل",//filename
 	Filesize                : "اندازه فایل",//filesize
 	HowWouldYouLikeToRenameTheseFiles: "چگونه می‌خواهید این فایل‌ها را تغییر نام دهید؟\n\n مثال:\"images-***.jpg\" به \"images-001.jpg\"، \"images-002.jpg\", ... تغییر نام پیدا خواهند کرد.",//How would you like to rename these files?\n\nexample: \"images-***.jpg\" will rename files to \"images-001.jpg\", \"images-002.jpg\", ...
@@ -96,27 +95,26 @@ kfm.lang={
 	NewHeightConfirmTxt     : "ارتفاع جدید:\"%1\"\n\n درست است؟",//New Height: \"%1\"\n\nIs this correct?
 	NotMoreThanOneFile      : "خطا: شما نمی‌توانید بیش از یک فایل در آن واحد انتخاب کنید",//error: you cannot choose more than one file at a time
 	NoFilesSelected         : "هیچ فایلی انتخاب نشده است",//no files selected
-	PermissionDeniedCannotDeleteFile: "خطای مجوز: نمی‌توان فایل را حذف کرد",//permission denied: cannot delete file
 	PleaseSelectFileBeforeRename: "لطفا قبل از تغییر نام دادن، یک فایل انتخاب کنید",//Please select a file before you try to rename it
 	RenameDir               : "تغییر نام",//rename
-	RenameFile              : "تغییر نام",//rename
-	RotateClockwise         : "چرخش ساعتگرد",//rotate clock-wise
-	RotateAntiClockwise     : "چرخش پادساعتگرد",//rotate anti-clockwise
-	ResizeImage             : "تغییر اندازه تصویر",//resize image
+	"rename file"              : "تغییر نام",//rename
+	"rotate clockwise"         : "چرخش ساعتگرد",//rotate clock-wise
+	"rotate anti-clockwise"     : "چرخش پادساعتگرد",//rotate anti-clockwise
+	"resize image"             : "تغییر اندازه تصویر",//resize image
 	RenamedFile             : "تغییر نام فایل از \"%1\" به \"%2\".",//renaming file \"%1\" to \"%2\".
 	Restore                 : "واگردانی",//restore
-	ReturnThumbnailToOpener : "بازگرداندن تصویر بندانگشتی به ویرایشگر",//return thumbnail to editor
+	"return thumbnail to opener" : "بازگرداندن تصویر بندانگشتی به ویرایشگر",//return thumbnail to editor
 	RenameOnlyOneFile       : "شما تنها می‌توانید نام یک فایل را در هر لحظه عوض کنید",//You can only rename one file at a time
 	RecursiveDeleteWarning  : "\"%1\" خالی نیست\n آیا مطمئن هستید که مایلبه حذف آن و تمام محتویاتش هستید؟\n*هشدار*: این کار برگشت‌پذیر نیست",//\"%1\" is not empty\nAre you sure you want to delete it and all its contents?\n*WARNING* THIS IS NOT REVERSIBLE
 	RmdirFailed             : "تلاش برای حذف پوشه \"%1\" بی‌نتیجه ماند",//failed to delete directory \"%1\"
 	RenamedDirectoryAs      : "تغییر نام از '%1' به '%2'",//Renamed '%1' as '%2'
 	RenameFileToWhat        : "تغییر نام فایل \"%1\" به چه نامی؟",//Rename the file \"%1\" to what?
 	RenameTheDirectoryToWhat: "تغییر نام پوشه \"%1\" به چه نامی؟",//Rename the directory '%1' to what?
-	RemoveTagsFromFiles     : "برداشتن تگ‌ها از فایل‌ها",//remove tags from file(s)
+	"remove tags from files"     : "برداشتن تگ‌ها از فایل‌ها",//remove tags from file(s)
 	SetStylesError          : "خطا: نمی‌توان \"%1\" را به \"%2\" تنظیم کرد.",//error: cannot set \"%1\" to \"%2\.
 	SaveThenClose           : "ذخیره، سپس بستن",//Save, then Close
 	SaveThenCloseQuestion   : "آیا مطمئن هستید که میخواهید تغییرات داده شده را ذخیره نمایید؟",//Are you sure you want to save the changes you made?
-	SelectAll               : "انتخاب همه",//select all
+	"select all"               : "انتخاب همه",//select all
 	SelectNone              : "انتخاب هیچکدام",//select none
 	Search                  : "جستجو",//Search
 	ShowPanel               : "نمایش پنل \"%1\"",//show panel \"%1\"
@@ -127,7 +125,7 @@ kfm.lang={
 	UnlockPanels            : "گشودن قفل پنل‌ها",//unlock panels
 	UrlNotValid             : "خطا: URL باید با \"http:\" شروع شود",//error: URL must begin with \"http:\"
 	Upload                  : "بارگیری",//Upload
-	ViewImage               : "مشاهده تصویر",//view image
+	"view image"               : "مشاهده تصویر",//view image
 	WhatFilenameDoYouWantToUse: "چه نام فایلی می‌خواهید استفاده کنید؟",//What filename do you want to use?
 	WhatFilenameToCreateAs  : "به چه عنوانی فایل ساخته شود؟",//What should the file be created as?
 	WhatMaximumSize         : "چه مقدار بیشینه‌ای باید بازگردانده شود؟",//What maximum size should be returned?
@@ -146,7 +144,7 @@ kfm.lang={
 	CouldNotMoveFiles       : "خطا:نمی‌توان فایل(ها) را منتقل کرد",//error: could not move file[s]
 	CopyFiles               : "کپی فایل‌ها",//copy files // when dragging files to a directory, two choices appear - "copy files" and "move files"
 	MoveFiles               : "انتقال فایل‌ها",//move files
-	AboutKfm                : "درباره KFM",//about KFM
+	"about KFM"                : "درباره KFM",//about KFM
 	Errors                  : "خطاها",//Errors
 	Ok                      : "تایید"//OK // as in "OK / Cancel"
 }

@@ -41,17 +41,16 @@ RenameDir:
 	"athainmnigh",
 
 // file
-DeleteFile:
+"delete file":
 	"scrios",
-RenameFile:
-	"athainmnigh",
-RotateClockwise:
+"rename file": "athainmnigh",
+"rotate clockwise":
 	"rothlaigh deiseal",
-RotateAntiClockwise:
+"rotate anti-clockwise":
 	"rothlaigh tuathal",
-ResizeImage:
+"resize image":
 	"athraigh tomhas an pictiúr",
-ChangeCaption:
+"change caption":
 	"athraigh ceannteideal",
 
 // create a file
@@ -129,8 +128,6 @@ FileTooLargeForThumb:
 	"earráid: tá \"%1\" rómhór chun thumbnail a cruthaigh. Caithfidh comhad níos beag a úsáid.",
 CouldntReadDir:
 	"earráid: ní féidir an chomhadlann a léamh",
-CannotRenameFile:
-	"earráid: ní féidir \"%1\" a ainmniú mar \"%2\"",
 FilenameAlreadyExists:
 	"earráid: tá comhad leis an ainm sin ann cheana",
 
@@ -151,13 +148,13 @@ LockPanels:
 	"cuir glas ar na bpainéil",
 UnlockPanels:
 	"scaoil na painéil",
-CreateEmptyFile:
+"create empty file":
 	"cruthaigh comhad folamh",
 DownloadFileFromUrl:
 	"Íosluchtaigh ó URL",
 DirectoryProperties:
 	"Sonraí an Chomhadlann",
-SelectAll:
+"select all":
 	"roghnaigh gach rud",
 SelectNone:
 	"roghnaigh dada",
@@ -167,7 +164,7 @@ LoadingKFM:
 	"ag luchtú KFM",
 Name:
 	"ainm",
-FileDetails:
+"file details":
 	"Sonraí an Chomhad",
 Search:
 	"Cuardaigh",
@@ -181,7 +178,7 @@ DirNotInDb:
 	"níl an chomhadlann sa bhunachar sonraí",
 ShowPanel:
 	"taispeáin an phainéil \"%1\"",
-ChangeCaption:
+"change caption":
 	"Athraigh an Cheannteideal",
 NewDirectory:
 	"Comhadlann Nua",
@@ -229,13 +226,13 @@ ExtractZippedFile:
 	"Bain as comhad Zip",
 
 // new in 0.8
-ViewImage:
+"view image":
 	"breathnaigh ar pictiúr",
-ReturnThumbnailToOpener:
+"return thumbnail to opener":
 	"tabhair mionsamhail ar ais don oscailaitheoir",
-AddTagsToFiles:
+"add tags to files":
 	"cur clibeanna le comhad(anna)",
-RemoveTagsFromFiles:
+"remove tags from files":
 	"tóg clibeanna ó comhad(anna)",
 HowWouldYouLikeToRenameTheseFiles:
 	"Conas ar mhaith leat na chomhaid a athainmniú?\n\ne.g.: ó \"images-***.jpg\" bainfidh tú \"images-001.jpg\", \"images-002.jpg\", ...",
@@ -267,7 +264,6 @@ AndNMore: "...and %1 more...",
 Browse: "Browse...",
 ExtractAfterUpload: "extract after upload",
 NotAnImageOrImageDimensionsNotReported: "error: not an image, or image dimensions not reported",
-PermissionDeniedCannotDeleteFile: "permission denied: cannot delete file",
 RenameTheDirectoryToWhat: "Rename the directory '%1' to what?",
 RenamedDirectoryAs: "Renamed '%1' as '%2'",
 TheFilenameShouldEndWithN: "The filename should end with %1",
@@ -287,7 +283,7 @@ Cancel: "cancel"
 	CouldNotMoveFiles       : "error: could not move file[s]",
 	CopyFiles               : "copy files", // when dragging files to a directory, two choices appear - "copy files" and "move files"
 	MoveFiles               : "move files",
-	AboutKfm                : "about KFM",
+	"about KFM"                : "about KFM",
 	Errors                  : "Errors",
 	Ok                      : "OK" // as in "OK / Cancel"
 }

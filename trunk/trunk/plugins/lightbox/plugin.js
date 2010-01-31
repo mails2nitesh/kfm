@@ -11,7 +11,7 @@ function plugin_lightbox(){
 	}
 }
 kfm_addHook(new plugin_lightbox());
-kfm_addHook(new plugin_lightbox(),{mode:0,title:kfm.lang.ViewImage});
+kfm_addHook(new plugin_lightbox(),{mode:0,title:"view image"});
 function $(id){
 	return document.getElementById(id);
 }

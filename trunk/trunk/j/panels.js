@@ -224,7 +224,7 @@ function kfm_fileUploadForm_flash(){
 	return t;
 }
 function kfm_createFileDetailsPanel(){
-	return kfm_createPanel(kfm.lang.FileDetails,'kfm_file_details_panel',0,{abilities:1,order:4});
+	return kfm_createPanel(kfm.lang["file details"],'kfm_file_details_panel',0,{abilities:1,order:4});
 }
 function kfm_createPanel(title,id,subels,vars){
 	// states:    0=minimised,1=maximised,2=fixed-height, 3=fixed-height-maxed
