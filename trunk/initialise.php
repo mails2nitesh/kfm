@@ -440,6 +440,7 @@ if ($handle = opendir(KFM_BASE_PATH.'lang')) {
 }
 // }
 // {  check for URL parameter "lang"
+if (isset($_REQUEST['langCode'])) $_REQUEST['lang']=$_REQUEST['langCode'];
 if (isset($_REQUEST['lang'])&&$_REQUEST['lang']&&in_array($_REQUEST['lang'], $kfm_available_languages)) {
     $kfm_language = $_REQUEST['lang'];
     $kfm_session->set('language', $kfm_language);
