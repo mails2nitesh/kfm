@@ -23,7 +23,10 @@ function setting_default_value(name, uid){
 }
 function setting_select_list(name, option, checked, uid){
 	checked=checked?1:0;
-	$.post('setting_change.php',{uid:uid,name:name,value:option,checked:checked},function(res){eval(res);});
+  var usersetting = $('#'+sprefix+name+'_'+uid+'_usersetting').val();
+  usersetting = usersetting ? usersetting : 0; // Non admin users will not have the choice
+  $('.'+sprefix+name+'_usersetting').val(usersetting); // Change other open list if thre are any
+	$.post('setting_change.php',{uid:uid,name:name,value:option,checked:checked,usersetting:usersetting},function(res){eval(res);});
 }
 function setting_help(setting_name, caller, uid){
 	var cont=$("<div class=\"help_container\" id=\""+setting_name+"_help\"></div>");

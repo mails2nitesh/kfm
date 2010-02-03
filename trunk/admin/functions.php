@@ -35,11 +35,12 @@ function form_choice_list($uid, $name,$value,$options){
 	$str.='</select>';
 	return $str;
 }
-function form_select_list($uid,$name,$value,$options){
+function form_select_list($uid,$name,$values,$options){
 	global $sprefix;
 	$str='';
+  if(is_string($values)) $values = explode(',', $values);
 	foreach($options as $option){
-		$ch=in_array($option,$value)?'checked="checked"':'';
+		$ch=in_array($option,$values)?'checked="checked"':'';
 		$str.='<input type="checkbox" onclick="setting_select_list(\''.$name.'\',\''.$option.'\',this.checked,'.$uid.')" '.$ch.'/>'.$option.'<br />';
 	}
 	return $str;
