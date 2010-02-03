@@ -335,7 +335,7 @@ if($uid!=1){
     }
 }
 if(isset($settings['disabled_plugins'])){
-    $kfm->defaultSetting('disabled_plugins',setting_array($settings['disabled_plugins']));
+    $kfm->setting('disabled_plugins',setting_array($settings['disabled_plugins']));
     unset($settings['disabled_plugins']); // it does not have to be set again
 }
 // }

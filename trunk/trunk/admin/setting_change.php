@@ -34,7 +34,6 @@ if($kfm->sdef[$sn]['type']=='select_list'){
 }
 // Only allow administrator users to give a custom uid
 $uid = ($kfm->isAdmin() && isset($_POST['uid']) && is_numeric($_POST['uid'])) ? $_POST['uid'] : $kfm->user_id;
-//die('alert("'.$sn.'\n'.$value.'\n'.$usersetting.'\n'.$uid.'")');
 if($uid == 1){
   change_usersetting($sn, $value, $usersetting, 1); 
 }elseif($kfm->isAdmin()){
