@@ -40,8 +40,6 @@ obj=obj||{};
 obj.extend=$extend;
 return obj;
 };
-var Window=new Abstract(window);
-var Document=new Abstract(document);
 window.xpath=!!(document.evaluate);
 if(window.ActiveXObject)window.ie=true;
 else if(document.childNodes && !document.all && !navigator.taintEnabled)window.webkit=true;
