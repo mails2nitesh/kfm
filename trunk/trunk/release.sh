@@ -10,9 +10,6 @@ do
 	rm -rf plugins/$plugin
 done
 
-# Remove some jquery files
-rm -f j/jquery/jquery.impromptu.js
-
 # clean up unnecessary third-party files (keep things clean!)
 rm -rf third-party/swfupload/Documentation
 rm -f "third-party/swfupload/Core Changelog.txt"
