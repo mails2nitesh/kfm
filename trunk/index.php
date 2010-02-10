@@ -188,7 +188,8 @@ if ($last_registration!=$today) {
 				version:'<?php echo KFM_VERSION; ?>'
 			};
 			var kfm_widgets=[];
-			var phpsession = "<?php echo session_id(); ?>";
+			var phpsession_name = "<?php echo session_name(); ?>";
+			var phpsession_id = "<?php echo session_id(); ?>";
 			var session_key="<?php echo $kfm_session->key; ?>";
 			var starttype="<?php echo isset($_GET['type'])?$_GET['type']:''; ?>";
 			var fckroot="<?php echo $kfm->setting('userfiles_address'); ?>";
