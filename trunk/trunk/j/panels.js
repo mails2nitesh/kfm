@@ -147,14 +147,15 @@ function kfm_fileUploadForm_flash(){
 	c.innerHTML='&nbsp;';
 	// }
 	setTimeout(function(){ // delay the creation of the swfupload object, until the browser registers #swfupload_browse_button
+		var post_params = {
+			"swf"        : 1,
+			"kfm_session": window.session_key
+		};
+		post_params[window.phpsession_name] = window.phpsession_id;
 		window.swfUpload = new SWFUpload({
 			// { Backend Settings
 			upload_url: "upload.php",	// Relative to the SWF file or absolute
-			post_params: {
-				"PHPSESSID"  : window.phpsession,
-				"swf"        : 1,
-				"kfm_session": window.session_key
-			},
+			post_params: post_params,
 			// }
 			// { File Upload Settings
 			file_size_limit : "9999 MB",	// 2MB

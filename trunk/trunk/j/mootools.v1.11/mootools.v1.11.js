@@ -1,15 +1,3 @@
-function $merge(){
-var mix={};
-for(var i=0; i < arguments.length; i++){
-for(var property in arguments[i]){
-var ap=arguments[i][property];
-var mp=mix[property];
-if(mp && $type(ap)=='object' && $type(mp)=='object')mix[property]=$merge(mp, ap);
-else mix[property]=ap;
-}
-}
-return mix;
-};
 var $extend=function(){
 var args=arguments;
 if(!args[1])args=[this, args[0]];
@@ -34,11 +22,6 @@ return this.prototype[prop].apply(bind, Array.prototype.slice.call(arguments, 1)
 $native(Function, Array, String, Number);
 function $chk(obj){
 return !!(obj||obj === 0);
-};
-var Abstract=function(obj){
-obj=obj||{};
-obj.extend=$extend;
-return obj;
 };
 window.xpath=!!(document.evaluate);
 if(window.ActiveXObject)window.ie=true;
