@@ -208,7 +208,7 @@ if ($last_registration!=$today) {
 <?php // } ?>
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
 		<script type="text/javascript" src="third-party/swfupload/swfupload.js"></script>
-		<script type="text/javascript" src="j/all.php"></script>
+		<script type="text/javascript" src="j/all.php/can-minify"></script>
 		<script type="text/javascript" src="lang/<?php echo $kfm_language; ?>.js"></script>
 <?php // { widgets and plugins
 // { include widgets if they exist
