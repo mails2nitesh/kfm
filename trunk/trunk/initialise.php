@@ -74,10 +74,8 @@ define('KFM_DB_PREFIX', $kfm_db_prefix);
 // }
 // { variables
 // structure
-$kfm->defaultSetting('kfm_url','/'
-  .str_replace($_SERVER['DOCUMENT_ROOT'],'',str_replace('\\','/',getcwd()))
-  .'/');
-$kfm->defaultSetting('file_url','secure');
+$kfm->defaultSetting('kfm_url','');
+$kfm->defaultSetting('file_url','url'); # Unsecure, but better for people setting the userfiles_output
 $kfm->defaultSetting('user_root_folder','');
 $kfm->defaultSetting('startup_folder','');
 $kfm->defaultSetting('hidden_panels',array('logs','file_details','directory_properties'));
