@@ -82,8 +82,8 @@ function kfm_changeDirectory(id, nofiles){
 	clearTimeout(window.kfm_incrementalFileDisplay_loader);
 	for(var a=0;a<els.length;++a)$j(els[a]).removeClass('kfm_directory_open');
 	el.parentNode.className+=' kfm_directory_open';
-		kfm_filesLoader();
 	if(!nofiles){
+		kfm_filesLoader();
 		setTimeout('x_kfm_loadFiles(kfm_cwd_id,kfm_refreshFiles);',20);
 	}
 	setTimeout('x_kfm_loadDirectories(kfm_cwd_id,kfm_refreshDirectories);',20);
@@ -271,9 +271,11 @@ function kfm_refreshDirectories(res){
 	kfm_directories[kfm_cwd_id]=res.properties;
 	kfm_directories[d].hasChildren=1;
 	if(kfm_startup_sequence_index<kfm_vars.startup_sequence.length){
-		kfm_changeDirectory(kfm_vars.startup_sequence[kfm_startup_sequence_index],true);
-		kfm_startup_sequence_index++;
-		if(kfm_startup_sequence_index > kfm_vars.startup_sequence.length)kfm_vars.startup_sequence=false;
+    setTimeout(function(){
+		  kfm_changeDirectory(kfm_vars.startup_sequence[kfm_startup_sequence_index],true);
+		  kfm_startup_sequence_index++;
+		  if(kfm_startup_sequence_index > kfm_vars.startup_sequence.length)kfm_vars.startup_sequence=false;
+    }, dirs.length + 1);
 	}
 	else kfm_refreshPanels('kfm_left_column');
 }

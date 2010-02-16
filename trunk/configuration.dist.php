@@ -46,15 +46,15 @@ $use_kfm_security=false;
 $kfm_userfiles_address = '/home/kae/Desktop/userfiles';
 
 // where should a browser look to find the files?
-// Note that this is usually the same as $kfm_userfiles_address (if it is relative), but could be different
-//   in the case that the server uses mod_rewrite or personal web-sites, etc
-// Use the value 'get.php' if you want to use the KFM file handler script to manage file downloads.
-// If you are not using get.php, this value must end in '/'.
-// Examples:
+// This setting assumes that the files are available throught a public address.
+// This is not secure. To securely store files, put them outside the public hierarchy, make sure that the setting
+// $kfm_userfiles_address is correct and set kfm_url to secure in the admin panel or put in this place the correct
+// values for the secure settings if you are not using the admin panel:
+// $kfm->setting('kfm_url', '/kfm/'); // Web address of KFM
+// $kfm->setting('file_url', 'secure');
+// Examples for public accessable files:
 //   $kfm_userfiles_output = 'http://thisdomain.com/files/';
 //   $kfm_userfiles_output = '/files/';
-//   $kfm_userfiles_output = 'http://thisdomain.com/kfm/get.php';
-//   $kfm_userfiles_output = '/kfm/get.php';
 $kfm_userfiles_output = '/userfiles/';
 
 // directory in which KFM keeps its database and generated files
@@ -88,5 +88,5 @@ $kfm_default_file_selection_handler='return_url';
  * This function is called in the admin area. To specify your own admin requirements or security, un-comment and edit this function
  */
 //	function kfm_admin_check(){
-//		return true;
+//		return false; // Disable the admin area
 //	}
