@@ -1,5 +1,4 @@
 <?php
-
 require '../initialise.php';
 require 'libs.php';
 
@@ -50,7 +49,7 @@ else{ // build cacheable js file
 		delete_old_md5s(WORKPATH);
 		exit;
 	}
-	else{
+	else if(strpos($_SERVER['REQUEST_URI'],'/can-minify')!==false){
 		$js.="setTimeout(function(){var a=document.createElement('img');a.src='j/all.php?minify=1';a.style.display='none';document.body.appendChild(a);},5000);";
 	}
 	echo $js;
