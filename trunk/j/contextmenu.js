@@ -1,10 +1,7 @@
 // see license.txt for licensing
 function kfm_addContextMenu(el,fn){
-	var evtype='contextmenu';
-	if(window.webkit&&!window.webkit420)evtype='mousedown'; // Safari, Konqueror
-	if($j.browser.opera)evtype='mousedown'; // Opera
-	$j.event.add(el,evtype,function(e){
-		if(e.type=='contextmenu' || e.button==2)fn(e);
+	$j.event.add(el,'mousedown',function(e){
+		if(e.button==2)fn(e);
 	});
 	return el;
 }
