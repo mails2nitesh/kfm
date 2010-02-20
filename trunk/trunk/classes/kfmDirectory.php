@@ -298,23 +298,23 @@ class kfmDirectory extends kfmObject{
 	function moveTo($newParent){
 		global $kfm;
 		if(is_numeric($newParent))$newParent=kfmDirectory::getInstance($newParent);
-		{ # check for errors
+		// { check for errors
       if($this->isLink()) return $this->error(kfm_lang('cannotMoveLink'));
 			if(!$kfm->setting('allow_directory_move'))return $this->error(kfm_lang('permissionDeniedMoveDirectory'));
 			if(strpos($newParent->path(),$this->path())===0) return $this->error(kfm_lang('cannotMoveIntoSelf'));
 			if(file_exists(file_join($newParent->path(),$this->name)))return $this->error(kfm_lang('alreadyExists',$newParent->path().$this->name));
 			if(!$newParent->isWritable())return $this->error(kfm_lang('isNotWritable',$newParent->path()));
-		}
-		{ # do the move and check that it was successful
+		// }
+		// { do the move and check that it was successful
 			rename(rtrim($this->path(), ' /'),$newParent->path().'/'.$this->name);
 			if(!file_exists($newParent->path().$this->name))return $this->error(kfm_lang('couldNotMoveDirectory',$this->path(),$newParent->path().$this->name));
-		}
-		{ # update database and kfmDirectory object
-			$kfm->db->exec("update ".KFM_DB_PREFIX."directories set parent=".$newParent->id." where id=".$this->id) or die('error: '.print_r($kfmdb->errorInfo(),true));
+		// }
+		// { update database and kfmDirectory object
+			$kfm->db->query("update ".KFM_DB_PREFIX."directories set parent=".$newParent->id." where id=".$this->id) or die('error: '.print_r($kfmdb->errorInfo(),true));
 			$this->pid=$newParent->id;
-			$this->cached_path=$this->path();
+			$this->cached_path=$this->getPath();
       $this->clearCache();
-		}
+		// }
 	}
 	function rename($newname){
 		global $kfm,$kfmDirectoryInstances;
