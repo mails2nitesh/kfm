@@ -7,7 +7,9 @@ include FileUtils
 rm_rf Dir.["**/.svn/"]
 
 # Remove some plugins
-chdir("plugins"){ rm_rf(%w{codepress return_thumbnail})
+chdir("plugins") do 
+  rm_rf(%w{codepress return_thumbnail logout})
+end
 
 # And last but not least, remove this script
 rm_rf $0

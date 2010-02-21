@@ -5,7 +5,7 @@
 find . -name .svn -exec rm -rf {} \;
 
 # Remove some plugins
-for plugin in codepress return_thumbnail
+for plugin in codepress return_thumbnail logout
 do
 	rm -rf plugins/$plugin
 done
