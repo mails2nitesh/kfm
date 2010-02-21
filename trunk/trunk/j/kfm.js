@@ -118,10 +118,6 @@ kfm.build=function(){
 			else kfm_deleteFile(files[0]);
 		}
 	});
-	if(kfm_vars.permissions.file.ed)kfm_addHook({name:"rename", mode:0,extensions:"all", writable:1,title:kfm.lang["rename file"], doFunction:function(files){
-			kfm_renameFile(files[0]);
-		}
-	});
 	win=$j(window);
 	w={x:win.width(),y:win.height()};
 	{ // extend language objects
