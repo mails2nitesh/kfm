@@ -233,3 +233,4 @@ td.listview_icon_bz2{background-image:url(icons/16x16/mimetypes/bz2.png)}
 }
 
 #kfm_lightboxWrapper{background:url(large_loader.gif) no-repeat center center}
+.kfm_directory_link{cursor:pointer}
