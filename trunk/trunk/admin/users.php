@@ -8,9 +8,10 @@ if(!is_array($users))die ('error retrieving user list');
 $lhtml='<table id="kfm_admin_users_table">
 <thead>
 	<tr>
-		<th>Name</th>
+		<th class="ui-widget-header">username</th>
+		<th class="ui-widget-header">type</th>
 		<th></th>
-		<th>Status</th>
+    <th></th>
 	</tr>
 </thead>
 <tbody>
@@ -24,83 +25,125 @@ $lhtml.="</tbody>\n</table>\n";
 ?>
 <script type="text/javascript">
 /* User functions */
+  var np_uid = -1;
+$(function(){
+  var un = $('#newuser_username');
+  var pw = $('#newuser_password');
+  var nu_errors = $("#newuser_errors");
+  var nu_allFields = $([]).add(un).add(pw);
+
+  $('#newuser_blueprint').dialog({
+    autoOpen:false,
+    modal: true,
+    buttons: {"Create":function(){
+      var bValid = true;
+      e_msg = '';
+      if(un.val() == ''){
+        bValid = false;
+        e_msg += 'Username cannot be empty<br/>';
+        un.addClass('ui-state-error');
+      }
+      // Password conditions??? (pw.val())
+      if(bValid){
+				$.post('user_new.php',{username:un.val(),password:pw.val()},function(res){eval(res);});
+        $(this).dialog('close');
+      }else{
+        nu_errors.html(e_msg).slideDown();
+      }
+    }},
+    close: function(){
+      nu_allFields.val('').removeClass('ui-state-error');
+      nu_errors.html('').hide();
+    }
+  });
+
+  // Now resetting password code
+  var np_pass = $('#reset_pw_newpass');
+  var np_confirm = $('#reset_pw_newpass_confirm');
+  var np_errors = $('#reset_pw_errors');
+  var np_allFields = $([]).add(np_pass).add(np_confirm); 
+  $('#reset_pw_blueprint').dialog({
+    autoOpen:false,
+    modal: true,
+    buttons:{
+      Assign: function(){
+        bValid = true;
+        e_msg = '';
+        if(np_pass.val() != np_confirm.val()){
+          bValid = false;
+          e_msg += 'Passwords are not equal<br/>';
+          np_confirm.addClass('ui-state-error');
+        }
+        if(bValid){
+				  $.post('password_change.php',{uid:np_uid,npw:np_pass.val(),npw2:np_confirm.val(),reset:true},function(res){eval(res);});
+          $(this).dialog('close');
+        }else{
+          np_errors.html(e_msg).slideDown();
+        }
+      },
+      Cancel: function(){
+        $(this).dialog('close');
+      }
+    },
+    close: function(){
+      np_allFields.val('').removeClass('ui-state-error');
+      np_errors.html('').hide();
+    }
+   });
+});
 function new_user(){
-	input_props='size=12 maxsize=16';
-	fc='<h3>New user</h3>';
-	fc+='Username <input type="text" id="newuser_username" '+input_props+'/><br/>';
-	fc+='Password <input type="password" id="newuser_password" '+input_props+'/>';
-	$.prompt(fc,{
-		buttons:{cancel:false, OK:true},
-		callback:function(v,m){
-			if(v){
-				un=m.children('#newuser_username').val();
-				pw=m.children('#newuser_password').val();
-				if(un==''){
-					$.prompt('Username can not be empty');
-					return;
-				}
-				$.post('user_new.php',{username:un,password:pw},function(res){eval(res);});
-			}
-		}
-	});
+  $('#newuser_blueprint').dialog('open');
 }
 function delete_user(uid, username){
-	$.prompt('Are you sure you want to delete user '+username+'?',{
-		buttons:{cancel:false,'I am sure':true},
-		callback:function(v,m){
-			if(v) $.post('user_delete.php',{uid:uid},function(res){eval(res);});
-		}
-	});
+  $('<div title="Delete user?">Do you want to delete user: '+username+'?</div>').dialog({
+    modal: true,
+    buttons:{
+      'Delete': function(){
+        $.post('user_delete.php',{uid:uid},function(res){eval(res);});
+        $(this).dialog('close');
+      },
+      Cancel: function(){
+        $(this).dialog('close');
+      }
+    }
+  });
 }
 var testerbj = null;
 function edit_user_settings(uid, username){
   $.post('settings.php',{uid:uid, ismodal:1}, function(data){
      $('<div title="Settings for '+username+'">'+data+'</div>').dialog({
         modal:true,
-        width:800,
+        width:900,
         close: function(event, ui){
           $(this).parents('.ui-dialog').empty();
         }
      });
-     /*$.prompt(data,{
-       prefix:'jqisettings'
-     });
-     */
   });
 }
 function user_status_change(uid, status){
 	$.post('user_status_change.php',{uid:uid,status:status},function(res){eval(res);});
 }
 function password_reset(uid, username){
-	var input_props='size=12 maxsize=16';
-	var fc='<h3>New password for user '+username+'</h3>';
-	fc+='<h3 id="newpass_errors" style="color:red;"></h3>';
-	fc+='<input type="password" id="newpass" '+input_props+'/><br/>';
-	fc+='<input type="password" id="newpass2" '+input_props+'/>';
-	$.prompt(fc,{
-		buttons:{cancel:false,"Reset pass":true},
-		callback:function(v,m){
-			if(v){
-				np=m.children('#newpass').val();
-				np2=m.children('#newpass2').val();
-				$.post('password_change.php',{uid:uid,npw:np,npw2:np2},function(res){eval(res);});
-			}
-		},
-		submit:function(v,m){
-			if(v){
-				np=m.children('#newpass').val();
-				np2=m.children('#newpass2').val();
-				if(np!=np2){
-					m.children('#newpass_errors').text('The two passwords do not match');
-					return false;
-				}
-			}
-			return true;
-		}
-	});
+  np_uid = uid;
+  $('#np_username').html(username);
+  $('#reset_pw_blueprint').dialog('open');
 }
 </script>
+<div id="newuser_blueprint" title="New user">
+<div id="newuser_errors" class="ui-state-highlight" style="display:none;"></div>
+Username: <input type="text" id="newuser_username"><br/>
+Password: <input type="password" id="newuser_password"><br/>
+</div>
+<div id="reset_pw_blueprint" title="Reset password">
+<div>Reset password for user: <span id="np_username"></span></div>
+<div id="reset_pw_errors" class="ui-state-highlight" style="display:none;"></div>
+<label for="reset_pw_newpass">New password</label>
+<input type="password" name="reset_pw_newpass" id="reset_pw_newpass" />
+<br/>
+<label for="reset_pw_newpass_confirm">Retype</label>
+<input type="password" name="reset_pw_newpass_confirm" id="reset_pw_newpass_confirm" />
+</div>
 <?php echo $lhtml;?>
 <br />
-<span class="button" onclick="new_user()">New user</span>
+<span class="ui-state-default button" onclick="new_user()">New user</span>
 <br />

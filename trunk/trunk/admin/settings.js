@@ -29,6 +29,7 @@ function setting_select_list(name, option, checked, uid){
 	$.post('setting_change.php',{uid:uid,name:name,value:option,checked:checked,usersetting:usersetting},function(res){eval(res);});
 }
 function setting_help(setting_name, caller, uid){
+  /*
 	var cont=$("<div class=\"help_container\" id=\""+setting_name+"_help\"></div>");
 	var title=$("<div class=\"help_title\"><h1>"+setting_name+"</h1></div>");
 	var help="<img src=\"/themes/<?php echo $kfm->setting('theme');?>/large_loader.gif\" alt=\"loading...\" />";
@@ -44,7 +45,8 @@ function setting_help(setting_name, caller, uid){
 	cont.css(calpos);
 	hbody.html(help);
 	cont.fadeIn();
-	$.post('setting_get_help.php',{name:setting_name},function(res){hbody.html(res);});
+  */
+	$.post('setting_get_help.php',{name:setting_name},function(res){eval(res);});
 }
 function setting_help_close(setting_name){
 	$("#"+setting_name+"_help").remove();

@@ -318,20 +318,29 @@ $kfm->defaultSetting('user_name',$kfm->username);
 $kfm->session= &$kfm_session;
 // }
 // { Read settings
-$settings=array();
-$admin_settings=db_fetch_all('SELECT name, value, usersetting FROM '.KFM_DB_PREFIX.'settings WHERE user_id=1');
-if(is_array($admin_settings)){
+function get_settings($uid){
+  $settings=array();
+  $usersettings = array();
+  $admin_settings=db_fetch_all('SELECT name, value, usersetting FROM '.KFM_DB_PREFIX.'settings WHERE user_id=1');
+  if(is_array($admin_settings)){
     foreach($admin_settings as $setting){
         $settings[$setting['name']]=$setting['value'];
-        if($setting['usersetting'])$kfm->addUserSetting($setting['name']);
+        if($setting['usersetting']) $usersettings[] = $setting['name'];
     }
-}
-if($uid!=1){
-    $user_settings=db_fetch_all('SELECT name, value FROM '.KFM_DB_PREFIX.'settings WHERE user_id='.$uid);
+  }
+  if($uid!=1){
+    $user_settings=db_fetch_all('SELECT name, value, usersetting FROM '.KFM_DB_PREFIX.'settings WHERE user_id='.$uid);
     if(is_array($user_settings)){
-			foreach($user_settings as $setting)$settings[$setting['name']]=$setting['value'];
+			foreach($user_settings as $setting){
+        $settings[$setting['name']]=$setting['value'];
+        if($setting['usersetting']) $usersettings[] = $setting['name'];
+      }
     }
+  }
+  return array($settings, array_unique($usersettings));
 }
+list($settings, $usersettings) = get_settings($uid); // $settings as database values
+foreach($usersettings as $usersetting) $kfm->addUserSetting($usersetting);
 if(isset($settings['disabled_plugins'])){
     $kfm->setting('disabled_plugins',setting_array($settings['disabled_plugins']));
     unset($settings['disabled_plugins']); // it does not have to be set again

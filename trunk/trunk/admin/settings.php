@@ -6,26 +6,20 @@ $mysets=db_fetch_all('SELECT name, value FROM '.KFM_DB_PREFIX.'settings WHERE us
 $ismodal = isset($_REQUEST['ismodal']) ? $_REQUEST['ismodal'] : 0;
 $my_settings = array();
 foreach($mysets as $myset) $my_settings[$myset['name']] = $myset['value']; // Convert array to Hash
+list($settings, $usersettings) = get_settings($uid); // $settings as database values
 //foreach($mysets as &$myset)$myset=$myset['name'];
 ?>
 <?php
 $js='';
 $sprefix='kfm_setting_'; // Until now a dummy prefix for settings. Maybe needed for future things. Also in index.php
-$str='<div id="settings_container_'.$uid.'" class="settings_container"><table class="settings_table">
-<thead>
-	<tr>
-		<th>Setting name</th>
-		<th>Setting value</th>
-		<th>User setting</th>
-		<th></th>
-	</tr>
-</thead>
+$str='<div id="settings_container_'.$uid.'" class="settings_container ui-widget ui-widget-content"><table class="settings_table">
 <tbody>';
 $user_is_administrator = $kfm->isAdmin($uid);
 foreach($kfm->sdef as $sname=>$sdef){
-	if(!$kfm->isAdmin() && !$kfm->isUserSetting($sname)) continue; // Do not process settings the user has no rights to
+  $is_usersetting = in_array($sname, $usersettings);
+	if(!$kfm->isAdmin() && !$is_usersetting) continue; // Do not process settings the user has no rights to
   // Comment below to let administrators change all user values
-  if(!$user_is_administrator && !$kfm->isUserSetting($sname) && !isset($my_settings[$sname])) continue; // Only show non user setting for user if it is explicitly defined
+  //if(!$user_is_administrator && !$kfm->isUserSetting($sname) && !isset($my_settings[$sname])) continue; // Only show non user setting for user if it is explicitly defined
 	//$svalue=$kfm->setting($sname);
   $svalue = isset($my_settings[$sname]) ? $my_settings[$sname] : $kfm->setting($sname);
   //print isset($my_settings[$sname]) ? "Test my setting $sname: ".$my_settings[$sname]."<br/>\n" : "Test default setting $sname: ".$kfm->setting($sname)."<br/>\n";
@@ -38,7 +32,7 @@ foreach($kfm->sdef as $sname=>$sdef){
 	$str.="\n\t<tr>";
 	if($gh){
 		$str.='
-		<td colspan="3"><span class="group_header">'.$sname.'</span></td></tr>';
+		<td colspan="3"><span class="ui-widget-header">'.$sname.'</span></td></tr>';
 	}else{
 		$str.='
 		<td><span id="desc_'.$sprefix.$sname.'_'.$uid.'" class="'.($ismyset?'user_setting':'default_setting').'">'.$sname.'</span></td>
@@ -68,22 +62,25 @@ foreach($kfm->sdef as $sname=>$sdef){
 		}
 		$str.=' '.$sunit.'
 		</td>';
-		if($kfm->user_status==1){
-			$str.='<td>';
-			$str.=form_user_setting($uid,$sname,$kfm->isUserSetting($sname));
-			$str.='</td>';
-		}
+	  $str.='<td>';
+		if(!$ismodal && $kfm->user_status==1){
+			$str.=form_user_setting($uid,$sname,$is_usersetting);
+		}elseif($ismodal && !$user_is_administrator){
+			$str.=form_user_setting($uid,$sname,$is_usersetting);
+    }
+
+	  $str.='</td>';
 		$str.='
 		<td>';
 			if($uid != 1)$str.='
-				<span onclick="setting_default_value(\''.$sname.'\', '.$uid.')" id="todefault_'.$sname.'_'.$uid.'" class="button"'.
-				($ismyset?'':' style="display:none;"').
-				'>Back to default</span>';
+				<div id="todefault_'.$sname.'_'.$uid.'" class="ui-state-default button" '.($ismyset?'':' style="display:none;"').'>
+            <span onclick="setting_default_value(\''.$sname.'\', '.$uid.')" class="ui-icon ui-icon-arrowreturnthick-1-w"></span>
+        </span>';
 		$str.='
 		</td>
 		<td>';
     if(!$ismodal) $str.='
-			<span class="button" onclick="setting_help(\''.$sname.'\',this, '.$uid.')">?</span>';
+			<div class="ui-state-default ui-corner-all button"><span class="ui-icon ui-icon-help" onclick="setting_help(\''.$sname.'\',this, '.$uid.')"></span></div>';
     $str.='
 		</td>
 		</tr>';
