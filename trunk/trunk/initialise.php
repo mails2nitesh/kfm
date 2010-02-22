@@ -131,10 +131,6 @@ $kfm->defaultSetting('max_image_upload_height', 768);
 $kfm->defaultSetting('disabled_plugins',array());
 // depricated
 $kfm->defaultSetting('allow_image_manipulation',1); // this is plugin management
-$kfm->defaultSetting('show_disabled_contextmenu_links',1); // Should be depricated
-$kfm->defaultSetting('return_file_id_to_cms',0); // Should be deprecated in favour of plugin
-$kfm->defaultSetting('allow_multiple_file_returns',0); // Should be deprecated in favour of plugin
-$kfm->defaultSetting('slideshow_delay',4);
 
 if(!$kfm_use_servers_pear)set_include_path(KFM_BASE_PATH.'includes/pear'.PATH_SEPARATOR.get_include_path());
 if(!substr($kfm_userfiles_output,-1,1)=='/')$kfm_userfiles_output .= '/'; // Just convention, end with slash

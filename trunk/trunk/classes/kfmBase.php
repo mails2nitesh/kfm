@@ -65,11 +65,11 @@ class kfmBase extends kfmObject{
 		
 		'Image settings'=>array( 'type'=>'group_header'),
 		'use_imagemagick'=>array('type'=>'bool'),
+		'allow_image_manipulation'=>array('type'=>'bool'),
 		
 		'Upload settings'=>array( 'type'=>'group_header'),
 		'allow_file_upload'=>array('type'=>'bool'),
 		'only_allow_image_upload'=>array('type'=>'bool'),
-		//'show_disabled_contextmenu_links'=>array('type'=>'bool'), // Should be depricated
 		'use_multiple_file_upload'=>array('type'=>'bool'),
 		'default_upload_permission'=>array('type'=>'integer', 'properties'=>array('size'=>3,'maxsize'=>3)),
 		'banned_upload_extensions'=>array('type'=>'array'),
@@ -78,11 +78,6 @@ class kfmBase extends kfmObject{
 		
 		'Plugin settings'=>array( 'type'=>'group_header'),
 		'disabled_plugins'=>array('type'=>'select_list'),
-		'Depricated settings'=>array( 'type'=>'group_header'),
-		'return_file_id_to_cms'=>array('type'=>'bool'), // Should be deprecated in favour of plugin
-		'allow_multiple_file_returns'=>array('type'=>'bool'), // Should be deprecated in favour of plugin
-		'slideshow_delay'=>array('type'=>'integer'),
-		'allow_image_manipulation'=>array('type'=>'bool')
 	);
 
 	function isUserSetting($name){

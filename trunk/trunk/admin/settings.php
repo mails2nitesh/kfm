@@ -35,7 +35,7 @@ foreach($kfm->sdef as $sname=>$sdef){
 	$str.="\n\t<tr>";
 	if($gh){
 		$str.='
-		<td colspan="3"><span class="ui-widget-header">'.$sname.'</span></td></tr>';
+		<td colspan="5"><span class="ui-widget-header">'.$sname.'</span></td></tr>';
 	}else{
 		$str.='
 		<td><span id="desc_'.$sprefix.$sname.'_'.$uid.'" class="'.($ismyset?'user_setting':'default_setting').'">'.$sname.'</span></td>

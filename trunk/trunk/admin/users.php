@@ -116,6 +116,7 @@ function edit_user_settings(uid, username){
      $('<div title="Settings for '+username+'">'+data+'</div>').dialog({
         modal:true,
         width:900,
+        height: 0.9*$(window).height(),
         close: function(event, ui){
           $(this).parents('.ui-dialog').empty();
         }
