@@ -5,7 +5,9 @@ $kfm->requireAdmin(true);
 require_once('functions.php');
 $users=db_fetch_all('SELECT * FROM '.KFM_DB_PREFIX.'users WHERE id>1');
 if(!is_array($users))die ('error retrieving user list');
-$lhtml='<table id="kfm_admin_users_table">
+$lhtml='
+<div class="ui-widget ui-widget-content" style="padding:10px;">
+<table id="kfm_admin_users_table">
 <thead>
 	<tr>
 		<th class="ui-widget-header">username</th>
@@ -19,7 +21,7 @@ $lhtml='<table id="kfm_admin_users_table">
 foreach($users as $user){
 	$lhtml.=user_row($user['id'],$user['username'],$user['status']);
 }
-$lhtml.="</tbody>\n</table>\n";
+$lhtml.="</tbody>\n</table>\n</div>\n";
 //if(count($users)==0)$lhtml='<span class="message">No users found</span>';
 
 ?>
