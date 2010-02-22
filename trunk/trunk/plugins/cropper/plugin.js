@@ -38,20 +38,12 @@ function plugin_cropper(){
 		F=File_getInstance(id);
 		var filename=F.name;
 		var newname_suggestion=filename.substr(0,filename.length-F.ext.length-1)+'.cropped.'+F.ext;
-		var html=kfm.lang.Filename+'<br/>';
-		html+='<input type="text" id="crop_new_filename" value="'+newname_suggestion+'" size="'+(newname_suggestion.length+1)+'" />';
-		$j.prompt(html,{
-			buttons:{Cancel:false,OK:true},
-			callback:function(v,m){
-				if(!v)return;
-				newName=m.children('#crop_new_filename').val();
+    kfm_prompt(kfm.lang.Filename, newname_suggestion, function(newName){
 				if(!newName||newName==filename)return;
 				kfm_pluginIframeHide();
 				x_kfm_cropToNew(id, coords.x1, coords.y1, dimensions.width, dimensions.height, newName, kfm_refreshFiles);
-			}
-		});
+    });
 	}
-
 /* add plugins to the hook system */
 kfm_addHook(new plugin_cropper(),
 	{mode:0,"extensions":["jpg","png","gif"], "category":"edit", "writable":1, title:"crop image", doFunction:"crop_image"}
