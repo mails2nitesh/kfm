@@ -16,34 +16,46 @@ $sprefix='kfm_setting_'; // Until now a dummy prefix for settings. Maybe needed 
 <head>
 <title>KFM admin</title>
 
-<link rel="stylesheet" href="../j/jquery/tabs/ui.tabs.css" type="text/css" />
-<link rel="stylesheet" href="../themes/<?php echo $kfm->setting('theme');?>/css.php" type="text/css" />
-<link type="text/css" rel="stylesheet" href="http://jqueryui.com/themes/base/ui.all.css" />
+<link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css" />
 <script src="http://www.google.com/jsapi"></script>
 <script type="text/javascript">
-google.load('jquery', '1');
-google.load('jqueryui', '1');
-// ugly fix for variable.js call to kfm_vars
-kfm_vars={};
+google.load('jquery', '1.4');
+google.load('jqueryui', '1.7');
 </script>
-<script type="text/javascript" src="../j/all.php"></script>
-<script type="text/javascript" src="../j/jquery/tabs/ui.tabs.js"></script>
+<script type="text/javascript" src="themeswitchertool.js"></script>
 <script type="text/javascript">
-$ = $j;
 $(function(){
-	$('#tabscontainer > ul').tabs();
+	$('#tabscontainer').tabs({
+      load: function(){
+        $('.button').hover(
+          function(){$(this).addClass('ui-state-hover')},
+          function(){$(this).removeClass('ui-state-hover')}
+        );
+      }
+     });
+  $('#switcher').themeswitcher({width:180});
 });
 function message(msg){
 	jobj=$('#messages');
 	jobj.html(msg);
-	jobj.fadeIn();
-	jobj.animate({fontSize:"16px"},2500);
-	jobj.fadeOut();
+  fadingMsg(jobj);
 }
 function error(msg){
-	message('Error: '+msg);
+  jobj = $('#errors');
+  jobj.html(msg);
+  fadingMsg(jobj);
+	//message('Error: '+msg);
+}
+function fadingMsg(jobj){
+	jobj.fadeIn();
+	//jobj.animate({fontSize:"16px"},2500);
+  setTimeout(function(){jobj.fadeOut()}, 2500);
+	//jobj.fadeOut();
 }
 
+</script>
+<script type="text/javascript">
+//$ = jQuery; // Normal notation from now
 </script>
 <?php
 foreach($kfm->admin_tabs as $tab){
@@ -62,40 +74,36 @@ foreach($kfm->admin_tabs as $tab){
 	color:black;
 	font-weight:bold;
 }
-#messages{
+#messages, #errors{
 	display:none;
 	position:absolute;
-	border:2px dashed #aaa;
-	background-color:#006;
-	color:white;
-	width:200px;
+	width:270px;
 	top:30px;
 	right:30px;
-	padding:5px;
-	font-size:16px;
+  padding: 4px;
 }
 #password_div{
 	margin:30px auto;
-	padding:10px;
-	width:450px;
-	border:2px dashed #aaa;
+	padding:15px;
+	width:650px;
 }
 #password_div label { position: absolute; text-align:left; width:222px; }
-#password_div input, textarea { margin-left: 140px; }
+#password_div input, textarea { margin-left: 222px; }
 
 .settings_container{
 	margin-left:60px;
 	margin-right:60px;
-	background-color:#eee;
+  padding: 10px;
 }
 .button{
-	cursor:hand;
-	width:automatic;
+	cursor:pointer;
+	width:auto;
+  padding: 3px;
 }
 #kfm_admin_users_table{
 	margin-left:60px;
 	margin-right:60px;
-	background-color:#eee;
+  width:auto;
 }
 .group_header{
 	font-size:24px;
@@ -106,13 +114,15 @@ foreach($kfm->admin_tabs as $tab){
 .default_setting{
 	color:#777;
 }
+.left{float:left;}
+.right{float:right;}
+.clearfix{clear:both;}
 </style>
 <style type="text/css">
 #associations_container{
 	margin-left:60px;
 	margin-right:60px;
 	padding:10px;
-	background-color:#eee;
 }
 </style>
 <style type="text/css">
@@ -165,10 +175,6 @@ var sprefix='<?php echo $sprefix;?>';
 <script type="text/javascript" src="settings.js"></script>
 </head>
 <body>
-<div id="general_info">
-<?php echo $kfm->username;?> <a class="admin_button" href="<?php echo $kfm->setting('kfm_url');?>">To the File Manager</a>
-</div>
-<div id="messages"></div>
 <div id="tabscontainer">
 	<ul>
 		<?php if($kfm->user_status==1) echo '<li><a href="users.php" title="Users tab"><span>Users</span></a></li>'; ?>
@@ -183,5 +189,11 @@ var sprefix='<?php echo $sprefix;?>';
 		?>
 	</ul>
 </div>
+<div id="switcher" class="right"></div>
+<div id="general_info">
+<?php echo $kfm->username;?> <a class="admin_button" href="<?php echo $kfm->setting('kfm_url');?>">To the File Manager</a>
+</div>
+<div id="messages" class="ui-state-highlight ui-corner-all"></div>
+<div id="errors" class="ui-state-error ui-corner-all"></div>
 </body>
 </html>

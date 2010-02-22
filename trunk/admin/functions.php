@@ -59,16 +59,18 @@ function user_row($id, $username, $status){
 	$html='<tr id="user_row_'.$id.'">
 		<td>'.$username.'</td>
 		<td>
-			<span class="button" onclick="delete_user('.$id.',\''.$username.'\')">Delete</span>
-			<span class="button" onclick="password_reset('.$id.',\''.$username.'\')">Reset password</span>
-      <span class="button" onclick="edit_user_settings('.$id.', \''.$username.'\')">Settings</span>
-		</td>
-		<td>
 			<select onchange="user_status_change('.$id.',this.value)">
 				<option value="1" '.(($status==1)?'selected="selected"':'').'>admin</option>
 				<option value="2" '.(($status==2)?'selected="selected"':'').'>user</option>
 				<option value="3" '.(($status==3)?'selected="selected"':'').'>blocked</option>
 			</select>
+		</td>
+		<td>
+			<span class="ui-state-default button" onclick="password_reset('.$id.',\''.$username.'\')">Reset password</span>
+      <span class="ui-state-default button" onclick="edit_user_settings('.$id.', \''.$username.'\')">Settings</span>
+    </td>
+    <td>
+			<div class="ui-state-default ui-corner-all button right"><span class="ui-icon ui-icon-closethick" onclick="delete_user('.$id.',\''.$username.'\')"></span></div>
 		</td>
 	</tr>';
 	return $html;
@@ -78,7 +80,7 @@ function get_association_row($ext, $plugin,$id){
 	<tr id="association_row_'.$id.'">
 		<td><input type="text" id="association_extension_'.$id.'" value="'.$ext.'" onblur="association_extension_change('.$id.')"/></td>
 		<td>'.get_plugin_list($plugin,$id).'</td>
-		<td><span class="button" onclick="association_delete('.$id.');">delete</span></td>
+		<td><div class="ui-state-default ui-corner-all button"><span class="ui-icon ui-icon-closethick" onclick="association_delete('.$id.');"></span></td>
 	</tr>';
 	$str=preg_replace('/\n/','',$str);
 	return $str;

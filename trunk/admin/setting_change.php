@@ -36,48 +36,23 @@ if($kfm->sdef[$sn]['type']=='select_list'){
 $uid = ($kfm->isAdmin() && isset($_POST['uid']) && is_numeric($_POST['uid'])) ? $_POST['uid'] : $kfm->user_id;
 if($uid == 1){
   change_usersetting($sn, $value, $usersetting, 1); 
-}elseif($kfm->isAdmin()){
-  if($usersetting xor $kfm->isUserSetting($sn)){
-    // When a user with admin rights which is not the admin user changes the usersetting value
-    // Change user setting value for admin user, but not per se its value
-    // First determine if the admin user already has this setting, otherwise apply it
+}else{
+    // Check if admin setting exist, add it if not
     $s=db_fetch_row('SELECT id FROM '.KFM_DB_PREFIX.'settings WHERE name="'.mysql_escape_string($sn).'" and user_id=1');
     if($s && count($s)){
-      // only update the usersetting value, since the user with administrator rights might have applied a different setting for himself
-      $kfm->db->query('UPDATE '.KFM_DB_PREFIX.'settings SET usersetting="'.mysql_escape_string($usersetting).'" WHERE name="'.mysql_escape_string($sn).'" AND user_id=1');
     }else{
       // Add the setting for the admin user. The setting of the user with administrator rights will become the default setting
       // I (Benjamin) think this is a feature and not a bug :)
       change_usersetting($sn, $value, $usersetting, 1);
     }
+  if(!$kfm->isAdmin()){
+    list($settings, $usersettings) = get_settings($uid); // $settings as database values
+    if(!in_array($sn, $usersettings)) die('error("Only admins can change non usersettings");'); // Security
+    $usersetting = 0; // Only admin users can make a setting a usersetting
   }
   change_usersetting($sn, $value, $usersetting, $uid); 
 	echo '$("#todefault_'.$sn.'_'.$uid.'").fadeIn();';
-}elseif($kfm->isUserSetting($sn)){
-  // User settings can be changed by all users
-  // The usersetting value will be 0 but should not be used anyway
-  change_usersetting($sn, $value, 0, $uid); 
-	if($kfm->user_id!=1) echo '$("#todefault_'.$sn.'_'.$uid.'").fadeIn();';
-}else{
-  // Something illegal is going on!!!!
-  die('error("You have no rights to change this setting!");');
 }
-/*
-if($kfm->isAdmin() || $kfm->isUserSetting($sn)){
-  // Only allow admin users to make settings for others 
-  $uid= ($kfm->isAdmin() && isset($_POST['uid'] && is_numeric($_POST['uid'])) ? $_POST['uid']: $kfm->user_id;
-  $s=db_fetch_row('SELECT id FROM '.KFM_DB_PREFIX.'settings WHERE name="'.mysql_escape_string($sn).'" and user_id='.$uid);
-  if($s && count($s)){
-    $kfm->db->query('UPDATE '.KFM_DB_PREFIX.'settings SET value="'.mysql_escape_string($value).'" WHERE name="'.mysql_escape_string($sn).'" AND user_id='.$uid);
-  }else{
-    $usersetting = mysql_escape_string($_POST['usersetting']);
-    if(!$kfm->user_id == 1) $usersetting = 0; // Only admin user can 
-    $kfm->db->query('INSERT INTO '.KFM_DB_PREFIX.'settings (name, value, user_id, usersetting) VALUES ("'.mysql_escape_string($sn).'","'.mysql_escape_string($value).'", '.$uid.','.$usersetting.')');
-	  if($kfm->user_id!=1) echo '$("#todefault_'.$sn.'").fadeIn();';
-  }
-}
-*/
-
 // Change theme in current session if is changed
 if($sn=='theme' && $uid == $kfm->user_id )$kfm_session->set('theme',$value);
 echo 'style_usersetting("'.$sn.'",'.$uid.');';
