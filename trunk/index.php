@@ -165,7 +165,7 @@ if ($last_registration!=$today) {
 <?php // { set up JavaScript environment variables ?>
 		<script type="text/javascript">
 			var kfm_vars={
-				files:{ name_length_displayed:<?php echo $kfm->setting('files_name_length_displayed'); ?>, name_length_in_list:<?php echo $kfm->setting('files_name_length_in_list'); ?>, return_id_to_cms:<?php echo $kfm->setting('return_file_id_to_cms')?'true':'false'; ?>, allow_multiple_returns:<?php echo $kfm->setting('allow_multiple_file_returns')?'true':'false'; ?>, drags_move_or_copy:<?php echo $kfm->setting('folder_drag_action'); ?>, refresh_count:0 },
+				files:{ name_length_displayed:<?php echo $kfm->setting('files_name_length_displayed'); ?>, name_length_in_list:<?php echo $kfm->setting('files_name_length_in_list'); ?>, return_id_to_cms:<?php echo $kfm->setting('return_file_id_to_cms')?'true':'false'; ?>, drags_move_or_copy:<?php echo $kfm->setting('folder_drag_action'); ?>, refresh_count:0 },
 				get_params:"<?php echo GET_PARAMS; ?>",
 				permissions:{
 					dir:{ ed:<?php echo $kfm->setting('allow_directory_edit'); ?>, mk:<?php echo $kfm->setting('allow_directory_create'); ?>, mv:<?php echo $kfm->setting('allow_directory_move'); ?>, rm:<?php echo $kfm->setting('allow_directory_delete'); ?> },
@@ -177,7 +177,6 @@ if ($last_registration!=$today) {
 				startupfolder_id:<?php echo $kfm->setting('startupfolder_id'); ?>,
 				startup_sequence:<?php echo $startup_sequence; ?>,
 				startup_selectedFiles:[<?php echo join(',',$kfm->setting('startup_selected_files')); ?>],
-				show_disabled_contextmenu_links:<?php echo $kfm->setting('show_disabled_contextmenu_links'); ?>,
 				use_multiple_file_upload:<?php echo $kfm->setting('use_multiple_file_upload'); ?>,
 				use_templates:<?php echo $templated; ?>,
 				associations:<?php echo $ass_str; ?>,
