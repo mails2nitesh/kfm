@@ -237,3 +237,4 @@ div.kfm_panel_body{
 	margin:5px
 }
 #kfm_lightboxWrapper{background:url(large_loader.gif) no-repeat center center}
+.kfm_directory_link{cursor:pointer}
