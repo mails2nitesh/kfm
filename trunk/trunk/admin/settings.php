@@ -7,6 +7,9 @@ $ismodal = isset($_REQUEST['ismodal']) ? $_REQUEST['ismodal'] : 0;
 $my_settings = array();
 foreach($mysets as $myset) $my_settings[$myset['name']] = $myset['value']; // Convert array to Hash
 list($settings, $usersettings) = get_settings($uid); // $settings as database values
+
+// Needed to hide usersetting combo in modal view for non admin users when setting is usersetting anyway
+if($ismodal) list($default_db_settings, $default_db_usersettings) = get_settings(1);
 //foreach($mysets as &$myset)$myset=$myset['name'];
 ?>
 <?php
@@ -66,7 +69,8 @@ foreach($kfm->sdef as $sname=>$sdef){
 		if(!$ismodal && $kfm->user_status==1){
 			$str.=form_user_setting($uid,$sname,$is_usersetting);
 		}elseif($ismodal && !$user_is_administrator){
-			$str.=form_user_setting($uid,$sname,$is_usersetting);
+
+			$str.=in_array($sname, $default_db_usersettings) ? 'yes' : form_user_setting($uid,$sname,$is_usersetting);
     }
 
 	  $str.='</td>';
