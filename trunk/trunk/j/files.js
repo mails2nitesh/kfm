@@ -49,9 +49,15 @@ var kfm_file_bits={
 	},
 	padding:0
 }
-function kfm_fileLoader(id){
-	if($type(id)!='array')return $j('#kfm_file_icon_'+id).css('background-image','url(themes/'+kfm_theme+'/icons/64x64/loader.gif)');
-	id.each(kfm_fileLoader);
+function kfm_fileLoader(ids){
+	if($type(ids)!='array')ids=[ids];
+	var i=0,l=ids.length,el;
+	for(i=0;i<l;++i){
+		el=document.getElementById('kfm_file_icon_'+ids[i]);
+		el.style.backgroundImage='url(themes/'+kfm_theme+'/icons/64x64/loader.gif)';
+		el.style.backgroundRepeat='no-repeat';
+		el.style.backgroundLeft='center';
+	}
 }
 function kfm_filesLoader(){
 	$j('<img src="themes/'+kfm_theme+'/small_loader.gif" alt=""/>').appendTo('#documents_loader');
@@ -64,9 +70,8 @@ function kfm_files_reflowIcons(){
 	els=$j('#documents_body .kfm_file_icon');
 	els.each(function(){
 		if(!this)return;
-		ej=$j(this);
-		ej.css({'clear':'none'});
-		if(k&&els[k-1].offsetLeft>=this.offsetLeft)ej.css({'clear':'left'});
+		if(this.style.clear)this.style.clear='none';
+		if(k&&els[k-1].offsetLeft>=this.offsetLeft)this.style.clear='left';
 		++k;
 	});
 	kfm_show_number_of_files(k);
@@ -100,6 +105,13 @@ function kfm_incrementalFileDisplay(refresh_count){
 	if(refresh_count!=kfm_vars.files.refresh_count){ // a new refresh is fired
 		return;
 	}
+	if(kfm_listview)kfm_incrementalFileDisplayListView();
+	else kfm_incrementalFileDisplayIconView();
+}
+function kfm_incrementalFileDisplayListView(){
+	if(refresh_count!=kfm_vars.files.refresh_count){ // a new refresh is fired
+		return;
+	}
 	var a,b,fsdata,wrapper,fdata,name,F,el,id,prevEl;
 	b=window.kfm_incrementalFileDisplay_vars;
 	fsdata=b.data.files;
@@ -121,7 +133,6 @@ function kfm_incrementalFileDisplay(refresh_count){
 			el.appendChild(img);
 			el.imageHolder=img;
 		}
-		kfm_fileIcon_addEvents(el);
 		el.id='kfm_file_icon_'+id;
 		el.file_id=id;
 		wrapper.files[a]=el;
@@ -162,43 +173,74 @@ function kfm_incrementalFileDisplay(refresh_count){
 		}
 		prevEl=el;
 		++a;
-	}while(a<fsdata.length && a%kfm_show_files_in_groups_of);
+	}while(a<fsdata.length);
 	window.kfm_incrementalFileDisplay_vars.at=a;
-	if(a<fsdata.length)kfm_incrementalFileDisplay(refresh_count);
-	else{ // finished displaying icons
-		kdnd_makeDraggable('kfm_file');
-		if(kfm_listview){
-			$j('#kfm_tooltip').remove();
-			$j('#kfm_files_listview_table').columnSizing();
-			$j('#kfm_files_listview_table').tablesorter({
-				sortList:[[1,0]],
-				headers:{
-					1:{
-						sorter:'kfmobject'
-					}
-				},
-				widgets:['zebra']
-			});
-		}
-		else kfm_files_reflowIcons();
-		$j('#documents_loader').html('&nbsp;');
-		if(kfm_vars.startup_selectedFiles){
-			for(var i=0;i<kfm_vars.startup_selectedFiles.length;++i)kfm_addToSelection(kfm_vars.startup_selectedFiles[i]);
-			kfm_vars.startup_selectedFiles=false;
-		}
+	kdnd_makeDraggable('kfm_file');
+	if(kfm_listview){
+		$j('#kfm_tooltip').remove();
+		$j('#kfm_files_listview_table').columnSizing();
+		$j('#kfm_files_listview_table').tablesorter({
+			sortList:[[1,0]],
+			headers:{
+				1:{
+					sorter:'kfmobject'
+				}
+			},
+			widgets:['zebra']
+		});
+	}
+	else kfm_files_reflowIcons();
+	$j('#documents_loader').html('&nbsp;');
+	if(kfm_vars.startup_selectedFiles){
+		for(var i=0;i<kfm_vars.startup_selectedFiles.length;++i)kfm_addToSelection(kfm_vars.startup_selectedFiles[i]);
+		kfm_vars.startup_selectedFiles=false;
 	}
 }
-function kfm_fileIcon_addEvents(icon){
-	$j.event.add(icon,'mouseover',function(e){
-		if(!kfm_listview)window.kfm_file_bits.infoTooltipStart(e);
-		if(this.hasActionEvents)return;
-		$j.event.add(this,'click',kfm_toggleSelectedFile);
-		$j.event.add(this,'dblclick',window.kfm_file_bits.dblclick);
-		if(!kfm_listview)$j.event.add(this,'mouseout',window.kfm_file_bits.infoTooltipStop);
-		kfm_addContextMenu(icon,window.kfm_file_bits.contextMenu);
-		this.hasActionEvents=true;
-		this.dragDisplay=kfm_file_bits.dragDisplay;
-	});
+function kfm_incrementalFileDisplayIconView(){
+	// this function creates a "buffer" element, adds all the file icons
+	// to that buffer, then attaches the buffer to the documents_body
+	// element. this is quicker (DOM-wise) than attaching each file icon
+	// individually.
+	// the documents_body wrapper is first turned invisible, so the browser
+	// doesn't waste time trying to render the elements, until we're finished
+	// adding them all
+	var a=0,b,fsdata,wrapper,fdata,name,F,el,id;
+	b=window.kfm_incrementalFileDisplay_vars;
+	fsdata=b.data.files;
+	wrapper=document.getElementById('documents_body');
+	wrapper.style.visibility='hidden';
+	var buffer=document.createElement('div');
+	if(wrapper.contentMode!='file_icons')return (window.kfm_incrementalFileDisplay_vars=null);
+	icon=kfm_getCachedIcon(kfm_listview);
+	do{
+		fdata=fsdata[a];
+		name=fdata.name;
+		id=fdata.id;
+		F=File_getInstance(id,fdata);
+		ext=fdata.ext;
+		el=icon.cloneNode(true);
+		var img=document.createElement('span');
+		img.className='img_holder';
+		el.appendChild(img);
+		el.imageHolder=img;
+		el.id='kfm_file_icon_'+id;
+		el.file_id=id;
+		wrapper.files[a]=el;
+		el.appendChild(F.getText('name'));
+		el.className+=' kfm_icontype_'+ext;
+		buffer.appendChild(el);
+		++a;
+	}while(a<fsdata.length);
+	kdnd_makeDraggable('kfm_file');
+	wrapper.appendChild(buffer);
+	// now make sure the icons "flow" nicely on the screen in rows
+	kfm_files_reflowIcons();
+	$j('#documents_loader').html('&nbsp;');
+	if(kfm_vars.startup_selectedFiles){
+		for(var i=0;i<kfm_vars.startup_selectedFiles.length;++i)kfm_addToSelection(kfm_vars.startup_selectedFiles[i]);
+		kfm_vars.startup_selectedFiles=false;
+	}
+	wrapper.style.visibility='visible';
 }
 function kfm_refreshFiles(res){
 	if(!res.files)return;
@@ -255,7 +297,7 @@ function kfm_refreshFiles(res){
 			listview_table.id='kfm_files_listview_table';
 			wrapper.appendChild(listview_table);
 			$j(listview_table).html('<thead><tr class="listview_headers"><th>&nbsp;</th><th id="listview_headers_name">'+_('Name',0,0,1)+'</th><th id="listview_headers_size">'+_('Size',0,0,1)+'</th><th id="listview_headers_type">'+_('Type',0,0,1)+'</th><th id="listview_headers_lastmodified">'+_('Last Modified',0,0,1)+'</th></tr></thead><tbody></tbody>');
-			$j(listview_table).css('width','99%');
+			$j(listview_table).style.width='99%';
 		}
 		kfm_vars.files.refresh_count++;
 		kfm_incrementalFileDisplay(kfm_vars.files.refresh_count);
@@ -278,4 +320,16 @@ llStubs.push('kfm_renameFile');
 llStubs.push('kfm_renameFiles');
 llStubs.push('kfm_showToolTip');
 llStubs.push('kfm_zip');
+// }
+// { "live" events (events that are automatically applied to new elements)
+$j('.kfm_file').live('mouseover',function(e){
+	if(!kfm_listview)window.kfm_file_bits.infoTooltipStart(e);
+	if(this.hasActionEvents)return;
+	$j.event.add(this,'click',kfm_toggleSelectedFile);
+	$j.event.add(this,'dblclick',window.kfm_file_bits.dblclick);
+	if(!kfm_listview)$j.event.add(this,'mouseout',window.kfm_file_bits.infoTooltipStop);
+	kfm_addContextMenu(this,window.kfm_file_bits.contextMenu);
+	this.hasActionEvents=true;
+	this.dragDisplay=kfm_file_bits.dragDisplay;
+});
 // }
