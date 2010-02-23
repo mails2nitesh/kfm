@@ -250,7 +250,7 @@ class kfmDirectory extends kfmObject{
 	}
 	function getSubdir($dirname){
 		global $kfm;
-		$res=db_fetch_row('select id from '.KFM_DB_PREFIX.'directories where name="'.$dirname.'" and parent='.$this->id);
+		$res=db_fetch_row('select id from '.KFM_DB_PREFIX.'directories where name="'.mysql_escape_string($dirname).'" and parent='.$this->id);
 		if($res)return kfmDirectory::getInstance($res['id']);
 		else if(is_dir($this->path().$dirname)){
 			$this->addSubdirToDb($dirname);
