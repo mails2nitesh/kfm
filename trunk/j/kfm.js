@@ -427,20 +427,19 @@ function kfm_inArray(needle,haystack){
 	return haystack.indexOf(needle)!=-1;
 }
 function kfm_prompt(txt,val,fn){
-	window.inPrompt=1;
-	var table=document.createElement('table');
-	table.id='kfm_prompt_table';
-	var inp=newInput('kfm_prompt',0,val);
-	if($type(txt)=='element')table.insertRow(0).insertCell(0).appendChild(txt);
-	else table.insertRow(0).insertCell(0).innerHTML=txt.replace(/\n/g,'<br />');
-	table.insertRow(1).insertCell(0).appendChild(inp);
-	kfm_modal_open(table,'prompt',[[kfm.lang.Ok,function(){
-		var v=document.getElementById('kfm_prompt').value;
-		kfm_modal_close();
-		window.inPrompt=0;
-		fn(v);
-	}]]);
-	document.getElementById('kfm_prompt').focus();
+  $j('<div title="Prompt"><div>'+txt+'</div><input id="kfm_prompt_input" value="'+val+'"/></div>').dialog({
+    modal:true,
+    buttons:{
+      Ok: function(){
+        val = $j(this).find('#kfm_prompt_input').val();
+        fn(val);
+        $j(this).dialog('close');
+      },
+      Cancel: function(){
+        $j(this).dialog('close');
+      }
+    }
+  });
 }
 function kfm_run_delayed(name,call){
 	name=name+'_timeout';

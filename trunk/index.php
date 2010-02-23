@@ -123,6 +123,7 @@ if(!empty($_POST['kaejax']))kfm_kaejax_handle_client_request();
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
+    <link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css" />
 		<style type="text/css">@import "themes/<?php echo $kfm->setting('theme'); ?>/css.php"; </style>
 		<style type="text/css">@import "plugins/css.php"; </style>
 		<title>KFM - Kae's File Manager</title>
@@ -206,6 +207,7 @@ if ($last_registration!=$today) {
 		</script>
 <?php // } ?>
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="third-party/swfupload/swfupload.js"></script>
 		<script type="text/javascript" src="j/all.php/can-minify"></script>
 		<script type="text/javascript" src="lang/<?php echo $kfm_language; ?>.js"></script>
