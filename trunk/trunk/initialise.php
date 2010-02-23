@@ -337,6 +337,11 @@ function get_settings($uid){
 }
 list($settings, $usersettings) = get_settings($uid); // $settings as database values
 foreach($usersettings as $usersetting) $kfm->addUserSetting($usersetting);
+if(!isset($settings['kfm_url'])){
+ $kfm_url = str_replace($_SERVER['DOCUMENT_ROOT'],'',str_replace('\\','/',getcwd()));
+ if(!$kfm_url[0] == '/') $kfm_url = '/'.$kfm_url; // Make the url absolute
+ $kfm->db->query('INSERT INTO '.KFM_DB_PREFIX.'settings (name, value, user_id) VALUES ("kfm_url", "'.mysql_escape_string($kfm_url).'",1)');
+}
 if(isset($settings['disabled_plugins'])){
     $kfm->setting('disabled_plugins',setting_array($settings['disabled_plugins']));
     unset($settings['disabled_plugins']); // it does not have to be set again
