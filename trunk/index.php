@@ -137,7 +137,7 @@ if(!empty($_POST['kaejax']))kfm_kaejax_handle_client_request();
 $templated = 0;
 if (file_exists('themes/'.$kfm->setting('theme').'/template.html')) {
 	$template=file_get_contents('themes/'.$kfm->setting('theme').'/template.html');
-	echo '<div id="templateWrapper" style="display:none">'.kfm_parse_template($template).'</div>';
+	$template = '<div id="templateWrapper" style="display:none">'.kfm_parse_template($template).'</div>';
 	$templated = 1;
 }
 // }
@@ -226,6 +226,7 @@ foreach ($kfm->plugins as $plugin) {
 }
 if($pluginssrc!='')echo "<script type=\"text/javascript\"><!--\n$pluginssrc\n--></script>";
 // }
+if($templated) echo $template;
 // } ?>
 <?php // { more JavaScript environment variables. These should be merged into the above set whenever possible ?>
 		<script type="text/javascript">
