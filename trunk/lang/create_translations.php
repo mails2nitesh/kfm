@@ -1,5 +1,5 @@
 <?php
-require "../initialise.php";
+require_once "../initialise.php";
 $h = opendir('./');
 print "<pre>";
 $kfm->db->query("delete from kfm_translations");

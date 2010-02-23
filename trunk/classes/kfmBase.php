@@ -5,6 +5,7 @@
 class kfmBase extends kfmObject{
 	var $doctype='<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
 	var $settings=array();
+  var $settings_frozen = array();
 	var $plugins=array();
 	var $themes=array();
 	var $user_settings=array();
@@ -125,20 +126,22 @@ class kfmBase extends kfmObject{
 	 * 
 	 * @return $value
 	 */
-	function setting($name,$value='novaluegiven'){
+	function setting($name,$value='novaluegiven', $freeze = false){
 		if($value=='novaluegiven'){
 			if(!isset($this->settings[$name]))return $this->error('Setting '.$name.' does not exists');
 			return $this->settings[$name];
 		}
-		$this->settings[$name]=$value;
+		if(!in_array($name, $this->settings_frozen))$this->settings[$name]=$value;
+    if($freeze) $this->settings_frozen[] = $name;
 	}
 
   /**
    * Bulk update settings
    */
-  function setSettings($settings = array()){
+  function setSettings($settings = array(), $freeze = false){
     foreach($settings as $setting_name => $setting_value){
       $this->settings[$setting_name] = $setting_value;
+      if($freeze) $this->settings_frozen[] = $setting_name;
     }
   }
 
@@ -150,6 +153,13 @@ class kfmBase extends kfmObject{
 	function addAdminTab($name, $page,$stylesheet=false){
 		$this->admin_tabs[]=array('title'=>$name, 'page'=>$page, 'stylesheet'=>$stylesheet);
 	}
+
+  /**
+    * Freeze a setting. After this a setting will not be changed anymore
+    */
+  function freezeSetting($setting){
+    $this->settings_frozen[] = $setting;
+  }
 
 	/**
 	 * returns a parameter, returns the default if not present
