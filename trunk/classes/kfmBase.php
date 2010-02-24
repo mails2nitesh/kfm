@@ -11,6 +11,7 @@ class kfmBase extends kfmObject{
 	var $user_settings=array();
 	var $admin_tabs=array();
 	var $associations=array();
+  var $associations_frozen=false;
 	//Settings definition
 	var $sdef=array(
 		'Structure settings'=>array( 'type'=>'group_header'),
@@ -226,6 +227,7 @@ class kfmBase extends kfmObject{
 	 *	)
 	 */
 	function addAssociations($associations){
+    if($this->associations_frozen) return;
 		if(!is_array($associations))return;
 		foreach($associations as $association){
 			if(strpos($association['extension'],',')!==false){
@@ -239,9 +241,27 @@ class kfmBase extends kfmObject{
 
 	/* Add an association to kfm. This associates a plugin with an extension.
 	 * It should be something like:
-	 *	array( 'plugin' => 'download', 'extension' => 'pdf' )
+   * $kfm->addAssociation('lightbox','jpg,png,jpeg,gif');
+   * $kfm->addAssociation('rename', 'all');
 	 */
 	function addAssociation($plugin, $extensions){
 		$this->addAssociations(array('plugin'=>$plugin, 'extension'=>$extensions));
+    return $this; // Allow chaining
 	}
+
+  /**
+    * Clear associations created before 
+    */
+  function clearAssociations(){
+    $this->associations = array();
+    return $this; // Allow chaining
+  }
+
+  /**
+    * Prevent future associations
+    */
+  function freezeAssociations(){
+    $this->associations_frozen = true;
+    return $this; // Allow chaining
+  }
 }
