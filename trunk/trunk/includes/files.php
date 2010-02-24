@@ -99,7 +99,7 @@ function _getFileDetails($fid){
 		'modified'=>$file->modified,
 		'writable'=>$file->isWritable(),
 		'ext'=>$file->getExtension(),
-		'icon_url'=>'get.php?id='.$file->id.'&width=64&height=64&get_params='.GET_PARAMS.'&hash='.$file->ctime
+		'icon_url'=>'get.php?id='.$file->id.'&width=64&height=64&hash='.$file->ctime.GET_PARAMS
 	);
 	if($file->isImage()){
 		if($kfm->isPlugin('captions'))$details['caption']=$file->caption;
