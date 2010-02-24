@@ -77,12 +77,7 @@ kfm.addRow=function(t,p,c){
 	return o;
 };
 kfm.alert=function(txt){
-	if(typeof(txt)=='string'){
-		var el=document.createElement('span');
-		el.innerHTML=txt;
-		txt=el;
-	}
-	kfm_modal_open(txt,_('Alert',0,0,1));
+  $j('<div title="Alert"></div>').append(txt).dialog({modal:true});
 };
 kfm.showErrors=function(errors){
 	var div=document.createElement('div');
@@ -301,11 +296,15 @@ kfm.build=function(){
 	kfm_contextmenuinit();
 	$j.event.add(documents_body,'scroll',kfm_setThumbnails);
 };
-kfm.confirm=function(txt){
-	window.inPrompt=1;
-	var ret=confirm(txt);
-	setTimeout('window.inPrompt=0',1);
-	return ret;
+kfm.confirm=function(txt, fn){
+  if(!(typeof(fn)=='function')) fn = function(){};
+  $j('<div title="Confirm"></div>').append(txt).dialog({
+    modal:true,
+    buttons:{
+      Ok: function(){$j(this).remove();fn();}, // TODO language string
+      Cancel: function(){$j(this).remove()} // TODO language string
+    }
+  });
 };
 kfm.getContainer=function(p,c){
 	for(var i=0;i<c.length;++i){
@@ -340,7 +339,7 @@ kfm.keyup=function(e){
 		}
 		case 27:{ // escape
 			if(cm=='lightbox')kfm_img_stopLightbox();
-			else if(!window.inPrompt&&kfm.confirm(kfm.lang.AreYouSureYouWantToCloseKFM))window.close();
+			else if(!window.inPrompt) kfm.confirm(kfm.lang.AreYouSureYouWantToCloseKFM, function(){window.close()});
 			break;
 		}
 		case 37:{ // left arrow
@@ -426,7 +425,7 @@ function kfm_inArray(needle,haystack){
 	return haystack.indexOf(needle)!=-1;
 }
 function kfm_prompt(txt,val,fn){
-  $j('<div title="Prompt"><div>'+txt+'</div><input id="kfm_prompt_input" value="'+val+'"/></div>').dialog({
+  $j('<div title="Prompt"></div>').append(txt).append('<input id="kfm_prompt_input" value="'+val+'"/>').dialog({
     modal:true,
     buttons:{
       Ok: function(){
@@ -437,7 +436,9 @@ function kfm_prompt(txt,val,fn){
       Cancel: function(){
         $j(this).dialog('close');
       }
-    }
+    },
+    open:function(){$j('#kfm_prompt_input').focus();},
+    close:function(){$j(this).remove()}
   });
 }
 function kfm_run_delayed(name,call){
