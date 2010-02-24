@@ -25,14 +25,9 @@ google.load('jqueryui', '1.7');
 <script type="text/javascript" src="themeswitchertool.js"></script>
 <script type="text/javascript">
 $(function(){
-	$('#tabscontainer').tabs({
-      load: function(){
-        $('.button').hover(
-          function(){$(this).addClass('ui-state-hover')},
-          function(){$(this).removeClass('ui-state-hover')}
-        );
-      }
-     });
+  $('.button').live('mouseover', function(){$(this).addClass('ui-state-hover')});
+  $('.button').live('mouseout', function(){$(this).removeClass('ui-state-hover')});
+  $('#tabscontainer').tabs();
   $('#switcher').themeswitcher({width:180});
 });
 function message(msg){
