@@ -73,8 +73,8 @@ function kfm_kaejax_sendRequests(uri){
 	// { send the requests to the server, and send the results back to the callbacks when the server's finished
 	$j.post(uri,{kaejax:Json.toString(t)},function(v){
 		var f,p,i;
-		if(v.errors.length)kfm.showErrors(v.errors);
-		if(v.messages.length)kfm.showMessages(v.messages);
+		if(v.errors && v.errors.length)kfm.showErrors(v.errors);
+		if(v.messages && v.messages.length)kfm.showMessages(v.messages);
 		for(i=0;i<t.c.length;++i){
 			f=callbacks[i];
 			p=[];
