@@ -336,7 +336,6 @@ kfm.keyup=function(e){
 				var openingHook=kfm_getDefaultOpener([id]);
 				if(openingHook)openingHook.doFunction([id]);
 			}
-			if(!openingHook)kfm_chooseFile();
 			break;
 		}
 		case 27:{ // escape
