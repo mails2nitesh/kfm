@@ -23,15 +23,9 @@ function kfm_returnThumbnail(id,size){
 		if(!valid)return kfm_returnThumbnail(id,size);
 		var x=size.replace(/x.*/,''),y=size.replace(/.*x/,'');
 		x_kfm_getFileUrl(id,x,y,function(url){
-			if(kfm_file_handler=='return'||kfm_file_handler=='fckeditor'||kfm_file_handler=='ckeditor'){
-				if(copy_to_clipboard)copy_to_clipboard(url);
-				window.opener.SetUrl(url,0,0,File_getInstance(id).caption);
-				window.close();
-			}
-			else if(kfm_file_handler=='download'){
-				if(/get.php/.test(url))url+='&forcedownload=1';
-				document.location=url;
-			}
+		  if(copy_to_clipboard)copy_to_clipboard(url);
+			window.opener.SetUrl(url,0,0,File_getInstance(id).caption);
+			window.close();
 		});
 	});
 }

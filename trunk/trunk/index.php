@@ -194,7 +194,6 @@ if ($last_registration!=$today) {
 			var starttype="<?php echo isset($_GET['type'])?$_GET['type']:''; ?>";
 			var fckroot="<?php echo $kfm->setting('userfiles_address'); ?>";
 			var fckrootOutput="<?php echo $kfm->setting('userfiles_output'); ?>";
-			var kfm_file_handler="<?php echo $kfm->setting('file_handler'); ?>";
 			var kfm_return_directory=<?php echo isset($_GET['return_directory'])?'1':'0'; ?>;
 			var kfm_theme="<?php echo $kfm->setting('theme'); ?>";
 			var kfm_hidden_panels="<?php echo join(',',$kfm->setting('hidden_panels')); ?>".split(',');

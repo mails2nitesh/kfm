@@ -6,7 +6,6 @@ function kfm_addToSelection(id){
 	document.getElementById('kfm_file_icon_'+id).className+=' selected';
 	kfm_selectionCheck();
 }
-llStubs.push('kfm_chooseFile');
 function kfm_isFileSelected(filename){
 	return kfm_inArray(filename,selectedFiles);
 }
