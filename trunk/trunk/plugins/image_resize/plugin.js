@@ -23,7 +23,7 @@ function kfm_resize_image(id){
 		kfm_prompt(txt+kfm.lang.NewHeight,Math.ceil(F.height*(x/F.width)),function(y){
 			y=parseInt(y);
 			if(!y)return;
-			if(kfm.confirm(txt+kfm.lang.NewHeightConfirmTxt(y))){
+			kfm.confirm(txt+kfm.lang.NewHeightConfirmTxt(y),function(){
 				kfm_fileLoader(id);
 				//x_kfm_resizeImage(id,x,y,kfm_refreshFiles);
 				x_kfm_resizeImage(id,x,y,function(){
@@ -32,7 +32,7 @@ function kfm_resize_image(id){
 						F.setThumbnailBackground(document.getElementById('kfm_file_icon_'+id));
 					});
 				});
-			}
+			});
 		});
 	});
 }
@@ -60,7 +60,7 @@ function kfm_resize_images(files){
 		kfm_prompt(txt+kfm.lang.NewHeight,Math.ceil(height*(x/width)),function(y){
 			y=parseInt(y);
 			if(!y)return;
-			if(kfm.confirm(txt+kfm.lang.NewHeightConfirmTxt(y))){
+			kfm.confirm(txt+kfm.lang.NewHeightConfirmTxt(y), function(){
 				kfm_fileLoader(imgfiles);
 				x_kfm_resizeImages(imgfiles,x,y,function(){
 					imgfiles.each(function(id){
@@ -71,7 +71,7 @@ function kfm_resize_images(files){
 						});
 					});
 				});
-			}
+			});
 		});
 	});
 }

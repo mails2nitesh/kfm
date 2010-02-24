@@ -92,17 +92,24 @@ function kfm_createDirectory(id){
 }
 function kfm_deleteDirectory(id){
 	if(!kfm_vars.permissions.dir.rm)return kfm.alert(_('permission denied: cannot delete directory'));
-	if(!kfm.confirm(kfm.lang.DelDirMessage(kfm_directories[id].path)))return;
-	if(kfm_directories[id].hasChildren && !kfm.confirm(kfm.lang.RecursiveDeleteWarning(kfm_directories[id].name)))return;
-	x_kfm_deleteDirectory(id,kfm_deleteDirectoryCheck);
+  kfm.confirm(kfm.lang.DelDirMessage(kfm_directories[id].path),function(){
+    if(kfm_directories[id].hasChildren){
+      kfm.confirm(kfm.lang.RecursiveDeleteWarning(kfm_directories[id].name),function(){
+	      x_kfm_deleteDirectory(id,kfm_deleteDirectoryCheck);
+      });
+    }else{
+	    x_kfm_deleteDirectory(id,kfm_deleteDirectoryCheck);
+    }
+  });
 }
 function kfm_deleteDirectoryCheck(res){
 	if(res.type&&res.type=='error'){
 		switch(parseInt(res.msg)){
 			case 1: case 3: case 4: break; // various unimportant errors
 			case 2:{ // not empty
-				var ok=kfm.confirm(kfm.lang.RecursiveDeleteWarning(res.name));
-				if(ok)x_kfm_deleteDirectory(res.id,1,kfm_deleteDirectoryCheck);
+				kfm.confirm(kfm.lang.RecursiveDeleteWarning(res.name), function(){
+          x_kfm_deleteDirectory(res.id,1,kfm_deleteDirectoryCheck);
+        });
 				break;
 			}
 			default: new Notice(res.msg);
