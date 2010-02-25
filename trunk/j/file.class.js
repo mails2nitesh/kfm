@@ -48,7 +48,7 @@ File.prototype.setThumbnailBackground=function(el,reset){
 		}
 	}
 	// sprite doesn't exist, or image is not in a CSS sprite
-	el.style.background='url(get.php?id='+id+'&width=64&height=64) center top no-repeat';
+	el.style.background='url(get.php?id='+id+'&width=64&height=64'+kfm_vars.get_params+') center top no-repeat';
 }
 File.prototype.iterateThumbnailQueue=function(){
 	if(!File_ThumbnailsQueue.length){
@@ -57,7 +57,7 @@ File.prototype.iterateThumbnailQueue=function(){
 	}
 	var el=window.File_ThumbnailsQueue[0][0],id=window.File_ThumbnailsQueue[0][1];
 	if(el && el.parentNode && el.parentNode.id=='documents_body'){
-		var url='get.php?id='+id+'&width=64&height=64&get_params='+kfm_vars.get_params;
+		var url='get.php?id='+id+'&width=64&height=64'+kfm_vars.get_params;
 		var img=document.createElement('img');
 		img.src=url;
 		img.style.width=1;
