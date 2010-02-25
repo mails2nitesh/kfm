@@ -27,4 +27,14 @@ function plugin_return_url(){
 	}
 	this.nocontextmenu=false; // Set this to true and make sure that file associations all points to this plugin for old style behaviour
 }
+window.SetUrl=function(file_url,b,c,caption){
+	// { FCKeditor
+	if(window.opener.SetUrl)return window.opener.SetUrl(file_url,b,c,caption);
+	// }
+	// { CKEditor
+	if(window.opener.CKEDITOR){
+		var funcnum=document.location.toString().replace(/.*CKEditorFuncNum=([0-9]*)[^0-9].*/,'$1');
+		window.opener.CKEDITOR.tools.callFunction(funcnum,file_url);
+	}
+}
 kfm_addHook(new plugin_return_url());

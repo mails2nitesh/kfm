@@ -522,16 +522,6 @@ function kfm_pluginIframeVar(varname){
 	return ifrvar;
 }
 /* End kfm plugin iframe functions */
-window.SetUrl=function(file_url,b,c,caption){
-	// { FCKeditor
-	if(window.opener.SetUrl)return window.opener.SetUrl(file_url,b,c,caption);
-	// }
-	// { CKEditor
-	if(window.opener.CKEDITOR){
-		var funcnum=document.location.toString().replace(/.*CKEditorFuncNum=([0-9]*)[^0-9].*/,'$1');
-		window.opener.CKEDITOR.tools.callFunction(funcnum,file_url);
-	}
-}
 var kfm_regexps={
 	all_up_to_last_dot:/.*\./,
 	all_up_to_last_slash:/.*\//,

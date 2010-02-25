@@ -26,14 +26,6 @@ kfm_dir_bits={
 			category:'edit',
 			doFunction:function(){kfm_deleteDirectory(node_id);}
 		});
-		if(kfm_return_directory)context_categories['returning'].add({
-			name:'directory_return',
-			title:"send to CMS",
-			doFunction:function(){
-				setTimeout("window.close()",1);
-				window.opener.SetUrl(kfm_directories[node_id].realpath+'/');
-			}
-		});
 		if(kfm_directories[node_id].writable){
 			for(i=0;i<HooksDirectoryWritable.length;i++){
 				obj=HooksDirectoryWritable[i];
