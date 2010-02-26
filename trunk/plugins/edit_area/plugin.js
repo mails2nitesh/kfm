@@ -7,7 +7,7 @@ function plugin_edit_area(){
 	this.extensions=['html','c','cpp','css','js', 'pas','php', 'python', 'sql', 'vb', 'xml','txt'];
 	this.doFunction=function(files){
 		//fid=files[0];
-		kfm_pluginIframeShow('plugins/edit_area/editfile.php?fid='+files.join(','));
+		kfm_pluginIframeShow('plugins/edit_area/editfile.php?fid='+files.join(',')+kfm_vars.get_params);
 	}
 }
 kfm_addHook(new plugin_edit_area());
