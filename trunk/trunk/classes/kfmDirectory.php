@@ -39,7 +39,8 @@ class kfmDirectory extends kfmObject{
 	function addSubdirToDb($name){
 		global $kfm;
 		$sql="INSERT INTO ".KFM_DB_PREFIX."directories (name,parent) VALUES('".sql_escape($name)."',".$this->id.")";
-		return $kfm->db->exec($sql);
+		$kfm->db->exec($sql);
+    return $kfm->db->lastInsertId(KFM_DB_PREFIX.'directories','id');
 	}
 	function checkAddr($addr){
 		return (
@@ -248,15 +249,17 @@ class kfmDirectory extends kfmObject{
 			'maxHeight'               => $this->maxHeight
 		);
 	}
-	function getSubdir($dirname){
+	function getSubdir($dirname, $create_unless_exists = false){
 		global $kfm;
 		$res=db_fetch_row('select id from '.KFM_DB_PREFIX.'directories where name="'.mysql_escape_string($dirname).'" and parent='.$this->id);
 		if($res)return kfmDirectory::getInstance($res['id']);
 		else if(is_dir($this->path().$dirname)){
-			$this->addSubdirToDb($dirname);
-			$id=$kfm->db->lastInsertId(KFM_DB_PREFIX.'directories','id');
+			$id = $this->addSubdirToDb($dirname);
 			return kfmDirectory::getInstance($id);
-		}
+		}elseif($create_unless_exists){
+      $id = $this->createSubdir($dirname);
+      return kfmDirectory::getInstance($id);
+    }
 		return false;
 	}
 	function getSubdirs(){
