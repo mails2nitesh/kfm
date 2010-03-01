@@ -50,7 +50,7 @@ if ($kfm->setting('startup_folder')) {
 	$subdir				 = $user_root_dir;
 	$startup_sequence_array = array();
 	foreach ($dirs as $dirname) {
-		$subdir = $subdir->getSubdir($dirname);
+		$subdir = $subdir->getSubdir($dirname, $kfm->setting('force_startup_folder'));
 		if(!$subdir)break;
 		$startup_sequence_array[] = $subdir->id;
 		$kfm_startupfolder_id	 = $subdir->id;

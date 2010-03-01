@@ -78,6 +78,7 @@ $kfm->defaultSetting('kfm_url','');
 $kfm->defaultSetting('file_url','url'); # Unsecure, but better for people setting the userfiles_output
 $kfm->defaultSetting('user_root_folder','');
 $kfm->defaultSetting('startup_folder','');
+$kfm->defaultSetting('force_startup_folder',false);
 $kfm->defaultSetting('hidden_panels',array('logs','file_details','directory_properties'));
 $kfm->defaultSetting('log_level', 0);
 $kfm->defaultSetting('allow_user_file_associations',false);
