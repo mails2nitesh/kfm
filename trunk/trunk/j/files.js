@@ -109,9 +109,6 @@ function kfm_incrementalFileDisplay(refresh_count){
 	else kfm_incrementalFileDisplayIconView();
 }
 function kfm_incrementalFileDisplayListView(){
-	if(refresh_count!=kfm_vars.files.refresh_count){ // a new refresh is fired
-		return;
-	}
 	var a,b,fsdata,wrapper,fdata,name,F,el,id,prevEl;
 	b=window.kfm_incrementalFileDisplay_vars;
 	fsdata=b.data.files;
@@ -127,69 +124,53 @@ function kfm_incrementalFileDisplayListView(){
 		F=File_getInstance(id,fdata);
 		ext=fdata.ext;
 		el=icon.cloneNode(true);
-		if(!kfm_listview){ // add icon holder
-			var img=document.createElement('span');
-			img.className='img_holder';
-			el.appendChild(img);
-			el.imageHolder=img;
-		}
 		el.id='kfm_file_icon_'+id;
 		el.file_id=id;
 		wrapper.files[a]=el;
 		el.appendChild(F.getText('name'));
-		if(kfm_listview){
-			var cs=0,cell;
-			var listview_table=$j('#kfm_files_listview_table tbody').get(0);
-			var rows=listview_table.rows.length;
-			var row=listview_table.insertRow(rows);
-			row.fileid=F.id;
-			row.id='kfm_files_listview_table_row'+F.id;
+		var cs=0,cell;
+		var listview_table=$j('#kfm_files_listview_table tbody').get(0);
+		var rows=listview_table.rows.length;
+		var row=listview_table.insertRow(rows);
+		row.fileid=F.id;
+		row.id='kfm_files_listview_table_row'+F.id;
+		cell=row.insertCell(cs++);
+		cell.className='listview_icon listview_icon_'+ext;
+		cell.innerHTML='&nbsp;';
+		row.insertCell(cs++).appendChild(el);
+		{ // file size
 			cell=row.insertCell(cs++);
-			cell.className='listview_icon listview_icon_'+ext;
-			cell.innerHTML='&nbsp;';
-			row.insertCell(cs++).appendChild(el);
-			{ // file size
-				cell=row.insertCell(cs++);
-				var hidden=document.createElement('span');
-				hidden.style.display='none';
-				hidden.appendChild(document.createTextNode(F.filesize_raw));
-				cell.appendChild(hidden);
-				cell.appendChild(F.getText('filesize'));
-			}
-			row.insertCell(cs++).appendChild(F.getText('ext'));
-			{ // modified time
-				cell=row.insertCell(cs++);
-				var hidden=document.createElement('span');
-				hidden.style.display='none';
-				hidden.appendChild(document.createTextNode(F.ctime));
-				cell.appendChild(hidden);
-				cell.appendChild(F.getText('modified'));
-			}
+			var hidden=document.createElement('span');
+			hidden.style.display='none';
+			hidden.appendChild(document.createTextNode(F.filesize_raw));
+			cell.appendChild(hidden);
+			cell.appendChild(F.getText('filesize'));
 		}
-		else{
-			el.className+=' kfm_icontype_'+ext;
-			wrapper.appendChild(el);
-			if(a&&prevEl.offsetLeft>=el.offsetLeft)el.style.clear='left';
+		row.insertCell(cs++).appendChild(F.getText('ext'));
+		{ // modified time
+			cell=row.insertCell(cs++);
+			var hidden=document.createElement('span');
+			hidden.style.display='none';
+			hidden.appendChild(document.createTextNode(F.ctime));
+			cell.appendChild(hidden);
+			cell.appendChild(F.getText('modified'));
 		}
 		prevEl=el;
 		++a;
 	}while(a<fsdata.length);
 	window.kfm_incrementalFileDisplay_vars.at=a;
 	kdnd_makeDraggable('kfm_file');
-	if(kfm_listview){
-		$j('#kfm_tooltip').remove();
-		$j('#kfm_files_listview_table').columnSizing();
-		$j('#kfm_files_listview_table').tablesorter({
-			sortList:[[1,0]],
-			headers:{
-				1:{
-					sorter:'kfmobject'
-				}
-			},
-			widgets:['zebra']
-		});
-	}
-	else kfm_files_reflowIcons();
+	$j('#kfm_tooltip').remove();
+	$j('#kfm_files_listview_table').columnSizing();
+	$j('#kfm_files_listview_table').tablesorter({
+		sortList:[[1,0]],
+		headers:{
+			1:{
+				sorter:'kfmobject'
+			}
+		},
+		widgets:['zebra']
+	});
 	$j('#documents_loader').html('&nbsp;');
 	if(kfm_vars.startup_selectedFiles){
 		for(var i=0;i<kfm_vars.startup_selectedFiles.length;++i)kfm_addToSelection(kfm_vars.startup_selectedFiles[i]);
@@ -251,7 +232,6 @@ function kfm_refreshFiles(res){
 		window.kfm_incrementalFileDisplay_vars=null;
 	}
 	kfm_selectNone();
-	if(!res)return;
 	if(res.parent)kfm_cwd_id=res.parent;
 	if(res.toString()===res)return;
 	window.kfm_incrementalFileDisplay_vars={at:0,data:res};
@@ -293,11 +273,7 @@ function kfm_refreshFiles(res){
 		wrapper.appendChild(s);
 	}else{
 		if(kfm_listview){
-			var listview_table=document.createElement('table');
-			listview_table.id='kfm_files_listview_table';
-			wrapper.appendChild(listview_table);
-			$j(listview_table).html('<thead><tr class="listview_headers"><th>&nbsp;</th><th id="listview_headers_name">'+_('Name',0,0,1)+'</th><th id="listview_headers_size">'+_('Size',0,0,1)+'</th><th id="listview_headers_type">'+_('Type',0,0,1)+'</th><th id="listview_headers_lastmodified">'+_('Last Modified',0,0,1)+'</th></tr></thead><tbody></tbody>');
-			$j(listview_table).style.width='99%';
+			$j('<table id="kfm_files_listview_table" style="width:99%"><thead><tr class="listview_headers"><th>&nbsp;</th><th id="listview_headers_name">'+_('Name',0,0,1)+'</th><th id="listview_headers_size">'+_('Size',0,0,1)+'</th><th id="listview_headers_type">'+_('Type',0,0,1)+'</th><th id="listview_headers_lastmodified">'+_('Last Modified',0,0,1)+'</th></tr></thead><tbody></tbody></table>').appendTo(wrapper);
 		}
 		kfm_vars.files.refresh_count++;
 		kfm_incrementalFileDisplay(kfm_vars.files.refresh_count);
