@@ -138,7 +138,7 @@ if (isset($_REQUEST['swf']) && $_REQUEST['swf']==1) {
 $js = isset($_REQUEST['js'])?$js:'';
 if (isset($_REQUEST['onload'])) echo $_REQUEST['onload'];
 else if (isset($_REQUEST['onupload'])) echo $_REQUEST['onupload'];
-else if (count($errors)) echo 'alert("'.addslashes(join("\n", $errors)).'");';
+else if (count($errors)) echo 'parent.kfm.alert("'.addslashes(join("\n", $errors)).'");';
 else{
 	echo 'parent.kfm_vars.startup_selectedFiles=['.join(',',$fids).'];';
 	echo 'parent.x_kfm_loadFiles('.$kfm_session->get('cwd_id').',parent.kfm_refreshFiles);';
