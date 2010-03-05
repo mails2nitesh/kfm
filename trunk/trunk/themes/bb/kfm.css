@@ -225,16 +225,14 @@ div.kfm_panel_body{
 /* IE-specific crap */
 .ie .kfm_panel_header{height:23px}
 
-#notice_wrapper{
-	width:120px
-}
 .notice{
 	display:block;
-	border:1px solid #000;
-	background:red;
-	color:#000;
 	padding:5px;
-	margin:5px
+	margin:5px;
+  position:absolute;
+  top: 25px;
+  right: 20px;
+  width: 230px;
 }
 #kfm_lightboxWrapper{background:url(large_loader.gif) no-repeat center center}
 .kfm_directory_link{cursor:pointer}

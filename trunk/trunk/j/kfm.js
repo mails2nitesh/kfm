@@ -98,7 +98,8 @@ kfm.showErrors=function(errors){
 kfm.showMessages=function(messages){
 	var message='';
 	for(var i=0;i<messages.length;i++){
-		message+=messages[i].message+'<hr>';
+		message+=messages[i].message;
+    if(i != messages.length-1)message+='<hr>';
 	}
 	new Notice(message);
 };
