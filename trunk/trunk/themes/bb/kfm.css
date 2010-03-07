@@ -145,54 +145,54 @@ div:hover.kfm_file_icon{background-color:#f0f8ff;border-color:#bababa}
 div.kfm_file_icon.selected{background-color:#ddd;border-color:#000}
 .last_clicked{border-style:dashed !important;border-color:red !important}
 
-.listview_icon{width:16px;height:16px;background:url(icons/16x16/mimetypes/unknown.png)}
-td.listview_icon_bz2{background-image:url(icons/16x16/mimetypes/bz2.png)}
-.listview_icon_bz2{background-image:url(icons/16x16/mimetypes/bz2.png)}
-.listview_icon_aac2{background-image:url(icons/16x16/mimetypes/aac2.png)}
-.listview_icon_aac{background-image:url(icons/16x16/mimetypes/aac.png)}
-.listview_icon_ape{background-image:url(icons/16x16/mimetypes/ape.png)}
-.listview_icon_avi2{background-image:url(icons/16x16/mimetypes/avi2.png)}
-.listview_icon_avi{background-image:url(icons/16x16/mimetypes/avi.png)}
-.listview_icon_bz2{background-image:url(icons/16x16/mimetypes/bz2.png)}
-.listview_icon_chm{background-image:url(icons/16x16/mimetypes/chm.png)}
-.listview_icon_core{background-image:url(icons/16x16/mimetypes/core.png)}
-.listview_icon_deb{background-image:url(icons/16x16/mimetypes/deb.png)}
-.listview_icon_doc{background-image:url(icons/16x16/mimetypes/doc.png)}
-.listview_icon_document{background-image:url(icons/16x16/mimetypes/document.png)}
-.listview_icon_empty{background-image:url(icons/16x16/mimetypes/empty.png)}
-.listview_icon_flac{background-image:url(icons/16x16/mimetypes/flac.png)}
-.listview_icon_folder_setting{background-image:url(icons/16x16/mimetypes/folder_setting.png)}
-.listview_icon_font{background-image:url(icons/16x16/mimetypes/font.png)}
-.listview_icon_font_truetype{background-image:url(icons/16x16/mimetypes/font_truetype.png)}
-.listview_icon_gz{background-image:url(icons/16x16/mimetypes/gz.png)}
-.listview_icon_mov{background-image:url(icons/16x16/mimetypes/mov.png)}
-.listview_icon_mp3{background-image:url(icons/16x16/mimetypes/mp3.png)}
-.listview_icon_mp4{background-image:url(icons/16x16/mimetypes/mp4.png)}
-.listview_icon_odt{background-image:url(icons/16x16/mimetypes/odt.png)}
-.listview_icon_ogg{background-image:url(icons/16x16/mimetypes/ogg.png)}
-.listview_icon_qt{background-image:url(icons/16x16/mimetypes/qt.png)}
-.listview_icon_ram{background-image:url(icons/16x16/mimetypes/ram.png)}
-.listview_icon_rar{background-image:url(icons/16x16/mimetypes/rar.png)}
-.listview_icon_rm{background-image:url(icons/16x16/mimetypes/rm.png)}
-.listview_icon_rmvb{background-image:url(icons/16x16/mimetypes/rmvb.png)}
-.listview_icon_rpm{background-image:url(icons/16x16/mimetypes/rpm.png)}
-.listview_icon_rtf{background-image:url(icons/16x16/mimetypes/rtf.png)}
-.listview_icon_rt{background-image:url(icons/16x16/mimetypes/rt.png)}
-.listview_icon_rv{background-image:url(icons/16x16/mimetypes/rv.png)}
-.listview_icon_svg{background-image:url(icons/16x16/mimetypes/svg.png)}
-.listview_icon_sxw{background-image:url(icons/16x16/mimetypes/sxw.png)}
-.listview_icon_tar{background-image:url(icons/16x16/mimetypes/tar.png)}
-.listview_icon_tgz{background-image:url(icons/16x16/mimetypes/tgz.png)}
-.listview_icon_txt2{background-image:url(icons/16x16/mimetypes/txt2.png)}
-.listview_icon_txt{background-image:url(icons/16x16/mimetypes/txt.png)}
-.listview_icon_unknown{background-image:url(icons/16x16/mimetypes/unknown.png)}
-.listview_icon_zip{background-image:url(icons/16x16/mimetypes/zip.png)}
-.listview_icon_pdf{background-image:url(icons/16x16/mimetypes/pdf.png)}
-.listview_icon_xls{background-image:url(icons/16x16/mimetypes/xls.png)}
-.listview_icon_html{background-image:url(icons/16x16/mimetypes/html.png)}
-.listview_icon_htm{background-image:url(icons/16x16/mimetypes/html.png)}
-.listview_icon_php{background-image:url(icons/16x16/mimetypes/php.png)}
-.listview_icon_rb{background-image:url(icons/16x16/mimetypes/ruby.png)}
+.listview_icon{width:16px;height:16px;background:url(icons/16x16/mimetypes/unknown.png.png) no-repeat}
+td.listview_icon_bz2{background-image:url(icons/16x16/mimetypes/bz2.png.png) no-repeat}
+.listview_icon_bz2{background-image:url(icons/16x16/mimetypes/bz2.png.png) no-repeat}
+.listview_icon_aac2{background-image:url(icons/16x16/mimetypes/aac2.png.png) no-repeat}
+.listview_icon_aac{background-image:url(icons/16x16/mimetypes/aac.png.png) no-repeat}
+.listview_icon_ape{background-image:url(icons/16x16/mimetypes/ape.png.png) no-repeat}
+.listview_icon_avi2{background-image:url(icons/16x16/mimetypes/avi2.png.png) no-repeat}
+.listview_icon_avi{background-image:url(icons/16x16/mimetypes/avi.png.png) no-repeat}
+.listview_icon_bz2{background-image:url(icons/16x16/mimetypes/bz2.png.png) no-repeat}
+.listview_icon_chm{background-image:url(icons/16x16/mimetypes/chm.png.png) no-repeat}
+.listview_icon_core{background-image:url(icons/16x16/mimetypes/core.png.png) no-repeat}
+.listview_icon_deb{background-image:url(icons/16x16/mimetypes/deb.png.png) no-repeat}
+.listview_icon_doc{background-image:url(icons/16x16/mimetypes/doc.png.png) no-repeat}
+.listview_icon_document{background-image:url(icons/16x16/mimetypes/document.png.png) no-repeat}
+.listview_icon_empty{background-image:url(icons/16x16/mimetypes/empty.png.png) no-repeat}
+.listview_icon_flac{background-image:url(icons/16x16/mimetypes/flac.png.png) no-repeat}
+.listview_icon_folder_setting{background-image:url(icons/16x16/mimetypes/folder_setting.png.png) no-repeat}
+.listview_icon_font{background-image:url(icons/16x16/mimetypes/font.png.png) no-repeat}
+.listview_icon_font_truetype{background-image:url(icons/16x16/mimetypes/font_truetype.png.png) no-repeat}
+.listview_icon_gz{background-image:url(icons/16x16/mimetypes/gz.png.png) no-repeat}
+.listview_icon_mov{background-image:url(icons/16x16/mimetypes/mov.png.png) no-repeat}
+.listview_icon_mp3{background-image:url(icons/16x16/mimetypes/mp3.png.png) no-repeat}
+.listview_icon_mp4{background-image:url(icons/16x16/mimetypes/mp4.png.png) no-repeat}
+.listview_icon_odt{background-image:url(icons/16x16/mimetypes/odt.png.png) no-repeat}
+.listview_icon_ogg{background-image:url(icons/16x16/mimetypes/ogg.png.png) no-repeat}
+.listview_icon_qt{background-image:url(icons/16x16/mimetypes/qt.png.png) no-repeat}
+.listview_icon_ram{background-image:url(icons/16x16/mimetypes/ram.png.png) no-repeat}
+.listview_icon_rar{background-image:url(icons/16x16/mimetypes/rar.png.png) no-repeat}
+.listview_icon_rm{background-image:url(icons/16x16/mimetypes/rm.png.png) no-repeat}
+.listview_icon_rmvb{background-image:url(icons/16x16/mimetypes/rmvb.png.png) no-repeat}
+.listview_icon_rpm{background-image:url(icons/16x16/mimetypes/rpm.png.png) no-repeat}
+.listview_icon_rtf{background-image:url(icons/16x16/mimetypes/rtf.png.png) no-repeat}
+.listview_icon_rt{background-image:url(icons/16x16/mimetypes/rt.png.png) no-repeat}
+.listview_icon_rv{background-image:url(icons/16x16/mimetypes/rv.png.png) no-repeat}
+.listview_icon_svg{background-image:url(icons/16x16/mimetypes/svg.png.png) no-repeat}
+.listview_icon_sxw{background-image:url(icons/16x16/mimetypes/sxw.png.png) no-repeat}
+.listview_icon_tar{background-image:url(icons/16x16/mimetypes/tar.png.png) no-repeat}
+.listview_icon_tgz{background-image:url(icons/16x16/mimetypes/tgz.png.png) no-repeat}
+.listview_icon_txt2{background-image:url(icons/16x16/mimetypes/txt2.png.png) no-repeat}
+.listview_icon_txt{background-image:url(icons/16x16/mimetypes/txt.png.png) no-repeat}
+.listview_icon_unknown{background-image:url(icons/16x16/mimetypes/unknown.png.png) no-repeat}
+.listview_icon_zip{background-image:url(icons/16x16/mimetypes/zip.png.png) no-repeat}
+.listview_icon_pdf{background-image:url(icons/16x16/mimetypes/pdf.png.png) no-repeat}
+.listview_icon_xls{background-image:url(icons/16x16/mimetypes/xls.png.png) no-repeat}
+.listview_icon_html{background-image:url(icons/16x16/mimetypes/html.png.png) no-repeat}
+.listview_icon_htm{background-image:url(icons/16x16/mimetypes/html.png.png) no-repeat}
+.listview_icon_php{background-image:url(icons/16x16/mimetypes/php.png.png) no-repeat}
+.listview_icon_rb{background-image:url(icons/16x16/mimetypes/ruby.png.png) no-repeat}
 
 #kfm_directories_panel{
 	background-color:#777;
