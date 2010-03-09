@@ -57,10 +57,12 @@ function kfm_createFileUploadPanel(contentsonly){
 	iframe.src='javascript:false';
 	iframe.style.display='none';
 	// { test to see if multiple uploads are natively supported
-	var inp=document.createElement('input');
+	var inp=document.createElement('input'),nm=false;
 	inp.type='file';
-	inp.setAttribute('multiple','multiple');
-	var nm=inp.multiple?true:false;
+	if('multiple' in inp){
+		inp.setAttribute('multiple','multiple');
+		nm=true;
+	}
 	// }
 	wrapper.appendChild((nm || !kfm_vars.use_multiple_file_upload) ?
 		kfm_fileUploadForm_native():
