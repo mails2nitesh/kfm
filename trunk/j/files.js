@@ -212,8 +212,8 @@ function kfm_incrementalFileDisplayIconView(){
 		buffer.appendChild(el);
 		++a;
 	}while(a<fsdata.length);
-	kdnd_makeDraggable('kfm_file');
 	wrapper.appendChild(buffer);
+	kdnd_makeDraggable('kfm_file');
 	// now make sure the icons "flow" nicely on the screen in rows
 	kfm_files_reflowIcons();
 	$j('#documents_loader').html('&nbsp;');
