@@ -58,5 +58,5 @@ if($dbv==7){
 }
 
 $kfmdb->query("update ".KFM_DB_PREFIX."parameters set value='$dbv' where name='version_db'");
-echo '<p>Database updated. Please reload page.</p>';
+echo '<p>Database updated. Please reload page.</p><script>setTimeout(function(){document.location="./";},10000);</script>';
 exit;

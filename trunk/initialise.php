@@ -84,7 +84,7 @@ $kfm->defaultSetting('log_level', 0);
 $kfm->defaultSetting('allow_user_file_associations',false);
 //display
 //$kfm->defaultSetting('theme', false); // must be overwritten
-$kfm->defaultSetting('show_admin_link', true);
+$kfm->defaultSetting('show_admin_link', file_exists(KFM_BASE_PATH.'admin'));
 $kfm->defaultSetting('time_format', '%T');
 $kfm->defaultSetting('date_format', '%x');
 $kfm->defaultSetting('listview',0);
@@ -339,7 +339,7 @@ list($settings, $usersettings) = get_settings($uid); // $settings as database va
 foreach($usersettings as $usersetting) $kfm->addUserSetting($usersetting);
 if(!isset($settings['kfm_url'])){
  $kfm_url = str_replace($_SERVER['DOCUMENT_ROOT'],'',str_replace('\\','/',getcwd()));
- if(!$kfm_url[0] == '/') $kfm_url = '/'.$kfm_url; // Make the url absolute
+ if(!isset($kfm_url[0]) || !$kfm_url[0] == '/') $kfm_url = '/'.$kfm_url; // Make the url absolute
  $kfm->db->query('INSERT INTO '.KFM_DB_PREFIX.'settings (name, value, user_id) VALUES ("kfm_url", "'.mysql_escape_string($kfm_url).'",1)');
 }
 if(isset($settings['disabled_plugins'])){

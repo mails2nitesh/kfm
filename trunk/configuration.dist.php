@@ -85,6 +85,12 @@ $kfm_thumb_format='.jpg';
 $kfm_default_file_selection_handler='return_url';
 
 /**
+ * Ignore DB Session - leave this as "false", unless you are a developer and accessing KFM through an API.
+ * Developers: this is for cases where KFM files are included and you just need to use its functions without going through the whole setup.
+ */
+if(!isset($kfm_do_not_save_session))$kfm_do_not_save_session=false;
+
+/**
  * This function is called in the admin area. To specify your own admin requirements or security, un-comment and edit this function
  */
 //	function kfm_admin_check(){

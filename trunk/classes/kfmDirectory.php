@@ -2,10 +2,10 @@
 class kfmDirectory extends kfmObject{
 	static $instances=array();
 	var $subDirs=array();
-  private $maxWidth;
-  private $maxHeight;
-  public $relpath = false; // Cache for path relative to kfm root
-  public $relpath_user = false; // Cache for path relative to user root
+	private $maxWidth;
+	private $maxHeight;
+	public $relpath = false; // Cache for path relative to kfm root
+	public $relpath_user = false; // Cache for path relative to user root
 	function __construct($id=1){
 		parent::__construct();
 		$this->id=$id;
@@ -40,7 +40,7 @@ class kfmDirectory extends kfmObject{
 		global $kfm;
 		$sql="INSERT INTO ".KFM_DB_PREFIX."directories (name,parent) VALUES('".sql_escape($name)."',".$this->id.")";
 		$kfm->db->exec($sql);
-    return $kfm->db->lastInsertId(KFM_DB_PREFIX.'directories','id');
+		return $kfm->db->lastInsertId(KFM_DB_PREFIX.'directories','id');
 	}
 	function checkAddr($addr){
 		return (
@@ -182,11 +182,11 @@ class kfmDirectory extends kfmObject{
 		return self::$instances[$id];
 	}
 
-  /**
-    Full path of directory
-    */
+	/**
+		Full path of directory
+		*/
 	function getPath(){
-    global $kfm;
+		global $kfm;
 		$pathTmp=$this->name.'/';
 		$pid=$this->pid;
 		if(!$pid)return $GLOBALS['rootdir'];
@@ -195,58 +195,58 @@ class kfmDirectory extends kfmObject{
 			$pathTmp=$p->name.'/'.$pathTmp;
 			$pid=$p->pid;
 		}
-    return file_join($kfm->files_root_path, $pathTmp);
+		return file_join($kfm->files_root_path, $pathTmp);
 	}
-  /**
-    * At the moment the path property is loaded for every directory instance. Maybe this is not required.
-    * A cached function should be more efficient for the future. Therefor every $dir->path call should be
-    * replaced by $dir->path();
-    */
-  function path(){
-    if(!$this->cached_path) $this->cached_path = $this->getPath();
-    return $this->cached_path;
-  }
-  /**
-    Path of directory relative to root.
-    If $to_user_root is set to true, support for custom root folders is activated.
-    The $to_user_root option should not be used for file retrieval but solely for display purposes.
-    */
-  function relativePath($to_user_root = false){
-    global $kfm;
-    // Determin root_id and check for cashed path
-    if($to_user_root){
-      if($this->relpath_user) return $this->relpath_user;
-      $root_id = $kfm->setting('root_folder_id');
-    }else{
-      if($this->relpath) return $this->relpath;
-      $root_id = 1;
-    }
+	/**
+		* At the moment the path property is loaded for every directory instance. Maybe this is not required.
+		* A cached function should be more efficient for the future. Therefor every $dir->path call should be
+		* replaced by $dir->path();
+		*/
+	function path(){
+		if(!isset($this->cached_path) || !$this->cached_path) $this->cached_path = $this->getPath();
+		return $this->cached_path;
+	}
+	/**
+		Path of directory relative to root.
+		If $to_user_root is set to true, support for custom root folders is activated.
+		The $to_user_root option should not be used for file retrieval but solely for display purposes.
+		*/
+	function relativePath($to_user_root = false){
+		global $kfm;
+		// Determin root_id and check for cashed path
+		if($to_user_root){
+			if($this->relpath_user) return $this->relpath_user;
+			$root_id = $kfm->setting('root_folder_id');
+		}else{
+			if($this->relpath) return $this->relpath;
+			$root_id = 1;
+		}
 		$pathTmp=''; // Return empty if we are the root folder
 		$pid=$this->pid;
 		if(!$pid)return $pathTmp;
-    if($this->id == $root_id) return $pathTmp;
-    $pathTmp = $this->name; // If not root, we need our name
+		if($this->id == $root_id) return $pathTmp;
+		$pathTmp = $this->name; // If not root, we need our name
 		while($pid != $root_id ){
 			$p=kfmDirectory::getInstance($pid);
 			$pathTmp=$p->name.DIRECTORY_SEPARATOR.$pathTmp;
 			$pid=$p->pid;
 		}
-    if($to_user_root){
-      $this->relpath_user = $pathTmp;
-    }else{
-      $this->relpath = $pathTmp;
-    }
+		if($to_user_root){
+			$this->relpath_user = $pathTmp;
+		}else{
+			$this->relpath = $pathTmp;
+		}
 		return $pathTmp;
-  }
+	}
 	function getProperties(){
 		return array(
 			'allowed_file_extensions' => '',
-			'name'                    => $this->name,
-			'path'                    => $this->relativePath(), #str_replace($_SERVER['DOCUMENT_ROOT'],'',$this->path()),
-			'parent'                  => $this->pid,
-			'writable'                => $this->isWritable(),
-			'maxWidth'                => $this->maxWidth,
-			'maxHeight'               => $this->maxHeight
+			'name'										=> $this->name,
+			'path'										=> $this->relativePath(), #str_replace($_SERVER['DOCUMENT_ROOT'],'',$this->path()),
+			'parent'									=> $this->pid,
+			'writable'								=> $this->isWritable(),
+			'maxWidth'								=> $this->maxWidth,
+			'maxHeight'							 => $this->maxHeight
 		);
 	}
 	function getSubdir($dirname, $create_unless_exists = false){
@@ -257,9 +257,9 @@ class kfmDirectory extends kfmObject{
 			$id = $this->addSubdirToDb($dirname);
 			return kfmDirectory::getInstance($id);
 		}elseif($create_unless_exists){
-      $id = $this->createSubdir($dirname);
-      return kfmDirectory::getInstance($id);
-    }
+			$id = $this->createSubdir($dirname);
+			return kfmDirectory::getInstance($id);
+		}
 		return false;
 	}
 	function getSubdirs(){
@@ -295,14 +295,14 @@ class kfmDirectory extends kfmObject{
 	function isWritable(){
 		return is_writable($this->path());
 	}
-  function isLink(){
-    return is_link($this->path());
-  }
+	function isLink(){
+		return is_link($this->path());
+	}
 	function moveTo($newParent){
 		global $kfm;
 		if(is_numeric($newParent))$newParent=kfmDirectory::getInstance($newParent);
 		// { check for errors
-      if($this->isLink()) return $this->error(kfm_lang('cannotMoveLink'));
+			if($this->isLink()) return $this->error(kfm_lang('cannotMoveLink'));
 			if(!$kfm->setting('allow_directory_move'))return $this->error(kfm_lang('permissionDeniedMoveDirectory'));
 			if(strpos($newParent->path(),$this->path())===0) return $this->error(kfm_lang('cannotMoveIntoSelf'));
 			if(file_exists(file_join($newParent->path(),$this->name)))return $this->error(kfm_lang('alreadyExists',$newParent->path().$this->name));
@@ -316,13 +316,13 @@ class kfmDirectory extends kfmObject{
 			$kfm->db->query("update ".KFM_DB_PREFIX."directories set parent=".$newParent->id." where id=".$this->id) or die('error: '.print_r($kfmdb->errorInfo(),true));
 			$this->pid=$newParent->id;
 			$this->cached_path=$this->getPath();
-      $this->clearCache();
+			$this->clearCache();
 		// }
 	}
 	function rename($newname){
 		global $kfm,$kfmDirectoryInstances;
 		if(!$kfm->setting('allow_directory_edit'))return $this->error(kfm_lang('permissionDeniedEditDirectory'));
-    if($this->isLink()) return $this->error(kfm_lang('cannotRenameLink'));
+		if($this->isLink()) return $this->error(kfm_lang('cannotRenameLink'));
 		if(!$this->isWritable())return $this->error(kfm_lang('permissionDeniedRename',$this->name));
 		if(!$this->checkName($newname))return $this->error(kfm_lang('cannotRenameFromTo',$this->name,$newname));
 		$parent=kfmDirectory::getInstance($this->pid);
@@ -345,25 +345,25 @@ class kfmDirectory extends kfmObject{
 		$this->maxHeight=$height;
 		$kfm->db->exec("UPDATE ".KFM_DB_PREFIX."directories SET maxwidth=$width,maxheight=$height WHERE id=".$this->id);
 	}
-  /*
-   * Return the max image height for the directory if set, the default otherwise
-   */
-  function maxHeight(){
-    global $kfm;
-    return $this->maxHeight > 0 ? $this->maxHeight : $kfm->setting('max_image_upload_height');
-  }
-  /*
-   * Return the max image width for the directory if set, the default otherwise
-   */
-  function maxWidth(){
-    global $kfm;
-    return $this->maxWidth > 0 ? $this->maxWidth : $kfm->setting('max_image_upload_width');
-  }
-  /**
-    Clear cashed properties
-    */
-  function clearCache(){
-    $this->relpath = false; # remove relative path cache
-    $this->relpath_user = false;
-  }
+	/*
+	 * Return the max image height for the directory if set, the default otherwise
+	 */
+	function maxHeight(){
+		global $kfm;
+		return $this->maxHeight > 0 ? $this->maxHeight : $kfm->setting('max_image_upload_height');
+	}
+	/*
+	 * Return the max image width for the directory if set, the default otherwise
+	 */
+	function maxWidth(){
+		global $kfm;
+		return $this->maxWidth > 0 ? $this->maxWidth : $kfm->setting('max_image_upload_width');
+	}
+	/**
+		Clear cashed properties
+		*/
+	function clearCache(){
+		$this->relpath = false; # remove relative path cache
+		$this->relpath_user = false;
+	}
 }

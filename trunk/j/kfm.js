@@ -318,6 +318,7 @@ kfm.getParentEl=function(c,t){
 	return c;
 };
 kfm.keyup=function(e){
+	if(window.ignore_keys)return;
 	var key=e.which;
 	var cm=document.getElementById('documents_body').contentMode;
 	switch(key){
@@ -426,20 +427,33 @@ function kfm_inArray(needle,haystack){
 	return haystack.indexOf(needle)!=-1;
 }
 function kfm_prompt(txt,val,fn){
-  $j('<div title="Prompt"></div>').append(txt).append('<input id="kfm_prompt_input" value="'+val+'"/>').dialog({
+	window.ignore_keys=true;
+  $j('<div id="kfm-prompt" title="Prompt"></div>').append(txt).append('<input id="kfm_prompt_input" value="'+val+'"/>').dialog({
     modal:true,
     buttons:{
       Ok: function(){
         val = $j(this).find('#kfm_prompt_input').val();
         fn(val);
+				window.ignore_keys=false;
         $j(this).dialog('close');
       },
       Cancel: function(){
+				window.ignore_keys=false;
         $j(this).dialog('close');
       }
     },
-    open:function(){$j('#kfm_prompt_input').focus();},
-    close:function(){$j(this).remove()}
+    open:function(){
+			$j('#kfm_prompt_input').focus();
+			$j('#kfm-prompt input').keyup(function(e){
+				if(e.which == 13){
+					$j('#kfm-prompt').closest('.ui-dialog').find('button:contains("Ok")').trigger('click');
+				}
+				document.title=e.which;
+			});
+		},
+    close:function(){
+			$j(this).remove();
+		}
   });
 }
 function kfm_run_delayed(name,call){

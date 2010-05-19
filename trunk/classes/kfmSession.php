@@ -7,6 +7,11 @@ class kfmSession extends kfmObject{
 		global $kfm;
 		parent::__construct();
 		$create=1;
+		if($GLOBALS['kfm_do_not_save_session']){
+			$this->key='fake';
+			$this->vars=array();
+			return;
+		}
 		if($key=='' && isset($_COOKIE['kfm_cookie']) && strlen($_COOKIE['kfm_cookie'])==32){
 			$key=$_COOKIE['kfm_cookie'];
 		}
@@ -63,7 +68,7 @@ class kfmSession extends kfmObject{
 		global $kfm;
 		if(isset($this->vars[$name])&&$this->vars[$name]==$value)return;
 		$this->vars[$name]=$value;
-		if($save_in_db){
+		if($save_in_db && !$GLOBALS['kfm_do_not_save_session']){
 			$kfm->db->query("DELETE FROM ".KFM_DB_PREFIX."session_vars WHERE session_id=".$this->id." and varname='".sql_escape($name)."'");
 			$kfm->db->query("INSERT INTO ".KFM_DB_PREFIX."session_vars (session_id,varname,varvalue) VALUES (".$this->id.",'".sql_escape($name)."','".sql_escape(json_encode($value))."')");
 		}
@@ -73,6 +78,7 @@ class kfmSession extends kfmObject{
 	}
 	function get($name){
 		if(isset($this->vars[$name]))return $this->vars[$name];
+		if($GLOBALS['kfm_do_not_save_session'])return null;
 		$res=db_fetch_row("SELECT varvalue FROM ".KFM_DB_PREFIX."session_vars WHERE session_id=".$this->id." and varname='".sql_escape($name)."'");
 		if($res && count($res)){
 			$ret=json_decode('['.stripslashes($res['varvalue']).']',true);
@@ -84,6 +90,7 @@ class kfmSession extends kfmObject{
 		return null;
 	}
 	function logout(){
+		if($GLOBALS['kfm_do_not_save_session'])return;
 		global $kfm;
 		$kfm->db->query("DELETE FROM ".KFM_DB_PREFIX."session_vars WHERE session_id=".$this->id);
 		$kfm->db->query("DELETE FROM ".KFM_DB_PREFIX."session WHERE id=".$this->id);
