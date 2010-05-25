@@ -4,8 +4,8 @@ if(!isset($_REQUEST['sname'])) die ('error("Postvalues are not correct")');
 $uid = ($kfm->isAdmin() && isset($_REQUEST['uid']) && is_numeric($_REQUEST['uid'])) ? $_REQUEST['uid'] : $kfm->user_id;
 if($uid == 1) die('error(Admin user cannot revert to original)');
 $sn=$_REQUEST['sname'];
-$kfm->db->query('DELETE FROM '.KFM_DB_PREFIX.'settings WHERE name="'.$sn.'" AND user_id='.$uid);
-$a=db_fetch_row('SELECT value, usersetting FROM '.KFM_DB_PREFIX.'settings WHERE name="'.$sn.'" AND user_id=1');
+$kfm->db->query('DELETE FROM '.KFM_DB_PREFIX.'settings WHERE name="'.sql_escape($sn).'" AND user_id='.$uid);
+$a=db_fetch_row('SELECT value, usersetting FROM '.KFM_DB_PREFIX.'settings WHERE name="'.sql_escape($sn).'" AND user_id=1');
 $value= $a['value'];
 $usersetting = $a['usersetting'];
 if($kfm->sdef[$sn]['type']=='select_list'){

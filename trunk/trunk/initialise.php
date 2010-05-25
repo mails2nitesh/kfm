@@ -35,7 +35,7 @@ function setting_array($str){
 }
 function sql_escape($sql) {
     global $kfm_db_type;
-    $sql = addslashes($sql);
+    $sql = mysql_real_escape_string($sql);
     if ($kfm_db_type=='sqlite'||$kfm_db_type=='sqlitepdo')$sql = str_replace("\\'", "''", $sql);
     return $sql;
 }
@@ -295,7 +295,7 @@ if (isset($use_kfm_security) && !$use_kfm_security)$kfm_session->setMultiple(arr
 if (!$kfm_session->get('loggedin') && (!isset($kfm_api_auth_override)||!$kfm_api_auth_override)) {
     $err = '';
     if (isset($_POST['username'])&&isset($_POST['password'])) {
-        $res=db_fetch_row('SELECT id, username, password, status FROM '.KFM_DB_PREFIX.'users WHERE username="'.addslashes($_POST['username']).'" AND password="'.sha1($_POST['password']).'"');
+        $res=db_fetch_row('SELECT id, username, password, status FROM '.KFM_DB_PREFIX.'users WHERE username="'.sql_escape($_POST['username']).'" AND password="'.sha1($_POST['password']).'"');
         if($res && count($res)){
             $kfm_session->setMultiple(array('user_id'=>$res['id'],'username'=>$_POST['username'], 'password'=>$_POST['password'],'user_status'=>$res['status'], 'loggedin'=>1));
         }else $err = '<em>Incorrect Password. Please try again, or check your <code>configuration.php</code>.</em>';
@@ -340,7 +340,7 @@ foreach($usersettings as $usersetting) $kfm->addUserSetting($usersetting);
 if(!isset($settings['kfm_url'])){
  $kfm_url = str_replace($_SERVER['DOCUMENT_ROOT'],'',str_replace('\\','/',getcwd()));
  if(!isset($kfm_url[0]) || !$kfm_url[0] == '/') $kfm_url = '/'.$kfm_url; // Make the url absolute
- $kfm->db->query('INSERT INTO '.KFM_DB_PREFIX.'settings (name, value, user_id) VALUES ("kfm_url", "'.mysql_escape_string($kfm_url).'",1)');
+ $kfm->db->query('INSERT INTO '.KFM_DB_PREFIX.'settings (name, value, user_id) VALUES ("kfm_url", "'.sql_escape($kfm_url).'",1)');
 }
 if(isset($settings['disabled_plugins'])){
     $kfm->setting('disabled_plugins',setting_array($settings['disabled_plugins']));

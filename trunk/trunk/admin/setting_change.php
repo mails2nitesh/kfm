@@ -5,11 +5,11 @@ require_once('initialise.php');
  */
 function change_usersetting($sn, $value, $is, $uid){
   global $kfm;
-  $s=db_fetch_row('SELECT id FROM '.KFM_DB_PREFIX.'settings WHERE name="'.mysql_escape_string($sn).'" and user_id='.$uid);
+  $s=db_fetch_row('SELECT id FROM '.KFM_DB_PREFIX.'settings WHERE name="'.sql_escape($sn).'" and user_id='.$uid);
   if($s && count($s)){
-    $kfm->db->query('UPDATE '.KFM_DB_PREFIX.'settings SET value="'.mysql_escape_string($value).'", usersetting='.$is.' WHERE name="'.mysql_escape_string($sn).'" AND user_id='.$uid);
+    $kfm->db->query('UPDATE '.KFM_DB_PREFIX.'settings SET value="'.sql_escape($value).'", usersetting='.$is.' WHERE name="'.sql_escape($sn).'" AND user_id='.$uid);
   }else{
-    $sql = 'INSERT INTO '.KFM_DB_PREFIX.'settings (name, value, user_id, usersetting) VALUES ("'.mysql_escape_string($sn).'","'.mysql_escape_string($value).'", '.$uid.','.mysql_escape_string($is).')';
+    $sql = 'INSERT INTO '.KFM_DB_PREFIX.'settings (name, value, user_id, usersetting) VALUES ("'.sql_escape($sn).'","'.sql_escape($value).'", '.$uid.','.sql_escape($is).')';
     $kfm->db->query($sql);
   }
 }
@@ -17,7 +17,7 @@ if(!isset($_POST['name']) || !isset($_POST['value'])) die ('error("post value mi
 if(!isset($_POST['usersetting'])) die ('error("Cannot determine if setting is usersetting")');
 $sn=$_POST['name'];
 $value=$_POST['value'];
-$usersetting = (Int)$_POST['usersetting'];
+$usersetting = (int)$_POST['usersetting'];
 /* Next section to create a proper value for the database */
 if($kfm->sdef[$sn]['type']=='select_list'){
 	if(!isset($_POST['checked']))die ('error("property checked must be given for a select list");');
@@ -38,7 +38,7 @@ if($uid == 1){
   change_usersetting($sn, $value, $usersetting, 1); 
 }else{
     // Check if admin setting exist, add it if not
-    $s=db_fetch_row('SELECT id FROM '.KFM_DB_PREFIX.'settings WHERE name="'.mysql_escape_string($sn).'" and user_id=1');
+    $s=db_fetch_row('SELECT id FROM '.KFM_DB_PREFIX.'settings WHERE name="'.sql_escape($sn).'" and user_id=1');
     if($s && count($s)){
     }else{
       // Add the setting for the admin user. The setting of the user with administrator rights will become the default setting

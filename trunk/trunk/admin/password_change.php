@@ -2,7 +2,7 @@
 require_once('initialise.php');
 if(isset($_POST['uid'])){
 	if($kfm->user_status==1){
-		$uid=$_POST['uid'];
+		$uid=(int)$_POST['uid'];
 	}else{
 		die('error("Unauthorized attempt to change a users password");');
 	}

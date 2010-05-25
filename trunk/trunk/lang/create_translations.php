@@ -34,13 +34,13 @@ while($file=readdir($h)){
 	print "lang $lang has:".count($f)."\n";
 	if($lang=='en')$en=$f;
 	foreach($f as $name=>$text){
-		$orig=addslashes($name);
-		$tran=addslashes($text);
+		$orig=sql_escape($name);
+		$tran=sql_escape($text);
 		$kfm->db->query("INSERT INTO kfm_translations(original,translation,language,context,found) VALUES ('$orig','$tran','$lang','kfm',1)");
 	}
 }
 foreach($en as $name=>$text){
-	$orig=addslashes($name);
-	$tran=addslashes($text);
+	$orig=sql_escape($name);
+	$tran=sql_escape($text);
 	$kfm->db->query("update kfm_translations set original='$tran' where original='$orig'");
 }
