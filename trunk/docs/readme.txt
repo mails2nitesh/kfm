@@ -11,7 +11,7 @@ INFORMATION
 http://kfm.verens.com/
 
 BUGS AND FEATURES
-http://mantis.verens.com/
+http://code.google.com/p/kfm/issues/list
 
 FORUM
-http://kfm.verens.com/phpBB3/
+http://forum.kfm.verens.com/
