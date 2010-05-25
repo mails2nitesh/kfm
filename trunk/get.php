@@ -62,8 +62,8 @@ if (isset($_GET['type'])&&$_GET['type']=='thumb') {
     $name = $id;
 } else {
     if (isset($_GET['width'])&&isset($_GET['height'])) {
-        $width  = $_GET['width'];
-        $height = $_GET['height'];
+        $width  = (int)$_GET['width'];
+        $height = (int)$_GET['height'];
         $image  = kfmImage::getInstance($id);
         if (!$image) {
             echo kfm_lang('errorFileIDNotFound', $id);

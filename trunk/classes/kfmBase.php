@@ -193,7 +193,7 @@ class kfmBase extends kfmObject{
 	 */
 	function isAdmin($uid = false){
     if($uid){
-      $res=db_fetch_row('SELECT id, username, password, status FROM '.KFM_DB_PREFIX.'users WHERE id='.mysql_escape_string($uid));
+      $res=db_fetch_row('SELECT id, username, password, status FROM '.KFM_DB_PREFIX.'users WHERE id='.((int)$uid));
       if($res && $res['status'] == 1) return true;
       else return false;
     }
