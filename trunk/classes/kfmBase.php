@@ -129,7 +129,7 @@ class kfmBase extends kfmObject{
 	 */
 	function setting($name,$value='novaluegiven', $freeze = false){
 		if($value=='novaluegiven'){
-			if(!isset($this->settings[$name]))return $this->error('Setting '.$name.' does not exists');
+			if(!isset($this->settings[$name]))return $this->error('Setting '.$name.' does not exist');
 			return $this->settings[$name];
 		}
 		if(!in_array($name, $this->settings_frozen))$this->settings[$name]=$value;
