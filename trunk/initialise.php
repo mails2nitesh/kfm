@@ -35,7 +35,7 @@ function setting_array($str){
 }
 function sql_escape($sql) {
     global $kfm_db_type;
-    $sql = mysql_real_escape_string($sql);
+    $sql = mysql_escape_string($sql);
     if ($kfm_db_type=='sqlite'||$kfm_db_type=='sqlitepdo')$sql = str_replace("\\'", "''", $sql);
     return $sql;
 }
@@ -83,7 +83,7 @@ $kfm->defaultSetting('hidden_panels',array('logs','file_details','directory_prop
 $kfm->defaultSetting('log_level', 0);
 $kfm->defaultSetting('allow_user_file_associations',false);
 //display
-//$kfm->defaultSetting('theme', false); // must be overwritten
+$kfm->defaultSetting('theme', 'default'); // must be overwritten
 $kfm->defaultSetting('show_admin_link', file_exists(KFM_BASE_PATH.'admin'));
 $kfm->defaultSetting('time_format', '%T');
 $kfm->defaultSetting('date_format', '%x');
