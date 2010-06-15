@@ -10,7 +10,7 @@
 
 function lazyload_replace_stub(fname,js,ps){ // replace stub with function, then call function with original parameters
 	eval(js);
-	(eval(fname)).apply(this,ps);
+	(eval("window."+fname)).apply(this,ps);
 }
 
 var i,funcs=[],fname;
