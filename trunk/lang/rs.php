@@ -10,6 +10,7 @@
  *
  * File Authors:
  *  kae@verens.com
+ *  nikolakirincic@gmail.com
  */
 
 $kfm_langStrings=array(
