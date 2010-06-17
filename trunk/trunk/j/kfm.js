@@ -32,12 +32,17 @@ kfm.about=function(){
 		html+='ga (Irish): Kae Verens<br />';
 		html+='hu (Hungarian): Ujj-Mészáros István<br />';
 		html+='it (Italian): Stefano Luchetta<br />';
-		html+='jp (Japanese): S. Higashi<br />';
+		html+='ja (Japanese): S. Higashi<br />';
+		html+='lt (Lithuanian): Linas Maciulis<br />';
 		html+='nl (Dutch): Roy Lubbers<br />';
+		html+='no (Norwegian): William Killerud<br />';
 		html+='pl (Polish): Jan Kurek<br />';
+		html+='pt_br (Portuguese Brazilian): Tárikly Lira<br />';
 		html+='ro (Romanian): Andrei Suscov<br />';
+		html+='rs (Serbian): Nikola Kirincic<br />';
 		html+='ru (Russian): Andrei Suscov<br />';
-		html+='sv (Swedish): Aram Mäkivierikko</td></tr></table>';
+		html+='sv (Swedish): Aram Mäkivierikko<br />';
+		html+='th (Thai): Nateetorn L</td></tr></table>';
 	}
 	{ // bug testers
 		html+='<h2>Bug Testers</h2>';
