@@ -285,6 +285,7 @@ class kfmDirectory extends kfmObject{
 		return $directories;
 	}
 	function hasSubdirs(){
+		if (!is_dir($this->path())) return false;
 		$dirs=new DirectoryIterator($this->path());
 		foreach($dirs as $dir){
 			if($dir->isDot())continue;
