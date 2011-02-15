@@ -152,7 +152,7 @@ function kfm_dir_add_attributes(){
 		el.kfm_directoryname=pdir;
 		el.node_id=pid;
 		if(x || y){ // constrained size
-			el.title+="\nimage size constraint: "+data[3]+"x"+data[4];
+			el.title+="\nimage size constraint: "+x+"x"+y;
 			el.className+=" constrainedSize";
 		}
 	}
